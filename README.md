@@ -46,7 +46,7 @@ There's already a similar thing called [SOUL](https://github.com/soul-lang/SOUL)
 - SOUL isn't free and open source. The "secret sauce" is still opaque and closed source.
 - SOUL is just for audio. Chata, on the other hand, is for all kinds of DSP!
 - SOUL has tons of boilerplate. I couldn't read the example programs provided there.
-- SOUL is basically abandoned now, because the company behind it went bankrupt, down the drain.
+- SOUL is basically abandoned now, because the company behind it went bankrupt, down the drain, more imploded than the Titan submarine.
 
 Other than that, we're competing against hodgepodges of libraries, bespoke compilers, and ugly code.
 
