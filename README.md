@@ -48,6 +48,6 @@ There's already a similar thing called [SOUL](https://github.com/soul-lang/SOUL)
 - SOUL has tons of boilerplate. I couldn't read the example programs provided there.
 - SOUL is basically abandoned now, because the company behind it went bankrupt, down the drain, more imploded than the Titan submarine.
 
-Other than that, we're competing against hodgepodges of libraries, bespoke compilers, and ugly code.
+Other than that, the competition doesn't look good. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
 
 # fff
