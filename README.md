@@ -50,6 +50,6 @@ There's already a similar thing called [SOUL](https://github.com/soul-lang/SOUL)
 
 Other than that, the competition doesn't look good. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
 
-# For Nerdy Eyes Only 🤓
+# For Nerds Only 🤓
 
 Right now, Chata is mostly an imperative language with functional aspects. Its syntax looks mildly similar to
