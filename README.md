@@ -40,9 +40,11 @@ Here's some of my goals for Chata:
 - great support for DSP applications like RF and not just audio
 - support for compiling to DSP chip targets
 
-The standard will be in this repository right here on GitHub.
+The standard will be in this repository right here on GitHub. :octocat:
 
-We'll figure out what it should look like and see if we can write some example programs that solve common problems. We're in this journey together!
+We'll figure out what it should look like and see if we can write some example programs that solve common problems. 
+
+**We're in this journey together!**
 
 # The Competition 🥇
 
@@ -51,7 +53,7 @@ There's already a similar thing called [SOUL](https://github.com/soul-lang/SOUL)
 - SOUL is just for audio. Chata, on the other hand, is for all kinds of DSP!
 - SOUL has tons of junk boilerplate. I couldn't read the example programs provided there.
 - SOUL is selling the implementation, not the end result. This limits SOUL's audience a lot.
-- SOUL is abandoned now, because the company behind it went bankrupt, down the drain, more imploded than the Titan submarine.
+- SOUL is abandoned now, because the company behind it went bankrupt, down the drain, more imploded than the gamepad-controlled Titan submarine.
 
 Other than that, the competition doesn't look good. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
 
@@ -108,7 +110,7 @@ Other than that, the competition doesn't look good. Therefore, we'll be competin
 
 ## Definitions
 
-## Chata Programs
+## General Requirements
 
 # Examples :hammer:
 
