@@ -103,3 +103,21 @@ Other than that, the competition doesn't look good. Therefore, we'll be competin
   - [ ] online playground
 - [ ] Your checkbox here!
   - [ ] Feel free to contribute to this roadmap!
+
+# The Standard 📜
+
+## Definitions
+
+## Chata Programs
+
+# Examples :hammer:
+
+## Sine Wave
+
+## High Pass Filter
+
+## Low Pass Filter
+
+## Delay
+
+## Reverb
