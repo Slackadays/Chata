@@ -1,10 +1,10 @@
 # Chata
 
-<h1 align="center">The (future) way to smash those signals.</h1>
+<h1 align="center">The (future) magic wand 🪄 for digital signals.</h1>
 
 Chata is a programming language that's made just for DSP, or Digital Signal Processing. 
 
-Chata aims to let you do awesome things like music effects and super fast communication by getting rid of all the junk associated with other kinds of DSP programming.
+Chata aims to let you do awesome things like music effects and accelerated communications by getting rid of all the junk associated with other kinds of DSP programming.
 
 # The Problem 😕
 
@@ -44,7 +44,7 @@ The standard will be in this repository right here on GitHub. :octocat:
 
 We'll figure out what it should look like and see if we can write some example programs that solve common problems. 
 
-**We're in this journey together!**
+**We're all in this journey together!**
 
 # The Competition 🥇
 
@@ -109,6 +109,12 @@ Other than that, the competition doesn't look good. Therefore, we'll be competin
 # The Standard 📜
 
 ## Definitions
+
+### Chata Program
+
+A Chata program is a collection of symbols defined within the Chata specification and arranged in a valid way.
+
+A Chata program file is a text file that contains only text encoded in UTF-8 format, and that end in a `.chata` extension.
 
 ## General Requirements
 
