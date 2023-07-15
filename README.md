@@ -1,6 +1,6 @@
 # Chata
 
-<h1 align="center">The (future) magic wand 🪄 for digital signals.</h1>
+<h1 align="center">The (future) magic wand 🪄 for signal processing.</h1>
 
 Chata is a programming language that's made just for DSP, or Digital Signal Processing. 
 
@@ -110,13 +110,21 @@ Other than that, the competition doesn't look good. Therefore, we'll be competin
 
 ## Definitions
 
-### Chata Program
+### Chata Programs
 
-A Chata program is a collection of symbols defined within the Chata specification and arranged in a valid way.
+An action is a collection of symbols defined within the Chata specification and arranged in a valid way, that either the Chata implementation can abstract or that other actions can access.
 
-A Chata program file is a text file that contains only text encoded in UTF-8 format, and that end in a `.chata` extension.
+A Chata program is at least one action with name "main."
+
+A Chata program file is a text file that contains only text encoded in UTF-8 format, and that end in a `.chata` extension, and that contains a valid Chata program.
 
 ## General Requirements
+
+All actions start with the keyword `action` followed by the name of the action. The action name must contain only the following classes of text characters:
+
+- foo
+- bar
+- baz
 
 # Examples :hammer:
 
