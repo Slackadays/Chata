@@ -4,7 +4,7 @@
 
 Chata is a programming language that's made just for DSP, or Digital Signal Processing. 
 
-Chata aims to let you do awesome things like music effects and accelerated communications by getting rid of all the junk associated with other kinds of DSP programming.
+Chata aims to let you do awesome things like music effects and accelerated communication by getting rid of all the junk associated with other kinds of DSP programming.
 
 # The Problem 😕
 
@@ -122,12 +122,18 @@ A Chata program is at least one action with name "main."
 
 A Chata program file is a text file that contains only text encoded in UTF-8 format, and that end in a `.chata` extension, and that contains a valid Chata program.
 
+A symbol is the name of an action, function, variable, or other component of a Chata program that the code refers to by a Human-readable string of valid characters.
+
 ## General Requirements
 
-All actions start with the keyword `action` followed by the name of the action. The action name must contain only the following classes of text characters:
+All actions start with the keyword `action` followed by the name of the action. 
+
+All symbols must contain only the following classes of text characters:
 
 - any Latin script character
 - any of these symbols: _ (underscore), - (dash), + (plus)
+
+## Actions
 
 # Examples :hammer:
 
