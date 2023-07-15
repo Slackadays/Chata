@@ -112,7 +112,11 @@ Other than that, the competition doesn't look good. Therefore, we'll be competin
 
 ### Chata Programs
 
+A Chata implementation is any software that follows the Chata standard.
+
 An action is a collection of symbols defined within the Chata specification and arranged in a valid way, that either the Chata implementation can abstract or that other actions can access.
+
+**`Note`** An action is like a function in regular programming languages, but because functions in Chata have a slightly different way of working, they're called actions instead.
 
 A Chata program is at least one action with name "main."
 
@@ -122,9 +126,8 @@ A Chata program file is a text file that contains only text encoded in UTF-8 for
 
 All actions start with the keyword `action` followed by the name of the action. The action name must contain only the following classes of text characters:
 
-- foo
-- bar
-- baz
+- any Latin script character
+- any of these symbols: _ (underscore), - (dash), + (plus)
 
 # Examples :hammer:
 
