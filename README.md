@@ -124,16 +124,37 @@ A Chata program file is a text file that contains only text encoded in UTF-8 for
 
 A symbol is the name of an action, function, variable, or other component of a Chata program that the code refers to by a Human-readable string of valid characters.
 
-## General Requirements
+A statement is a combination of symbols that fits on one line.
 
-All actions start with the keyword `action` followed by the name of the action. 
+## General Requirements
 
 All symbols must contain only the following classes of text characters:
 
 - any Latin script character
 - any of these symbols: _ (underscore), - (dash), + (plus)
 
+All statements must end with an ASCII line feed character or an ASCII carriage return character followed by an ASCII line feed character.
+
+**`Note`** This means that either `\n` or `\r\n` can delimit lines.
+
+## Types
+
+There are these types in Chata:
+
+- foo
+
 ## Actions
+
+All actions start with the keyword `action` followed by the name of the action, followed by an opening curly bracket, Chata code, and closing curly bracket.
+
+**`Example`**
+```
+action main {
+foobar
+}
+```
+
+Actions may specify which variables that they can access directly
 
 # Examples :hammer:
 
