@@ -76,6 +76,12 @@ And there's now a followup called [Cmajor](https://github.com/SoundStacks/cmajor
 
 Other than that, the competition doesn't look good. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
 
+# Contributing :heart:
+
+If you want to help out, feel free to do so! I want Chata to be something that everyone can feel good about because it listens to them.
+
+**`How To Help`** The fastest way to help out is by joining our Discord server above :point_up:. After that, if you see something that you want to change, go fork this repo and make those changes. Then, we'll see if they can be integrated.
+
 # Roadmap 🗺️
 
 - [ ] Chata Language Standard
