@@ -48,6 +48,8 @@ We'll figure out what it should look like and see if we can write some example p
 
 **We're all in this journey together!**
 
+<p align="center"><a href="https://discord.gg/J6asnc3pEG"><img src="DiscordBanner.png" height="80px"></a></p>
+
 # Motivation 🎸
 
 I think ba**chata** music, especially the guitar part, is the coolest thing ever. If you don't know what that is, do an internet search for the band featured on my GitHub profile and you'll find out. (Hint: Aventura is awesome!)
@@ -217,7 +219,7 @@ To create a variable that matches the value of a different variable, declare it 
 
 ## Math Symbol Support
 
-Chata supports all standard math symbols like +, -, <, >, <= (alias for ≤), => (alias for ≥), != (alias for ≠),and =.
+Chata supports all standard math symbols like +, -, <, >, <= (alias for ≤), => (alias for ≥), != (alias for ≠), =, and ||.
 
 Chata supports mathematical constants like pi (alias for π), e, and i.
 
@@ -262,7 +264,7 @@ Chata provides several built-in actions that all implementations must include.
 
 Set a variable to one or more values.
 
-**`Examples`**
+**`Example`**
 ```
 int fooVar
 set fooVar, 100, 69, 420, 42
@@ -275,7 +277,7 @@ set fooVar, 100, 69, 420, 42
 
 Add one or more values to a variable.
 
-**`Examples`**
+**`Example`**
 ```
 int fooVar
 add fooVar, 1
@@ -325,7 +327,7 @@ namespace foo {
 action main, signal in {
   // make a copy of foo:bar
   signal bat = foo:bar
-  foo:baz = someGlobalVar
+  set foo:baz, someGlobalVar
 }
 ```
 
@@ -350,11 +352,33 @@ int main(float& in) { //note that you can't actually do this in C++!
 
 Chata provides several global variables that are always present in all Chata programs.
 
-### placeholder
+### Sample Rate
+
+This variable of type `int` represents the current sample rate of the Chata implementation in Hertz. If the Chata implementation does not have a set sample rate, the value is 0.
+
+Access the sample rate with `std:SampleRate`.
+
+**`Example`**
+```
+action main {
+  int foo = std:SampleRate
+}
+
+```
 
 # Examples :hammer:
 
 ## Sine Wave
+
+```
+action main, signal in1 {
+  int hertz = 440
+  int samplesPerCycle = std:SampleRate / hertz
+  int cycles
+  set in1, sin(2πcycles/samplesPerCycle)
+  add cycles, 1
+}
+```
 
 ## High Pass Filter
 
