@@ -32,6 +32,8 @@ I want to make Chata the most _awesome_ way to do great things with DSP. Imagine
 
 First, I want to write a standard that's as polished as it can be. Then, once the standard is ready, we can start making it real. 
 
+The reason for doing this is because I think it's sometimes better to know what you want to achieve first and then work towards that goal rather than working towards something and making up the goal along the way. 
+
 Here's some of my goals for Chata:
 - a superb standard library with fancy algorithms such as IIR, Hilbert Transform, and more
 - an action-oriented syntax with clear verbage
@@ -56,6 +58,14 @@ There's already a similar thing called [SOUL](https://github.com/soul-lang/SOUL)
 - SOUL is abandoned now, because the company behind it went bankrupt, down the drain, more imploded than the gamepad-controlled Titan submarine.
 
 Other than that, the competition doesn't look good. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
+
+# Motivation 🎸
+
+I have an interest in bachata guitar. If you don't know what that is, do an internet search for the band featured on my GitHub profile and you'll find out. (Hint: Aventura is the coolest thing ever!)
+
+To make the "classic" bachata guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
+
+So, why not just make the solution?
 
 # Roadmap 🗺️
 
@@ -85,6 +95,7 @@ Other than that, the competition doesn't look good. Therefore, we'll be competin
   - [ ] multi-language support
     - [ ] should we support multiple languages?
 - [ ] Official Implementation
+  - [x] license
   - [ ] basic working interpreter
     - [ ] what language?
     - [ ] at what standard should it be built?
@@ -125,6 +136,12 @@ A Chata program file is a text file that contains only text encoded in UTF-8 for
 A symbol is the name of an action, function, variable, or other component of a Chata program that the code refers to by a Human-readable string of valid characters.
 
 A statement is a combination of symbols that fits on one line.
+
+A scope is the part of a Chata program in which code within the part can access variables.
+
+A variable is named container of data of a specific type.
+
+A namespace is a way to abstract variables within a single name.
 
 ## General Requirements
 
@@ -187,6 +204,8 @@ action main {
 }
 ```
 
+All variables which do not depend on other variables contain the value 0 by default.
+
 To create a variable that matches the value of a different variable, declare it with `variable-type variable-name = target-variable-name`. Chata implementations must only copy the value held by `target-variable-name` into `variable-name`.
 
 ## Math Symbol Support
@@ -203,7 +222,7 @@ Chata supports different mathematical order of operations, but PEMDAS is the def
 
 All trigonometric functions must use radians for angle units.
 
-**`Note`** This means that you can effortlessly do math on signals as if you were in a math class.
+**`Note`** This means that you can effortlessly do math on variables as if you were in a math class.
 
 **`Example`**
 ```
@@ -211,6 +230,72 @@ action main, signal in {
   signal foo = 2πin
 }
 ```
+
+## Scopes
+
+All Chata programs have a global scope where all actions within the program can access any variables declared in it.
+
+Within an action, only code within the action and other actions created within it can access variables created in that action.
+
+Only code following the creation of a variable may access that variable.
+
+## Comments
+
+Chata implementations must not interpret code comments as code.
+
+Code comments can start anywhere.
+
+Code comments which span a single line start with the characters `//`.
+
+Code comments which can span multiple lines start with the character `#` and end with the character `#`.
+
+**`Note`** The reason for using `#` for multi-line comments was so that you don't have to type more characters compared to a single-line comment.
+
+## Namespaces
+
+A namespace may contain one or more variables and/or namespaces under a single name. For example, the `foo` namespace may contain the variables `bar` and `baz`. 
+
+You can access variables or namespaces within a namespace in Chata in the format `namespace:content`. For example, to access the `bar` variable within `foo`, use `foo:bar`.
+
+To create a namespace, use the format `namespace namespace-name {content}`. `content` is lines of variable or namespace declarations.
+
+**`Example`**
+```
+signal someGlobalVar
+namespace foo {
+  signal bar
+  int baz
+}
+#namespace junk {
+  blah var
+}#
+action main, signal in {
+  // make a copy of foo:bar
+  signal bat = foo:bar
+  foo:baz = someGlobalVar
+}
+```
+
+**`Note`** Here's the equivalent code but in C++:
+```cpp
+float someGlobalVar;
+namespace foo {
+  float bar;
+  int baz;
+}
+/*namespace junk {
+  blah var
+}*/
+int main(float& in) { //note that you can't actually do this in C++!
+  // make a copy of foo:bar
+  float bat = foo::bar;
+  foo::baz = someGlobalVar;
+}
+```
+
+## Special Global Variables
+
+### placeholder
 
 # Examples :hammer:
 
