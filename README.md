@@ -48,6 +48,14 @@ We'll figure out what it should look like and see if we can write some example p
 
 **We're all in this journey together!**
 
+# Motivation 🎸
+
+I think ba**chata** music, especially the guitar part, is the coolest thing ever. If you don't know what that is, do an internet search for the band featured on my GitHub profile and you'll find out. (Hint: Aventura is awesome!)
+
+To make the "classic" ba**chata** guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
+
+So, why not just make the solution?
+
 # The Competition 🥇
 
 There's already a similar thing called [SOUL](https://github.com/soul-lang/SOUL), or SOUnd Language. SOUL doesn't even come close to Chata:
@@ -57,15 +65,14 @@ There's already a similar thing called [SOUL](https://github.com/soul-lang/SOUL)
 - SOUL is selling the implementation, not the end result. This limits SOUL's audience a lot.
 - SOUL is abandoned now, because the company behind it went bankrupt, down the drain, more imploded than the gamepad-controlled Titan submarine.
 
+And there's now a followup called [Cmajor](https://github.com/SoundStacks/cmajor)! Cmajor still doesn't even come close to Chata:
+- Cmajor STILL isn't free and open source. The tools provided as binaries are still opaque and closed source.
+- Cmajor still is focused on audio, while Chata is for all DSP.
+- Cmajor looks better regarding boilerplate, but still could do even better.
+- Cmajor's readme leaves a lot to be desired because there's almost no information on it.
+- Cmajor is STILL owned by some company which could go bust like Apollo 13.
+
 Other than that, the competition doesn't look good. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
-
-# Motivation 🎸
-
-I have an interest in ba**chata** guitar. If you don't know what that is, do an internet search for the band featured on my GitHub profile and you'll find out. (Hint: Aventura is the coolest thing ever!)
-
-To make the "classic" ba**chata** guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
-
-So, why not just make the solution?
 
 # Roadmap 🗺️
 
