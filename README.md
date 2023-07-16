@@ -132,16 +132,31 @@ All symbols must contain only the following classes of text characters:
 
 - any Latin script character
 - any of these symbols: _ (underscore), - (dash), + (plus)
+- any Greek alphabet letter
+
+Variable names must not be a symbol already used by a Chata implementation.
 
 All statements must end with an ASCII line feed character or an ASCII carriage return character followed by an ASCII line feed character.
 
 **`Note`** This means that either `\n` or `\r\n` can delimit lines.
 
-## Types
+## Variable Types
 
-There are these types in Chata:
+There are these variable types in Chata:
 
-- foo
+### signal
+
+The `signal` type is a floating-point number with range -1.0 to 1.0 and at least 32 bits of precision.
+
+### int
+
+The `int` type is a signed integer with at least 32 bits of precision.
+
+## Number Overflow
+
+If adding a value to a type where the result exceeds the type's maximum capacity in either the positive or negative direction, the type must remain at its previous value.
+
+**`Note`** This means that if you add 1 to an `int` at value 2^31, it will stay at 2^31. This is also called "saturating" a value.
 
 ## Actions
 
@@ -150,11 +165,52 @@ All actions start with the keyword `action` followed by the name of the action, 
 **`Example`**
 ```
 action main {
-foobar
+  foobar
 }
 ```
 
-Actions may specify which variables that they can access directly
+Actions may specify which variables that they can access directly in the format `action action-name, 1st-variable-type 1st-variable-name {code}`. To provide multiple variables, use the format `action action-name, 1st-variable-type 1st-variable-name, 2nd-variable-type 2nd-variable-name {code}`.
+
+**`Example`** An action that accepts a variable called `in1` of type `signal` and another of name `count` of type `int` can look like `action main, signal in1, int count {}`.
+
+## Variable Creation
+
+Variable names must not start with a number.
+
+You can create a variable by declaring it in the format `variable-type variable-name`.
+
+**`Example`** Declare a signal variable of name `foo` with `signal foo`:
+
+```
+action main {
+  signal foo
+}
+```
+
+To create a variable that matches the value of a different variable, declare it with `variable-type variable-name = target-variable-name`. Chata implementations must only copy the value held by `target-variable-name` into `variable-name`.
+
+## Math Symbol Support
+
+Chata supports all standard math symbols like +, -, <, >, <= (alias for ≤), => (alias for ≥), != (alias for ≠),and =.
+
+Chata supports mathematical constants like pi (alias for π), e, and i.
+
+Chata supports mathematical functions like sqrt() (alias for √()), sin(), cos(), tan(), sec(), csc(), cot(), sinh(), cosh(), and tanh().
+
+Chata supports standard mathematical syntax such as 5pi (alias for 5π) and 2 + 1.2sin(e)√(5), and (foovariable)sin(1)
+
+Chata supports different mathematical order of operations, but PEMDAS is the default.
+
+All trigonometric functions must use radians for angle units.
+
+**`Note`** This means that you can effortlessly do math on signals as if you were in a math class.
+
+**`Example`**
+```
+action main, signal in {
+  signal foo = 2πin
+}
+```
 
 # Examples :hammer:
 
