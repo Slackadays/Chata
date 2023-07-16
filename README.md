@@ -4,7 +4,7 @@
 
 Chata is a programming language that's made just for DSP, or Digital Signal Processing. 
 
-Chata aims to let you do awesome things like music effects and accelerated communication by getting rid of all the junk associated with other kinds of DSP programming.
+Chata aims to let you do awesome things like music effects and accelerated communication by getting rid of all the junk associated with this kind of programming.
 
 # The Problem 😕
 
@@ -73,6 +73,16 @@ And there's now a followup called [Cmajor](https://github.com/SoundStacks/cmajor
 - Cmajor looks better regarding boilerplate, but still could do even better.
 - Cmajor's readme leaves a lot to be desired because there's almost no information on it.
 - Cmajor is STILL owned by some company which could go bust like Apollo 13.
+
+There's also something else called [Faust](https://github.com/grame-cncm/faust)! Faust STILL doesn't even come close to Chata:
+- Faust puts all of its eggs into functional programming. Chata is imperative, which is better if that's what you're interested in.
+- Faust is always "fully compiled" with zero interpretation. Chata, on the other hand, is more flexible because it doesn't specify either.
+- Faust is "block-diagram oriented." Chata, on the other hand, lacks any concept of block diagrams, which is beneficial if you don't want them.
+- Faust relies on bespoke symbol characters like `:`, `,`, `~`, `<:`, and `:>`. Most/all of Chata's symbols, on the other hand, are standard mathematical symbols that aren't specific to one language, neither Human nor programming.
+
+Something that's common to all of these other options is that there is only one toolchain available for each one. This leads to a monoculture, which means that all projects using it depend on one toolchain to work. Additionally, noncompliant behavior from a single toolchain influences the standard by becoming what projects experience, which isn't good if you're interested in language standardization. 
+
+Languages like C, C++, Rust, and more don't suffer from this. An example is with C++'s "big three" of GCC, Clang, and MSVC. Therefore, it's in our best interest that Chata never becomes a monoculture by making sure multiple toolchains are available.
 
 Other than that, the competition doesn't look good. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
 
