@@ -61,9 +61,9 @@ Other than that, the competition doesn't look good. Therefore, we'll be competin
 
 # Motivation 🎸
 
-I have an interest in bachata guitar. If you don't know what that is, do an internet search for the band featured on my GitHub profile and you'll find out. (Hint: Aventura is the coolest thing ever!)
+I have an interest in ba**chata** guitar. If you don't know what that is, do an internet search for the band featured on my GitHub profile and you'll find out. (Hint: Aventura is the coolest thing ever!)
 
-To make the "classic" bachata guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
+To make the "classic" ba**chata** guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
 
 So, why not just make the solution?
 
@@ -231,6 +231,52 @@ action main, signal in {
 }
 ```
 
+## Using Actions
+
+To use an action, use the format `action-name 1st-operand, 2nd-operand, ...`.
+
+**`Example`**
+```
+action doSomething, signal one, signal two {
+  signal three = one + two
+}
+action main, signal in, signal in2 {
+  doSomething in, in2
+}
+```
+
+## Built-In Actions
+
+Chata provides several built-in actions that all implementations must include.
+
+### set
+
+`set target, value, ...`
+
+Set a variable to one or more values.
+
+**`Examples`**
+```
+int fooVar
+set fooVar, 100, 69, 420, 42
+// result: fooVar is 42
+```
+
+### add
+
+`add target, value, ...`
+
+Add one or more values to a variable.
+
+**`Examples`**
+```
+int fooVar
+add fooVar, 1
+// result: fooVar is 1
+add fooVar, 100, 50
+// result: fooVar is 151
+```
+
 ## Scopes
 
 All Chata programs have a global scope where all actions within the program can access any variables declared in it.
@@ -289,11 +335,13 @@ namespace foo {
 int main(float& in) { //note that you can't actually do this in C++!
   // make a copy of foo:bar
   float bat = foo::bar;
-  foo::baz = someGlobalVar;
+  foo::baz = someGlobalVar + bat
 }
 ```
 
 ## Special Global Variables
+
+Chata provides several global variables that are always present in all Chata programs.
 
 ### placeholder
 
