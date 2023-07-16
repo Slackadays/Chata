@@ -266,9 +266,9 @@ Set a variable to one or more values.
 
 **`Example`**
 ```
-int fooVar
-set fooVar, 100, 69, 420, 42
-// result: fooVar is 42
+int foo
+set foo, 100, 69, 420, 42
+// result: foo is 42
 ```
 
 ### add
@@ -279,11 +279,100 @@ Add one or more values to a variable.
 
 **`Example`**
 ```
-int fooVar
-add fooVar, 1
-// result: fooVar is 1
-add fooVar, 100, 50
-// result: fooVar is 151
+int foo
+add foo, 1
+// result: foo is 1
+add foo, 100, 50
+// result: foo is 151
+```
+
+### mul
+
+`mul target, value, ...`
+
+Multiply one or more values with a variable.
+
+**`Example`**
+```
+int foo
+mul foo, 10000000
+// result: foo is 0
+add foo, 5
+mul foo, 100, 1, 5
+// result: foo is 2500
+```
+
+### sub
+
+`sub target, value, ...`
+
+Subtract one or more values from a variable.
+
+**`Example`**
+```
+int foo = 100
+sub foo, 10
+// result: foo is 90
+sub foo, foo - 50, 1
+// result: foo is 49
+```
+
+### setif
+
+Set a variable to one or more values if a condition is true.
+
+`setif condition, target, value, ...`
+
+**`Example`**
+```
+int foo = 100
+sub foo, 50
+setif foo = 50, foo, 10
+// result: foo is 10
+```
+
+**`Note`** `setif` exists to provide an easy way to do predicated actions on variables as is commonly done in DSPs.
+
+### addif 
+
+Add one or more values to a variable if a condition is true.
+
+`addif condition, target, value, ...`
+
+**`Example`**
+```
+int foo = 100
+sub foo, 50
+addif foo = 50, foo, 10
+// result: foo is 60
+```
+
+### subif 
+
+Subtract one or more values from a variable if a condition is true.
+
+`subif condition, target, value, ...`
+
+**`Example`**
+```
+int foo = 100
+sub foo, 50
+subif foo = 50, foo, 10
+// result: foo is 40
+```
+
+### mulif
+
+Multiply one or more values with a variable if a condition is true.
+
+`mulif condition, target, value, ...`
+
+**`Example`**
+```
+int foo = 100
+sub foo, 50
+mulif foo = 50, foo, 10
+// result: foo is 500
 ```
 
 ## Scopes
@@ -379,6 +468,10 @@ action main, signal in1 {
   add cycles, 1
 }
 ```
+
+issues:
+- won't exactly be 440 hertz because there is not enough precision when dividing ints
+- `cycles` will eventually saturate which leads to no more signals getting made
 
 ## High Pass Filter
 
