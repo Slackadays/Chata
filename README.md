@@ -1,10 +1,10 @@
-# Chata
+<h1 align="center">Chata</h1>
 
-<h1 align="center">The (future) magic wand 🪄 for signal processing.</h1>
+<h1 align="center">The <sub><sup>(future)</sup></sub> magic wand 🪄 for signal processing.</h1>
 
 Chata is a programming language that's made just for DSP, or Digital Signal Processing. 
 
-Chata aims to let you do awesome things like music effects and accelerated communication by getting rid of all the junk associated with this kind of programming.
+Chata aims to let you do awesome things like music effects and accelerated number crunching by getting rid of all the junk associated with this kind of programming.
 
 # The Problem 😕
 
@@ -32,7 +32,7 @@ I want to make Chata the most _awesome_ way to do great things with DSP. Imagine
 
 First, I want to write a standard that's as polished as it can be. Then, once the standard is ready, we can start making it real. 
 
-The reason for doing this is because I think it's sometimes better to know what you want to achieve first and then work towards that goal rather than working towards something and making up the goal along the way. 
+The reason for doing this is because I think it's sometimes better to know what you want to achieve first and then work towards that _actionable_ goal rather than working towards something and making up the goal along the way. 
 
 Here's some of my goals for Chata:
 - a superb standard library with fancy algorithms such as IIR, Hilbert Transform, and more
@@ -52,7 +52,7 @@ We'll figure out what it should look like and see if we can write some example p
 
 # Motivation 🎸
 
-I think ba**chata** music, especially the guitar part, is the coolest thing ever. If you don't know what that is, do an internet search for the band featured on my GitHub profile and you'll find out. (Hint: Aventura is awesome!)
+I think ba**chata** music, especially the guitar part, is the coolest thing ever. If you don't know what that is, do an internet search for the band featured on my GitHub profile and you'll find out. (Hint: Aventura is the best!)
 
 To make the "classic" ba**chata** guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
 
@@ -75,14 +75,13 @@ And there's now a followup called [Cmajor](https://github.com/SoundStacks/cmajor
 - Cmajor is STILL owned by some company which could go bust like Apollo 13.
 
 There's also something else called [Faust](https://github.com/grame-cncm/faust)! Faust STILL doesn't even come close to Chata:
-- Faust puts all of its eggs into functional programming. Chata is imperative, which is better if that's what you're interested in.
-- Faust is always "fully compiled" with zero interpretation. Chata, on the other hand, is more flexible because it doesn't specify either.
-- Faust is "block-diagram oriented." Chata, on the other hand, lacks any concept of block diagrams, which is beneficial if you don't want them.
-- Faust relies on bespoke symbol characters like `:`, `,`, `~`, `<:`, and `:>`. Most/all of Chata's symbols, on the other hand, are standard mathematical symbols that aren't specific to one language, neither Human nor programming.
+- Faust puts all of its eggs into functional programming. Chata, on the other hand, is imperative, which is better if that's what you're interested in.
+- Faust is "block-diagram oriented." Chata, on the other hand, lacks any concept of block diagrams, which is better if you don't want them.
+- Faust is always "fully compiled" with zero interpretation. Chata, on the other hand, is more flexible here because it doesn't specify either.
+- Faust relies on bespoke symbol characters like `:`, `,`, `~`, `<:`, and `:>`. With only a couple exceptions, Chata's non-text symbols, on the other hand, are standard mathematical symbols that aren't specific to one language, neither Human nor programming.
+- Faust can't combine multiple files into one program, and you have to specify boilerplate metadata within every code file. Chata, C, C++, Rust all have the ability to atomically combine separate files into one, with metadata specified in one place, baked right into the languages themselves. Examples: Rust and Cargo, C/C++ and CMake, and whatever Chata will have.
 
-Something that's common to all of these other options is that there is only one toolchain available for each one. This leads to a monoculture, which means that all projects using it depend on one toolchain to work. Additionally, noncompliant behavior from a single toolchain influences the standard by becoming what projects experience, which isn't good if you're interested in language standardization. 
-
-Languages like C, C++, Rust, and more don't suffer from this. An example is with C++'s "big three" of GCC, Clang, and MSVC. Therefore, it's in our best interest that Chata never becomes a monoculture by making sure multiple toolchains are available.
+Something that's common to all of these other options is that there is only one toolchain available for each one. This leads to a monoculture, which means that all projects using it depend on one toolchain to work. Additionally, noncompliant behavior from a single toolchain influences the standard by becoming what projects experience, which isn't good if you're interested in language standardization. Other languages like C, C++, Rust, and Go don't suffer from this. An example is with C++'s "big three" of GCC, Clang, and MSVC. Therefore, it's in our best interest that Chata never becomes a monoculture by making sure multiple toolchains are available.
 
 Other than that, the competition doesn't look good. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
 
@@ -130,8 +129,13 @@ If you want to help out, feel free to do so! I want Chata to be something that e
   - [ ] native binary generator
     - [ ] what ISAs?
     - [ ] what platforms?
+- [ ] Alternative Implementation
+  - [ ] who will make it?
+  - [ ] license
+  - [ ] what language?
 - [ ] Documentation
   - [x] readme with basic details
+  - [ ] Chata logo
   - [ ] sample programs
     - [ ] "hello world" (sine wave)
     - [ ] delay
@@ -235,7 +239,7 @@ To create a variable that matches the value of a different variable, declare it 
 
 ## Math Symbol Support
 
-Chata supports all standard math symbols like +, -, <, >, <= (alias for ≤), => (alias for ≥), != (alias for ≠), =, and ||.
+Chata supports all standard math symbols like +, -, *, /, <, >, <= (alias for ≤), => (alias for ≥), != (alias for ≠), =, ||, and ^.
 
 Chata supports mathematical constants like pi (alias for π), e, and i.
 
