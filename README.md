@@ -16,9 +16,9 @@ Take your wireless noise cancelling headphones for example. They're using DSP ri
 
 However, how do you even get to this point?
 
-**Enter the clown world of DSP programming.**
+**Enter the clown world 🤡 of DSP programming.**
 
-If you want to process signals straight up, all you need is to write some code in a plain old programming language, and you're done! But what if you want to make it an audio plugin? Now, you're married to some cookie cutter tool that gives you a functional plugin, and hopefully you're done. What if you want to use one of those fancy-schmancy DSP processors? Say hello to special snowflake systems and highway robbery pricing. 
+If you want to process signals straight up, all you need is to write some code in a plain old programming language, and you're done! But what if you want to make it an audio plugin? Now, you're married to some cookie cutter tool that gives you a functional plugin, and hopefully you're done. What if you want to use one of those fancy-schmancy DSP processors? Say hello to special snowflake software systems and highway robbery pricing. 
 
 Is there a way out?
 
