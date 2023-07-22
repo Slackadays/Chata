@@ -16,7 +16,7 @@ Take your wireless noise cancelling headphones for example. They're using DSP ri
 
 However, how do you even get to this point?
 
-**Enter the clown world 🤡 of DSP programming.**
+**Enter the clown world of DSP programming.**
 
 If you want to process signals straight up, all you need is to write some code in a plain old programming language, and you're done! But what if you want to make it an audio plugin? Now, you're married to some cookie cutter tool that gives you a functional plugin, and hopefully you're done. What if you want to use one of those fancy-schmancy DSP processors? Say hello to special snowflake software systems and highway robbery pricing. 
 
@@ -52,9 +52,9 @@ We'll figure out what it should look like and see if we can write some example p
 
 # Motivation 🎸
 
-I think ba**chata** music, especially the guitar part, is the coolest thing ever. If you don't know what that is, do an internet search for the band featured on my GitHub profile and you'll find out. (Hint: Aventura is the best!)
+Ba**chata** music, especially the guitar part, is the coolest thing ever. If you don't know what that is, do an internet search for the band featured on my GitHub profile and you'll find out. (Hint: Aventura is the best!)
 
-To make the "classic" ba**chata** guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
+To make the "classic" bachata guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
 
 So, why not just make the solution?
 
@@ -72,16 +72,16 @@ And there's now a followup called [Cmajor](https://github.com/SoundStacks/cmajor
 - Cmajor still is focused on audio, while Chata is for all DSP.
 - Cmajor looks better regarding boilerplate, but still could do even better.
 - Cmajor's readme leaves a lot to be desired because there's almost no information on it.
-- Cmajor is STILL owned by some company which could go bust like Apollo 13.
+- Cmajor is STILL owned by some company which could go bust like the Challenger space shuttle.
 
 There's also something else called [Faust](https://github.com/grame-cncm/faust)! Faust STILL doesn't even come close to Chata:
 - Faust puts all of its eggs into functional programming. Chata, on the other hand, is imperative, which is better if that's what you're interested in.
 - Faust is "block-diagram oriented." Chata, on the other hand, lacks any concept of block diagrams, which is better if you don't want them.
-- Faust is always "fully compiled" with zero interpretation. Chata, on the other hand, is more flexible here because it doesn't specify either.
+- Faust is always "fully compiled" with zero interpretation. Chata is more flexible here because it doesn't specify either.
 - Faust relies on bespoke symbol characters like `:`, `,`, `~`, `<:`, and `:>`. With only a couple exceptions, Chata's non-text symbols, on the other hand, are standard mathematical symbols that aren't specific to one language, neither Human nor programming.
 - Faust can't combine multiple files into one program, and you have to specify boilerplate metadata within every code file. Chata, C, C++, Rust all have the ability to atomically combine separate files into one, with metadata specified in one place, baked right into the languages themselves. Examples: Rust and Cargo, C/C++ and CMake, and whatever Chata will have.
 
-Something that's common to all of these other options is that there is only one toolchain available for each one. This leads to a monoculture, which means that all projects using it depend on one toolchain to work. Additionally, noncompliant behavior from a single toolchain influences the standard by becoming what projects experience, which isn't good if you're interested in language standardization. Other languages like C, C++, Rust, and Go don't suffer from this. An example is with C++'s "big three" of GCC, Clang, and MSVC. Therefore, it's in our best interest that Chata never becomes a monoculture by making sure multiple toolchains are available.
+Common to all of these other options is that there is only one toolchain available for each. This leads to a monoculture, which means that all projects using it depend on one toolchain to work. Additionally, noncompliant behavior from a single toolchain influences the standard by becoming what projects experience, which isn't good if you're interested in language standardization. Other languages like C, C++, Rust, Zig, and Go don't suffer from this. An example is with C and C++'s "big three" of GCC, Clang, and MSVC. For Rust, there's GCC and rustc. For Go, there's also GCC and the official go toolchain. Therefore, it's in our best interest that Chata never becomes a monoculture by making sure multiple toolchains remain available.
 
 Other than that, the competition doesn't look good. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
 
@@ -98,9 +98,18 @@ If you want to help out, feel free to do so! I want Chata to be something that e
     - [ ] what should it look like?
     - [ ] what kinds of looks are feasible?
     - [ ] how nice can it look?
+  - [ ] types
+    - [ ] int types
+    - [ ] float types
+    - [ ] buffer (array) types
+    - [ ] other types?
+  - [ ] versioning
   - [ ] syntax
     - [ ] procedural, functional, imperative?
     - [ ] how should "stuff" work?
+    - [ ] generics/templates
+  - [ ] IO
+    - [ ] in != out IO
   - [ ] names
     - [ ] what kind of capitalization?
     - [ ] what abbreviations should we use?
