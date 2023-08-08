@@ -12,27 +12,27 @@ Chata aims to let you do awesome things like music effects and accelerated numbe
 
 Tons of things today use DSP, or Digital Signal Processing, to make them work. 
 
-Take your wireless noise cancelling headphones for example. They're using DSP right now to beam that wireless signal and cancel that noise. My guitar pedal with zillions of different effects uses a special DSP processor to make them all.
+Take your wireless noise cancelling headphones for example. They're using DSP right now to beam that wireless signal and cancel that noise. My guitar pedal with zillions of different effects uses a special DSP processor to create them all.
 
-However, how do you even get to this point?
+But how do you even get to this point?
 
 **Enter the clown world of DSP programming.**
 
-If you want to process signals straight up, all you need is to write some code in a plain old programming language, and you're done! But what if you want to make it an audio plugin? Now, you're married to some cookie cutter tool that gives you a functional plugin, and hopefully you're done. What if you want to use one of those fancy-schmancy DSP processors? Say hello to special snowflake software systems and highway robbery pricing. 
+If all you want to do is straight up process signals, all you need is to "just" write some code in a plain old programming language, and you're done! What if you want to make it an audio plugin? Well, you're now married to a cookie cutter tool that gives you a functional plugin, and hopefully you're done. What if you want to use one of those super duper fancy-schmancy DSP processors? Say hello to special snowflake software systems and highway robbery pricing. 
 
 Is there a way out?
 
 **Enter Chata.**
 
-I want to make Chata the most _awesome_ way to do great things with DSP. Imagine a one-two punch of an open road where your mind can run full speed with a language that lets you express your ideas, and a powerful ecosystem to put those ideas to work.
+Chata's goal is to be the most _awesome_ way to do great things with DSP. Imagine a one-two punch of an open road where your mind can run full speed with a language that lets you express your ideas, and a powerful ecosystem to put those ideas to work.
 
 # How It Works :eyes:
 
 **Chata doesn't actually exist yet.**
 
-First, I want to write a standard that's as polished as it can be. Then, once the standard is ready, we can start making it real. 
+First, let's write a standard that's as polished as it can be. Then, once the standard is ready, we can start making it real. 
 
-The reason for doing this is because I think it's sometimes better to know what you want to achieve first and then work towards that _actionable_ goal rather than working towards something and making up the goal along the way. 
+The reason for doing this is because I think it's sometimes better to know what you want to achieve first and then work towards that actionable goal rather than working towards something and making up the goal along the way. 
 
 Here's some of my goals for Chata:
 - a superb standard library with fancy algorithms such as IIR, Hilbert Transform, and more
@@ -81,15 +81,15 @@ There's also something else called [Faust](https://github.com/grame-cncm/faust)!
 - Faust relies on bespoke symbol characters like `:`, `,`, `~`, `<:`, and `:>`. With only a couple exceptions, Chata's non-text symbols, on the other hand, are standard mathematical symbols that aren't specific to one language, neither Human nor programming.
 - Faust can't combine multiple files into one program, and you have to specify boilerplate metadata within every code file. Chata, C, C++, Rust all have the ability to atomically combine separate files into one, with metadata specified in one place, baked right into the languages themselves. Examples: Rust and Cargo, C/C++ and CMake, and whatever Chata will have.
 
-Common to all of these other options is that there is only one toolchain available for each. This leads to a monoculture, which means that all projects using it depend on one toolchain to work. Additionally, noncompliant behavior from a single toolchain influences the standard by becoming what projects experience, which isn't good if you're interested in language standardization. Other languages like C, C++, Rust, Zig, and Go don't suffer from this. An example is with C and C++'s "big three" of GCC, Clang, and MSVC. For Rust, there's GCC and rustc. For Go, there's also GCC and the official go toolchain. Therefore, it's in our best interest that Chata never becomes a monoculture by making sure multiple toolchains remain available.
+Common to all of these options is that there is only one toolchain available for each. This is a monoculture, which means that all projects using it depend on one toolchain to work. Additionally, noncompliant behavior from a single toolchain influences the standard by becoming what projects experience. That's not good if you're interested in language standardization. Other languages like C, C++, Rust, Zig, and Go don't suffer from this. An example is with C and C++'s "big three" of GCC, Clang, and MSVC. For Rust, there's GCC and rustc. For Go, there's also GCC and the official go toolchain. Therefore, it's in our best interest that Chata never becomes a monoculture by making sure multiple toolchains remain available.
 
-Other than that, the competition doesn't look good. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
+Other than that, there is almost nothing available that even compares to Chata. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
 
 # Contributing :heart:
 
 If you want to help out, feel free to do so! I want Chata to be something that everyone can feel good about because it listens to them.
 
-**`How To Help`** The fastest way to help out is by joining our Discord server above :point_up:. After that, if you see something that you want to change, go fork this repo and make those changes. Then, we'll see if they can be integrated.
+**`How To Help`** A fine way to help is by joining our Discord server above :point_up:. After that, if you see something that you want to change, fork this repo and make those changes. Then, we'll see if they integrate well into the main codebase.
 
 # Roadmap 🗺️
 
@@ -161,13 +161,13 @@ If you want to help out, feel free to do so! I want Chata to be something that e
 
 ### Chata Programs
 
-A Chata implementation is any software that follows the Chata standard.
+An action is a collection of symbols defined within the Chata specification and arranged in a valid way.
 
-An action is a collection of symbols defined within the Chata specification and arranged in a valid way, that either the Chata implementation can abstract or that other actions can access.
-
-**`Note`** An action is like a function in regular programming languages, but because functions in Chata have a slightly different way of working, they're called actions instead.
+**`Note`** An action is like a function in regular programming languages, but because functions in Chata have a slightly different way of working, we call them actions instead.
 
 A Chata program is at least one action with name "main."
+
+A Chata implementation is any software that follows the Chata standard and can run Chata programs.
 
 A Chata program file is a text file that contains only text encoded in UTF-8 format, and that end in a `.chata` extension, and that contains a valid Chata program.
 
@@ -187,13 +187,16 @@ All symbols must contain only the following classes of text characters:
 
 - any Latin script character
 - any of these symbols: _ (underscore), - (dash), + (plus)
-- any Greek alphabet letter
+- any Greek alphabet letter conventionally used in mathematics
+- any number from 0 to 9
+
+Variable names must not start with a number.
 
 Variable names must not be a symbol already used by a Chata implementation.
 
 All statements must end with an ASCII line feed character or an ASCII carriage return character followed by an ASCII line feed character.
 
-**`Note`** This means that either `\n` or `\r\n` can delimit lines.
+**`Note`** This means that either `\n` or `\r\n` can delimit lines regardless of if the platform uses either option conventionally.
 
 ## Variable Types
 
@@ -201,7 +204,7 @@ There are these variable types in Chata:
 
 ### signal
 
-The `signal` type is a floating-point number with range -1.0 to 1.0 and at least 32 bits of precision.
+The `signal` type is a floating-point or posit number with range -1.0 to 1.0 and at least 32 bits of precision.
 
 ### int
 
