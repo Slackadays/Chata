@@ -48,7 +48,7 @@ We'll figure out what it should look like and see if we can write some example p
 
 <p align="center"><a href="https://discord.gg/J6asnc3pEG"><img src="DiscordBanner.png" height="80px"></a></p>
 
-# Chata Compared
+# Chata Compared ⚖️
 
 There's already a similar thing called [SOUL](https://github.com/soul-lang/SOUL), or SOUnd Language. SOUL doesn't even come close to Chata:
 - SOUL isn't free and open source. The "secret sauce" is still opaque and closed source.
@@ -192,13 +192,21 @@ All statements must end with an ASCII line feed character or an ASCII carriage r
 
 There are these variable types in Chata:
 
-### signal
+### real
 
-The `signal` type is a floating-point or posit number with range -1.0 to 1.0 and at least 32 bits of precision.
+The `real` type is a floating-point or posit number with at least 32 bits of precision.
 
 ### int
 
 The `int` type is a signed integer with at least 32 bits of precision.
+
+### imag
+
+The `imag` type is the same as `real`, except that it has the semantics of imaginary numbers.
+
+### complex
+
+The `complex` type combines a `real` and a `imag`.
 
 ## Number Overflow
 
