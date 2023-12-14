@@ -50,21 +50,21 @@ We'll figure out what it should look like and see if we can write some example p
 
 # Chata Compared ⚖️
 
-There's already a similar thing called [SOUL](https://github.com/soul-lang/SOUL), or SOUnd Language. SOUL doesn't even come close to Chata:
+There's already a similar thing called [SOUL](https://github.com/soul-lang/SOUL), or SOUnd Language.
 - SOUL isn't free and open source. The "secret sauce" is still opaque and closed source.
 - SOUL is just for audio. Chata, on the other hand, is for all kinds of DSP!
 - SOUL has tons of junk boilerplate. I couldn't read the example programs provided there.
 - SOUL is selling the implementation, not the end result. This limits SOUL's audience a lot.
 - SOUL is abandoned now, because the company behind it went bankrupt, down the drain, more imploded than the gamepad-controlled Titan submarine.
 
-And there's now a followup called [Cmajor](https://github.com/SoundStacks/cmajor)! Cmajor still doesn't even come close to Chata:
+And there's now a followup called [Cmajor](https://github.com/SoundStacks/cmajor)!
 - Cmajor STILL isn't free and open source. The tools provided as binaries are still opaque and closed source.
 - Cmajor still is focused on audio, while Chata is for all DSP.
 - Cmajor looks better regarding boilerplate, but still could do even better.
 - Cmajor's readme leaves a lot to be desired because there's almost no information on it.
 - Cmajor is STILL owned by some company which could go bust like the Challenger space shuttle.
 
-There's also something else called [Faust](https://github.com/grame-cncm/faust)! Faust STILL doesn't even come close to Chata:
+There's also something else called [Faust](https://github.com/grame-cncm/faust).
 - Faust puts all of its eggs into functional programming. Chata, on the other hand, is imperative, which is better if that's what you're interested in.
 - Faust is "block-diagram oriented." Chata, on the other hand, lacks any concept of block diagrams, which is better if you don't want them.
 - Faust is always "fully compiled" with zero interpretation. Chata is more flexible here because it doesn't specify either.
@@ -79,7 +79,9 @@ Other than that, there is almost nothing available that even compares to Chata. 
 
 If you want to help out, feel free to do so! I want Chata to be something that everyone can feel good about because it listens to them.
 
-**`How To Help`** A fine way to help is by joining our Discord server above :point_up:. After that, if you see something that you want to change, fork this repo and make those changes. Then, we'll see if they integrate well into the main codebase.
+**`How To Help`** Check out the Discord server above :point_up:. 
+
+After that, if you see something that you want to change, fork this repo and make those changes. Then, we'll see if they integrate well into the main codebase.
 
 # Roadmap 🗺️
 
