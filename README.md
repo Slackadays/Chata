@@ -1,10 +1,8 @@
-<h1 align="center">Chata</h1>
+<h1>Welcome to the 𝓒𝓱𝓪𝓽𝓪 programming language</h1>
 
-<h1 align="center">The <sub><sup>(future)</sup></sub> magic wand 🪄 for signal processing.</h1>
+Chata is an idea for programming language that's just for DSP, or Digital Signal Processing. 
 
-Chata is a programming language that's made just for DSP, or Digital Signal Processing. 
-
-Chata aims to let you do awesome things like music effects and accelerated number crunching by getting rid of all the junk associated with this kind of programming.
+Chata gets rid of all the junk and cruft associated with this kind of programming, letting you do DSP-related things easier than ever.
 
 # The Problem 😕
 
@@ -24,7 +22,7 @@ Is there a way out?
 
 **Enter Chata.**
 
-Chata's goal is to be the most _awesome_ way to do great things with DSP. Imagine a one-two punch of an open road where your mind can run full speed with a language that lets you express your ideas, and a powerful ecosystem to put those ideas to work.
+Chata's goal is to be the most _awesome_ way to do great things with DSP. To get creative, imagine a one-two punch of an open road where your mind can run full speed with a language that lets you express your ideas, and a powerful ecosystem to put those ideas to work.
 
 # How It Works :eyes:
 
@@ -50,15 +48,7 @@ We'll figure out what it should look like and see if we can write some example p
 
 <p align="center"><a href="https://discord.gg/J6asnc3pEG"><img src="DiscordBanner.png" height="80px"></a></p>
 
-# Motivation 🎸
-
-Ba**chata** music, especially the guitar part, is the coolest thing ever. If you don't know what that is, do an internet search for the band featured on my GitHub profile and you'll find out. (Hint: Aventura is the best!)
-
-To make the "classic" bachata guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
-
-So, why not just make the solution?
-
-# The Competition 🥇
+# Chata Compared
 
 There's already a similar thing called [SOUL](https://github.com/soul-lang/SOUL), or SOUnd Language. SOUL doesn't even come close to Chata:
 - SOUL isn't free and open source. The "secret sauce" is still opaque and closed source.
@@ -507,8 +497,24 @@ issues:
 
 ## High Pass Filter
 
+Not implemented yet
+
 ## Low Pass Filter
+
+Not implemented yet
 
 ## Delay
 
+Not implemented yet
+
 ## Reverb
+
+Not implemented yet
+
+# Inspiration ✨
+
+Ba**chata** music, especially the guitar component of it, is the coolest thing ever. If you don't know what that is, check out the explanation on my [profile page](https://github.com/Slackadays/).
+
+To make the "classic" bachata guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
+
+So, why not just make the solution?
