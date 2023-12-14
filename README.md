@@ -33,12 +33,13 @@ First, let's write a standard that's as polished as it can be. Then, once the st
 The reason for doing this is because I think it's sometimes better to know what you want to achieve first and then work towards that actionable goal rather than working towards something and making up the goal along the way. 
 
 Here's some of my goals for Chata:
-- a superb standard library with fancy algorithms such as IIR, Hilbert Transform, and more
+- a superb standard library with algorithms such as IIR, Hilbert Transform, and more
 - an action-oriented syntax with clear verbage
-- full math symbol support because DSP is all about math!
+- full math symbol support because DSP is all about math
 - a build system that lets you make different plugins for any valid Chata program
 - great support for DSP applications like RF and not just audio
 - support for compiling to DSP chip targets
+- first-class support for RISC-V JIT
 
 The standard will be in this repository right here on GitHub. :octocat:
 
