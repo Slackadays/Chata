@@ -2,7 +2,7 @@
 
 Chata is an idea for programming language that's just for DSP, or Digital Signal Processing. 
 
-Chata gets rid of all the junk and cruft associated with this kind of programming, letting you do DSP-related things easier than ever.
+Chata gets rid of all the junk and cruft associated with this kind of programming, letting you do DSP-related things easier than ever!
 
 # The Problem 😕
 
@@ -10,7 +10,9 @@ Chata gets rid of all the junk and cruft associated with this kind of programmin
 
 Tons of things today use DSP, or Digital Signal Processing, to make them work. 
 
-Take your wireless noise cancelling headphones for example. They're using DSP right now to beam that wireless signal and cancel that noise. My guitar pedal with zillions of different effects uses a special DSP processor to create them all.
+Take your wireless noise cancelling headphones for example. They're using DSP right now to beam that wireless signal and cancel that noise. 
+
+My guitar pedal with zillions of different effects uses a special DSP processor to create them all.
 
 But how do you even get to this point?
 
@@ -22,7 +24,9 @@ Is there a way out?
 
 **Enter Chata.**
 
-Chata's goal is to be the most _awesome_ way to do great things with DSP. To get creative, imagine a one-two punch of an open road where your mind can run full speed with a language that lets you express your ideas, and a powerful ecosystem to put those ideas to work.
+The goal of Chata is to be the _best_ way to do great things with DSP. To get creative, imagine a one-two punch of an open road where your mind can run full speed with a language that lets you express your ideas, and a powerful ecosystem to put those ideas to work.
+
+**Sound interesting? Read on.**
 
 # How It Works :eyes:
 
@@ -39,9 +43,9 @@ Here's some of my goals for Chata:
 - a build system that lets you make different plugins for any valid Chata program
 - great support for DSP applications like RF and not just audio
 - support for compiling to DSP chip targets
-- first-class support for RISC-V JIT
+- first-class support for RISC-V
 
-The standard will be in this repository right here on GitHub. :octocat:
+The language standard will live in this repository right here on GitHub. :octocat:
 
 We'll figure out what it should look like and see if we can write some example programs that solve common problems. 
 
@@ -154,13 +158,13 @@ After that, if you see something that you want to change, fork this repo and mak
 
 ### Chata Programs
 
-An action is a collection of symbols defined within the Chata specification and arranged in a valid way.
+A Chata implementation is any software that follows the Chata standard.
+
+A keyword is a symbol with an assigned meaning in a Chata implementation.
 
 **`Note`** An action is like a function in regular programming languages, but because functions in Chata have a slightly different way of working, we call them actions instead.
 
 A Chata program is at least one action with name "main."
-
-A Chata implementation is any software that follows the Chata standard and can run Chata programs.
 
 A Chata program file is a text file that contains only text encoded in UTF-8 format, and that end in a `.chata` extension, and that contains a valid Chata program.
 
@@ -524,7 +528,7 @@ Not implemented yet
 
 # Inspiration ✨
 
-Ba**chata** music, especially the guitar component of it, is the coolest thing ever. If you don't know what that is, check out the explanation on my [profile page](https://github.com/Slackadays/).
+Ba**chata** music, especially the guitar component of it, I think is the coolest thing ever. If you don't know what that is, check out the explanation on my [profile page](https://github.com/Slackadays/).
 
 To make the "classic" bachata guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
 
