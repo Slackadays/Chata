@@ -2,7 +2,7 @@
 
 Chata is an idea for programming language that's just for DSP, or Digital Signal Processing. 
 
-Chata gets rid of all the junk and cruft associated with this kind of programming, letting you do DSP-related things easier than ever!
+Chata gets rid of all the junk and cruft associated with DSP, letting you do awesome things easier than ever!
 
 # The Problem 😕
 
@@ -24,7 +24,7 @@ Is there a way out?
 
 **Enter Chata.**
 
-The goal of Chata is to be the _best_ way to do great things with DSP. To get creative, imagine a one-two punch of an open road where your mind can run full speed with a language that lets you express your ideas, and a powerful ecosystem to put those ideas to work.
+The goal of Chata is to be the _dedicated_ way to do great things with DSP. To get really creative, imagine a one-two punch of an open road where your mind can run full speed with a language that lets you express your ideas, and a powerful ecosystem to put those ideas to work.
 
 **Sound interesting? Read on.**
 
@@ -162,6 +162,14 @@ A Chata implementation is any software that follows the Chata standard.
 
 A keyword is a symbol with an assigned meaning in a Chata implementation.
 
+An action is a collection of symbols and keywords that contains the following in this order:
+- the keyword `action`
+- a valid name
+- optionally, variables in the format `type name` separated by a comma (`,`) character
+- an opening curly bracket symbol (`{`)
+- Chata code
+- a closing curly bracket symbol (`}`)
+
 **`Note`** An action is like a function in regular programming languages, but because functions in Chata have a slightly different way of working, we call them actions instead.
 
 A Chata program is at least one action with name "main."
@@ -184,10 +192,10 @@ All symbols must contain only the following classes of text characters:
 
 - any Latin script character
 - any of these symbols: _ (underscore), - (dash), + (plus)
-- any Greek alphabet letter conventionally used in mathematics
+- any Greek alphabet letter conventionally used in mathematics except those which are constants
 - any number from 0 to 9
 
-Variable names must not start with a number.
+Variable names must start with a Latin script character.
 
 Variable names must not be a symbol already used by a Chata implementation.
 
@@ -201,19 +209,29 @@ There are these variable types in Chata:
 
 ### real
 
-The `real` type is a floating-point or posit number with at least 32 bits of precision.
+The `real` type is a floating-point or posit number.
+
+### signal
+
+The `signal` type is a `real` with minimum value -1.0 and maximum value 1.0.
 
 ### int
 
-The `int` type is a signed integer with at least 32 bits of precision.
+The `int` type is a signed integer.
 
 ### imag
 
 The `imag` type is the same as `real`, except that it has the semantics of imaginary numbers.
 
+**`Note`** For example, if you multiplied a `imag` with itself, you would get a negative result.
+
 ### complex
 
 The `complex` type combines a `real` and a `imag`.
+
+## Number Precision
+
+The Chata implementation defines the precision that all number types use.
 
 ## Number Overflow
 
@@ -223,7 +241,7 @@ If adding a value to a type where the result exceeds the type's maximum capacity
 
 ## Actions
 
-All actions start with the keyword `action` followed by the name of the action, followed by an opening curly bracket, Chata code, and closing curly bracket.
+All actions start with the keyword `action` followed by the name of the action, optionally variables, followed by an opening curly bracket, Chata code, and closing curly bracket.
 
 **`Example`**
 ```
@@ -234,7 +252,12 @@ action main {
 
 Actions may specify which variables that they can access directly in the format `action action-name, 1st-variable-type 1st-variable-name {code}`. To provide multiple variables, use the format `action action-name, 1st-variable-type 1st-variable-name, 2nd-variable-type 2nd-variable-name {code}`.
 
-**`Example`** An action that accepts a variable called `in1` of type `signal` and another of name `count` of type `int` can look like `action main, signal in1, int count {}`.
+**`Example`** An action that accepts a variable called `in1` of type `signal` and another of name `count` of type `int` can look like 
+```
+action main, signal in1, int count {
+  foobar
+}
+```
 
 ## Variable Creation
 
@@ -256,9 +279,9 @@ To create a variable that matches the value of a different variable, declare it 
 
 ## Math Symbol Support
 
-Chata supports all standard math symbols like +, -, *, /, <, >, <= (alias for ≤), => (alias for ≥), != (alias for ≠), =, ||, and ^.
+Chata supports all standard algebraic math symbols like +, -, *, /, <, >, <= (alias for ≤), => (alias for ≥), != (alias for ≠), =, ||, and ^.
 
-Chata supports mathematical constants like pi (alias for π), e, and i.
+Chata supports mathematical constants like π, τ, e, and i.
 
 Chata supports mathematical functions like sqrt() (alias for √()), sin(), cos(), tan(), sec(), csc(), cot(), sinh(), cosh(), and tanh().
 
@@ -266,9 +289,9 @@ Chata supports standard mathematical syntax such as 5pi (alias for 5π) and 2 + 
 
 Chata supports different mathematical order of operations, but PEMDAS is the default.
 
-All trigonometric functions must use radians for angle units.
+All trigonometric functions use radians for angle units.
 
-**`Note`** This means that you can effortlessly do math on variables as if you were in a math class.
+**`Note`** This means that you can effortlessly do math on variables as if you were in a math class!
 
 **`Example`**
 ```
