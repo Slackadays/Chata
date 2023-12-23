@@ -1,4 +1,4 @@
-<h1>Welcome to the 𝓒𝓱𝓪𝓽𝓪 programming language</h1>
+<h1>Welcome to the Chata programming language</h1>
 
 Chata is an idea for programming language that's just for DSP, or Digital Signal Processing. 
 
