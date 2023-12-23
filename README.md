@@ -522,7 +522,6 @@ Access the sample rate with `std:SampleRate`.
 action main {
   int foo = std:SampleRate
 }
-
 ```
 
 # Examples :hammer:
