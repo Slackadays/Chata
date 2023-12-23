@@ -30,7 +30,8 @@ The goal of Chata is to be the _dedicated_ way to do great things with DSP. To g
 
 # How It Works :eyes:
 
-**Chata doesn't actually exist yet.**
+> [!Important]
+> **Chata doesn't actually exist yet.**
 
 First, let's write a standard that's as polished as it can be. Then, once the standard is ready, we can start making it real. 
 
@@ -49,7 +50,8 @@ The language standard will live in this repository right here on GitHub. :octoca
 
 We'll figure out what it should look like and see if we can write some example programs that solve common problems. 
 
-**We're all in this journey together!**
+> [!Tip]
+> **We're all in this journey together!**
 
 <p align="center"><a href="https://discord.gg/J6asnc3pEG"><img src="DiscordBanner.png" height="80px"></a></p>
 
@@ -170,7 +172,8 @@ An action is a collection of symbols and keywords that contains the following in
 - Chata code
 - a closing curly bracket symbol (`}`)
 
-**`Note`** An action is like a function in regular programming languages, but because functions in Chata have a slightly different way of working, we call them actions instead.
+> [!Note]
+> An action is like a function in regular programming languages, but because functions in Chata have a slightly different way of working, we call them actions instead.
 
 A Chata program is at least one action with name "main."
 
@@ -201,7 +204,8 @@ Variable names must not be a symbol already used by a Chata implementation.
 
 All statements must end with an ASCII line feed character or an ASCII carriage return character followed by an ASCII line feed character.
 
-**`Note`** This means that either `\n` or `\r\n` can delimit lines regardless of if the platform uses either option conventionally.
+> [!Note]
+> This means that either `\n` or `\r\n` can delimit lines regardless of if the platform uses either option conventionally.
 
 ## Variable Types
 
@@ -223,7 +227,8 @@ The `int` type is a signed integer.
 
 The `imag` type is the same as `real`, except that it has the semantics of imaginary numbers.
 
-**`Note`** For example, if you multiplied a `imag` with itself, you would get a negative result.
+> [!Note]
+> For example, if you multiplied a `imag` with itself, you would get a negative result.
 
 ### complex
 
@@ -237,7 +242,8 @@ The Chata implementation defines the precision that all number types use.
 
 If adding a value to a type where the result exceeds the type's maximum capacity in either the positive or negative direction, the type must remain at its previous value.
 
-**`Note`** This means that if you add 1 to an `int` at value 2^31, it will stay at 2^31. This is also called "saturating" a value.
+> [!Note]
+> This means that if you add 1 to an `int` at value 2^31, it will stay at 2^31. This is also called "saturating" a value.
 
 ## Actions
 
@@ -291,7 +297,8 @@ Chata supports different mathematical order of operations, but PEMDAS is the def
 
 All trigonometric functions use radians for angle units.
 
-**`Note`** This means that you can effortlessly do math on variables as if you were in a math class!
+> [!Note]
+> This means that you can effortlessly do math on variables as if you were in a math class!
 
 **`Example`**
 ```
@@ -391,7 +398,8 @@ setif foo = 50, foo, 10
 // result: foo is 10
 ```
 
-**`Note`** `setif` exists to provide an easy way to do predicated actions on variables as is commonly done in DSPs.
+> [!Note]
+> `setif` exists to provide an easy way to do predicated actions on variables as is commonly done in DSPs.
 
 ### addif 
 
@@ -453,7 +461,8 @@ Code comments which span a single line start with the characters `//`.
 
 Code comments which can span multiple lines start with the character `#` and end with the character `#`.
 
-**`Note`** The reason for using `#` for multi-line comments was so that you don't have to type more characters compared to a single-line comment.
+> [!Note]
+> The reason for using `#` for multi-line comments was so that you don't have to type more characters compared to a single-line comment.
 
 ## Namespaces
 
@@ -480,7 +489,8 @@ action main, signal in {
 }
 ```
 
-**`Note`** Here's the equivalent code but in C++:
+> [!Note]
+> Here's the equivalent code but in C++:
 ```cpp
 float someGlobalVar;
 namespace foo {
