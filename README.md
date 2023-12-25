@@ -578,7 +578,7 @@ So, I decided to just make the solution.
 
 [Romeo Santos: Ileso](https://www.youtube.com/watch?v=yjdHGmRKz08)
 
-[Antony Santos (different from Romeo): Corazón bonito](https://www.youtube.com/watch?v=gDYhGBy6304)
+[Antony Santos: Corazón bonito](https://www.youtube.com/watch?v=gDYhGBy6304)
 
-Note that ⏫ this one ⏫ doesn't actually use a PT-4 due to barely predating its release in 1993.
+Note that ⏫ this one ⏫ doesn't actually use a PT-4 due to barely predating its release in 1993. However, Antony Santos (NOT to be confused with Romeo Santos) was the first to use it to define the sound of bachata music.
 
