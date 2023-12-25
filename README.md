@@ -244,7 +244,7 @@ The Chata implementation defines the precision that all number types use.
 
 ## Number Overflow
 
-If adding a value to a type where the result exceeds the type's maximum capacity in either the positive or negative direction, the type must remain at its previous value.
+If adding a value to a type where the result exceeds the type's maximum capacity in either the positive or negative direction, the type must remain at its maximum possible value.
 
 > [!Note]
 > This means that if you add 1 to an `int` at value 2^31, it will stay at 2^31. This is also called "saturating" a value.
