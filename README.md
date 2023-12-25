@@ -82,6 +82,20 @@ There's also something else called [Faust](https://github.com/grame-cncm/faust).
 - Faust relies on bespoke symbol characters like `:`, `,`, `~`, `<:`, and `:>`. With only a couple exceptions, Chata's non-text symbols, on the other hand, are standard mathematical symbols that aren't specific to one language, neither Human nor programming.
 - Faust can't combine multiple files into one program, and you have to specify boilerplate metadata within every code file. Chata, C, C++, Rust all have the ability to atomically combine separate files into one, with metadata specified in one place, baked right into the languages themselves. Examples: Rust and Cargo, C/C++ and CMake, and whatever Chata will have.
 
+How about something called [Glicol](https://github.com/chaosprint/glicol)?
+- Glicol claims to be a "graph-oriented live coding language". However, Chata does not contain any graphs at all in the language.
+- Glicol also seems to be oriented around audio synthesis. However, Chata is for generic DSP, where audio generation is a mere bonus.
+- Glicol is also functional which Chata is not.
+
+Introducing yet another competitor: [Extempore](https://github.com/digego/extempore)!
+- Extempore looks like one of those functional lisps. However, Chata is neither of those.
+- Extempore is yet another DSP language oriented toward music. However, again, Chata is for generic DSP with music as an application of that.
+- Extempore does not use a certified FOSS license. However, Chata uses the high-quality Mozilla Public License.
+
+Let's finish this comparison off with [Mimium](https://github.com/mimium-org/mimium):
+- Mimium claims that it's "for sound and music". Chata, yet again, is just generic DSP, with sound and music mere bonuses.
+- Mimium code actually looks similar to Chata code. However, it lacks some features such as more advanced math due to being only for sound and music.
+
 Common to all of these options is that there is only one toolchain available for each. This is a monoculture, which means that all projects using it depend on one toolchain to work. Additionally, noncompliant behavior from a single toolchain influences the standard by becoming what projects experience. That's not good if you're interested in language standardization. Other languages like C, C++, Rust, Zig, and Go don't suffer from this. An example is with C and C++'s "big three" of GCC, Clang, and MSVC. For Rust, there's GCC and rustc. For Go, there's also GCC and the official go toolchain. Therefore, it's in our best interest that Chata never becomes a monoculture by making sure multiple toolchains remain available.
 
 Other than that, there is almost nothing available that even compares to Chata. Therefore, we'll be competing only with ourselves to make the best DSP language out there.
