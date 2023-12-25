@@ -18,7 +18,11 @@ But how do you even get to this point?
 
 **Enter the clown world of DSP programming.**
 
-If all you want to do is straight up process signals, all you need is to "just" write some code in a plain old programming language, and you're done! What if you want to make it an audio plugin? Well, you're now married to a cookie cutter tool that gives you a functional plugin, and hopefully you're done. What if you want to use one of those super duper fancy-schmancy DSP processors? Say hello to special snowflake software systems and highway robbery pricing. 
+Current DSP processors often require bespoke tools to work with them. For example, take [SigmaStudio](https://www.analog.com/en/design-center/evaluation-hardware-and-software/software/ss_sigst_02.html).
+
+If you just want to type code instead, then you're dealing with more bespoke SDKs, APIs, and other fun things.
+
+What about running DSP on a regular computer instead? At least you don't have to deal with closed-source, visual tools, but now you've got even more bespoke libraries to deal with.
 
 Is there a way out?
 
