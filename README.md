@@ -568,4 +568,17 @@ Ba**chata** music, especially the guitar component of it, I think is the coolest
 
 To make the "classic" bachata guitar sound, you need four audio effects: high-pass EQ, compression, 20ms-delay stereo chorus, and reverb, in that order. Unfortunately, unless you want to lug around a bunch of heavy guitar pedals, a laptop, or a vintage Ibanez PT-4 from the 1990s, a DSP "multi-effects processor" is the only practical option. Also unfortunately, researching how these DSP things work revealed how sorry of a state the professional audio industry is regarding free and open-source software. 
 
-So, why not just make the solution?
+So, I decided to just make the solution.
+
+**Sound interesting? Take a listen for yourself!**
+
+[Aventura: Todavía me amas](https://www.youtube.com/watch?v=RxIM2bMBhCo)
+
+[Aventura: Cuando volverás (English Version)](https://www.youtube.com/watch?v=jnD8Av4Dl4o)
+
+[Romeo Santos: Ileso](https://www.youtube.com/watch?v=yjdHGmRKz08)
+
+[Antony Santos (different from Romeo): Corazón bonito](https://www.youtube.com/watch?v=gDYhGBy6304)
+
+Note that ⏫ this one ⏫ doesn't actually use a PT-4 due to barely predating its release in 1993.
+
