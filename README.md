@@ -195,7 +195,7 @@ An action is a collection of symbols and keywords that contains the following in
 
 A Chata program is at least one action with name "main."
 
-A Chata program file is a text file that contains only text encoded in UTF-8 format, and that end in a `.chata` extension, and that contains a valid Chata program.
+A Chata program file is a text file that contains only text encoded in UTF-8 format, and that end in a `.cha` extension, and that contains a valid Chata program.
 
 A symbol is the name of an action, function, variable, or other component of a Chata program that the code refers to by a Human-readable string of valid characters.
 
@@ -224,6 +224,33 @@ All statements must end with an ASCII line feed character or an ASCII carriage r
 
 > [!Note]
 > This means that either `\n` or `\r\n` can delimit lines regardless of if the platform uses either option conventionally.
+
+## Preprocessing
+
+Chata provides some ways to change your code before an implemention runs the `main` action.
+
+### inject
+
+Insert a file where the `inject` symbol appears. Specify the filename after `inject` with or without quotes, using POSIX conventions.
+
+The `inject` symbol may appear within an action.
+
+**`Example`**
+```
+inject foo.cha
+
+inject foo bar.cha
+
+inject "bar.cha"
+
+inject "bar foo.cha"
+
+action main {
+  inject baz.cha
+  
+  # do stuff here
+}
+```
 
 ## Variable Types
 
