@@ -343,6 +343,23 @@ action main, signal in, signal in2 {
 
 Chata provides several built-in actions that all implementations must include.
 
+
+### out
+
+`out target, ...`
+
+Set variables as the output signals of a Chata program.
+
+**`Example`**
+```
+action main, real in1 {
+  out in1
+}
+```
+
+> [!Note]
+> You can only use the `out` action in the `main` action.
+
 ### set
 
 `set target, value, ...`
