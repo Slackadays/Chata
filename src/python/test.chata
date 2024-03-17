@@ -1,0 +1,7 @@
+inject test2.chata
+
+## this is a comment
+
+real x = 10 #this should not appear#
+
+add x, 10#00#
