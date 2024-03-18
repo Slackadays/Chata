@@ -1,9 +1,10 @@
-import preprocessing
-import checks
+import libchata
 import sys
 
 def main():
     print("This is the Python implementation of Chata!")
+
+    sample_data = [1, 2, 3]
 
     target_files = sys.argv[1:]
 
@@ -13,9 +14,11 @@ def main():
         with open(file, 'r') as f:
             target_data.append(f.read())
 
-    target_data = preprocessing.run(target_data)
+    processor = libchata.ChataProcessor()
 
-    checks.run(target_data)
+    processor.compile(target_data)
+
+    sample_data = processor.run(sample_data)
 
 if __name__ == "__main__":
     main()
