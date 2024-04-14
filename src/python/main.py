@@ -12,7 +12,7 @@ def main():
 
     for file in target_files:
         with open(file, 'r') as f:
-            target_data.append(f.read())
+            target_data.append([file, f.read()])
 
     processor = libchata.ChataProcessor()
 

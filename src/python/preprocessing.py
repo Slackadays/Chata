@@ -1,8 +1,10 @@
 import re
 
-def run(input):
-    global target_data
-    target_data = input
+def run(input: [[str]]):
+    global target_data # the raw file contents
+    target_data = []
+    for i in range(len(input)):
+        target_data.append(input[i][1])
 
     print("Preprocessing input:")
     for i in range(len(target_data)):
@@ -10,7 +12,7 @@ def run(input):
 
     remove_comments()
 
-    add_injections()    
+    add_injections()
 
     print("Preprocessing result:")
     for i in range(len(target_data)):
