@@ -37,7 +37,7 @@ What about running DSP on a regular computer instead? At least you don't have to
 
 Is there a way out?
 
-**Enter Chata.**
+### Enter Chata.
 
 The goal of Chata is to be the _dedicated_ way to do great things with DSP. To get really creative, imagine a one-two punch of an open road where your mind can run full speed with a language that lets you express your ideas, and a powerful ecosystem to put those ideas to work.
 
@@ -45,3 +45,8 @@ The goal of Chata is to be the _dedicated_ way to do great things with DSP. To g
 
 # How It Works :eyes:
 
+Chata builds off of a subset of RISC-V assembly. In case you don't know, RISC-V is a new kind of computer _instruction set architecture_ that defines the raw instructions that you computer runs. We use this low-level language because DSP mainly performs low-level operations on raw data, and this saves us a lot of time and effort.
+
+But if you're cringing at the thought of writing assembly, fear not. Chata will include a vast standard library with all the classic DSP goodies like filters, transforms, and the like. Plus, since we can take creative license, Chata will have a lot of helpers that make it feel more like other programming languages you might be used to already.
+
+Finally, we put all this together with...
