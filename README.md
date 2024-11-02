@@ -13,7 +13,7 @@ Consider this: A language that's like RISC-V assembly (the way Old Chata worked)
 Therefore, why not just base Chata off of assembly directly? We can borrow a subset of RISC-V simply, expand it with convenient building blocks, and provide a runtime emulatable on other platforms too. That's the new idea going forward.
 
 > [!NOTE]
-> <a href="README-old.md">Click here for Old Chata's README.</a>
+> <a href="readme/README-old.md">Click here for Old Chata's README.</a>
 
 # 😕 The problem (and the solution)
 
@@ -220,4 +220,7 @@ A register used for input will contain the value of the input signal, not the ad
 
 ### Program exit
 
-blah
+A Chata program may use the `ret` keyword at the uppermost level to stop execution early.
+
+## Shortcuts
+
