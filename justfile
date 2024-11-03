@@ -22,3 +22,13 @@ build-cli:
   cd chatacli/build; cmake --build .
 
   cd chatacli/build; sudo cmake --install .
+
+clean-all:
+  @just clean-lib
+  @just clean-cli
+
+clean-lib:
+  if [ -d "libchata/build" ]; then rm -rf libchata/build; fi
+
+clean-cli:
+  if [ -d "chatacli/build" ]; then rm -rf chatacli/build; fi

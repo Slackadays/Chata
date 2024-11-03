@@ -13,3 +13,8 @@ add_library(chata MODULE
 install(TARGETS chata
     DESTINATION lib
 )
+
+install(FILES
+    src/libchata.hpp
+    DESTINATION include
+)

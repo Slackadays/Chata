@@ -1,9 +1,0 @@
-## this is a comment
-
-action main {
-    real x = 10 #this should not appear#
-
-    inject test2.chata
-
-    add x, 10#00#
-}
