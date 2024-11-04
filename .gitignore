@@ -31,9 +31,7 @@
 *.out
 *.app
 
-.idea/
-.vscode/
-.cache/
+**/.vscode/*
 
 CMakeFiles/
 

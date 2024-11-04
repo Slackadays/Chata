@@ -14,7 +14,7 @@ execute_process( # save the current commit hash to GIT_COMMIT_HASH
 
 add_definitions(-DGIT_COMMIT_HASH="${GIT_COMMIT_HASH}")
 add_definitions(-DGIT_BRANCH="${GIT_BRANCH}")
-add_definitions(-DCLIPBOARD_VERSION="${PROJECT_VERSION}")
+add_definitions(-DPROJECT_VERSION="${PROJECT_VERSION}")
 
 include(CheckIPOSupported)
 check_ipo_supported(RESULT lto_supported)

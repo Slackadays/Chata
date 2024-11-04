@@ -1,4 +1,5 @@
 #include <iostream>
+#include <print>
 #include <vector>
 #include <optional>
 #include <string>
@@ -51,11 +52,10 @@ std::optional<std::string> fileContents(const fs::path& path) {
 #endif
 }
 
-
 int main(int argc, char *argv[]) {
-    std::cout << "Welcome to Chata!" << std::endl;
+    std::println("Welcome to Chata {} (commit {} on branch {})", PROJECT_VERSION, GIT_COMMIT_HASH, GIT_BRANCH);
     if (argc < 2) {
-        std::cout << "You must provide a file" << std::endl;
+        std::cout << "You must provide one or more files" << std::endl;
         return 1;
     }
 
@@ -63,8 +63,22 @@ int main(int argc, char *argv[]) {
     auto contents = fileContents(filePath);
 
     if (contents) {
-        std::cout << "File contents:\n" << *contents << std::endl;
+        std::println("File found: {}", filePath.string());
     } else {
-        std::cout << "Failed to read " << filePath << std::endl;
+        std::println("File not found: {}", filePath.string());
+    }
+
+    std::println("Ok, now processing this file...");
+
+    InputFile file(*contents, filePath.string());
+
+    ChataProcessor processor;
+
+    auto result = processor.compile(file);
+
+    if (result) {
+        std::println("Error! {}", result.value().details.value());
+    } else {
+        std::println("Success!");
     }
 }

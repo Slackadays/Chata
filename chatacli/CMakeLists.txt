@@ -6,6 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 include("../boilerplate.cmake")
 
+include_directories(/usr/local/include)
+
 add_executable(chatacli 
     src/main.cpp
 )

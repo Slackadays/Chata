@@ -1,10 +1,21 @@
 #include "libchata.hpp"
 
-std::optional<ChataError> compile(const std::string_view& code) {
+
+
+std::optional<ChataError> ChataProcessor::process_data(float& in1) {
+    in1 *= 0.5;
     return std::nullopt;
 }
 
-std::optional<ChataError> process_data(float& in1) {
-    in1 *= 0.5;
+std::optional<ChataError> ChataProcessor::compile(const std::span<InputFile> files) {
     return std::nullopt;
+}
+
+std::optional<ChataError> ChataProcessor::compile(const InputFile& file) {
+    std::array<InputFile, 1> temp = {file};
+    return compile(std::span(temp));
+}
+
+std::optional<ChataError> ChataProcessor::compile(const std::string_view& code) {
+    return compile(InputFile(code, std::nullopt));
 }
