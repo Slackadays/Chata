@@ -14,6 +14,13 @@ add_executable(chatacli
 
 target_link_libraries(chatacli PRIVATE chata)
 
+set_property(
+    TARGET chatacli
+    APPEND
+    PROPERTY INSTALL_RPATH
+    "$ORIGIN/../lib"
+)
+
 set_property(TARGET chatacli PROPERTY OUTPUT_NAME chata)
 
 install(TARGETS chatacli DESTINATION bin)

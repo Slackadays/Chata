@@ -6,6 +6,7 @@
 #include <span>
 
 constexpr size_t max_code_size = 1048576;
+constexpr std::string_view libchata_version_str = PROJECT_VERSION;
 
 enum class ErrorType {
     Nada,
@@ -25,8 +26,7 @@ class InputFile {
     std::optional<std::string_view> filename;
 
 public:
-    InputFile(std::string_view data, std::optional<std::string_view> filename)
-        : data(data), filename(filename) {}
+    InputFile(std::string_view data, std::optional<std::string_view> filename) : data(data), filename(filename) {}
 };
 
 class ChataProcessor {
@@ -41,3 +41,5 @@ public:
 
     std::optional<ChataError> process_data(float& in1);
 };
+
+std::string_view libchata_version();

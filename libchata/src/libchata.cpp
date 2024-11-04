@@ -19,3 +19,7 @@ std::optional<ChataError> ChataProcessor::compile(const InputFile& file) {
 std::optional<ChataError> ChataProcessor::compile(const std::string_view& code) {
     return compile(InputFile(code, std::nullopt));
 }
+
+std::string_view libchata_version() {
+    return libchata_version_str;
+}

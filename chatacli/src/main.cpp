@@ -53,7 +53,8 @@ std::optional<std::string> fileContents(const fs::path& path) {
 }
 
 int main(int argc, char *argv[]) {
-    std::println("Welcome to Chata {} (commit {} on branch {})", PROJECT_VERSION, GIT_COMMIT_HASH, GIT_BRANCH);
+    std::println("Welcome to ChataCLI {} (commit {} on branch {})", PROJECT_VERSION, GIT_COMMIT_HASH, GIT_BRANCH);
+    std::println("libchata version: {}", libchata_version());
     if (argc < 2) {
         std::cout << "You must provide one or more files" << std::endl;
         return 1;
