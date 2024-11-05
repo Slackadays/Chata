@@ -21,13 +21,12 @@ std::optional<ChataError> ChataProcessor::process_data(float& in1) {
 
 
 std::optional<ChataError> ChataProcessor::compile(const std::span<InputFile> files) {
-    std::vector<int, MemoryPool<int>> test;
-    test.push_back(1);
-    test.push_back(2);
-    test.push_back(3);
-    for (const auto& i : test) {
-        std::println("{}", i);
-    } 
+    std::vector<int, LinearMemoryPool<int>> test;
+    for (int i = 0; i < 10000000; i++) {
+        test.push_back(i);
+        std::println("{}", test.back());
+    }
+    
     return std::nullopt;
 }
 

@@ -10,6 +10,8 @@ add_library(chata MODULE
     src/libchata.cpp
 )
 
+add_compile_options(chata PRIVATE -fno-exceptions)
+
 install(TARGETS chata
     DESTINATION lib
 )

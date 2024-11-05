@@ -55,6 +55,9 @@
         "streambuf": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "expected": "cpp"
+        "expected": "cpp",
+        "strstream": "cpp",
+        "complex": "cpp",
+        "cfenv": "cpp"
     }
 }

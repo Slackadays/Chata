@@ -9,14 +9,14 @@
 constexpr size_t libchata_memory_pool_size = 4194304;
 
 template <class T>
-class MemoryPool {
+class LinearMemoryPool {
     std::array<std::byte, libchata_memory_pool_size> pool;
     size_t used = 0;
 
 public:
     using value_type = T;
 
-    MemoryPool() = default;
+    LinearMemoryPool() = default;
 
     [[nodiscard]] T* allocate(size_t requested) {
         std::size_t bytes = requested * sizeof(T);

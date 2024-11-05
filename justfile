@@ -8,7 +8,7 @@ build-all:
 build-lib:
   if [ ! -d "libchata/build" ]; then mkdir libchata/build; fi 
 
-  cd libchata/build; cmake ..
+  cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE=Release
 
   cd libchata/build; cmake --build .
 
@@ -17,7 +17,7 @@ build-lib:
 build-cli:
   if [ ! -d "chatacli/build" ]; then mkdir chatacli/build; fi 
 
-  cd chatacli/build; cmake ..
+  cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE=Release
 
   cd chatacli/build; cmake --build .
 
