@@ -9,18 +9,42 @@ std::optional<ChataError> ChataProcessor::process_data(float& in1) {
     return std::nullopt;
 }
 
-/*std::array<char> process_injections(const std::span<InputFile> files) {
-    std::array<char> injections;
-    for (const auto& file : files) {
-        for (const auto& c : file.data) {
-            injections.push_back(c);
+void process_comments(auto& files) {
+    // Comment format: # begins a comment on a line, and another # ends that comment
+    // Examples: # Commented out #
+    // # This whole line is a comment
+
+    for (auto& file : files) { // Modify data in-place (make whitespace)
+        bool is_comment = false;
+        for (auto& c : file.data) {
+            if (c == '#') {
+                is_comment = !is_comment;
+                c = ' ';
+            }
+            if (c == '\n') {
+                is_comment = false;
+            }
+            if (is_comment) {
+                c = ' ';
+            }
         }
+        
     }
-    return injections;
-}*/
+}
 
 
-std::optional<ChataError> ChataProcessor::compile(const std::span<InputFile> files) {
+std::optional<ChataError> ChataProcessor::compile(const std::span<InputFile> input) {
+    std::vector<InternalFile, AccessMemoryBank<InternalFile>> files;
+    for (const auto& file : input) {
+        files.push_back(InternalFile(file));
+    }
+
+    process_comments(files);
+
+    std::println("Ok, here's the processed data: {}", files[0].data);
+
+    exit(0);
+    
     std::vector<int, AccessMemoryBank<int>> test;
     for (int i = 0; i < 10000000; i++) {
         test.push_back(i);

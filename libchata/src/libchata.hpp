@@ -56,12 +56,22 @@ public:
     int column = 0;
 };
 
+class InternalFile;
+
 class InputFile {
     std::string_view data;
     std::optional<std::string_view> filename;
+    friend InternalFile;
 
 public:
     InputFile(std::string_view data, std::optional<std::string_view> filename) : data(data), filename(filename) {}
+};
+
+class InternalFile {
+public:
+    std::basic_string<char, std::char_traits<char>, AccessMemoryBank<char>> data;
+    std::optional<std::string_view> filename;
+    InternalFile(InputFile file) : data(file.data.begin(), file.data.end()), filename(file.filename) {}
 };
 
 class ChataProcessor {
