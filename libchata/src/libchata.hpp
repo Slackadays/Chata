@@ -6,26 +6,34 @@
 #include <span>
 #include <memory>
 
-constexpr size_t libchata_memory_pool_size = 4194304;
+constexpr size_t libchata_memory_pool_size = 33554432;
 
-template <class T>
-class LinearMemoryPool {
+static class GlobalMemoryBank {
     std::array<std::byte, libchata_memory_pool_size> pool;
     size_t used = 0;
 
 public:
-    using value_type = T;
-
-    LinearMemoryPool() = default;
-
-    [[nodiscard]] T* allocate(size_t requested) {
-        std::size_t bytes = requested * sizeof(T);
+    void* grab_some_memory(size_t requested) {
+        std::size_t bytes = requested;
         if (bytes + used > pool.size()) {
             return nullptr;
         }
-        T* ptr = reinterpret_cast<T*>(pool.data() + used);
+        void* ptr = reinterpret_cast<void*>(pool.data() + used);
         used += bytes;
         return ptr;
+    }
+} memory_bank;
+
+template <class T>
+class AccessMemoryBank {
+public:
+    using value_type = T;
+
+    AccessMemoryBank() = default;
+
+    [[nodiscard]] T* allocate(size_t requested) {
+        std::size_t bytes = requested * sizeof(T);
+        return reinterpret_cast<T*>(memory_bank.grab_some_memory(bytes));
     }
 
     void deallocate(T* ptr, size_t requested) {

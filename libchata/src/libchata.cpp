@@ -21,7 +21,7 @@ std::optional<ChataError> ChataProcessor::process_data(float& in1) {
 
 
 std::optional<ChataError> ChataProcessor::compile(const std::span<InputFile> files) {
-    std::vector<int, LinearMemoryPool<int>> test;
+    std::vector<int, AccessMemoryBank<int>> test;
     for (int i = 0; i < 10000000; i++) {
         test.push_back(i);
         std::println("{}", test.back());
