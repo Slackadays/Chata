@@ -8,6 +8,11 @@
 
 constexpr size_t libchata_memory_pool_size = 33554432;
 
+template <class T>
+class AccessMemoryBank;
+
+typedef std::basic_string<char, std::char_traits<char>, AccessMemoryBank<char>> ChataString;
+
 static class GlobalMemoryBank {
     std::array<std::byte, libchata_memory_pool_size> pool;
     size_t used = 0;
@@ -69,7 +74,7 @@ public:
 
 class InternalFile {
 public:
-    std::basic_string<char, std::char_traits<char>, AccessMemoryBank<char>> data;
+    ChataString data;
     std::optional<std::string_view> filename;
     InternalFile(InputFile file) : data(file.data.begin(), file.data.end()), filename(file.filename) {}
 };

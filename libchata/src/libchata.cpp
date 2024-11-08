@@ -2,6 +2,9 @@
 #include <print>
 #include <vector>
 
+#include <fstream>
+#include <filesystem>
+
 constexpr std::string_view libchata_version_str = PROJECT_VERSION;
 
 std::optional<ChataError> ChataProcessor::process_data(float& in1) {
@@ -30,6 +33,28 @@ void process_comments(auto& files) {
         }
         
     }
+}
+
+ChataString assemble_code(const ChataString& data) {
+    // Assemble by putting everything into a .s file, then invoke as, then convert to binary with objcopy
+
+    std::ofstream out("temp.s");
+    out << data;
+    out.close();
+
+    std::system("riscv64-linux-gnu-as temp.s -o temp.o");
+
+    std::system("riscv64-linux-gnu-objcopy -O binary temp.o temp.bin");
+
+    std::ifstream in("temp.bin", std::ios::binary);
+    ChataString result((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    in.close();
+
+    std::filesystem::remove("temp.s");
+    std::filesystem::remove("temp.o");
+    std::filesystem::remove("temp.bin");
+
+    return result;
 }
 
 
