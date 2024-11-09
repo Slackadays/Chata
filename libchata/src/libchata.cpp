@@ -1,6 +1,8 @@
 #include "libchata.hpp"
 #include <print>
 #include <vector>
+#include <sys/mman.h>
+
 
 #include <fstream>
 #include <filesystem>
@@ -57,6 +59,21 @@ ChataString assemble_code(const ChataString& data) {
     return result;
 }
 
+void ChataProcessor::commit_to_memory(const ChataString& data) {
+    executable_memory.resize(data.size());
+    auto res = mmap(executable_memory.data(), data.size(), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (res == MAP_FAILED) {
+        std::perror("mmap");
+        exit(1);
+    }
+    std::move(data.begin(), data.end(), executable_memory.begin());
+
+    int mpres = mprotect(executable_memory.data(), data.size(), PROT_READ | PROT_EXEC);
+    if (mpres == -1) {
+        std::perror("mprotect");
+        exit(1);
+    }
+}
 
 std::optional<ChataError> ChataProcessor::compile(const std::span<InputFile> input) {
     std::vector<InternalFile, AccessMemoryBank<InternalFile>> files;

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(libchata LANGUAGES CXX C VERSION 0.0.1)
+project(libchata LANGUAGES CXX C VERSION 1)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 

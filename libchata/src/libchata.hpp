@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <span>
 #include <memory>
+#include <vector>
 
 constexpr size_t libchata_memory_pool_size = 33554432;
 
@@ -80,8 +81,9 @@ public:
 };
 
 class ChataProcessor {
-    //std::array<char, libchata_code_memory_size> code_memory;
-    //std::array<std::byte, libchata_executable_memory_size> executable_memory;
+    std::vector<unsigned char, AccessMemoryBank<unsigned char>> executable_memory;
+
+    void commit_to_memory(const ChataString& data);
 
 public:
     std::optional<ChataError> compile(const std::string_view& code);
