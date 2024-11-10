@@ -222,5 +222,46 @@ A register used for input will contain the value of the input signal, not the ad
 
 A Chata program may use the `ret` keyword at the uppermost level to stop execution early.
 
-## Shortcuts
+## Superpseudo Instructions
 
+This is where Chata sets itself apart from RISC-V assembly. RISC-V assembly has "pseudo instructions" that are simply aliases for a different instruction. For example, "bnez rs1, offset" directly translates to "bne rs1, zero, offset," and "zero" is in fact an alias itself for the register "x0."
+
+Chata, of course, supports all these pseudo instructions. What it includes in addition is "superpseudo instructions" that provide more logic and a larger selection than RISC-V's own pseudo instructions.
+
+### `if` 
+
+The code
+
+```
+if register condition register:
+  code
+```
+
+is equivalent to
+
+```
+if_jump:
+  code
+
+beq|bne|blt|bge register, register, if_jump
+```
+
+where `condition` can be `==`, `!=`, `<`,  `>`, `<=`, or `>=`.
+
+For example,
+
+```
+if fa1 == zero:
+  foobar
+```
+
+is the same as
+
+```
+if_jump:
+  foobar
+
+beq fa1, x0, if_jump
+```
+
+which looks a lot nicer!
