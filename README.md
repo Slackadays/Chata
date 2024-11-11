@@ -265,3 +265,95 @@ beq fa1, x0, if_jump
 ```
 
 which looks a lot nicer!
+
+### `=`, `*=`, `+=`, `-=`, and `/=`
+
+The code 
+
+```
+a0 = 69
+
+fa0 = 69
+```
+
+is the same as
+
+```
+addi a0, zero, 69
+
+addi t0, zero, 69
+fcvt.s.w fa0, t0
+```
+
+The same idea is true for `*=`, `+=`, `-=`, and `/=`.
+
+The code
+
+```
+a0 *= 2
+
+a0 *= 3
+
+a0 += 5
+
+a0 -= 7
+
+a0 /= 20
+
+if a0 == 20:
+  a0 += a1
+
+# Floating point
+
+fa0 *= 2
+
+fa0 += 5
+
+fa0 -= 7
+
+fa0 /= 20
+```
+
+is the same as
+
+```
+slli a0, a0, 2 # Automatically apply this easy optimization!
+
+addi t0, zero, 3
+mul a0, a0, t0
+
+addi a0, a0, 5
+
+addi t0, zero, 7
+sub a0, a0, t0
+
+addi t0, zero, 20
+div a0, a0, t0
+
+if_jump:
+  add a0, a0, a1
+  ret # AKA jalr x0, x1, 0
+
+addi t0, zero, 20
+beq a0, t0, if_jump
+
+# Floating point
+
+addi t0, zero, 2
+fcvt.s.w ft0, t0
+fmul.s fa0, fa0, ft0
+
+addi t0, zero, 5
+fcvt.s.w ft0, t0
+fadd.s fa0, fa0, ft0
+
+addi t0, zero, 7
+fcvt.s.w ft0, t0
+fsub.s fa0, fa0, ft0
+
+addi t0, zero, 20
+fcvt.s.w ft0, t0
+fdiv.s fa0, fa0, ft0
+```
+
+Be honest: which one would you rather read?
