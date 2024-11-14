@@ -102,12 +102,11 @@ void process_ifs(auto& files) {
             if_indent_level++;
             continue;
         } else if (c() == 'i' && file.data.substr(i, 2) == "if") {
+            i_at_if_statement_start = i;
             i += 2;
         } else {
             continue;
         }
-
-        i_at_if_statement_start = i;
 
         // Save the condition and code block
         branch_instruction.clear();
@@ -115,8 +114,6 @@ void process_ifs(auto& files) {
         operand_2.clear();
         condition.clear();
         code_block.clear();
-
-        std::println("If statement: {}", condition);
 
         // Analyze the condition and generate the correct branch instruction
         // First, check if both operands are registers
@@ -221,7 +218,21 @@ void process_ifs(auto& files) {
         }
         std::println("Code block: {}", code_block);
 
+        // Now add an idnentation of 4 spaces to each line of the code block
+        code_block.insert(0, "    ");
+        for (size_t i = 0; i < code_block.size(); i++) {
+            if (code_block.at(i) == '\n') {
+                code_block.insert(i + 1, "    ");
+            }
+        }
+        code_block.append("ret\n");
 
+        // Ok, now we need to overwrite the if statement starting at i_at_if_statement_start with the generated label and the code block
+        // We also need to indent the code block by some nonzero amount compared to the label
+        // We also need to add a ret instruction at the end of the code block
+        file.data.replace(i_at_if_statement_start, i - i_at_if_statement_start, chatastring(generated_label) + ":\n" + code_block + branch_instruction + "\n");
+
+        i += branch_instruction.size() + 1;
 
     }
    }
@@ -229,7 +240,6 @@ void process_ifs(auto& files) {
 
 void compile_code(chatavector<InternalFile>& files) {
     process_comments(files);
-
 
 
     process_ifs(files);
