@@ -1,7 +1,7 @@
 
-# This is a comment
+                   
 
-addi a0, zero, # you shouldn't see this # 1
+addi a0, zero,                            1
 
 beq a0, a0, 0
 

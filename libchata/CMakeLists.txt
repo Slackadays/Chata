@@ -8,6 +8,8 @@ include("../boilerplate.cmake")
 
 add_library(chata MODULE
     src/libchata.cpp
+    src/assemble.cpp
+    src/compile.cpp
 )
 
 add_compile_options(chata PRIVATE -fno-exceptions -fno-unwind-tables -fno-rtti)

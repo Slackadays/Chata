@@ -8,16 +8,16 @@ build-all:
 build-lib:
   if [ ! -d "libchata/build" ]; then mkdir libchata/build; fi 
 
-  cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE=Release
+  cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE=Debug
 
-  cd libchata/build; cmake --build .
+  cd libchata/build; cmake --build . -j 4
 
   cd libchata/build; sudo cmake --install .
 
 build-cli:
   if [ ! -d "chatacli/build" ]; then mkdir chatacli/build; fi 
 
-  cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE=Release
+  cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE=Debug
 
   cd chatacli/build; cmake --build .
 

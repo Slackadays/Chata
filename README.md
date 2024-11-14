@@ -246,12 +246,12 @@ if_jump:
 beq|bne|blt|bge register, register, if_jump
 ```
 
-where `condition` can be `==`, `!=`, `<`,  `>`, `<=`, or `>=`.
+where `condition` can be `=`, `!=`, `<`,  `>`, `<=`, or `>=`.
 
 For example,
 
 ```
-if fa1 == zero:
+if fa1 = zero:
   foobar
 ```
 
