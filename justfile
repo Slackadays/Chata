@@ -1,6 +1,12 @@
 default:
   @just --list
 
+copy:
+  python setup-credentials.py
+  # Copy all .cpp, .hpp, .cmake, .txt, .chata, .py, and .sh files
+  . ./credentials.sh; \
+  rsync -r -e ssh ./ $CHATA_CROSS_USERNAME@$CHATA_CROSS_IP:$CHATA_CROSS_PATH --include="*.cpp" --include="*.hpp" --include="*.cmake" --include="*.txt" --include="*.chata" --include="*.py" --include="*.sh" --exclude="*"
+
 build-all:
   @just build-lib
   @just build-cli

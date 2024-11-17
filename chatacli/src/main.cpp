@@ -1,5 +1,4 @@
 #include <iostream>
-#include <print>
 #include <vector>
 #include <optional>
 #include <string>
@@ -53,8 +52,8 @@ std::optional<std::string> fileContents(const fs::path& path) {
 }
 
 int main(int argc, char *argv[]) {
-    std::println("Welcome to ChataCLI {} (commit {} on branch {})", PROJECT_VERSION, GIT_COMMIT_HASH, GIT_BRANCH);
-    std::println("libchata version: {}", libchata_version());
+    std::cout << "Welcome to ChataCLI " << PROJECT_VERSION << " (commit " << GIT_COMMIT_HASH << " on branch " << GIT_BRANCH << ")" << std::endl;
+    std::cout << "libchata version: " << libchata_version() << std::endl;
     if (argc < 2) {
         std::cout << "You must provide one or more files" << std::endl;
         return 1;
@@ -64,12 +63,12 @@ int main(int argc, char *argv[]) {
     auto contents = fileContents(filePath);
 
     if (contents) {
-        std::println("File found: {}", filePath.string());
+        std::cout << "File found: " << filePath.string() << std::endl;
     } else {
-        std::println("File not found: {}", filePath.string());
+        std::cout << "File not found: " << filePath.string() << std::endl;
     }
 
-    std::println("Ok, now processing this file...");
+    std::cout << "Ok, now processing this file..." << std::endl;
 
     InputFile file(*contents, filePath.string());
 
@@ -79,15 +78,15 @@ int main(int argc, char *argv[]) {
 
     float value = 2.0;
 
-    std::println("Ok, let's see if we can change the value of a float. Current value: {}", value);
+    std::cout << "Ok, let's see if we can change the value of a float. Current value: " << value << std::endl;
 
     processor.process_data(value);
 
-    std::println("New value: {}", value);
+    std::cout << "New value: " << value << std::endl;
 
     if (result) {
-        std::println("Error! {}", result.value().details.value());
+        std::cout << "Error! " << result.value().details.value() << std::endl;
     } else {
-        std::println("Success!");
+        std::cout << "Success!" << std::endl;
     }
 }

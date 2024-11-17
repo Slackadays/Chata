@@ -1,5 +1,7 @@
 #include "libchata.hpp"
 #include <cctype>
+#include <iostream>
+#include <algorithm>
 
 int label_num = 0;
 constexpr std::string_view generated_label = "generated_label"; // You can generate unique labels if needed
@@ -138,9 +140,9 @@ void process_ifs(auto& files) {
                 operand_2.push_back(c());
                 i++;
             }
-        std::println("Operand 1: {}", operand_1);
-        std::println("Operand 2: {}", operand_2);
-        std::println("Condition: {}", condition);
+        std::cout << "Operand 1: " << operand_1 << std::endl;
+        std::cout << "Operand 2: " << operand_2 << std::endl;
+        std::cout << "Condition: " << condition << std::endl;
 
         if (is_one_of(operand_1, valid_register_names) && is_one_of(operand_2, valid_register_names)) {
             if (condition == "=") {
@@ -159,7 +161,7 @@ void process_ifs(auto& files) {
             branch_instruction += " " + operand_1 + ", " + operand_2 + ", " + chatastring(generated_label) + to_chatastring(generated_label_num);
             generated_label_num++;
         }
-        std::println("Branch instruction: {}", branch_instruction);
+        std::cout << "Branch instruction: " << branch_instruction << std::endl;
 
         // Ok, now that we have the branch instruction, we can generate the code block
 
@@ -189,7 +191,7 @@ void process_ifs(auto& files) {
                 i++;
             }
             if (first_line_indent_level <= if_indent_level) {
-                std::println("Error! Code block must be indented more than the if statement");
+                std::cout << "Error! Code block must be indented more than the if statement" << std::endl;
                 exit(1);
             }
             this_indent_level = first_line_indent_level;
@@ -201,12 +203,12 @@ void process_ifs(auto& files) {
             }
         }
         
-        std::println("This indent level: {}", this_indent_level);
-        std::println("First line indent level: {}", first_line_indent_level);
+        std::cout << "This indent level: " << this_indent_level << std::endl;
+        std::cout << "First line indent level: " << first_line_indent_level << std::endl;
         if (this_indent_level >= first_line_indent_level) {
             // This is the start of the code block
             while (i < file.data.size() && c() != '\n') {
-                std::println("Adding character to code block: {}", c());
+                std::cout << "Adding character to code block: " << c() << std::endl;
                 code_block.push_back(c());
                 i++;
             }
@@ -216,7 +218,7 @@ void process_ifs(auto& files) {
             break;
         }
         }
-        std::println("Code block: {}", code_block);
+        std::cout << "Code block: " << code_block << std::endl;
 
         // Now add an idnentation of 4 spaces to each line of the code block
         code_block.insert(0, "    ");

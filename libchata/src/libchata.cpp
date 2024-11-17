@@ -1,19 +1,17 @@
 #include "libchata.hpp"
-#include <print>
 #include <vector>
 #include <sys/mman.h>
-
-
 #include <fstream>
 #include <filesystem>
 #include <string.h>
+#include <iostream>
 
 constexpr std::string_view libchata_version_str = PROJECT_VERSION;
 
 std::optional<ChataError> ChataProcessor::process_data(float& in1) {
     //in1 *= 0.5;
     executable_function(in1);
-    std::println("Ok, here's the result: {}", in1);
+    std::cout << "Ok, here's the result: " << in1 << std::endl;
     return std::nullopt;
 }
 
@@ -44,14 +42,11 @@ void ChataProcessor::commit_to_memory(const chatastring& data) {
     errno = 0;
     int mpres = mprotect(executable_memory.data(), executable_memory.size(), PROT_READ | PROT_EXEC);
     if (mpres == -1) {
-
-    // show error
-    std::println("mprotect failed: {}, {}", strerror(errno), errno);
-
-    exit(1);
+        std::cout << "mprotect failed: " << strerror(errno) << ", " << errno << std::endl;
+        exit(1);
     }
 
-    std::println("Executable memory first address: {}", reinterpret_cast<long int>(executable_memory.data()));
+    std::cout << "Executable memory first address: " << reinterpret_cast<long int>(executable_memory.data()) << std::endl;
 
     executable_function = reinterpret_cast<void (*)(float&)>(executable_memory.data());
 }
@@ -64,21 +59,21 @@ std::optional<ChataError> ChataProcessor::compile(const std::span<InputFile> inp
 
     compile_code(files);
 
-    std::println("Ok, here's the processed code: {}", files[0].data);
+    std::cout << "Ok, here's the processed code: " << files[0].data << std::endl;
     
     auto assembled = assemble_code(files[0].data);
 
-    std::println("Ok, here's the assembled code:");
+    std::cout << "Ok, here's the assembled code:" << std::endl;
     // Show the code in hex form
     for (auto c : assembled) {
         printf("%02x ", c);
     }
 
-    std::println("");
+    std::cout << std::endl;
 
     commit_to_memory(assembled);
 
-    std::println("Ok, here's the memory:");
+    std::cout << "Ok, here's the memory:" << std::endl;
     for (auto c : executable_memory) {
         printf("%02x ", c);
     }
