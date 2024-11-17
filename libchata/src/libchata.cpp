@@ -11,7 +11,8 @@
 constexpr std::string_view libchata_version_str = PROJECT_VERSION;
 
 std::optional<ChataError> ChataProcessor::process_data(float& in1) {
-    in1 *= 0.5;
+    //in1 *= 0.5;
+    executable_function(in1);
     return std::nullopt;
 }
 

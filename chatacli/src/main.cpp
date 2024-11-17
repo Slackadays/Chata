@@ -77,6 +77,14 @@ int main(int argc, char *argv[]) {
 
     auto result = processor.compile(file);
 
+    float value = 2.0;
+
+    std::println("Ok, let's see if we can change the value of a float. Current value: {}", value);
+
+    processor.process_data(value);
+
+    std::println("New value: {}", value);
+
     if (result) {
         std::println("Error! {}", result.value().details.value());
     } else {
