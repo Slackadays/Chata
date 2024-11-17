@@ -130,7 +130,7 @@ public:
 class ChataProcessor {
     std::vector<unsigned char, AlignedMemory<unsigned char>> executable_memory;
 
-    void (*executable_function)(float) = reinterpret_cast<void(*)(float)>(executable_memory.data());
+    void (*executable_function)(float&) = nullptr;
 
     void commit_to_memory(const chatastring& data);
 

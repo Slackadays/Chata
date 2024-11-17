@@ -13,18 +13,33 @@ constexpr std::string_view libchata_version_str = PROJECT_VERSION;
 std::optional<ChataError> ChataProcessor::process_data(float& in1) {
     //in1 *= 0.5;
     executable_function(in1);
+    std::println("Ok, here's the result: {}", in1);
     return std::nullopt;
 }
 
 void ChataProcessor::commit_to_memory(const chatastring& data) {
     executable_memory.resize(data.size());
-    auto res = mmap(executable_memory.data(), data.size(), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    /*auto res = mmap(executable_memory.data(), executable_memory.size(), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (res == MAP_FAILED) {
         std::perror("mmap");
         exit(1);
-    }
+    }*/
     
-    std::move(data.begin(), data.end(), executable_memory.begin());
+    for (size_t i = 0; i < data.size(); i += 4) {
+        if (i + 3 < data.size()) {
+            executable_memory[i] = data[i + 3];
+            executable_memory[i + 1] = data[i + 2];
+            executable_memory[i + 2] = data[i + 1];
+            executable_memory[i + 3] = data[i];
+        } else {
+            // Handle the remaining bytes if data.size() is not a multiple of 4
+            for (size_t j = 0; j < data.size() - i; ++j) {
+                executable_memory[i + j] = data[i + data.size() - i - 1 - j];
+            }
+        }
+    }
+
+    executable_memory = {0xf3, 0x0f, 0x10, 0x07, 0xf3, 0x0f, 0x58, 0xc0, 0xf3, 0x0f, 0x11, 0x07, 0xc3};
 
     errno = 0;
     int mpres = mprotect(executable_memory.data(), executable_memory.size(), PROT_READ | PROT_EXEC);
@@ -35,6 +50,10 @@ void ChataProcessor::commit_to_memory(const chatastring& data) {
 
     exit(1);
     }
+
+    std::println("Executable memory first address: {}", reinterpret_cast<long int>(executable_memory.data()));
+
+    executable_function = reinterpret_cast<void (*)(float&)>(executable_memory.data());
 }
 
 std::optional<ChataError> ChataProcessor::compile(const std::span<InputFile> input) {
