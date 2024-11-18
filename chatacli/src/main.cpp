@@ -80,9 +80,13 @@ int main(int argc, char *argv[]) {
 
     std::cout << "Ok, let's see if we can change the value of a float. Current value: " << value << std::endl;
 
-    processor.process_data(value);
+    chata_args args;
 
-    std::cout << "New value: " << value << std::endl;
+    args.input1 = value;
+
+    processor.process_data(args);
+
+    std::cout << "New value: " << args.input1 << std::endl;
 
     if (result) {
         std::cout << "Error! " << result.value().details.value() << std::endl;

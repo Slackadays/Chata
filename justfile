@@ -3,9 +3,8 @@ default:
 
 copy:
   python setup-credentials.py
-  # Copy all .cpp, .hpp, .cmake, .txt, .chata, .py, and .sh files
   . ./credentials.sh; \
-  rsync -r -e ssh ./ $CHATA_CROSS_USERNAME@$CHATA_CROSS_IP:$CHATA_CROSS_PATH --include="*.cpp" --include="*.hpp" --include="*.cmake" --include="*.txt" --include="*.chata" --include="*.py" --include="*.sh" --exclude="*"
+  rsync -rRv -e ssh ./ $CHATA_CROSS_USERNAME@$CHATA_CROSS_IP:$CHATA_CROSS_PATH --exclude="*.txt" --exclude=".git/*" --exclude="*/build/*" --exclude="*a.out" --exclude="*.png"
 
 build-all:
   @just build-lib
@@ -14,7 +13,7 @@ build-all:
 build-lib:
   if [ ! -d "libchata/build" ]; then mkdir libchata/build; fi 
 
-  cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE=Debug
+  if [ ! -d "libchata/build/CMakeFiles" ]; then cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE=Debug; fi
 
   cd libchata/build; cmake --build . -j 4
 
@@ -23,7 +22,7 @@ build-lib:
 build-cli:
   if [ ! -d "chatacli/build" ]; then mkdir chatacli/build; fi 
 
-  cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE=Debug
+  if [ ! -d "chatacli/build/CMakeFiles" ]; then cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE=Debug; fi
 
   cd chatacli/build; cmake --build .
 

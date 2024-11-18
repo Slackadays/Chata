@@ -1,12 +1,20 @@
 
 # This is a comment
 
-addi a0, zero, # you shouldn't see this # 1
+flw fa0, 0(a0)
 
-beq a0, a0, 0
+addi a1, zero, 1
 
-if a0 = a1:
-    addi a0, a1, 10
-    mul a0, a1, a1
+fcvt.s.w fa1, a1
 
-sub a1, a1, a1
+fadd.s fa0, fa0, fa1
+
+fcvt.w.s t0, fa0
+fcvt.w.s t1, fa1
+
+if t0 = t1:
+    fadd.s fa0, fa0, fa1
+
+fsw fa0, 0(a0)
+
+addi a6, zero, # you shouldn't see this # 1

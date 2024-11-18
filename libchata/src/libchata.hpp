@@ -95,7 +95,6 @@ public:
     }
 };
 
-
 enum class ErrorType {
     Nada,
     Dummy
@@ -127,10 +126,17 @@ public:
     InternalFile(InputFile file) : data(file.data.begin(), file.data.end()), filename(file.filename) {}
 };
 
+struct chata_args {
+    float input1;
+    float input2;
+    float input3;
+    float input4;
+};
+
 class ChataProcessor {
     std::vector<unsigned char, AlignedMemory<unsigned char>> executable_memory;
 
-    void (*executable_function)(float&) = nullptr;
+    void (*executable_function)(chata_args&) = nullptr;
 
     void commit_to_memory(const chatastring& data);
 
@@ -141,7 +147,7 @@ public:
 
     std::optional<ChataError> compile(const std::span<InputFile> files);
 
-    std::optional<ChataError> process_data(float& in1);
+    std::optional<ChataError> process_data(chata_args& in1);
 };
 
 std::string_view libchata_version();
