@@ -9,8 +9,10 @@ fcvt.s.w fa1, a1
 
 fadd.s fa0, fa0, fa1
 
-fcvt.w.s t0, fa0
-fcvt.w.s t1, fa1
+#fcvt.w.s t0, fa0
+#fcvt.w.s t1, fa0
+addi t0, zero, 10
+addi t1, zero, 10
 
 if t0 = t1:
     fadd.s fa0, fa0, fa1

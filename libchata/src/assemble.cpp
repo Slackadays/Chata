@@ -10,7 +10,7 @@ chatastring assemble_code(const chatastring& data) {
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as temp.s -o temp.o");
+    int res = std::system("llvm-mc -assemble temp.s -mcpu=sifive-u74 -mattr=-c --filetype=obj -o temp.o");
 
     if (res != 0) {
         std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;
@@ -29,7 +29,7 @@ chatastring assemble_code(const chatastring& data) {
     in.close();
 
     std::filesystem::remove("temp.s");
-    std::filesystem::remove("temp.o");
+    //std::filesystem::remove("temp.o");
     std::filesystem::remove("temp.bin");
 
     return result;

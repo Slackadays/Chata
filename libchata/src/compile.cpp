@@ -60,7 +60,10 @@ bool is_one_of(auto& str, auto& vec) {
     return std::find(vec.begin(), vec.end(), str) != vec.end();
 }
 
-chatastring to_chatastring(int& num) {
+chatastring to_chatastring(int num) {
+    if (num == 0) {
+        return "0";
+    }
     chatastring str;
     while (num) {
         str.push_back('0' + num % 10);
@@ -91,7 +94,7 @@ void process_ifs(auto& files) {
     chatastring operand_1;
     chatastring operand_2;
     chatastring condition;
-    chatastring code_block;
+    chatavector<chatastring> code_block;
    for (auto& file : files) {
     for (size_t i = 0; i < file.data.size(); i++) {
         auto c = [&](){ return file.data.at(i); };
@@ -109,6 +112,8 @@ void process_ifs(auto& files) {
         } else {
             continue;
         }
+
+        std::cout << "if indent level: " << if_indent_level << std::endl;
 
         // Save the condition and code block
         branch_instruction.clear();
@@ -140,6 +145,10 @@ void process_ifs(auto& files) {
                 operand_2.push_back(c());
                 i++;
             }
+        i++;
+
+        int inner_if_label_num = generated_label_num;
+
         std::cout << "Operand 1: " << operand_1 << std::endl;
         std::cout << "Operand 2: " << operand_2 << std::endl;
         std::cout << "Condition: " << condition << std::endl;
@@ -158,91 +167,96 @@ void process_ifs(auto& files) {
             } else if (condition == ">=") {
                 branch_instruction = "bge";
             }
-            branch_instruction += " " + operand_1 + ", " + operand_2 + ", " + chatastring(generated_label) + to_chatastring(generated_label_num);
+            branch_instruction += " " + operand_1 + ", " + operand_2 + ", " + chatastring(generated_label) + to_chatastring(inner_if_label_num);
             generated_label_num++;
         }
         std::cout << "Branch instruction: " << branch_instruction << std::endl;
-
+        
         // Ok, now that we have the branch instruction, we can generate the code block
+
+        // First, add "j label" to the block to skip past it if we don't branch
+        
+        code_block.push_back("j " + chatastring(generated_label) + to_chatastring(generated_label_num));
+
+        // Then, we need to add the label to jump to for our inner if statement
+
+        code_block.push_back(chatastring(generated_label) + to_chatastring(inner_if_label_num) + ":");
 
         // Find the code block
         // Procedure: use the previously found indentation level and look for the next lines that have a higher indentation level
         // Stop when the indentation level is the same or lower than the original indentation level
 
+        chatastring line;
+
         int first_line_indent_level = 0;
-
     
-        while (true) {
-            while (i < file.data.size() && c() != '\n') {
-            i++;
-        }
-        i++;
-            // First get to the start of the next line
-            
-        if (i >= file.data.size()) {
-            break;
-        }
-
-        // Now we are at the start of the next line
-        int this_indent_level = 0;
-        if (first_line_indent_level == 0) {
-            while (std::isspace(c())) {
-                first_line_indent_level++;
-                i++;
-            }
-            if (first_line_indent_level <= if_indent_level) {
-                std::cout << "Error! Code block must be indented more than the if statement" << std::endl;
-                exit(1);
-            }
-            this_indent_level = first_line_indent_level;
-            
-        } else {
-            while (std::isspace(c())) {
-                this_indent_level++;
-                i++;
-            }
+        for (;i < file.data.size() && c() != '\n' && std::isspace(c()); i++) {
+            first_line_indent_level++;
         }
         
-        std::cout << "This indent level: " << this_indent_level << std::endl;
+        for (;i < file.data.size() && c() != '\n'; i++) {
+            line.push_back(c());
+        }
+
+        if (line.size() > 0) {
+            code_block.push_back(line);
+        }
+
+        while (i < file.data.size() && c() == '\n') {
+            i++;
+        }
+
+        std::cout << "First line: " << line << std::endl;
         std::cout << "First line indent level: " << first_line_indent_level << std::endl;
-        if (this_indent_level >= first_line_indent_level) {
-            // This is the start of the code block
-            while (i < file.data.size() && c() != '\n') {
-                std::cout << "Adding character to code block: " << c() << std::endl;
-                code_block.push_back(c());
+
+        int this_indent_level = 0;
+
+        while(true) {
+            this_indent_level = 0;
+            for (;i < file.data.size() && std::isspace(c()); i++) {
+                this_indent_level++;
+            }
+            std::cout << "This indent level: " << this_indent_level << std::endl;
+            if (this_indent_level > if_indent_level && this_indent_level < first_line_indent_level) {
+                std::cout << "Error! Code block must be indented the same as the first line" << std::endl;
+                exit(1);
+            }
+            if (this_indent_level <= if_indent_level) {
+                break;
+            }
+            line.clear();
+            for (;i < file.data.size() && c() != '\n'; i++) {
+                line.push_back(c());
+            }
+            code_block.push_back(line);
+            while (i < file.data.size() && c() == '\n') {
                 i++;
             }
-            code_block.push_back('\n');
-        } else {
-            // This is the end of the code block
-            break;
         }
-        }
-        std::cout << "Code block: " << code_block << std::endl;
 
-        // Now add an idnentation of 4 spaces to each line of the code block
-        code_block.insert(0, "    ");
-        for (size_t i = 0; i < code_block.size(); i++) {
-            if (code_block.at(i) == '\n') {
-                code_block.insert(i + 1, "    ");
-            }
-        }
-        code_block.append("ret\n");
+        code_block.push_back(chatastring(generated_label) + to_chatastring(generated_label_num) + ":");
 
         // Ok, now we need to overwrite the if statement starting at i_at_if_statement_start with the generated label and the code block
         // We also need to indent the code block by some nonzero amount compared to the label
-        // We also need to add a ret instruction at the end of the code block
-        file.data.replace(i_at_if_statement_start, i - i_at_if_statement_start, chatastring(generated_label) + ":\n" + code_block + branch_instruction + "\n");
+        file.data.replace(i_at_if_statement_start, i - i_at_if_statement_start, branch_instruction + "\n");
 
-        i += branch_instruction.size() + 1;
+        i = i_at_if_statement_start + branch_instruction.size() + 1;
 
+        for (auto& line : code_block) {
+            std::cout << "line before modification: " << line << std::endl;
+            line.insert(0, chatastring(if_indent_level, ' '));
+            line.append("\n");
+            file.data.insert(i, line);
+            i += line.size();
+        }
+
+        file.data.insert(i, "\n");
     }
    }
 }
 
 void compile_code(chatavector<InternalFile>& files) {
     process_comments(files);
-
 
     process_ifs(files);
 }

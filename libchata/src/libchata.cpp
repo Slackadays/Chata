@@ -52,6 +52,8 @@ std::optional<ChataError> ChataProcessor::compile(const std::span<InputFile> inp
 
     std::cout << std::endl;
 
+    //exit(0);
+
     commit_to_memory(assembled);
 
     std::cout << "Ok, here's the memory:" << std::endl;

@@ -66,6 +66,7 @@ int main(int argc, char *argv[]) {
         std::cout << "File found: " << filePath.string() << std::endl;
     } else {
         std::cout << "File not found: " << filePath.string() << std::endl;
+        return 1;
     }
 
     std::cout << "Ok, now processing this file..." << std::endl;
