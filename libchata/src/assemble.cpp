@@ -10,18 +10,20 @@ chatastring assemble_code(const chatastring& data) {
     out << data;
     out.close();
 
-    int res = std::system("llvm-mc -assemble temp.s -mcpu=sifive-u74 -mattr=-c --filetype=obj -o temp.o");
+    int res = std::system("riscv64-linux-gnu-as temp.s -o temp.o");
 
     if (res != 0) {
-        std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;
-        exit(1);
+        //std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;
+        //exit(1);
+        throw ChataError(ErrorType::Dummy, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
     }
 
     res = std::system("riscv64-linux-gnu-objcopy -O binary temp.o temp.bin");
 
     if (res != 0) {
-        std::cout << "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin" << std::endl;
-        exit(1);
+        //std::cout << "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin" << std::endl;
+        //exit(1);
+        throw ChataError(ErrorType::Dummy, "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin", 0, 0);
     }
 
     std::ifstream in("temp.bin", std::ios::binary);

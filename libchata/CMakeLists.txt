@@ -35,9 +35,10 @@ add_library(chata MODULE
     src/libchata.cpp
     src/assemble.cpp
     src/compile.cpp
+    src/utils.cpp
 )
 
-add_compile_options(chata PRIVATE -fno-exceptions -fno-unwind-tables -fno-rtti)
+add_compile_options(chata PRIVATE -fno-rtti)
 
 install(TARGETS chata
     DESTINATION lib

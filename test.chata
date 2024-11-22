@@ -1,13 +1,11 @@
 
 # This is a comment
 
-flw fa0, 0(a0)
-
 addi a1, zero, 1
 
-fcvt.s.w fa1, a1
+fcvt.d.w fa1, a1
 
-fadd.s fa0, fa0, fa1
+fadd.d fa0, fa0, fa1
 
 #fcvt.w.s t0, fa0
 #fcvt.w.s t1, fa0
@@ -15,8 +13,14 @@ addi t0, zero, 10
 addi t1, zero, 10
 
 if t0 = t1:
-    fadd.s fa0, fa0, fa1
+    fadd.d fa0, fa0, fa1
+    if t0 != t1:
+        fadd.d fa0, fa0, fa1
 
-fsw fa0, 0(a0)
+if t0 = 10:
+    fadd.d fa0, fa0, fa1
+
+if 10 = 10:
+    fadd.d fa0, fa0, fa1
 
 addi a6, zero, # you shouldn't see this # 1

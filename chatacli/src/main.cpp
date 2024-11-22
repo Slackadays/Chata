@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <cstring>
 #include <array>
+#include <chrono>
+#include <thread>
 #include <libchata.hpp>
 
 namespace fs = std::filesystem;
@@ -75,23 +77,24 @@ int main(int argc, char *argv[]) {
 
     ChataProcessor processor;
 
-    auto result = processor.compile(file);
+    try {
+        processor.compile(file);
 
-    float value = 2.0;
+        double value = 2.0;
 
-    std::cout << "Ok, let's see if we can change the value of a float. Current value: " << value << std::endl;
+        std::cout << "Ok, let's see if we can change the value of a float. Current value: " << value << std::endl;
 
-    chata_args args;
+        chata_args args;
 
-    args.input1 = value;
+        args.input1 = value;
 
-    processor.process_data(args);
+        processor.process_data(args);
 
-    std::cout << "New value: " << args.input1 << std::endl;
-
-    if (result) {
-        std::cout << "Error! " << result.value().details.value() << std::endl;
-    } else {
-        std::cout << "Success!" << std::endl;
+        std::cout << "New value: " << args.input1 << std::endl;
+    } catch (ChataError& e) {
+        std::cout << "Error! " << e.what() << std::endl;
+        return 1;
     }
+
+    std::cout << "Success!" << std::endl;
 }
