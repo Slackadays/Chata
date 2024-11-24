@@ -2,12 +2,16 @@
 #include <cctype>
 #include <iostream>
 #include <algorithm>
+#include <chrono>
 
 constexpr std::string_view generated_label = "generated_code_label"; // You can generate unique labels if needed
 int generated_label_num = 0;
 
-constexpr std::string_view placeholder_temp_integer_register = "generated_placeholder_register"; // You can generate unique labels if needed
+constexpr std::string_view placeholder_temp_integer_register = "generated_placeholder_integer_register";
 int placeholder_temp_integer_register_num = 0;
+
+constexpr std::string_view placeholder_temp_floating_point_register = "generated_placeholder_floating_point_register";
+int placeholder_temp_floating_point_register_num = 0;
 
 bool is_one_of(auto& str, auto& vec) {
     return std::find(vec.begin(), vec.end(), str) != vec.end();
@@ -21,12 +25,20 @@ chatastring make_label(int num) {
     return chatastring(generated_label) + to_chatastring(num);
 }
 
-chatastring make_register() {
+chatastring make_int_register() {
     return chatastring(placeholder_temp_integer_register) + to_chatastring(placeholder_temp_integer_register_num);
 }
 
-chatastring make_register(int num) {
+chatastring make_int_register(int num) {
     return chatastring(placeholder_temp_integer_register) + to_chatastring(num);
+}
+
+chatastring make_float_register() {
+    return chatastring(placeholder_temp_floating_point_register) + to_chatastring(placeholder_temp_floating_point_register_num);
+}
+
+chatastring make_float_register(int num) {
+    return chatastring(placeholder_temp_floating_point_register) + to_chatastring(num);
 }
 
 chatastring condition_to_instruction(chatastring& condition) {
@@ -45,7 +57,7 @@ chatastring condition_to_instruction(chatastring& condition) {
     } else {
         throw ChataError(ErrorType::Dummy, "Error! Invalid condition", 0, 0);
     }
-};
+}
 
 void process_ifs(auto& files) {
     /*Format: 
@@ -129,23 +141,42 @@ void process_ifs(auto& files) {
         std::cout << "Operand 2: " << operand_2 << std::endl;
         std::cout << "Condition: " << condition << std::endl;
 
-        if (is_one_of(operand_1, valid_integer_register_names) && is_one_of(operand_2, valid_integer_register_names)) { // 
+        if (is_one_of(operand_1, valid_integer_registers) && is_one_of(operand_2, valid_integer_registers)) { // 
             branch_code.push_back(condition_to_instruction(condition) + " " + operand_1 + ", " + operand_2 + ", " + make_label(inner_if_label_num));
-            
-        } else if (is_one_of(operand_1, valid_integer_register_names) && is_integer(operand_2)) {
-            branch_code.push_back("addi " + make_register() + ", zero, " + operand_2);
-            branch_code.push_back(condition_to_instruction(condition) + " " + operand_1 + ", " + make_register() + ", " + make_label(inner_if_label_num));
+        } else if (is_one_of(operand_1, valid_integer_registers) && is_number(operand_2)) {
+            branch_code.push_back("addi " + make_int_register() + ", zero, " + operand_2);
+            branch_code.push_back(condition_to_instruction(condition) + " " + operand_1 + ", " + make_int_register() + ", " + make_label(inner_if_label_num));
             placeholder_temp_integer_register_num++;
-        } else if (is_integer(operand_1) && is_one_of(operand_2, valid_integer_register_names)) {
-            branch_code.push_back("addi " + make_register() + ", zero, " + operand_1);
-            branch_code.push_back(condition_to_instruction(condition) + " " + make_register() + ", " + operand_2 + ", " + make_label(inner_if_label_num));
+        } else if (is_number(operand_1) && is_one_of(operand_2, valid_integer_registers)) {
+            branch_code.push_back("addi " + make_int_register() + ", zero, " + operand_1);
+            branch_code.push_back(condition_to_instruction(condition) + " " + make_int_register() + ", " + operand_2 + ", " + make_label(inner_if_label_num));
             placeholder_temp_integer_register_num++;
-        } else if (is_integer(operand_1) && is_integer(operand_2)) { // Allocate two temp registers for this one
-            branch_code.push_back("addi " + make_register() + ", zero, " + operand_1);
-            auto temp = make_register();
+        } else if (is_one_of(operand_1, valid_floating_point_registers) && is_one_of(operand_2, valid_floating_point_registers)) {
+            if (condition == "=") {
+                branch_code.push_back("feq.d " + make_int_register() + ", " + operand_1 + ", " + operand_2);
+            } else if (condition == "!=") {
+                branch_code.push_back("feq.d " + make_int_register() + ", " + operand_1 + ", " + operand_2);
+            } else if (condition == "<") {
+                branch_code.push_back("flt.d " + make_int_register() + ", " + operand_1 + ", " + operand_2);
+            } else if (condition == ">") {
+                branch_code.push_back("flt.d " + make_int_register() + ", " + operand_2 + ", " + operand_1);
+            } else if (condition == "<=") {
+                branch_code.push_back("fle.d " + make_int_register() + ", " + operand_1 + ", " + operand_2);
+            } else if (condition == "=>") {
+                branch_code.push_back("fle.d " + make_int_register() + ", " + operand_2 + ", " + operand_1);
+            }
+            if (condition == "!=") {
+                branch_code.push_back("beqz " + make_int_register() + ", " + make_label(inner_if_label_num));
+            } else {
+                branch_code.push_back("bnez " + make_int_register() + ", " + make_label(inner_if_label_num));
+            }
             placeholder_temp_integer_register_num++;
-            branch_code.push_back("addi " + make_register() + ", zero, " + operand_2);
-            branch_code.push_back(condition_to_instruction(condition) + " " + temp + ", " + make_register() + ", " + make_label(inner_if_label_num));
+        } else if (is_number(operand_1) && is_number(operand_2)) { // Allocate two temp registers for this one
+            branch_code.push_back("addi " + make_int_register() + ", zero, " + operand_1);
+            auto temp = make_int_register();
+            placeholder_temp_integer_register_num++;
+            branch_code.push_back("addi " + make_int_register() + ", zero, " + operand_2);
+            branch_code.push_back(condition_to_instruction(condition) + " " + temp + ", " + make_int_register() + ", " + make_label(inner_if_label_num));
             placeholder_temp_integer_register_num++;
         } else {
             throw ChataError(ErrorType::Dummy, "Error! Invalid operands", 0, 0);
@@ -285,7 +316,7 @@ void replace_temp_registers(chatastring& input) {
     // First, search for all integer registers already present and mark those as non-candidates.
     chatavector<chatastring> used_integer_registers;
 
-    for (const auto& reg : valid_integer_register_names) {
+    for (const auto& reg : valid_integer_registers) {
         for (auto pos = input.find(reg); pos != std::string::npos; pos = input.find(reg, pos + 1)) {
             if (pos == 0 || input.at(pos - 1) != 'f') {
                 auto it = std::find_if(x_register_aliases.begin(), x_register_aliases.end(), 
@@ -307,7 +338,7 @@ void replace_temp_registers(chatastring& input) {
 
     chatavector<chatastring> used_floating_point_registers;
 
-    for (const auto& reg : valid_floating_point_register_names) {
+    for (const auto& reg : valid_floating_point_registers) {
         for (auto pos = input.find(reg); pos != std::string::npos; pos = input.find(reg, pos + 1)) {
             auto it = std::find_if(f_register_aliases.begin(), f_register_aliases.end(), 
                 [&](const auto& pair) { return pair.first == reg; });
@@ -387,6 +418,8 @@ void replace_temp_registers(chatastring& input) {
 }
 
 chatastring compile_code(chatavector<InternalFile>& files) {
+    auto then = std::chrono::high_resolution_clock::now();
+
     auto prelude = generate_prelude();
 
     process_comments(files);
@@ -405,9 +438,15 @@ chatastring compile_code(chatavector<InternalFile>& files) {
     result.insert(0, prelude);
     result.append(postlude);
 
-    std::cout << "Result: " << result << std::endl;
+    //std::cout << "Result: " << result << std::endl;
 
     replace_temp_registers(result);
+
+    auto now = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(now - then);
+
+    std::cout << "Compilation took " << duration.count() << " microseconds" << std::endl;
 
     std::cout << "Result: " << result << std::endl;
 

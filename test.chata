@@ -23,4 +23,7 @@ if t0 = 10:
 if 10 = 10:
     fadd.d fa0, fa0, fa1
 
+if fa0 = fa0:
+    fadd.d fa0, fa0, fa1
+
 addi a6, zero, # you shouldn't see this # 1

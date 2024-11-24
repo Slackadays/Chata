@@ -26,6 +26,10 @@ bool is_float(const chatastring& str) {
     return true;
 }
 
+bool is_number(const chatastring& str) {
+    return is_integer(str) || is_float(str);
+}
+
 chatastring to_chatastring(int num) {
     if (num == 0) {
         return "0";

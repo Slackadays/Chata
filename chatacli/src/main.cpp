@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
     ChataProcessor processor;
 
     try {
-        processor.compile(file);
+        processor.compile_and_commit(file);
 
         double value = 2.0;
 
