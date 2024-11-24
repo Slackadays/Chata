@@ -1,4 +1,5 @@
 #include "libchata.hpp"
+#include <charconv>
 
 bool is_integer(const chatastring& str) {
     for (auto c : str) {
@@ -36,6 +37,15 @@ chatastring to_chatastring(int num) {
     }
     std::reverse(str.begin(), str.end());
     return str;
+}
+
+int to_int(const chatastring& str) {
+    int result = 0;
+    auto res = std::from_chars(str.data(), str.data() + str.size(), result);
+    if (res.ec != std::errc()) {
+        throw ChataError(ErrorType::Dummy, "Error! Invalid integer", 0, 0);
+    }
+    return result;
 }
 
 void process_comments(chatavector<InternalFile>& files) {

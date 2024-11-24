@@ -9,7 +9,6 @@
 #include <unistd.h>
 #include <new>
 #include <cstring>
-#include <unordered_map>
 
 constexpr size_t libchata_memory_pool_size = 33554432;
 
@@ -31,7 +30,7 @@ constexpr std::array<std::string_view, 64> valid_floating_point_register_names =
 
 constexpr std::array<std::string_view, 32> valid_vector_register_names = {"v0", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12", "v13", "v14", "v15", "v16", "v17", "v18", "v19", "v20", "v21", "v22", "v23", "v24", "v25", "v26", "v27", "v28", "v29", "v30", "v31"};
 
-static std::unordered_map<std::string_view, std::string_view> x_register_aliases = {
+constexpr std::array<std::pair<std::string_view, std::string_view>, 32> x_register_aliases = {{
     {"x0", "zero"},
     {"x1", "ra"},
     {"x2", "fp"},
@@ -64,9 +63,9 @@ static std::unordered_map<std::string_view, std::string_view> x_register_aliases
     {"x29", "t4"},
     {"x30", "t5"},
     {"x31", "t6"},
-};
+}};
 
-static std::unordered_map<std::string_view, std::string_view> f_register_aliases = {
+constexpr std::array<std::pair<std::string_view, std::string_view>, 32> f_register_aliases = {{
     {"f0", "fa0"},
     {"f1", "fa1"},
     {"f2", "fa2"},
@@ -99,7 +98,11 @@ static std::unordered_map<std::string_view, std::string_view> f_register_aliases
     {"f29", "fs9"},
     {"f30", "fs10"},
     {"f31", "fs11"},
-};
+}};
+
+constexpr std::array<std::string_view, 15> integer_register_replacement_priority_list = {"t0", "t1", "t2", "t3", "t4", "t5", "t6", "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7"};
+
+constexpr std::array<std::string_view, 20> floating_point_register_replacement_priority_list = {"ft0", "ft1", "ft2", "ft3", "ft4", "ft5", "ft6", "ft7", "ft8", "ft9", "ft10", "ft11", "fa0", "fa1", "fa2", "fa3", "fa4", "fa5", "fa6", "fa7"};
 
 chatastring to_chatastring(int num);
 
@@ -258,3 +261,5 @@ void process_comments(chatavector<InternalFile>& files);
 bool is_float(const chatastring& str);
 
 bool is_integer(const chatastring& str);
+
+int to_int(const chatastring& str);

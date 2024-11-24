@@ -6,8 +6,8 @@
 constexpr std::string_view generated_label = "generated_code_label"; // You can generate unique labels if needed
 int generated_label_num = 0;
 
-constexpr std::string_view placeholder_temp_register = "generated_placeholder_register"; // You can generate unique labels if needed
-int placeholder_temp_register_num = 0;
+constexpr std::string_view placeholder_temp_integer_register = "generated_placeholder_register"; // You can generate unique labels if needed
+int placeholder_temp_integer_register_num = 0;
 
 bool is_one_of(auto& str, auto& vec) {
     return std::find(vec.begin(), vec.end(), str) != vec.end();
@@ -22,11 +22,11 @@ chatastring make_label(int num) {
 }
 
 chatastring make_register() {
-    return chatastring(placeholder_temp_register) + to_chatastring(placeholder_temp_register_num);
+    return chatastring(placeholder_temp_integer_register) + to_chatastring(placeholder_temp_integer_register_num);
 }
 
 chatastring make_register(int num) {
-    return chatastring(placeholder_temp_register) + to_chatastring(num);
+    return chatastring(placeholder_temp_integer_register) + to_chatastring(num);
 }
 
 chatastring condition_to_instruction(chatastring& condition) {
@@ -135,18 +135,18 @@ void process_ifs(auto& files) {
         } else if (is_one_of(operand_1, valid_integer_register_names) && is_integer(operand_2)) {
             branch_code.push_back("addi " + make_register() + ", zero, " + operand_2);
             branch_code.push_back(condition_to_instruction(condition) + " " + operand_1 + ", " + make_register() + ", " + make_label(inner_if_label_num));
-            placeholder_temp_register_num++;
+            placeholder_temp_integer_register_num++;
         } else if (is_integer(operand_1) && is_one_of(operand_2, valid_integer_register_names)) {
             branch_code.push_back("addi " + make_register() + ", zero, " + operand_1);
             branch_code.push_back(condition_to_instruction(condition) + " " + make_register() + ", " + operand_2 + ", " + make_label(inner_if_label_num));
-            placeholder_temp_register_num++;
+            placeholder_temp_integer_register_num++;
         } else if (is_integer(operand_1) && is_integer(operand_2)) { // Allocate two temp registers for this one
             branch_code.push_back("addi " + make_register() + ", zero, " + operand_1);
             auto temp = make_register();
-            placeholder_temp_register_num++;
+            placeholder_temp_integer_register_num++;
             branch_code.push_back("addi " + make_register() + ", zero, " + operand_2);
-            placeholder_temp_register_num++;
             branch_code.push_back(condition_to_instruction(condition) + " " + temp + ", " + make_register() + ", " + make_label(inner_if_label_num));
+            placeholder_temp_integer_register_num++;
         } else {
             throw ChataError(ErrorType::Dummy, "Error! Invalid operands", 0, 0);
         }
@@ -286,13 +286,16 @@ void replace_temp_registers(chatastring& input) {
     chatavector<chatastring> used_integer_registers;
 
     for (const auto& reg : valid_integer_register_names) {
-        if (auto pos = input.find(reg); pos != std::string::npos) {
-            if (input.at(pos) != 'f') {
-                if (auto search = x_register_aliases.find(reg); search != x_register_aliases.end()) {
-                    used_integer_registers.emplace_back(x_register_aliases[reg]);
+        for (auto pos = input.find(reg); pos != std::string::npos; pos = input.find(reg, pos + 1)) {
+            if (pos == 0 || input.at(pos - 1) != 'f') {
+                auto it = std::find_if(x_register_aliases.begin(), x_register_aliases.end(), 
+                    [&](const auto& pair) { return pair.first == reg; });
+                if (it != x_register_aliases.end()) {
+                    used_integer_registers.emplace_back(it->second);
                 } else {
                     used_integer_registers.emplace_back(reg);
                 }
+                break;
             }
         }
     }
@@ -305,14 +308,15 @@ void replace_temp_registers(chatastring& input) {
     chatavector<chatastring> used_floating_point_registers;
 
     for (const auto& reg : valid_floating_point_register_names) {
-        if (auto pos = input.find(reg); pos != std::string::npos) {
-            if (input.at(pos) != 'f') {
-                if (auto search = f_register_aliases.find(reg); search != f_register_aliases.end()) {
-                    used_floating_point_registers.emplace_back(f_register_aliases[reg]);
-                } else {
-                    used_floating_point_registers.emplace_back(reg);
-                }
+        for (auto pos = input.find(reg); pos != std::string::npos; pos = input.find(reg, pos + 1)) {
+            auto it = std::find_if(f_register_aliases.begin(), f_register_aliases.end(), 
+                [&](const auto& pair) { return pair.first == reg; });
+            if (it != f_register_aliases.end()) {
+                used_floating_point_registers.emplace_back(it->second);
+            } else {
+                used_floating_point_registers.emplace_back(reg);
             }
+            break;
         }
     }
 
@@ -320,17 +324,65 @@ void replace_temp_registers(chatastring& input) {
     for (const auto& reg : used_floating_point_registers) {
         std::cout << reg << std::endl;
     }
-    exit(0);
 
-    std::string temp_register_prefix = std::string(placeholder_temp_register);
-    size_t pos = 0;
-    while ((pos = input.find(temp_register_prefix, pos)) != std::string::npos) {
-        size_t end_pos = pos + temp_register_prefix.size();
-        while (end_pos < input.size() && std::isdigit(input[end_pos])) {
-            end_pos++;
+    auto integer_reg_eligible = [&](const auto& reg){
+        return std::find(used_integer_registers.begin(), used_integer_registers.end(), reg) == used_integer_registers.end();
+    };
+
+    auto floating_point_reg_eligible = [&](const auto& reg){
+        return std::find(used_floating_point_registers.begin(), used_floating_point_registers.end(), reg) == used_floating_point_registers.end();
+    };
+
+    // Search for temporary register labels
+
+    chatavector<std::pair<int, chatastring>> temp_integer_register_id_to_replacement;
+
+    for (auto pos = input.find(placeholder_temp_integer_register); pos != std::string::npos; pos = input.find(placeholder_temp_integer_register, pos + 1)) {
+        int id = 0;
+        chatastring id_str;
+        for (auto i = pos + placeholder_temp_integer_register.size(); i < input.size(); i++) {
+            if (std::isdigit(input.at(i))) {
+                id_str.push_back(input.at(i));
+            } else {
+                break;
+            }
         }
-        input.replace(pos, end_pos - pos, "t0");
-        pos += 2; // Move past the replaced "t0"
+        id = to_int(id_str);
+        std::cout << "Found temp register: " << id << std::endl;
+
+        chatastring replacement;
+
+        // Check if we can find a suitable replacement register by looking in temp_integer_register_id_to_replacement first
+        for (auto& pair : temp_integer_register_id_to_replacement) {
+            if (pair.first == id) {
+                replacement.append(pair.second);
+                break;
+            }
+        }
+
+        if (!replacement.empty()) {
+            std::cout << "Replacement: " << replacement << std::endl;
+            input.replace(pos, placeholder_temp_integer_register.size() + id_str.size(), replacement);
+            used_integer_registers.emplace_back(replacement);
+            continue;
+        }
+
+        // Now for each ID, we need to find a suitable replacement register
+        for (const auto& reg : integer_register_replacement_priority_list) {
+            if (integer_reg_eligible(reg)) {
+                replacement = reg;
+                break;
+            }
+        }
+
+        std::cout << "Replacement: " << replacement << std::endl;
+
+        temp_integer_register_id_to_replacement.emplace_back(id, replacement);
+
+        used_integer_registers.emplace_back(replacement);
+
+        input.replace(pos, placeholder_temp_integer_register.size() + id_str.size(), replacement);
+
     }
 }
 
@@ -349,7 +401,17 @@ chatastring compile_code(chatavector<InternalFile>& files) {
         result += file.data;
     }
 
+    //result = prelude + result + postlude;
+    result.insert(0, prelude);
+    result.append(postlude);
+
+    std::cout << "Result: " << result << std::endl;
+
     replace_temp_registers(result);
 
-    return prelude + result + postlude;
+    std::cout << "Result: " << result << std::endl;
+
+    //exit(0);
+
+    return result;
 }
