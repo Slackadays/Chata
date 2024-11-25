@@ -91,12 +91,8 @@ void process_ifs(chatavector<InternalFile>& files) {
     */
    int if_indent_level = 0;
     int i_at_if_statement_start = 0;
-    chatavector<chatastring> branch_code;
-    chatastring operand_1;
-    chatastring operand_2;
-    chatastring condition;
-    chatavector<chatastring> code_block;
-    bool no_ifs_found = true;
+    chatavector<chatastring> branch_code, code_block;
+    chatastring operand_1, operand_2, condition;
    for (auto& file : files) {
     for (size_t i = 0; i < file.data.size(); i++) {
         auto c = [&](){ return file.data.at(i); };
@@ -110,7 +106,6 @@ void process_ifs(chatavector<InternalFile>& files) {
             continue;
         } else if (c() == 'i' && file.data.substr(i, 2) == "if") {
             i_at_if_statement_start = i;
-            no_ifs_found = false;
             i += 2;
         } else {
             continue;
@@ -357,7 +352,6 @@ void process_ifs(chatavector<InternalFile>& files) {
         temp.clear();
 
         for (auto& line : branch_code) {
-            //line.insert(0, chatastring(if_indent_level, ' '));
             line.append("\n");
             temp += line;
         }
@@ -369,7 +363,6 @@ void process_ifs(chatavector<InternalFile>& files) {
         i = i_at_if_statement_start + temp.size();
 
         for (auto& line : code_block) {
-            //line.insert(0, chatastring(if_indent_level, ' '));
             line.append("\n");
             file.data.insert(i, line);
             i += line.size();
@@ -377,12 +370,7 @@ void process_ifs(chatavector<InternalFile>& files) {
 
         file.data.insert(i, "\n");
 
-        if (no_ifs_found) {
-            std::cout << "No more ifs found" << std::endl;
-        } else {
-            std::cout << "Code after processing an if: " << file.data << std::endl;
-            i = 0;
-        }
+        i = 0;
     }
    }
 }
