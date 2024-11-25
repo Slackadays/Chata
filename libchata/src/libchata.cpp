@@ -12,21 +12,31 @@ void ChataProcessor::process_data(chata_args& input) {
     executable_function(input);
 }
 
-void ChataProcessor::commit_to_memory(const chatastring& data) {
-    executable_memory.resize(data.size());
-    
-    std::copy(data.begin(), data.end(), executable_memory.begin());
-
-    errno = 0;
-    int mpres = mprotect(executable_memory.data(), executable_memory.size(), PROT_READ | PROT_EXEC);
+void ChataProcessor::save_to_memory(const chatastring& data) {
+    int mpres = mprotect(executable_memory.at(!current_executable_memory).data(), executable_memory.at(!current_executable_memory).size(), PROT_READ | PROT_WRITE);
     if (mpres != 0) {
         std::cout << "mprotect failed: " << strerror(errno) << ", " << errno << std::endl;
         exit(1);
     }
 
-    std::cout << "Executable memory first address: " << reinterpret_cast<long int>(executable_memory.data()) << std::endl;
+    executable_memory.at(!current_executable_memory).resize(data.size());
+    
+    std::copy(data.begin(), data.end(), executable_memory.at(!current_executable_memory).begin());
 
-    executable_function = reinterpret_cast<void (*)(chata_args&)>(executable_memory.data());
+    errno = 0;
+    mpres = mprotect(executable_memory.at(!current_executable_memory).data(), executable_memory.at(!current_executable_memory).size(), PROT_READ | PROT_EXEC);
+    if (mpres != 0) {
+        std::cout << "mprotect failed: " << strerror(errno) << ", " << errno << std::endl;
+        exit(1);
+    }
+
+    std::cout << "Executable memory first address: " << reinterpret_cast<long int>(executable_memory.at(!current_executable_memory).data()) << std::endl;
+}
+
+void ChataProcessor::commit() {
+    executable_function = reinterpret_cast<void (*)(chata_args&)>(executable_memory.at(!current_executable_memory).data());
+
+    current_executable_memory = !current_executable_memory;
 }
 
 [[nodiscard]] chatastring ChataProcessor::compile(const std::span<InputFile> input) {
@@ -66,10 +76,12 @@ void ChataProcessor::commit_to_memory(const chatastring& data) {
 void ChataProcessor::compile_and_commit(const std::span<InputFile> input) {
     auto assembled = compile(input);
 
-    commit_to_memory(assembled);
+    save_to_memory(assembled);
+
+    commit();
 
     std::cout << "Ok, here's the memory:" << std::endl;
-    for (auto c : executable_memory) {
+    for (auto c : executable_memory.at(current_executable_memory)) {
         printf("%02x ", c);
     }
 }

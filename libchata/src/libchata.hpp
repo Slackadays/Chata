@@ -35,7 +35,7 @@ constexpr std::array<std::pair<std::string_view, std::string_view>, 32> x_regist
     {"x1", "ra"},
     {"x2", "fp"},
     {"x3", "sp"},
-    {"x4", "gp"}, // Check for tp too
+    {"x4", "gp"}, // Check for tp too later
     {"x5", "t0"},
     {"x6", "t1"},
     {"x7", "t2"},
@@ -238,11 +238,12 @@ struct chata_args {
 };
 
 class ChataProcessor {
-    std::vector<unsigned char, AlignedMemory<unsigned char>> executable_memory;
+    std::array<std::vector<unsigned char, AlignedMemory<unsigned char>>, 2> executable_memory;
+    int current_executable_memory = 0;
 
     void (*executable_function)(chata_args&) = nullptr;
 
-    void commit_to_memory(const chatastring& data);
+    void save_to_memory(const chatastring& data);
 
 public:
     [[nodiscard]] chatastring compile(const std::string_view& code);
@@ -258,6 +259,14 @@ public:
     void compile_and_commit(const std::span<InputFile> files);
 
     void process_data(chata_args& in1);
+
+    void commit();
+
+    ChataProcessor(const std::string_view& code) {
+        compile_and_commit(code);
+    }
+
+    ChataProcessor() = default;
 };
 
 std::string_view libchata_version();
