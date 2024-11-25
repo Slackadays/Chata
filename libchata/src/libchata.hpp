@@ -222,7 +222,7 @@ chatastring assemble_code(const chatastring& data);
 
 chatastring compile_code(chatavector<InternalFile>& files);
 
-void process_comments(chatavector<InternalFile>& files);
+void process_comments(InternalFile& files);
 
 bool is_float(const chatastring& str);
 
@@ -234,7 +234,7 @@ int to_int(const chatastring& str);
 
 double to_float(const chatastring& str);
 
-void process_ifs(chatavector<InternalFile>& files);
+void process_ifs(InternalFile& file);
 
 constexpr std::string_view generated_label = "generated_code_label";
 

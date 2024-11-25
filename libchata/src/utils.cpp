@@ -62,24 +62,22 @@ double to_float(const chatastring& str) {
     return result;
 }
 
-void process_comments(chatavector<InternalFile>& files) {
+void process_comments(InternalFile& file) {
     // Comment format: # begins a comment on a line, and another # ends that comment
     // Examples: # Commented out #
     // # This whole line is a comment
 
-    for (auto& file : files) { // Modify data in-place (make whitespace)
-        bool is_comment = false;
-        for (auto& c : file.data) {
-            if (c == '#') {
-                is_comment = !is_comment;
-                c = ' ';
-            }
-            if (c == '\n') {
-                is_comment = false;
-            }
-            if (is_comment) {
-                c = ' ';
-            }
+    bool is_comment = false;
+    for (auto& c : file.data) {
+        if (c == '#') {
+            is_comment = !is_comment;
+            c = ' ';
+        }
+        if (c == '\n') {
+            is_comment = false;
+        }
+        if (is_comment) {
+            c = ' ';
         }
     }
 }

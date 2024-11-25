@@ -175,9 +175,11 @@ chatastring compile_code(chatavector<InternalFile>& files) {
 
     auto prelude = generate_prelude();
 
-    process_comments(files);
+    for (auto& file : files) {
+        process_comments(file);
 
-    process_ifs(files);
+        process_ifs(file);
+    }
 
     auto postlude = generate_postlude();
 

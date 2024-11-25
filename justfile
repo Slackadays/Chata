@@ -4,7 +4,7 @@ default:
 copy:
   python setup-credentials.py
   . ./credentials.sh; \
-  rsync -rRv -e ssh ./ $CHATA_CROSS_USERNAME@$CHATA_CROSS_IP:$CHATA_CROSS_PATH --exclude="*.txt" --exclude=".git/*" --exclude="*/build/*" --exclude="*a.out" --exclude="*.png"
+  rsync -rRv -e ssh ./ $CHATA_CROSS_USERNAME@$CHATA_CROSS_IP:$CHATA_CROSS_PATH --exclude="*/build" --exclude=".git/*" --exclude="*a.out" --exclude="*.png" 
 
 build-all:
   @just build-lib
