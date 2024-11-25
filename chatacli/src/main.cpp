@@ -1,15 +1,15 @@
-#include <iostream>
-#include <vector>
-#include <optional>
-#include <string>
-#include <filesystem>
-#include <fcntl.h>
-#include <unistd.h>
-#include <cstring>
 #include <array>
 #include <chrono>
-#include <thread>
+#include <cstring>
+#include <fcntl.h>
+#include <filesystem>
+#include <iostream>
 #include <libchata.hpp>
+#include <optional>
+#include <string>
+#include <thread>
+#include <unistd.h>
+#include <vector>
 
 namespace fs = std::filesystem;
 
@@ -53,7 +53,7 @@ std::optional<std::string> fileContents(const fs::path& path) {
 #endif
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     std::cout << "Welcome to ChataCLI " << PROJECT_VERSION << " (commit " << GIT_COMMIT_HASH << " on branch " << GIT_BRANCH << ")" << std::endl;
     std::cout << "libchata version: " << libchata_version() << std::endl;
     if (argc < 2) {

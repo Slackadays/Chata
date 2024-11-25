@@ -1,10 +1,10 @@
 #include "libchata.hpp"
-#include <vector>
-#include <sys/mman.h>
-#include <fstream>
 #include <filesystem>
-#include <string.h>
+#include <fstream>
 #include <iostream>
+#include <string.h>
+#include <sys/mman.h>
+#include <vector>
 
 constexpr std::string_view libchata_version_str = PROJECT_VERSION;
 
@@ -20,7 +20,7 @@ void ChataProcessor::save_to_memory(const chatastring& data) {
     }
 
     executable_memory.at(!current_executable_memory).resize(data.size());
-    
+
     std::copy(data.begin(), data.end(), executable_memory.at(!current_executable_memory).begin());
 
     errno = 0;
@@ -48,7 +48,7 @@ void ChataProcessor::commit() {
     auto compiled = compile_code(files);
 
     std::cout << "Ok, here's the processed code: " << compiled << std::endl;
-    
+
     auto assembled = assemble_code(compiled);
 
     std::cout << "Ok, here's the assembled code:" << std::endl;
@@ -59,7 +59,7 @@ void ChataProcessor::commit() {
 
     std::cout << std::endl;
 
-    //exit(0);
+    // exit(0);
 
     return assembled;
 }

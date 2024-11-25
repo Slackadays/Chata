@@ -42,7 +42,7 @@ chatastring to_chatastring(int num) {
     }
     std::cout << "result: " << result << std::endl;
     return result;
-} 
+}
 
 int to_int(const chatastring& str) {
     int result = 0;

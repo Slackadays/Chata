@@ -1,22 +1,22 @@
 #include "libchata.hpp"
-#include <cctype>
-#include <iostream>
 #include <algorithm>
+#include <cctype>
 #include <chrono>
+#include <iostream>
 
 chatastring generate_prelude() {
     return "fld fa0, 0(a0)\n"
-    "fld fa1, 8(a0)\n"
-    "fld fa2, 16(a0)\n"
-    "fld fa3, 24(a0)\n";
+           "fld fa1, 8(a0)\n"
+           "fld fa2, 16(a0)\n"
+           "fld fa3, 24(a0)\n";
 }
 
 chatastring generate_postlude() {
     return "\nfsd fa0, 0(a0)\n"
-    "fsd fa1, 8(a0)\n"
-    "fsd fa2, 16(a0)\n"
-    "fsd fa3, 24(a0)\n"
-    "ret";
+           "fsd fa1, 8(a0)\n"
+           "fsd fa2, 16(a0)\n"
+           "fsd fa3, 24(a0)\n"
+           "ret";
 }
 
 void replace_temp_registers(chatastring& input) {
@@ -26,8 +26,7 @@ void replace_temp_registers(chatastring& input) {
     for (const auto& reg : valid_integer_registers) {
         for (auto pos = input.find(reg); pos != std::string::npos; pos = input.find(reg, pos + 1)) {
             if (pos == 0 || input.at(pos - 1) != 'f') {
-                auto it = std::find_if(x_register_aliases.begin(), x_register_aliases.end(), 
-                    [&](const auto& pair) { return pair.first == reg; });
+                auto it = std::find_if(x_register_aliases.begin(), x_register_aliases.end(), [&](const auto& pair) { return pair.first == reg; });
                 if (it != x_register_aliases.end()) {
                     used_integer_registers.emplace_back(it->second);
                 } else {
@@ -47,8 +46,7 @@ void replace_temp_registers(chatastring& input) {
 
     for (const auto& reg : valid_floating_point_registers) {
         for (auto pos = input.find(reg); pos != std::string::npos; pos = input.find(reg, pos + 1)) {
-            auto it = std::find_if(f_register_aliases.begin(), f_register_aliases.end(), 
-                [&](const auto& pair) { return pair.first == reg; });
+            auto it = std::find_if(f_register_aliases.begin(), f_register_aliases.end(), [&](const auto& pair) { return pair.first == reg; });
             if (it != f_register_aliases.end()) {
                 used_floating_point_registers.emplace_back(it->second);
             } else {
@@ -63,11 +61,11 @@ void replace_temp_registers(chatastring& input) {
         std::cout << reg << std::endl;
     }
 
-    auto integer_reg_eligible = [&](const auto& reg){
+    auto integer_reg_eligible = [&](const auto& reg) {
         return std::find(used_integer_registers.begin(), used_integer_registers.end(), reg) == used_integer_registers.end();
     };
 
-    auto floating_point_reg_eligible = [&](const auto& reg){
+    auto floating_point_reg_eligible = [&](const auto& reg) {
         return std::find(used_floating_point_registers.begin(), used_floating_point_registers.end(), reg) == used_floating_point_registers.end();
     };
 
@@ -120,7 +118,6 @@ void replace_temp_registers(chatastring& input) {
         used_integer_registers.emplace_back(replacement);
 
         input.replace(pos, placeholder_temp_integer_register.size() + id_str.size(), replacement);
-
     }
 
     chatavector<std::pair<int, chatastring>> temp_floating_point_register_id_to_replacement;
@@ -170,7 +167,6 @@ void replace_temp_registers(chatastring& input) {
         used_floating_point_registers.emplace_back(replacement);
 
         input.replace(pos, placeholder_temp_floating_point_register.size() + id_str.size(), replacement);
-
     }
 }
 
@@ -193,7 +189,7 @@ chatastring compile_code(chatavector<InternalFile>& files) {
 
     result = prelude + result + postlude;
 
-    //std::cout << "Result: " << result << std::endl;
+    // std::cout << "Result: " << result << std::endl;
 
     replace_temp_registers(result);
 
@@ -205,7 +201,7 @@ chatastring compile_code(chatavector<InternalFile>& files) {
 
     std::cout << "Result: " << result << std::endl;
 
-    //exit(0);
+    // exit(0);
 
     return result;
 }

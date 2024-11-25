@@ -37,3 +37,11 @@ clean-lib:
 
 clean-cli:
   if [ -d "chatacli/build" ]; then rm -rf chatacli/build; fi
+
+format-code:
+  cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose '{}' +
+  cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose '{}' +
+
+check-format:
+  cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose --dry-run '{}' +
+  cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose --dry-run '{}' +

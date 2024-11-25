@@ -1,6 +1,6 @@
 #include "libchata.hpp"
-#include <fstream>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 
 chatastring assemble_code(const chatastring& data) {
@@ -13,16 +13,16 @@ chatastring assemble_code(const chatastring& data) {
     int res = std::system("riscv64-linux-gnu-as temp.s -o temp.o");
 
     if (res != 0) {
-        //std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;
-        //exit(1);
+        // std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;
+        // exit(1);
         throw ChataError(ErrorType::Dummy, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
     }
 
     res = std::system("riscv64-linux-gnu-objcopy -O binary temp.o temp.bin");
 
     if (res != 0) {
-        //std::cout << "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin" << std::endl;
-        //exit(1);
+        // std::cout << "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin" << std::endl;
+        // exit(1);
         throw ChataError(ErrorType::Dummy, "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin", 0, 0);
     }
 
@@ -31,7 +31,7 @@ chatastring assemble_code(const chatastring& data) {
     in.close();
 
     std::filesystem::remove("temp.s");
-    //std::filesystem::remove("temp.o");
+    // std::filesystem::remove("temp.o");
     std::filesystem::remove("temp.bin");
 
     return result;
