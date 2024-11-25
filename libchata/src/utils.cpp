@@ -31,23 +31,33 @@ bool is_number(const chatastring& str) {
 }
 
 chatastring to_chatastring(int num) {
-    if (num == 0) {
-        return "0";
+    chatastring result;
+    std::array<char, 16> temp;
+    auto res = std::to_chars(temp.data(), temp.data() + temp.size(), num);
+    if (res.ec != std::errc()) {
+        throw ChataError(ErrorType::Dummy, "Error! Invalid integer", 0, 0);
     }
-    chatastring str;
-    while (num) {
-        str.push_back('0' + num % 10);
-        num /= 10;
+    for (auto i = temp.data(); i < res.ptr; i++) {
+        result.push_back(*i);
     }
-    std::reverse(str.begin(), str.end());
-    return str;
-}
+    std::cout << "result: " << result << std::endl;
+    return result;
+} 
 
 int to_int(const chatastring& str) {
     int result = 0;
     auto res = std::from_chars(str.data(), str.data() + str.size(), result);
     if (res.ec != std::errc()) {
         throw ChataError(ErrorType::Dummy, "Error! Invalid integer", 0, 0);
+    }
+    return result;
+}
+
+double to_float(const chatastring& str) {
+    double result = 0;
+    auto res = std::from_chars(str.data(), str.data() + str.size(), result);
+    if (res.ec != std::errc()) {
+        throw ChataError(ErrorType::Dummy, "Error! Invalid float", 0, 0);
     }
     return result;
 }

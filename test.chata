@@ -7,8 +7,6 @@ fcvt.d.w fa1, a1
 
 fadd.d fa0, fa0, fa1
 
-#fcvt.w.s t0, fa0
-#fcvt.w.s t1, fa0
 addi t0, zero, 10
 addi t1, zero, 10
 
@@ -20,10 +18,22 @@ if t0 = t1:
 if t0 = 10:
     fadd.d fa0, fa0, fa1
 
+if 10 = t0:
+    fadd.d fa0, fa0, fa1
+    
+if t0 = 10.5: # This should round down
+    fadd.d fa0, fa0, fa1
+
 if 10 = 10:
     fadd.d fa0, fa0, fa1
 
 if fa0 = fa0:
+    fadd.d fa0, fa0, fa1
+
+if fa0 < 15:
+    fadd.d fa0, fa0, fa1
+
+if 15 > fa0:
     fadd.d fa0, fa0, fa1
 
 addi a6, zero, # you shouldn't see this # 1

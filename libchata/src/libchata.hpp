@@ -157,6 +157,10 @@ public:
     void deallocate(T* ptr, size_t requested) {
         return;
     }
+
+    bool operator==(const MemoryBank&) const {
+        return true;
+    }
 };
 
 template<class T>
@@ -271,3 +275,13 @@ bool is_integer(const chatastring& str);
 bool is_number(const chatastring& str);
 
 int to_int(const chatastring& str);
+
+double to_float(const chatastring& str);
+
+void process_ifs(chatavector<InternalFile>& files);
+
+constexpr std::string_view generated_label = "generated_code_label";
+
+constexpr std::string_view placeholder_temp_integer_register = "generated_placeholder_integer_register";
+
+constexpr std::string_view placeholder_temp_floating_point_register = "generated_placeholder_floating_point_register";
