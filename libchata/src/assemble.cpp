@@ -17,7 +17,7 @@ chatastring assemble_code(const chatastring& data) {
     if (res != 0) {
         // std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;
         // exit(1);
-        throw ChataError(ErrorType::Dummy, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
+        throw ChataError(ChataErrorType::Assembler, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
     }
 
     res = std::system("riscv64-linux-gnu-objcopy -O binary temp.o temp.bin");
@@ -25,7 +25,7 @@ chatastring assemble_code(const chatastring& data) {
     if (res != 0) {
         // std::cout << "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin" << std::endl;
         // exit(1);
-        throw ChataError(ErrorType::Dummy, "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin", 0, 0);
+        throw ChataError(ChataErrorType::Assembler, "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin", 0, 0);
     }
 
     std::ifstream in("temp.bin", std::ios::binary);

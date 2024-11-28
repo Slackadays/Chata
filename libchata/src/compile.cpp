@@ -21,6 +21,34 @@ chatastring generate_postlude() {
            "ret";
 }
 
+chatastring allocate_label(struct temp_resource_context& c) {
+    return chatastring(generated_label_prefix) + to_chatastring(c.generated_label_num);
+}
+
+chatastring allocate_label(int num) {
+    return chatastring(generated_label_prefix) + to_chatastring(num);
+}
+
+chatastring allocate_int_register(struct temp_resource_context& c) {
+    auto res = chatastring(placeholder_temp_integer_register) + to_chatastring(c.placeholder_temp_integer_register_num);
+    c.placeholder_temp_integer_register_num++;
+    return res;
+}
+
+chatastring allocate_int_register(int num) {
+    return chatastring(placeholder_temp_integer_register) + to_chatastring(num);
+}
+
+chatastring allocate_float_register(struct temp_resource_context& c) {
+    auto res = chatastring(placeholder_temp_floating_point_register) + to_chatastring(c.placeholder_temp_floating_point_register_num);
+    c.placeholder_temp_floating_point_register_num++;
+    return res;
+}
+
+chatastring allocate_float_register(int num) {
+    return chatastring(placeholder_temp_floating_point_register) + to_chatastring(num);
+}
+
 void replace_temp_registers(chatastring& input) {
     // First, search for all integer registers already present and mark those as non-candidates.
     chatavector<chatastring> used_integer_registers;
@@ -175,12 +203,14 @@ void replace_temp_registers(chatastring& input) {
 chatastring compile_code(chatavector<InternalFile>& files) {
     auto then = std::chrono::high_resolution_clock::now();
 
+    struct temp_resource_context c;
+
     auto prelude = generate_prelude();
 
     for (auto& file : files) {
         process_comments(file);
 
-        process_ifs(file);
+        process_ifs(file, c);
     }
 
     auto postlude = generate_postlude();

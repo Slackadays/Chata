@@ -2,42 +2,8 @@
 
 namespace libchata_internal {
 
-int generated_label_num = 0;
-
-int placeholder_temp_integer_register_num = 0;
-
-int placeholder_temp_floating_point_register_num = 0;
-
 bool is_one_of(auto& str, auto& vec) {
     return std::find(vec.begin(), vec.end(), str) != vec.end();
-}
-
-chatastring allocate_label() {
-    return chatastring(generated_label) + to_chatastring(generated_label_num);
-}
-
-chatastring allocate_label(int num) {
-    return chatastring(generated_label) + to_chatastring(num);
-}
-
-chatastring allocate_int_register() {
-    auto res = chatastring(placeholder_temp_integer_register) + to_chatastring(placeholder_temp_integer_register_num);
-    placeholder_temp_integer_register_num++;
-    return res;
-}
-
-chatastring allocate_int_register(int num) {
-    return chatastring(placeholder_temp_integer_register) + to_chatastring(num);
-}
-
-chatastring allocate_float_register() {
-    auto res = chatastring(placeholder_temp_floating_point_register) + to_chatastring(placeholder_temp_floating_point_register_num);
-    placeholder_temp_floating_point_register_num++;
-    return res;
-}
-
-chatastring allocate_float_register(int num) {
-    return chatastring(placeholder_temp_floating_point_register) + to_chatastring(num);
 }
 
 chatastring condition_to_int_instruction(chatastring& condition) {
@@ -54,7 +20,7 @@ chatastring condition_to_int_instruction(chatastring& condition) {
     } else if (condition == "=>") {
         return "bge";
     } else {
-        throw ChataError(ErrorType::Dummy, "Error! Invalid condition", 0, 0);
+        throw ChataError(ChataErrorType::Compiler, "Error! Invalid condition", 0, 0);
     }
 }
 
@@ -72,22 +38,22 @@ chatastring condition_to_float_instruction(chatastring& condition, chatastring& 
     } else if (condition == "=>") {
         return "fle.d " + result + ", " + operand_two + ", " + operand_one;
     } else {
-        throw ChataError(ErrorType::Dummy, "Error! Invalid condition", 0, 0);
+        throw ChataError(ChataErrorType::Compiler, "Error! Invalid condition", 0, 0);
     }
 }
 
-void process_ifs(InternalFile& file) {
+void process_ifs(InternalFile& file, struct temp_resource_context& c) {
     /*Format:
     if register condition register|immediate:
         code
 
     This becomes
 
-    generated_label:
+    generated_label_prefix:
         code
         ret
 
-    beq|beqz|bne|bnez|blt|bltu|bltz|bgt|bgtz|ble|blez|bge|bgez register, register|immediate, generated_label
+    beq|beqz|bne|bnez|blt|bltu|bltz|bgt|bgtz|ble|blez|bge|bgez register, register|immediate, generated_label_prefix
 
     And "condition" can be =|!=|<|>|<=|=>
     */
@@ -96,18 +62,18 @@ void process_ifs(InternalFile& file) {
     chatavector<chatastring> branch_code, code_block;
     chatastring operand_1, operand_2, condition;
     for (size_t i = 0; i < file.data.size(); i++) {
-        auto c = [&]() {
+        auto ch = [&]() {
             return file.data.at(i);
         };
 
         // Count indentation and check for "if" statement
-        if (c() == '\n') {
+        if (ch() == '\n') {
             if_indent_level = 0;
             continue;
-        } else if (std::isblank(c())) {
+        } else if (std::isblank(ch())) {
             if_indent_level++;
             continue;
-        } else if (c() == 'i' && file.data.substr(i, 2) == "if") {
+        } else if (ch() == 'i' && file.data.substr(i, 2) == "if") {
             i_at_if_statement_start = i;
             i += 2;
         } else {
@@ -125,30 +91,30 @@ void process_ifs(InternalFile& file) {
 
         // Analyze the condition and generate the correct branch instruction
         // First, check if both operands are registers
-        while (std::isblank(c())) {
+        while (std::isblank(ch())) {
             i++;
         }
-        while (std::isalnum(c()) || c() == '.') {
-            operand_1.push_back(c());
+        while (std::isalnum(ch()) || ch() == '.') {
+            operand_1.push_back(ch());
             i++;
         }
-        while (std::isblank(c())) {
+        while (std::isblank(ch())) {
             i++;
         }
-        while (c() == '=' || c() == '!' || c() == '<' || c() == '>') {
-            condition.push_back(c());
+        while (ch() == '=' || ch() == '!' || ch() == '<' || ch() == '>') {
+            condition.push_back(ch());
             i++;
         }
-        while (std::isblank(c())) {
+        while (std::isblank(ch())) {
             i++;
         }
-        while (std::isalnum(c()) || c() == '.') {
-            operand_2.push_back(c());
+        while (std::isalnum(ch()) || ch() == '.') {
+            operand_2.push_back(ch());
             i++;
         }
         i++;
 
-        int inner_if_label_num = generated_label_num;
+        int inner_if_label_num = c.generated_label_num;
 
         std::cout << "Operand 1: " << operand_1 << std::endl;
         std::cout << "Operand 2: " << operand_2 << std::endl;
@@ -165,7 +131,7 @@ void process_ifs(InternalFile& file) {
                 this_num = operand_2;
                 this_reg = operand_1;
             }
-            auto temp_reg_1 = allocate_int_register();
+            auto temp_reg_1 = allocate_int_register(c);
             if (is_float(this_num)) {
                 this_num = this_num.substr(0, this_num.find('.'));
             }
@@ -180,7 +146,7 @@ void process_ifs(InternalFile& file) {
             }
             branch_code.push_back(condition_to_int_instruction(condition) + " " + comp_reg_one + ", " + comp_reg_two + ", " + allocate_label(inner_if_label_num));
         } else if (is_one_of(operand_1, valid_floating_point_registers) && is_one_of(operand_2, valid_floating_point_registers)) {
-            auto temp_reg_1 = allocate_int_register();
+            auto temp_reg_1 = allocate_int_register(c);
             branch_code.push_back(condition_to_float_instruction(condition, temp_reg_1, operand_1, operand_2));
             if (condition == "!=") {
                 branch_code.push_back("beqz " + temp_reg_1 + ", " + allocate_label(inner_if_label_num));
@@ -196,8 +162,8 @@ void process_ifs(InternalFile& file) {
                 this_num = operand_2;
                 this_reg = operand_1;
             }
-            auto temp_reg_1 = allocate_int_register();
-            auto temp_reg_2 = allocate_float_register();
+            auto temp_reg_1 = allocate_int_register(c);
+            auto temp_reg_2 = allocate_float_register(c);
             float temp = to_float(this_num); // Only floats are supported here for now
             std::cout << "Temp: " << temp << std::endl;
             union {
@@ -267,9 +233,9 @@ void process_ifs(InternalFile& file) {
                 }
             }
         } else {
-            throw ChataError(ErrorType::Dummy, "Error! Invalid operands", 0, 0);
+            throw ChataError(ChataErrorType::Compiler, "Error! Invalid operands", 0, 0);
         }
-        generated_label_num++;
+        c.generated_label_num++;
 
         std::cout << "Branch code: " << std::endl;
         for (auto& line : branch_code) {
@@ -279,7 +245,7 @@ void process_ifs(InternalFile& file) {
         // Ok, now that we have the branch instruction, we can generate the code block
 
         // First, add "j label" to the block to skip past it if we don't branch
-        code_block.push_back(chatastring(if_indent_level, ' ') + "j " + allocate_label());
+        code_block.push_back(chatastring(if_indent_level, ' ') + "j " + allocate_label(c));
 
         // Then, we need to add the label to jump to for our inner if statement
         code_block.push_back(chatastring(if_indent_level, ' ') + allocate_label(inner_if_label_num) + ":");
@@ -292,26 +258,26 @@ void process_ifs(InternalFile& file) {
 
         int first_line_indent_level = 0;
 
-        while (i < file.data.size() && c() != '\n') {
+        while (i < file.data.size() && ch() != '\n') {
             i++;
         }
 
         i++;
 
-        for (; i < file.data.size() && std::isblank(c()); i++) {
+        for (; i < file.data.size() && std::isblank(ch()); i++) {
             first_line_indent_level++;
             std::cout << "First line indent level: " << first_line_indent_level << std::endl;
         }
 
-        for (; i < file.data.size() && c() != '\n'; i++) {
-            line.push_back(c());
+        for (; i < file.data.size() && ch() != '\n'; i++) {
+            line.push_back(ch());
         }
 
         if (line.size() > 0) {
             code_block.push_back(chatastring(if_indent_level, ' ') + line);
         }
 
-        while (i < file.data.size() && c() == '\n') {
+        while (i < file.data.size() && ch() == '\n') {
             i++;
         }
 
@@ -319,35 +285,35 @@ void process_ifs(InternalFile& file) {
         std::cout << "First line indent level: " << first_line_indent_level << std::endl;
 
         if (first_line_indent_level == if_indent_level) {
-            throw ChataError(ErrorType::Dummy, "Error! Code block must be indented", 0, 0);
+            throw ChataError(ChataErrorType::Compiler, "Error! Code block must be indented", 0, 0);
         }
 
         int this_indent_level = 0;
 
         while (true) {
             this_indent_level = 0;
-            for (; i < file.data.size() && std::isblank(c()); i++) {
+            for (; i < file.data.size() && std::isblank(ch()); i++) {
                 this_indent_level++;
             }
             std::cout << "This indent level: " << this_indent_level << std::endl;
             if (this_indent_level > if_indent_level && this_indent_level < first_line_indent_level) {
-                throw ChataError(ErrorType::Dummy, "Error! Code block must be indented the same as the first line", 0, 0);
+                throw ChataError(ChataErrorType::Compiler, "Error! Code block must be indented the same as the first line", 0, 0);
             }
             if (this_indent_level <= if_indent_level) {
                 break;
             }
             line.clear();
-            for (; i < file.data.size() && c() != '\n'; i++) {
-                line.push_back(c());
+            for (; i < file.data.size() && ch() != '\n'; i++) {
+                line.push_back(ch());
             }
             code_block.push_back(chatastring(this_indent_level, ' ') + line);
-            while (i < file.data.size() && c() == '\n') {
+            while (i < file.data.size() && ch() == '\n') {
                 i++;
             }
         }
 
-        code_block.push_back(chatastring(if_indent_level, ' ') + allocate_label() + ":");
-        generated_label_num++;
+        code_block.push_back(chatastring(if_indent_level, ' ') + allocate_label(c) + ":");
+        c.generated_label_num++;
 
         // Ok, now we need to overwrite the if statement starting at i_at_if_statement_start with the generated label and the code block
         // We also need to indent the code block by some nonzero amount compared to the label

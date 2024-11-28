@@ -37,7 +37,7 @@ chatastring to_chatastring(int num) {
     std::array<char, 16> temp;
     auto res = std::to_chars(temp.data(), temp.data() + temp.size(), num);
     if (res.ec != std::errc()) {
-        throw ChataError(ErrorType::Dummy, "Error! Invalid integer", 0, 0);
+        throw ChataError(ChataErrorType::Other, "Error! Invalid integer", 0, 0);
     }
     for (auto i = temp.data(); i < res.ptr; i++) {
         result.push_back(*i);
@@ -50,7 +50,7 @@ int to_int(const chatastring& str) {
     int result = 0;
     auto res = std::from_chars(str.data(), str.data() + str.size(), result);
     if (res.ec != std::errc()) {
-        throw ChataError(ErrorType::Dummy, "Error! Invalid integer", 0, 0);
+        throw ChataError(ChataErrorType::Other, "Error! Invalid integer", 0, 0);
     }
     return result;
 }
@@ -59,7 +59,7 @@ double to_float(const chatastring& str) {
     double result = 0;
     auto res = std::from_chars(str.data(), str.data() + str.size(), result);
     if (res.ec != std::errc()) {
-        throw ChataError(ErrorType::Dummy, "Error! Invalid float", 0, 0);
+        throw ChataError(ChataErrorType::Other, "Error! Invalid float", 0, 0);
     }
     return result;
 }

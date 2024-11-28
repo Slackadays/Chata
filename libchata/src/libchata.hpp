@@ -75,6 +75,12 @@ constexpr std::array<std::string_view, 20> floating_point_register_replacement_p
                                                                                                 "ft10", "ft11", "fa0", "fa1", "fa2", "fa3", "fa4", "fa5", "fa6", "fa7"};
 
 chatastring to_chatastring(int num);
+chatastring allocate_label(struct temp_resource_context& c);
+chatastring allocate_label(int num);
+chatastring allocate_int_register(struct temp_resource_context& c);
+chatastring allocate_int_register(int num);
+chatastring allocate_float_register(struct temp_resource_context& c);
+chatastring allocate_float_register(int num);
 
 static class GlobalMemoryBank {
     std::array<std::byte, memory_pool_size> pool;
@@ -144,16 +150,17 @@ public:
     void deallocate(T* ptr, size_t requested) { return; }
 };
 
-enum class ErrorType {
-    Nada,
-    Dummy
-};
-
 class InternalFile {
 public:
     chatastring data;
     std::optional<std::string_view> filename;
     InternalFile(InputFile file) : data(file.data.begin(), file.data.end()), filename(file.filename) {}
+};
+
+struct temp_resource_context {
+    int generated_label_num = 0;
+    int placeholder_temp_integer_register_num = 0;
+    int placeholder_temp_floating_point_register_num = 0;
 };
 
 chatastring assemble_code(const chatastring& data);
@@ -172,9 +179,9 @@ int to_int(const chatastring& str);
 
 double to_float(const chatastring& str);
 
-void process_ifs(InternalFile& file);
+void process_ifs(InternalFile& file, struct temp_resource_context& c);
 
-constexpr std::string_view generated_label = "generated_code_label";
+constexpr std::string_view generated_label_prefix = "generated_code_label";
 
 constexpr std::string_view placeholder_temp_integer_register = "generated_placeholder_integer_register";
 
@@ -182,10 +189,17 @@ constexpr std::string_view placeholder_temp_floating_point_register = "generated
 
 } // namespace libchata_internal
 
+enum class ChataErrorType {
+    Unspecified,
+    Compiler,
+    Assembler,
+    Execution,
+    Other
+};
+
 class ChataError : public std::exception {
 public:
-    using ErrorType = libchata_internal::ErrorType;
-    ErrorType type = ErrorType::Nada;
+    ChataErrorType type = ChataErrorType::Unspecified;
     std::optional<std::string_view> details;
     int line = 0;
     int column = 0;
@@ -193,11 +207,20 @@ public:
     char* what() {
         libchata_internal::chatastring error_message;
         switch (type) {
-        case ErrorType::Nada:
-            error_message = "No error ";
+        case ChataErrorType::Unspecified:
+            error_message = "Unspecified error ";
             break;
-        case ErrorType::Dummy:
-            error_message = "Dummy error ";
+        case ChataErrorType::Compiler:
+            error_message = "Compiler error ";
+            break;
+        case ChataErrorType::Assembler:
+            error_message = "Assembler error ";
+            break;
+        case ChataErrorType::Execution:
+            error_message = "Execution error ";
+            break;
+        case ChataErrorType::Other:
+            error_message = "Other error ";
             break;
         }
         if (details.has_value()) {
@@ -207,7 +230,7 @@ public:
         return error_message.data();
     }
 
-    ChataError(ErrorType type, std::optional<std::string_view> details, int line, int column) : type(type), details(details), line(line), column(column) {}
+    ChataError(ChataErrorType type, std::optional<std::string_view> details, int line, int column) : type(type), details(details), line(line), column(column) {}
 };
 
 struct chata_args {
