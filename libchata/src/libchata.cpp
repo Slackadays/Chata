@@ -6,6 +6,8 @@
 #include <sys/mman.h>
 #include <vector>
 
+using namespace libchata_internal;
+
 constexpr std::string_view libchata_version_str = PROJECT_VERSION;
 
 void ChataProcessor::process_data(chata_args& input) {

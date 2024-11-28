@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iostream>
 
+namespace libchata_internal {
+
 chatastring assemble_code(const chatastring& data) {
     // Assemble by putting everything into a .s file, then invoke as, then convert to binary with objcopy
 
@@ -36,3 +38,5 @@ chatastring assemble_code(const chatastring& data) {
 
     return result;
 }
+
+} // namespace libchata_internal

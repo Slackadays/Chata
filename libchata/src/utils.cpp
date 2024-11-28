@@ -1,6 +1,8 @@
 #include "libchata.hpp"
 #include <charconv>
 
+namespace libchata_internal {
+
 bool is_integer(const chatastring& str) {
     for (auto c : str) {
         if (!std::isdigit(c)) {
@@ -81,3 +83,6 @@ void process_comments(InternalFile& file) {
         }
     }
 }
+
+} // namespace libchata_internal
+

@@ -10,7 +10,22 @@
 #include <unistd.h>
 #include <vector>
 
-constexpr size_t libchata_memory_pool_size = 33554432;
+namespace libchata_internal {
+class InternalFile;
+}
+
+class InputFile {
+    std::string_view data;
+    std::optional<std::string_view> filename;
+    friend libchata_internal::InternalFile;
+
+public:
+    InputFile(std::string_view data, std::optional<std::string_view> filename) : data(data), filename(filename) {}
+};
+
+namespace libchata_internal {
+
+constexpr size_t memory_pool_size = 33554432;
 
 template <class T>
 class MemoryBank;
@@ -62,7 +77,7 @@ constexpr std::array<std::string_view, 20> floating_point_register_replacement_p
 chatastring to_chatastring(int num);
 
 static class GlobalMemoryBank {
-    std::array<std::byte, libchata_memory_pool_size> pool;
+    std::array<std::byte, memory_pool_size> pool;
     size_t used = 0;
     long pagesize = sysconf(_SC_PAGE_SIZE);
 
@@ -134,15 +149,49 @@ enum class ErrorType {
     Dummy
 };
 
+class InternalFile {
+public:
+    chatastring data;
+    std::optional<std::string_view> filename;
+    InternalFile(InputFile file) : data(file.data.begin(), file.data.end()), filename(file.filename) {}
+};
+
+chatastring assemble_code(const chatastring& data);
+
+chatastring compile_code(chatavector<InternalFile>& files);
+
+void process_comments(InternalFile& files);
+
+bool is_float(const chatastring& str);
+
+bool is_integer(const chatastring& str);
+
+bool is_number(const chatastring& str);
+
+int to_int(const chatastring& str);
+
+double to_float(const chatastring& str);
+
+void process_ifs(InternalFile& file);
+
+constexpr std::string_view generated_label = "generated_code_label";
+
+constexpr std::string_view placeholder_temp_integer_register = "generated_placeholder_integer_register";
+
+constexpr std::string_view placeholder_temp_floating_point_register = "generated_placeholder_floating_point_register";
+
+} // namespace libchata_internal
+
 class ChataError : public std::exception {
 public:
+    using ErrorType = libchata_internal::ErrorType;
     ErrorType type = ErrorType::Nada;
     std::optional<std::string_view> details;
     int line = 0;
     int column = 0;
 
     char* what() {
-        chatastring error_message;
+        libchata_internal::chatastring error_message;
         switch (type) {
         case ErrorType::Nada:
             error_message = "No error ";
@@ -154,29 +203,11 @@ public:
         if (details.has_value()) {
             error_message += *details;
         }
-        error_message += " at line " + to_chatastring(line) + ", column " + to_chatastring(column);
+        error_message += " at line " + libchata_internal::to_chatastring(line) + ", column " + libchata_internal::to_chatastring(column);
         return error_message.data();
     }
 
     ChataError(ErrorType type, std::optional<std::string_view> details, int line, int column) : type(type), details(details), line(line), column(column) {}
-};
-
-class InternalFile;
-
-class InputFile {
-    std::string_view data;
-    std::optional<std::string_view> filename;
-    friend InternalFile;
-
-public:
-    InputFile(std::string_view data, std::optional<std::string_view> filename) : data(data), filename(filename) {}
-};
-
-class InternalFile {
-public:
-    chatastring data;
-    std::optional<std::string_view> filename;
-    InternalFile(InputFile file) : data(file.data.begin(), file.data.end()), filename(file.filename) {}
 };
 
 struct chata_args {
@@ -187,6 +218,10 @@ struct chata_args {
 };
 
 class ChataProcessor {
+    using chatastring = libchata_internal::chatastring;
+    template <typename T>
+    using AlignedMemory = libchata_internal::AlignedMemory<T>;
+
     std::array<std::vector<unsigned char, AlignedMemory<unsigned char>>, 2> executable_memory;
     int current_executable_memory = 0;
 
@@ -217,27 +252,3 @@ public:
 };
 
 std::string_view libchata_version();
-
-chatastring assemble_code(const chatastring& data);
-
-chatastring compile_code(chatavector<InternalFile>& files);
-
-void process_comments(InternalFile& files);
-
-bool is_float(const chatastring& str);
-
-bool is_integer(const chatastring& str);
-
-bool is_number(const chatastring& str);
-
-int to_int(const chatastring& str);
-
-double to_float(const chatastring& str);
-
-void process_ifs(InternalFile& file);
-
-constexpr std::string_view generated_label = "generated_code_label";
-
-constexpr std::string_view placeholder_temp_integer_register = "generated_placeholder_integer_register";
-
-constexpr std::string_view placeholder_temp_floating_point_register = "generated_placeholder_floating_point_register";

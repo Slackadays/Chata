@@ -1,5 +1,7 @@
 #include "libchata.hpp"
 
+namespace libchata_internal {
+
 int generated_label_num = 0;
 
 int placeholder_temp_integer_register_num = 0;
@@ -374,3 +376,5 @@ void process_ifs(InternalFile& file) {
         i = 0;
     }
 }
+
+} // namespace libchata_internal

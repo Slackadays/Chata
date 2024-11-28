@@ -4,6 +4,8 @@
 #include <chrono>
 #include <iostream>
 
+namespace libchata_internal {
+
 chatastring generate_prelude() {
     return "fld fa0, 0(a0)\n"
            "fld fa1, 8(a0)\n"
@@ -207,3 +209,5 @@ chatastring compile_code(chatavector<InternalFile>& files) {
 
     return result;
 }
+
+} // namespace libchata_internal

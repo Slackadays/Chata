@@ -6,7 +6,7 @@ copy:
   . ./credentials.sh; \
   rsync -rRv -e ssh ./ $CHATA_CROSS_USERNAME@$CHATA_CROSS_IP:$CHATA_CROSS_PATH --exclude="*/build" --exclude=".git/*" --exclude="*a.out" --exclude="*.png" 
 
-build-all:
+build:
   @just build-lib
   @just build-cli
 
@@ -28,7 +28,7 @@ build-cli:
 
   cd chatacli/build; sudo cmake --install .
 
-clean-all:
+clean:
   @just clean-lib
   @just clean-cli
 
