@@ -21,7 +21,7 @@ chatastring generate_postlude() {
            "ret";
 }
 
-chatastring allocate_label(struct temp_resource_context& c) {
+chatastring allocate_label(struct compilation_context& c) {
     return chatastring(generated_label_prefix) + to_chatastring(c.generated_label_num);
 }
 
@@ -29,7 +29,7 @@ chatastring allocate_label(int num) {
     return chatastring(generated_label_prefix) + to_chatastring(num);
 }
 
-chatastring allocate_int_register(struct temp_resource_context& c) {
+chatastring allocate_int_register(struct compilation_context& c) {
     auto res = chatastring(placeholder_temp_integer_register) + to_chatastring(c.placeholder_temp_integer_register_num);
     c.placeholder_temp_integer_register_num++;
     return res;
@@ -39,7 +39,7 @@ chatastring allocate_int_register(int num) {
     return chatastring(placeholder_temp_integer_register) + to_chatastring(num);
 }
 
-chatastring allocate_float_register(struct temp_resource_context& c) {
+chatastring allocate_float_register(struct compilation_context& c) {
     auto res = chatastring(placeholder_temp_floating_point_register) + to_chatastring(c.placeholder_temp_floating_point_register_num);
     c.placeholder_temp_floating_point_register_num++;
     return res;
@@ -47,6 +47,28 @@ chatastring allocate_float_register(struct temp_resource_context& c) {
 
 chatastring allocate_float_register(int num) {
     return chatastring(placeholder_temp_floating_point_register) + to_chatastring(num);
+}
+
+void jump_to_next_line(InternalFile& file, struct compilation_context& c, size_t& i) {
+    while (i < file.data.size() && file.data.at(i) != '\n') {
+        i++;
+    }
+    while (i < file.data.size() && file.data.at(i) == '\n') {
+        c.line++;
+        i++;
+    }
+    c.column = 0;
+}
+
+chatastring read_this_line(InternalFile& file, struct compilation_context& c, size_t& i) {
+    chatastring line;
+    while (i < file.data.size() && file.data.at(i) != '\n') {
+        line += file.data.at(i);
+        std::cout << "Line: " << line << std::endl;
+        i++;
+        c.column++;
+    }
+    return line;
 }
 
 void replace_temp_registers(chatastring& input) {
@@ -203,7 +225,7 @@ void replace_temp_registers(chatastring& input) {
 chatastring compile_code(chatavector<InternalFile>& files) {
     auto then = std::chrono::high_resolution_clock::now();
 
-    struct temp_resource_context c;
+    struct compilation_context c;
 
     auto prelude = generate_prelude();
 
@@ -211,6 +233,8 @@ chatastring compile_code(chatavector<InternalFile>& files) {
         process_comments(file);
 
         process_ifs(file, c);
+
+        process_changes(file, c);
     }
 
     auto postlude = generate_postlude();

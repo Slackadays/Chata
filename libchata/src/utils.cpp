@@ -64,6 +64,15 @@ double to_float(const chatastring& str) {
     return result;
 }
 
+int decimal_representation_of_float(float input) {
+    union {
+        float f;
+        int i;
+    } u;
+    u.f = input;
+    return u.i;
+}
+
 void process_comments(InternalFile& file) {
     // Comment format: # begins a comment on a line, and another # ends that comment
     // Examples: # Commented out #

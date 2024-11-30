@@ -2,10 +2,6 @@
 
 namespace libchata_internal {
 
-bool is_one_of(auto& str, auto& vec) {
-    return std::find(vec.begin(), vec.end(), str) != vec.end();
-}
-
 chatastring condition_to_int_instruction(chatastring& condition) {
     if (condition == "=") {
         return "beq";
@@ -42,25 +38,26 @@ chatastring condition_to_float_instruction(chatastring& condition, chatastring& 
     }
 }
 
-void process_ifs(InternalFile& file, struct temp_resource_context& c) {
+void process_ifs(InternalFile& file, struct compilation_context& c) {
     /*Format:
-    if register condition register|immediate:
+    if register1|immediate1 condition register2|immediate2:
         code
 
     This becomes
 
-    generated_label_prefix:
+    beq|beqz|bne|bnez|blt|bltu|bltz|bgt|bgtz|ble|blez|bge|bgez register, register|immediate, generated_label1
+    j generated_label2
+    generated_label1:
         code
-        ret
-
-    beq|beqz|bne|bnez|blt|bltu|bltz|bgt|bgtz|ble|blez|bge|bgez register, register|immediate, generated_label_prefix
+    generated_label2:
 
     And "condition" can be =|!=|<|>|<=|=>
     */
     int if_indent_level = 0;
     int i_at_if_statement_start = 0;
-    chatavector<chatastring> branch_code, code_block;
-    chatastring operand_1, operand_2, condition;
+    
+    c.line = 0;
+    c.column = 0;
     for (size_t i = 0; i < file.data.size(); i++) {
         auto ch = [&]() {
             return file.data.at(i);
@@ -69,50 +66,60 @@ void process_ifs(InternalFile& file, struct temp_resource_context& c) {
         // Count indentation and check for "if" statement
         if (ch() == '\n') {
             if_indent_level = 0;
+            c.line++;
+            c.column = 0;
             continue;
         } else if (std::isblank(ch())) {
             if_indent_level++;
+            c.column++;
             continue;
         } else if (ch() == 'i' && file.data.substr(i, 2) == "if") {
             i_at_if_statement_start = i;
             i += 2;
+            c.column += 2;
         } else {
+            c.column++;
             continue;
         }
 
         std::cout << "if indent level: " << if_indent_level << std::endl;
 
         // Save the condition and code block
-        branch_code.clear();
-        operand_1.clear();
-        operand_2.clear();
-        condition.clear();
-        code_block.clear();
+        chatavector<chatastring> branch_code, code_block;
+        chatastring operand_1, operand_2, condition;
 
         // Analyze the condition and generate the correct branch instruction
         // First, check if both operands are registers
         while (std::isblank(ch())) {
             i++;
+            c.column++;
         }
         while (std::isalnum(ch()) || ch() == '.') {
             operand_1.push_back(ch());
             i++;
+            c.column++;
         }
         while (std::isblank(ch())) {
             i++;
+            c.column++;
         }
         while (ch() == '=' || ch() == '!' || ch() == '<' || ch() == '>') {
             condition.push_back(ch());
             i++;
+            c.column++;
         }
         while (std::isblank(ch())) {
             i++;
+            c.column++;
         }
         while (std::isalnum(ch()) || ch() == '.') {
             operand_2.push_back(ch());
             i++;
+            c.column++;
         }
         i++;
+        c.column = 0;
+        c.line++;
 
         int inner_if_label_num = c.generated_label_num;
 
@@ -164,17 +171,7 @@ void process_ifs(InternalFile& file, struct temp_resource_context& c) {
             }
             auto temp_reg_1 = allocate_int_register(c);
             auto temp_reg_2 = allocate_float_register(c);
-            float temp = to_float(this_num); // Only floats are supported here for now
-            std::cout << "Temp: " << temp << std::endl;
-            union {
-                float f;
-                int i;
-            } u;
-            u.f = temp;
-            std::cout << "u.i = " << u.i << std::endl;
-            chatastring decimal_representation = to_chatastring(u.i);
-            std::cout << "Decimal representation: " << decimal_representation << std::endl;
-            branch_code.push_back("li " + temp_reg_1 + ", " + decimal_representation);
+            branch_code.push_back("li " + temp_reg_1 + ", " + to_chatastring(decimal_representation_of_float(to_float(this_num))));
             branch_code.push_back("fmv.s.x " + temp_reg_2 + ", " + temp_reg_1);  // Move from integer register to floating point
             branch_code.push_back("fcvt.d.s " + temp_reg_2 + ", " + temp_reg_2); // Convert from single to double
             chatastring comp_reg_one, comp_reg_two;
@@ -260,17 +257,22 @@ void process_ifs(InternalFile& file, struct temp_resource_context& c) {
 
         while (i < file.data.size() && ch() != '\n') {
             i++;
+            c.column++;
         }
 
         i++;
+        c.column = 0;
+        c.line++;
 
         for (; i < file.data.size() && std::isblank(ch()); i++) {
             first_line_indent_level++;
+            c.column++;
             std::cout << "First line indent level: " << first_line_indent_level << std::endl;
         }
 
         for (; i < file.data.size() && ch() != '\n'; i++) {
             line.push_back(ch());
+            c.column++;
         }
 
         if (line.size() > 0) {
@@ -279,6 +281,8 @@ void process_ifs(InternalFile& file, struct temp_resource_context& c) {
 
         while (i < file.data.size() && ch() == '\n') {
             i++;
+            c.column = 0;
+            c.line++;
         }
 
         std::cout << "First line: " << line << std::endl;
@@ -294,6 +298,7 @@ void process_ifs(InternalFile& file, struct temp_resource_context& c) {
             this_indent_level = 0;
             for (; i < file.data.size() && std::isblank(ch()); i++) {
                 this_indent_level++;
+                c.column++;
             }
             std::cout << "This indent level: " << this_indent_level << std::endl;
             if (this_indent_level > if_indent_level && this_indent_level < first_line_indent_level) {
@@ -305,10 +310,13 @@ void process_ifs(InternalFile& file, struct temp_resource_context& c) {
             line.clear();
             for (; i < file.data.size() && ch() != '\n'; i++) {
                 line.push_back(ch());
+                c.column++;
             }
             code_block.push_back(chatastring(this_indent_level, ' ') + line);
             while (i < file.data.size() && ch() == '\n') {
                 i++;
+                c.column = 0;
+                c.line++;
             }
         }
 
@@ -318,7 +326,6 @@ void process_ifs(InternalFile& file, struct temp_resource_context& c) {
         // Ok, now we need to overwrite the if statement starting at i_at_if_statement_start with the generated label and the code block
         // We also need to indent the code block by some nonzero amount compared to the label
         chatastring temp;
-        temp.clear();
 
         for (auto& line : branch_code) {
             line.append("\n");
@@ -340,6 +347,8 @@ void process_ifs(InternalFile& file, struct temp_resource_context& c) {
         file.data.insert(i, "\n");
 
         i = 0;
+        c.line = 0;
+        c.column = 0;
     }
 }
 

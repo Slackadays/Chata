@@ -10,8 +10,11 @@ fadd.d fa0, fa0, fa1
 addi t0, zero, 10
 addi t1, zero, 10
 
+fa0 += 2
+
 if t0 = t1:
     fadd.d fa0, fa0, fa1
+    fa0 *= 10
     if t0 != t1:
         fadd.d fa0, fa0, fa1
 

@@ -75,11 +75,11 @@ constexpr std::array<std::string_view, 20> floating_point_register_replacement_p
                                                                                                 "ft10", "ft11", "fa0", "fa1", "fa2", "fa3", "fa4", "fa5", "fa6", "fa7"};
 
 chatastring to_chatastring(int num);
-chatastring allocate_label(struct temp_resource_context& c);
+chatastring allocate_label(struct compilation_context& c);
 chatastring allocate_label(int num);
-chatastring allocate_int_register(struct temp_resource_context& c);
+chatastring allocate_int_register(struct compilation_context& c);
 chatastring allocate_int_register(int num);
-chatastring allocate_float_register(struct temp_resource_context& c);
+chatastring allocate_float_register(struct compilation_context& c);
 chatastring allocate_float_register(int num);
 
 static class GlobalMemoryBank {
@@ -157,10 +157,12 @@ public:
     InternalFile(InputFile file) : data(file.data.begin(), file.data.end()), filename(file.filename) {}
 };
 
-struct temp_resource_context {
+struct compilation_context {
     int generated_label_num = 0;
     int placeholder_temp_integer_register_num = 0;
     int placeholder_temp_floating_point_register_num = 0;
+    int line = 0;
+    int column = 0;
 };
 
 chatastring assemble_code(const chatastring& data);
@@ -179,7 +181,19 @@ int to_int(const chatastring& str);
 
 double to_float(const chatastring& str);
 
-void process_ifs(InternalFile& file, struct temp_resource_context& c);
+bool is_one_of(auto& str, auto& vec) {
+    return std::find(vec.begin(), vec.end(), str) != vec.end();
+}
+
+void jump_to_next_line(InternalFile& file, struct compilation_context& c, size_t& i);
+
+chatastring read_this_line(InternalFile& file, struct compilation_context& c, size_t& i);
+
+int decimal_representation_of_float(float input);
+
+void process_ifs(InternalFile& file, struct compilation_context& c);
+
+void process_changes(InternalFile& file, struct compilation_context& c);
 
 constexpr std::string_view generated_label_prefix = "generated_code_label";
 
