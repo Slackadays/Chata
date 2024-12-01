@@ -222,6 +222,44 @@ void replace_temp_registers(chatastring& input) {
     }
 }
 
+void process_comments(InternalFile& file) {
+    // Chata comment format: # begins a comment on a line, and another # ends that comment
+    // If a line begins with a #, no subsequent # matters
+    // Examples: This is not commented out, but # this is #
+    // # This whole line is a comment
+    // Regular RISC-V assemblers will already handle the whole line case, so we only need to think about
+    // the partial line one
+
+    bool in_comment = false;
+    bool partial_comment_possible = false;
+    for (int i = 0; i < file.data.size(); i++) {
+        auto ch = [&]() {
+            return file.data.at(i);
+        };
+        if (std::isspace(ch()) && !partial_comment_possible) {
+            continue;
+        }
+        if (std::isprint(ch()) && ch() != '#' && !in_comment) {
+            partial_comment_possible = true;
+        }
+        if (std::isprint(ch()) && ch() == '#' && !partial_comment_possible) {
+            for (; i < file.data.size() && ch() != '\n'; i++) {}
+            continue;
+        }
+        if (ch() == '#' && partial_comment_possible) {
+            in_comment = !in_comment;
+            file.data.at(i) = ' ';
+        }
+        if (ch() == '\n') {
+            partial_comment_possible = false;
+            in_comment = false;
+        }
+        if (in_comment) {
+            file.data.at(i) = ' ';
+        }
+    }
+}
+
 chatastring compile_code(chatavector<InternalFile>& files) {
     auto then = std::chrono::high_resolution_clock::now();
 

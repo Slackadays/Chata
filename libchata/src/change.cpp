@@ -14,7 +14,7 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
     Temporary regosters might be allocated too
     */
 
-    c.line = 0;
+    c.line = 1;
     c.column = 0;
 
     for (size_t i = 0; i < file.data.size(); i++) {
@@ -80,7 +80,7 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
 
         if (is_one_of(operand_1, valid_integer_registers) && is_one_of(operand_2, valid_integer_registers)) {
             if (operation == "=") {
-            lines.push_back("add " + operand_1 + ", zero, " + operand_2);
+            lines.push_back("mv " + operand_1 + ", " + operand_2);
             } else if (operation == "+=") {
             lines.push_back("add " + operand_1 + ", " + operand_1 + ", " + operand_2);
             } else if (operation == "-=") {
@@ -93,11 +93,14 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
         } else if ((is_number(operand_1) && is_one_of(operand_2, valid_integer_registers)) || (is_one_of(operand_1, valid_integer_registers) && is_number(operand_2))) {
             chatastring this_reg, this_num;
             if (is_number(operand_1)) {
-            this_num = operand_1;
-            this_reg = operand_2;
+                this_num = operand_1;
+                this_reg = operand_2;
             } else {
-            this_num = operand_2;
-            this_reg = operand_1;
+                this_num = operand_2;
+                this_reg = operand_1;
+            }
+            if (is_float(this_num)) {
+                this_num = to_chatastring(static_cast<int>(to_float(this_num)));
             }
             if (operation == "=") {
                 lines.push_back("li " + this_reg + ", " + this_num);
@@ -120,9 +123,7 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
             }
         } else if (is_one_of(operand_1, valid_floating_point_registers) && is_one_of(operand_2, valid_floating_point_registers)) {
             if (operation == "=") {
-                auto temp_reg_1 = allocate_float_register(c);
-                lines.push_back("fmv.d " + temp_reg_1 + ", zero");
-                lines.push_back("fadd.d " + operand_1 + ", " + temp_reg_1 + ", " + operand_2);
+                lines.push_back("fmv.d " + operand_1 + ", " + operand_2);
             } else if (operation == "+=") {
                 lines.push_back("fadd.d " + operand_1 + ", " + operand_1 + ", " + operand_2);
             } else if (operation == "-=") {

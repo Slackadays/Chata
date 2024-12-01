@@ -1,5 +1,6 @@
 #include "libchata.hpp"
 #include <charconv>
+#include <algorithm>
 
 namespace libchata_internal {
 
@@ -64,6 +65,30 @@ double to_float(const chatastring& str) {
     return result;
 }
 
+bool is_register_character(const char& c) {
+    return std::islower(c) || std::isdigit(c);
+}
+
+chatastring make_base_register(const chatastring& reg) {
+    if (auto it = std::find_if(x_register_aliases.begin(), x_register_aliases.end(), [&](const auto& pair) { return pair.second == reg; }); it != x_register_aliases.end()) {
+        return it->first;
+    }
+    if (auto it = std::find_if(f_register_aliases.begin(), f_register_aliases.end(), [&](const auto& pair) { return pair.second == reg; }); it != f_register_aliases.end()) {
+        return it->first;
+    }
+    return reg;
+}
+
+int extract_number_from_string(const chatastring& str) {
+    int result = 0;
+    for (auto c : str) {
+        if (std::isdigit(c)) {
+            result = result * 10 + (c - '0');
+        }
+    }
+    return result;
+}
+
 int decimal_representation_of_float(float input) {
     union {
         float f;
@@ -71,26 +96,6 @@ int decimal_representation_of_float(float input) {
     } u;
     u.f = input;
     return u.i;
-}
-
-void process_comments(InternalFile& file) {
-    // Comment format: # begins a comment on a line, and another # ends that comment
-    // Examples: # Commented out #
-    // # This whole line is a comment
-
-    bool is_comment = false;
-    for (auto& c : file.data) {
-        if (c == '#') {
-            is_comment = !is_comment;
-            c = ' ';
-        }
-        if (c == '\n') {
-            is_comment = false;
-        }
-        if (is_comment) {
-            c = ' ';
-        }
-    }
 }
 
 } // namespace libchata_internal

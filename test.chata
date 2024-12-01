@@ -1,6 +1,8 @@
 
 # This is a comment
 
+# Testing a comment with # a partial comment in it (you should see this) #
+
 addi a1, zero, 1
 
 fcvt.d.w fa1, a1
@@ -11,6 +13,8 @@ addi t0, zero, 10
 addi t1, zero, 10
 
 fa0 += 2
+
+fa0 -= 1
 
 if t0 = t1:
     fadd.d fa0, fa0, fa1

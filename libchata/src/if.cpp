@@ -56,7 +56,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
     int if_indent_level = 0;
     int i_at_if_statement_start = 0;
     
-    c.line = 0;
+    c.line = 1;
     c.column = 0;
     for (size_t i = 0; i < file.data.size(); i++) {
         auto ch = [&]() {
