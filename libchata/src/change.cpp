@@ -78,7 +78,7 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
 
         chatavector<chatastring> lines;
 
-        if (is_one_of(operand_1, valid_integer_registers) && is_one_of(operand_2, valid_integer_registers)) {
+        if (is_int_register(operand_1) && is_int_register(operand_2)) {
             if (operation == "=") {
             lines.push_back("mv " + operand_1 + ", " + operand_2);
             } else if (operation == "+=") {
@@ -90,7 +90,7 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
             } else if (operation == "/=") {
             lines.push_back("div " + operand_1 + ", " + operand_1 + ", " + operand_2);
             }
-        } else if ((is_number(operand_1) && is_one_of(operand_2, valid_integer_registers)) || (is_one_of(operand_1, valid_integer_registers) && is_number(operand_2))) {
+        } else if ((is_number(operand_1) && is_int_register(operand_2)) || (is_int_register(operand_1) && is_number(operand_2))) {
             chatastring this_reg, this_num;
             if (is_number(operand_1)) {
                 this_num = operand_1;
@@ -121,7 +121,7 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
                 lines.push_back("li " + temp_reg_1 + ", " + this_num);
                 lines.push_back("div " + this_reg + ", " + this_reg + ", " + temp_reg_1);
             }
-        } else if (is_one_of(operand_1, valid_floating_point_registers) && is_one_of(operand_2, valid_floating_point_registers)) {
+        } else if (is_float_register(operand_1) && is_float_register(operand_2)) {
             if (operation == "=") {
                 lines.push_back("fmv.d " + operand_1 + ", " + operand_2);
             } else if (operation == "+=") {
@@ -133,7 +133,7 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
             } else if (operation == "/=") {
                 lines.push_back("fdiv.d " + operand_1 + ", " + operand_1 + ", " + operand_2);
             }
-        } else if (is_one_of(operand_1, valid_floating_point_registers) && is_number(operand_2)) {
+        } else if (is_float_register(operand_1) && is_number(operand_2)) {
             auto temp_reg_1 = allocate_int_register(c);
             auto temp_reg_2 = allocate_float_register(c);
             lines.push_back("li " + temp_reg_1 + ", " + to_chatastring(decimal_representation_of_float(to_float(operand_2))));

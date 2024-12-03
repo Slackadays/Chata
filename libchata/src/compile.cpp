@@ -263,7 +263,7 @@ void process_comments(InternalFile& file) {
 chatastring compile_code(chatavector<InternalFile>& files) {
     auto then = std::chrono::high_resolution_clock::now();
 
-    struct compilation_context c;
+    compilation_context c;
 
     auto prelude = generate_prelude();
 

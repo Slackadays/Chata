@@ -127,9 +127,9 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
         std::cout << "Operand 2: " << operand_2 << std::endl;
         std::cout << "Condition: " << condition << std::endl;
 
-        if (is_one_of(operand_1, valid_integer_registers) && is_one_of(operand_2, valid_integer_registers)) { //
+        if (is_int_register(operand_1) && is_int_register(operand_2)) { //
             branch_code.push_back(condition_to_int_instruction(condition) + " " + operand_1 + ", " + operand_2 + ", " + allocate_label(inner_if_label_num));
-        } else if ((is_number(operand_1) && is_one_of(operand_2, valid_integer_registers)) || (is_one_of(operand_1, valid_integer_registers) && is_number(operand_2))) {
+        } else if ((is_number(operand_1) && is_int_register(operand_2)) || (is_int_register(operand_1) && is_number(operand_2))) {
             chatastring this_reg, this_num;
             if (is_number(operand_1)) {
                 this_num = operand_1;
@@ -152,7 +152,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
                 comp_reg_two = temp_reg_1;
             }
             branch_code.push_back(condition_to_int_instruction(condition) + " " + comp_reg_one + ", " + comp_reg_two + ", " + allocate_label(inner_if_label_num));
-        } else if (is_one_of(operand_1, valid_floating_point_registers) && is_one_of(operand_2, valid_floating_point_registers)) {
+        } else if (is_float_register(operand_1) && is_float_register(operand_2)) {
             auto temp_reg_1 = allocate_int_register(c);
             branch_code.push_back(condition_to_float_instruction(condition, temp_reg_1, operand_1, operand_2));
             if (condition == "!=") {
@@ -160,7 +160,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
             } else {
                 branch_code.push_back("bnez " + temp_reg_1 + ", " + allocate_label(inner_if_label_num));
             }
-        } else if ((is_one_of(operand_1, valid_floating_point_registers) && is_number(operand_2)) || (is_number(operand_1) && is_one_of(operand_2, valid_floating_point_registers))) {
+        } else if ((is_float_register(operand_1) && is_number(operand_2)) || (is_number(operand_1) && is_float_register(operand_2))) {
             chatastring this_reg, this_num;
             if (is_number(operand_1)) {
                 this_num = operand_1;

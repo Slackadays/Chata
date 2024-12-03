@@ -3,95 +3,245 @@
 #include <fstream>
 #include <iostream>
 #include <bitset>
+#include <variant>
 
 namespace libchata_internal {
 
-struct instruction_parameters {
+chatavector<chatastring> code_labels;
+
+enum class RV32IInstructions {
+    LUI,
+    AUIPC,
+    JAL,
+    JALR,
+    BEQ,
+    BNE,
+    BLT,
+    BGE,
+    BLTU,
+    BGEU,
+    LB,
+    LH,
+    LW,
+    LBU,
+    LHU,
+    SB,
+    SH,
+    SW,
+    ADDI,
+    SLTI,
+    SLTIU,
+    XORI,
+    ORI,
+    ANDI,
+    SLLI,
+    SRLI,
+    SRAI,
+    ADD,
+    SUB,
+    SLL,
+    SLT,
+    SLTU,
+    XOR,
+    SRL,
+    SRA,
+    OR,
+    AND,
+    FENCE,
+    FENCETSO,
+    PAUSE,
+    ECALL,
+    EBREAK
+};
+
+enum class InstructionType {
+    R,
+    I,
+    S,
+    B,
+    U,
+    J
+};
+
+struct instruction {
+    std::variant<RV32IInstructions, chatastring> inst;
+    InstructionType type;
     chatastring rd;
     chatastring rs1;
     chatastring rs2;
-    int imm;
+    chatastring imm;
 };
 
-chatastring add_instr(chatastring& line) {
-    chatastring result;
-    result.resize(4);
-    chatastring operand_1, operand_2, operand_3;
-    int i = 0;
-    auto ch = [&]() {
-        return line.at(i);
-    };
-    for (; i < line.size() && std::isblank(ch()); i++) {}
-    for (; i < line.size() && is_register_character(ch()); i++) {
-        operand_1.push_back(ch());
-    }
-    for (; i < line.size() && (std::isblank(ch()) || ch() == ','); i++) {}
-    for (; i < line.size() && is_register_character(ch()); i++) {
-        operand_2.push_back(ch());
-    }
-    for (; i < line.size() && (std::isblank(ch()) || ch() == ','); i++) {}
-    for (; i < line.size() && is_register_character(ch()); i++) {
-        operand_3.push_back(ch());
-    }
-    std::cout << "Operand 1: " << operand_1 << std::endl;
-    std::cout << "Operand 2: " << operand_2 << std::endl;
-    std::cout << "Operand 3: " << operand_3 << std::endl;
-    if (!is_one_of(operand_1, valid_integer_registers)) {
-        throw ChataError(ChataErrorType::Assembler, "Error! " + operand_1 + " is not a valid integer register", 0, 0);
-    }
-    if (!is_one_of(operand_2, valid_integer_registers)) {
-        throw ChataError(ChataErrorType::Assembler, "Error! " + operand_2 + " is not a valid integer register", 0, 0);
-    }
-    if (!is_one_of(operand_3, valid_integer_registers)) {
-        throw ChataError(ChataErrorType::Assembler, "Error! " + operand_3 + " is not a valid integer register", 0, 0);
-    }
-    operand_1 = make_base_register(operand_1);
-    operand_2 = make_base_register(operand_2);
-    operand_3 = make_base_register(operand_3);
-    // Start by setting result to 0110011
-    result = 0b0110011;
-    // Now add the destination register
-    result |= (extract_number_from_string(operand_1) << 7);
-    // Now add 000 for the funct3 field (already done)
-    // Now add the source register 1
-    result |= (extract_number_from_string(operand_2) << 15);
-    // Now add the source register 2
-    result |= (extract_number_from_string(operand_3) << 20);
-    // Now add 0000000 for the funct7 field (already done)
-    return result;
-}
-
-chatastring new_assembler(const chatastring& data) {
+struct assembly_context {
     int line = 1;
     int column = 0;
-    chatastring machine_code;
-    for (int i = 0; i < data.size(); i++) {
+    chatastring inst;
+    chatastring arg1;
+    chatastring arg2;
+    chatastring arg3;
+};
+
+instruction make_R_type_inst(assembly_context& c) {
+    instruction i;
+    i.inst = c.inst;
+    i.type = InstructionType::R;
+    i.rd = c.arg1;
+    i.rs1 = c.arg2;
+    i.rs2 = c.arg3;
+    return i;
+}
+
+instruction make_I_type_inst(assembly_context& c) {
+    instruction i;
+    i.inst = c.inst;
+    i.type = InstructionType::I;
+    i.rd = c.arg1;
+    i.rs1 = c.arg2;
+    i.imm = c.arg3;
+    return i;
+}
+
+instruction make_S_type_inst(assembly_context& c) {
+    instruction i;
+    i.inst = c.inst;
+    i.type = InstructionType::S;
+    i.rs1 = c.arg1;
+    i.rs2 = c.arg2;
+    i.imm = c.arg3;
+    return i;
+}
+
+instruction make_B_type_inst(assembly_context& c) {
+    instruction i;
+    i.inst = c.inst;
+    i.type = InstructionType::B;
+    i.rs1 = c.arg1;
+    i.rs2 = c.arg2;
+    i.imm = c.arg3;
+    return i;
+}
+
+instruction make_U_type_inst(assembly_context& c) {
+    instruction i;
+    i.inst = c.inst;
+    i.type = InstructionType::U;
+    i.rd = c.arg1;
+    i.imm = c.arg2;
+    return i;
+}
+
+instruction make_UJ_type_inst(assembly_context& c) {
+    instruction i;
+    i.inst = c.inst;
+    i.type = InstructionType::J;
+    i.rd = c.arg1;
+    i.rs1 = c.arg2;
+    i.imm = c.arg3;
+    return i;
+}
+
+void parse_this_line(chatastring& this_line, assembly_context& c) {
+    for (int i = 0; i < this_line.size(); i++) {
         auto ch = [&]() {
-            return data.at(i);
+            return this_line.at(i);
         };
-        chatastring this_line;
-        chatastring instruction;
-        for (; i < data.size() && std::isspace(ch()); i++) {
-            column++;
+        for (; i < this_line.size() && std::isspace(ch()); i++) {
+            c.column++;
         }
-        for (; i < data.size() && is_register_character(ch()); i++) {
-            this_line.push_back(ch());
-            instruction.push_back(ch());
-            column++;
+        for (; i < this_line.size() && (std::islower(ch()) || ch() == '.'); i++) {
+            c.inst.push_back(ch());
+            c.column++;
         }
         std::cout << "Instruction candidate: " << instruction << std::endl;
         if (instruction.front() == '.' || instruction.front() == '#' || instruction.back() == ':') {
             std::cout << "Looks like this is a label or a comment or a directive" << std::endl;
-            continue;
+            break;
         }
-        for (int j = i; j < data.size(); j++) {
-            this_line.push_back(data.at(j));
+        for (; i < this_line.size() && (std::isblank(ch()) || ch() == ','); i++) {
+            c.column++;
         }
-        if (instruction == "add") {
-            machine_code += add_instr(this_line);
-        //} else if (instruction == 
+        for (; i < this_line.size() && (!std::isblank(ch()) && ch() != ','); i++) {
+            c.arg1.push_back(ch());
+            c.column++;
+        }
+        for (; i < this_line.size() && (std::isblank(ch()) || ch() == ','); i++) {
+            c.column++;
+        }
+        for (; i < this_line.size() && (!std::isblank(ch()) && ch() != ','); i++) {
+            c.arg2.push_back(ch());
+            c.column++;
+        }
+        for (; i < this_line.size() && (std::isblank(ch()) || ch() == ','); i++) {
+            c.column++;
+        }
+        for (; i < this_line.size() && (!std::isblank(ch()) && ch() != ','); i++) {
+            c.arg3.push_back(ch());
+            c.column++;
         }
     }
+}
+
+void act_on_this_line(chatavector<instruction>& instructions, assembly_context& c) {
+    if (c.inst == "add") {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (c.inst == "sub") {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (c.inst == "mul") {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (c.inst == "div") {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (c.inst == "addi") {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (c.inst == "subi") {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (c.inst == "muli") {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (c.inst == "divi") {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (c.inst == "lw") {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (c.inst == "sw") {
+        instructions.push_back(make_S_type_inst(c));
+    } else if (c.inst == "beq") {
+        instructions.push_back(make_B_type_inst(c));
+    } else if (c.inst == "bne") {
+        instructions.push_back(make_B_type_inst(c));
+    } else if (c.inst == "blt") {
+        instructions.push_back(make_B_type_inst(c));
+    } else if (c.inst == "bge") {
+        instructions.push_back(make_B_type_inst(c));
+    } else if (c.inst == "jal") {
+        instructions.push_back(make_UJ_type_inst(c));
+    } else if (c.inst == "jalr") {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (c.inst == "lui") {
+        instructions.push_back(make_U_type_inst(c));
+    } else if (c.inst == "auipc") {
+        instructions.push_back(make_U_type_inst(c));
+    }
+}
+
+chatastring new_assembler(const chatastring& data) {
+    chatavector<instruction> instructions;
+    int line = 1;
+    int column = 0;
+    chatastring machine_code;
+    chatastring this_line;
+    for (int i = 0; i < data.size(); i++) {
+        if (data.at(i) == '\n') {
+            //chatastring inst, arg1, arg2, arg3; // RISC-V instructions will only ever have up to 3 arguments
+            struct assembly_context c;
+            parse_this_line(this_line, c);
+            act_on_this_line(instructions, c);
+            this_line.clear();
+            line++;
+            column = 0;
+            continue;
+        }
+        this_line.push_back(data.at(i));
+    }
+
+
     return machine_code;
 }
 

@@ -69,12 +69,20 @@ bool is_register_character(const char& c) {
     return std::islower(c) || std::isdigit(c);
 }
 
+bool is_int_register(chatastring& reg) {
+    return std::find(valid_integer_registers.begin(), valid_integer_registers.end(), reg) != valid_integer_registers.end();
+}
+
+bool is_float_register(chatastring& reg) {
+    return std::find(valid_floating_point_registers.begin(), valid_floating_point_registers.end(), reg) != valid_floating_point_registers.end();
+}
+
 chatastring make_base_register(const chatastring& reg) {
     if (auto it = std::find_if(x_register_aliases.begin(), x_register_aliases.end(), [&](const auto& pair) { return pair.second == reg; }); it != x_register_aliases.end()) {
-        return it->first;
+        return chatastring(it->first);
     }
     if (auto it = std::find_if(f_register_aliases.begin(), f_register_aliases.end(), [&](const auto& pair) { return pair.second == reg; }); it != f_register_aliases.end()) {
-        return it->first;
+        return chatastring(it->first);
     }
     return reg;
 }

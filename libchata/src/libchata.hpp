@@ -179,9 +179,9 @@ int to_int(const chatastring& str);
 
 double to_float(const chatastring& str);
 
-bool is_one_of(auto& str, auto& vec) {
-    return std::find(vec.begin(), vec.end(), str) != vec.end();
-}
+bool is_int_register(chatastring& reg);
+
+bool is_float_register(chatastring& reg);
 
 void jump_to_next_line(InternalFile& file, struct compilation_context& c, size_t& i);
 
