@@ -54,6 +54,59 @@ enum class RV32IInstructions {
     EBREAK
 };
 
+enum class RV64IInstructions {
+    LWU,
+    LD,
+    SD,
+    ADDIW,
+    SLLIW,
+    SRLIW,
+    SRAIW,
+    ADDW,
+    SUBW,
+    SLLW,
+    SRLW,
+    SRAW
+};
+
+enum class RV32FInstructions {
+    FMADDS,
+    FMSUBS,
+    FNMSUBS,
+    FNMADDS,
+    FADDS,
+    FSUBS,
+    FMULS,
+    FDIVS,
+    FSQRTS,
+    FSGNJS,
+    FSGNJNS,
+    FSGNJXS,
+    FMINS,
+    FMAXS,
+    FCVTWS,
+    FCVTWUS,
+    FMVXW,
+    FEQS,
+    FLTS,
+    FLES,
+    FCLASSS,
+    FCVTSW,
+    FCVTSWU,
+    FMVWX,
+    FLW,
+    FSW
+};
+
+enum class RV64FInstructions {
+    FCVTLS,
+    FCVTLUS,
+    FCVTSL,
+    FCVTSLU
+};
+
+enum class 
+
 enum class InstructionType {
     R,
     I,
@@ -182,43 +235,95 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
 }
 
 void act_on_this_line(chatavector<instruction>& instructions, assembly_context& c) {
-    if (c.inst == "add") {
-        instructions.push_back(make_R_type_inst(c));
-    } else if (c.inst == "sub") {
-        instructions.push_back(make_R_type_inst(c));
-    } else if (c.inst == "mul") {
-        instructions.push_back(make_R_type_inst(c));
-    } else if (c.inst == "div") {
-        instructions.push_back(make_R_type_inst(c));
-    } else if (c.inst == "addi") {
-        instructions.push_back(make_I_type_inst(c));
-    } else if (c.inst == "subi") {
-        instructions.push_back(make_I_type_inst(c));
-    } else if (c.inst == "muli") {
-        instructions.push_back(make_I_type_inst(c));
-    } else if (c.inst == "divi") {
-        instructions.push_back(make_I_type_inst(c));
-    } else if (c.inst == "lw") {
-        instructions.push_back(make_I_type_inst(c));
-    } else if (c.inst == "sw") {
-        instructions.push_back(make_S_type_inst(c));
-    } else if (c.inst == "beq") {
-        instructions.push_back(make_B_type_inst(c));
-    } else if (c.inst == "bne") {
-        instructions.push_back(make_B_type_inst(c));
-    } else if (c.inst == "blt") {
-        instructions.push_back(make_B_type_inst(c));
-    } else if (c.inst == "bge") {
-        instructions.push_back(make_B_type_inst(c));
-    } else if (c.inst == "jal") {
+    auto is = [&](const chatastring& inst) {
+        return c.inst == inst;
+    };
+    if (is("lui")) {
+        instructions.push_back(make_U_type_inst(c));
+    } else if (is("auipc")) {
+        instructions.push_back(make_U_type_inst(c));
+    } else if (is("jal")) {
         instructions.push_back(make_UJ_type_inst(c));
-    } else if (c.inst == "jalr") {
+    } else if (is("jalr")) {
         instructions.push_back(make_I_type_inst(c));
-    } else if (c.inst == "lui") {
-        instructions.push_back(make_U_type_inst(c));
-    } else if (c.inst == "auipc") {
-        instructions.push_back(make_U_type_inst(c));
+    } else if (is("beq")) {
+        instructions.push_back(make_B_type_inst(c));
+    } else if (is("bne")) {
+        instructions.push_back(make_B_type_inst(c));
+    } else if (is("blt")) {
+        instructions.push_back(make_B_type_inst(c));
+    } else if (is("bge")) {
+        instructions.push_back(make_B_type_inst(c));
+    } else if (is("bltu")) {
+        instructions.push_back(make_B_type_inst(c));
+    } else if (is("bgeu")) {
+        instructions.push_back(make_B_type_inst(c));
+    } else if (is("lb")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("lh")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("lw")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("lbu")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("lhu")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("sb")) {
+        instructions.push_back(make_S_type_inst(c));
+    } else if (is("sh")) {
+        instructions.push_back(make_S_type_inst(c));
+    } else if (is("sw")) {
+        instructions.push_back(make_S_type_inst(c));
+    } else if (is("addi")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("slti")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("sltiu")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("xori")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("ori")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("andi")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("slli")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("srli")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("srai")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("add")) {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (is("sub")) {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (is("sll")) {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (is("slt")) {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (is("sltu")) {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (is("xor")) {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (is("srl")) {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (is("sra")) {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (is("or")) {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (is("and")) {
+        instructions.push_back(make_R_type_inst(c));
+    } else if (is("fence")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("fence.tso")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("pause")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("ecall")) {
+        instructions.push_back(make_I_type_inst(c));
+    } else if (is("ebreak")) {
+        instructions.push_back(make_I_type_inst(c));
     }
+    
 }
 
 chatastring new_assembler(const chatastring& data) {
