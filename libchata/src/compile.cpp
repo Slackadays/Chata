@@ -1,4 +1,5 @@
 #include "libchata.hpp"
+#include "registers.hpp"
 #include <algorithm>
 #include <cctype>
 #include <chrono>
@@ -78,9 +79,9 @@ void replace_temp_registers(chatastring& input) {
     for (const auto& reg : valid_integer_registers) {
         for (auto pos = input.find(reg); pos != std::string::npos; pos = input.find(reg, pos + 1)) {
             if (pos == 0 || input.at(pos - 1) != 'f') {
-                auto it = std::find_if(x_register_aliases.begin(), x_register_aliases.end(), [&](const auto& pair) { return pair.first == reg; });
-                if (it != x_register_aliases.end()) {
-                    used_integer_registers.emplace_back(it->second);
+                auto it = std::find_if(registers.begin(), registers.end(), [&](const auto& r) { return r.name == reg && r.type == RegisterType::Integer; });
+                if (it != registers.end()) {
+                    used_integer_registers.emplace_back(it->alias);
                 } else {
                     used_integer_registers.emplace_back(reg);
                 }
@@ -98,9 +99,9 @@ void replace_temp_registers(chatastring& input) {
 
     for (const auto& reg : valid_floating_point_registers) {
         for (auto pos = input.find(reg); pos != std::string::npos; pos = input.find(reg, pos + 1)) {
-            auto it = std::find_if(f_register_aliases.begin(), f_register_aliases.end(), [&](const auto& pair) { return pair.first == reg; });
-            if (it != f_register_aliases.end()) {
-                used_floating_point_registers.emplace_back(it->second);
+            auto it = std::find_if(registers.begin(), registers.end(), [&](const auto& r) { return r.name == reg && r.type == RegisterType::FloatingPoint; });
+            if (it != registers.end()) {
+                used_floating_point_registers.emplace_back(it->alias);
             } else {
                 used_floating_point_registers.emplace_back(reg);
             }

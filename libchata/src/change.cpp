@@ -80,15 +80,15 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
 
         if (is_int_register(operand_1) && is_int_register(operand_2)) {
             if (operation == "=") {
-            lines.push_back("mv " + operand_1 + ", " + operand_2);
+                lines.push_back("mv " + operand_1 + ", " + operand_2);
             } else if (operation == "+=") {
-            lines.push_back("add " + operand_1 + ", " + operand_1 + ", " + operand_2);
+                lines.push_back("add " + operand_1 + ", " + operand_1 + ", " + operand_2);
             } else if (operation == "-=") {
-            lines.push_back("sub " + operand_1 + ", " + operand_1 + ", " + operand_2);
+                lines.push_back("sub " + operand_1 + ", " + operand_1 + ", " + operand_2);
             } else if (operation == "*=") {
-            lines.push_back("mul " + operand_1 + ", " + operand_1 + ", " + operand_2);
+                lines.push_back("mul " + operand_1 + ", " + operand_1 + ", " + operand_2);
             } else if (operation == "/=") {
-            lines.push_back("div " + operand_1 + ", " + operand_1 + ", " + operand_2);
+                lines.push_back("div " + operand_1 + ", " + operand_1 + ", " + operand_2);
             }
         } else if ((is_number(operand_1) && is_int_register(operand_2)) || (is_int_register(operand_1) && is_number(operand_2))) {
             chatastring this_reg, this_num;
@@ -138,22 +138,22 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
             auto temp_reg_2 = allocate_float_register(c);
             lines.push_back("li " + temp_reg_1 + ", " + to_chatastring(decimal_representation_of_float(to_float(operand_2))));
             if (operation == "=") {
-                lines.push_back("fmv.s.x " + operand_1 + ", " + temp_reg_1);
+                lines.push_back("fmv.w.x " + operand_1 + ", " + temp_reg_1);
                 lines.push_back("fcvt.d.s " + operand_1 + ", " + operand_1);
             } else if (operation == "+=") {
-                lines.push_back("fmv.s.x " + temp_reg_2 + ", " + temp_reg_1);
+                lines.push_back("fmv.w.x " + temp_reg_2 + ", " + temp_reg_1);
                 lines.push_back("fcvt.d.s " + temp_reg_2 + ", " + temp_reg_2);
                 lines.push_back("fadd.d " + operand_1 + ", " + operand_1 + ", " + temp_reg_2);
             } else if (operation == "-=") {
-                lines.push_back("fmv.s.x " + temp_reg_2 + ", " + temp_reg_1);
+                lines.push_back("fmv.w.x " + temp_reg_2 + ", " + temp_reg_1);
                 lines.push_back("fcvt.d.s " + temp_reg_2 + ", " + temp_reg_2);
                 lines.push_back("fsub.d " + operand_1 + ", " + operand_1 + ", " + temp_reg_2);
             } else if (operation == "*=") {
-                lines.push_back("fmv.s.x " + temp_reg_2 + ", " + temp_reg_1);
+                lines.push_back("fmv.w.x " + temp_reg_2 + ", " + temp_reg_1);
                 lines.push_back("fcvt.d.s " + temp_reg_2 + ", " + temp_reg_2);
                 lines.push_back("fmul.d " + operand_1 + ", " + operand_1 + ", " + temp_reg_2);
             } else if (operation == "/=") {
-                lines.push_back("fmv.s.x " + temp_reg_2 + ", " + temp_reg_1);
+                lines.push_back("fmv.w.x " + temp_reg_2 + ", " + temp_reg_1);
                 lines.push_back("fcvt.d.s " + temp_reg_2 + ", " + temp_reg_2);
                 lines.push_back("fdiv.d " + operand_1 + ", " + operand_1 + ", " + temp_reg_2);
             }
@@ -171,7 +171,6 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
         }
 
         file.data.replace(i - this_line.size(), this_line.size(), temp);
-
     }
 }
 

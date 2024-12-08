@@ -55,7 +55,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
     */
     int if_indent_level = 0;
     int i_at_if_statement_start = 0;
-    
+
     c.line = 1;
     c.column = 0;
     for (size_t i = 0; i < file.data.size(); i++) {
@@ -172,7 +172,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
             auto temp_reg_1 = allocate_int_register(c);
             auto temp_reg_2 = allocate_float_register(c);
             branch_code.push_back("li " + temp_reg_1 + ", " + to_chatastring(decimal_representation_of_float(to_float(this_num))));
-            branch_code.push_back("fmv.s.x " + temp_reg_2 + ", " + temp_reg_1);  // Move from integer register to floating point
+            branch_code.push_back("fmv.w.x " + temp_reg_2 + ", " + temp_reg_1);  // Move from integer register to floating point
             branch_code.push_back("fcvt.d.s " + temp_reg_2 + ", " + temp_reg_2); // Convert from single to double
             chatastring comp_reg_one, comp_reg_two;
             if (is_number(operand_1)) {

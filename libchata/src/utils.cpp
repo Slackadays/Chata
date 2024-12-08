@@ -1,6 +1,7 @@
 #include "libchata.hpp"
-#include <charconv>
+#include "registers.hpp"
 #include <algorithm>
+#include <charconv>
 
 namespace libchata_internal {
 
@@ -50,8 +51,8 @@ chatastring to_chatastring(int num) {
 int to_int(const chatastring& str) {
     int result = 0;
     auto res = std::from_chars(str.data(), str.data() + str.size(), result);
-    if (res.ec != std::errc()) {
-        throw ChataError(ChataErrorType::Other, "Error! Invalid integer", 0, 0);
+    if (res.ec != std::errc() || res.ptr != str.data() + str.size()) {
+        throw ChataError(ChataErrorType::Other, "Error! Invalid integer " + str, 0, 0);
     }
     return result;
 }
@@ -60,7 +61,7 @@ double to_float(const chatastring& str) {
     double result = 0;
     auto res = std::from_chars(str.data(), str.data() + str.size(), result);
     if (res.ec != std::errc()) {
-        throw ChataError(ChataErrorType::Other, "Error! Invalid float", 0, 0);
+        throw ChataError(ChataErrorType::Other, "Error! Invalid float " + str, 0, 0);
     }
     return result;
 }
@@ -70,21 +71,19 @@ bool is_register_character(const char& c) {
 }
 
 bool is_int_register(chatastring& reg) {
-    return std::find(valid_integer_registers.begin(), valid_integer_registers.end(), reg) != valid_integer_registers.end();
+    return std::find_if(registers.begin(), registers.end(), [&](const auto& r) { return (r.name == reg || r.alias == reg) && r.type == RegisterType::Integer; }) != registers.end();
 }
 
 bool is_float_register(chatastring& reg) {
-    return std::find(valid_floating_point_registers.begin(), valid_floating_point_registers.end(), reg) != valid_floating_point_registers.end();
+    return std::find_if(registers.begin(), registers.end(), [&](const auto& r) { return (r.name == reg || r.alias == reg) && r.type == RegisterType::FloatingPoint; }) != registers.end();
 }
 
 chatastring make_base_register(const chatastring& reg) {
-    if (auto it = std::find_if(x_register_aliases.begin(), x_register_aliases.end(), [&](const auto& pair) { return pair.second == reg; }); it != x_register_aliases.end()) {
-        return chatastring(it->first);
+    auto reg_it = std::find_if(registers.begin(), registers.end(), [&](const auto& r) { return r.alias == reg; });
+    if (reg_it == registers.end()) {
+        return reg;
     }
-    if (auto it = std::find_if(f_register_aliases.begin(), f_register_aliases.end(), [&](const auto& pair) { return pair.second == reg; }); it != f_register_aliases.end()) {
-        return chatastring(it->first);
-    }
-    return reg;
+    return chatastring(reg_it->name);
 }
 
 int extract_number_from_string(const chatastring& str) {
@@ -107,4 +106,3 @@ int decimal_representation_of_float(float input) {
 }
 
 } // namespace libchata_internal
-

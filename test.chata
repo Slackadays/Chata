@@ -16,6 +16,8 @@ fa0 += 2
 
 fa0 -= 1
 
+#j blah25
+
 if t0 = t1:
     fadd.d fa0, fa0, fa1
     fa0 *= 10
