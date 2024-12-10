@@ -16,6 +16,18 @@ fa0 += 2
 
 fa0 -= 1
 
+#fa0 *= 2
+
+#fa0 /= 2
+
+#t0 += 2
+
+#t0 -= 2
+
+#t0 *= 2
+
+#t0 /= 2
+
 j manually_added_label
 manually_added_label:
 

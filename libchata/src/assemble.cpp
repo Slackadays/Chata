@@ -402,40 +402,28 @@ void solve_label_offsets(assembly_context& c) {
             auto& inst = std::get<instruction>(c.nodes.at(i));
             if (inst.imm_is_label) {
                 DBG(std::cout << "Label " << inst.imm << " found, searching for offset" << std::endl;)
-                int label_offset = 0;
-                
-                for (int j = i; j < c.nodes.size(); j++) {
-                    if (std::holds_alternative<int>(c.nodes.at(j))) {
-                        if (std::get<int>(c.nodes.at(j)) == inst.imm) {
-                            label_offset += bytes_in_instruction(inst);
-                            DBG(std::cout << "Found offset for label " << inst.imm << ": " << label_offset << std::endl;)
-                            inst.imm = label_offset;
-                            inst.imm_is_label = false;
-                            break;
+                auto search_for_label = [&](int end, int step) {
+                    int label_offset = 0;
+                    for (int j = i; j != end; j += step) {
+                        if (std::holds_alternative<int>(c.nodes.at(j))) {
+                            if (std::get<int>(c.nodes.at(j)) == inst.imm) {
+                                label_offset += bytes_in_instruction(inst);
+                                DBG(std::cout << "Found offset for label " << inst.imm << ": " << label_offset << std::endl;)
+                                inst.imm = label_offset;
+                                inst.imm_is_label = false;
+                                break;
+                            }
+                        }
+                        if (std::holds_alternative<instruction>(c.nodes.at(j))) {
+                            label_offset += bytes_in_instruction(std::get<instruction>(c.nodes.at(j)));
                         }
                     }
-                    if (std::holds_alternative<instruction>(c.nodes.at(j))) {
-                        label_offset += bytes_in_instruction(std::get<instruction>(c.nodes.at(j)));
-                    }
-                }
+                    return label_offset;
+                };
+                int label_offset = search_for_label(c.nodes.size(), 1);
                 if (inst.imm_is_label) {
                     DBG(std::cout << "Label not found, searching backwards" << std::endl;)
-                    label_offset = 0;
-                } else {
-                    continue;
-                }
-                for (int j = i; j >= 0; j--) {
-                    if (std::holds_alternative<int>(c.nodes.at(j))) {
-                        if (std::get<int>(c.nodes.at(j)) == inst.imm) {
-                            DBG(std::cout << "Found offset for label " << inst.imm << ": " << label_offset << std::endl;)
-                            inst.imm = label_offset;
-                            inst.imm_is_label = false;
-                            break;
-                        }
-                    }
-                    if (std::holds_alternative<instruction>(c.nodes.at(j))) {
-                        label_offset -= bytes_in_instruction(std::get<instruction>(c.nodes.at(j)));
-                    }
+                    label_offset = search_for_label(-1, -1);
                 }
                 if (inst.imm_is_label) {
                     throw ChataError(ChataErrorType::Assembler, "Error! Label " + to_chatastring(inst.imm) + " not found", 0, 0);
