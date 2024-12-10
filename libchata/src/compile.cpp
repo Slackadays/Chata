@@ -1,9 +1,12 @@
+#include "debug.hpp"
 #include "libchata.hpp"
 #include "registers.hpp"
 #include <algorithm>
 #include <cctype>
 #include <chrono>
 #include <iostream>
+
+
 
 namespace libchata_internal {
 
@@ -65,7 +68,7 @@ chatastring read_this_line(InternalFile& file, struct compilation_context& c, si
     chatastring line;
     while (i < file.data.size() && file.data.at(i) != '\n') {
         line += file.data.at(i);
-        std::cout << "Line: " << line << std::endl;
+        DBG(std::cout << "Line: " << line << std::endl;)
         i++;
         c.column++;
     }
@@ -90,9 +93,9 @@ void replace_temp_registers(chatastring& input) {
         }
     }
 
-    std::cout << "Used integer registers: " << std::endl;
+    DBG(std::cout << "Used integer registers: " << std::endl;)
     for (const auto& reg : used_integer_registers) {
-        std::cout << reg << std::endl;
+        DBG(std::cout << reg << std::endl;)
     }
 
     chatavector<chatastring> used_floating_point_registers;
@@ -109,9 +112,9 @@ void replace_temp_registers(chatastring& input) {
         }
     }
 
-    std::cout << "Used floating point registers: " << std::endl;
+    DBG(std::cout << "Used floating point registers: " << std::endl;)
     for (const auto& reg : used_floating_point_registers) {
-        std::cout << reg << std::endl;
+        DBG(std::cout << reg << std::endl;)
     }
 
     auto integer_reg_eligible = [&](const auto& reg) {
@@ -137,7 +140,7 @@ void replace_temp_registers(chatastring& input) {
             }
         }
         id = to_int(id_str);
-        std::cout << "Found temp register: " << id << std::endl;
+        DBG(std::cout << "Found temp register: " << id << std::endl;)
 
         chatastring replacement;
 
@@ -150,7 +153,7 @@ void replace_temp_registers(chatastring& input) {
         }
 
         if (!replacement.empty()) {
-            std::cout << "Replacement: " << replacement << std::endl;
+            DBG(std::cout << "Replacement: " << replacement << std::endl;)
             input.replace(pos, placeholder_temp_integer_register.size() + id_str.size(), replacement);
             used_integer_registers.emplace_back(replacement);
             continue;
@@ -164,7 +167,7 @@ void replace_temp_registers(chatastring& input) {
             }
         }
 
-        std::cout << "Replacement: " << replacement << std::endl;
+        DBG(std::cout << "Replacement: " << replacement << std::endl;)
 
         temp_integer_register_id_to_replacement.emplace_back(id, replacement);
 
@@ -186,7 +189,7 @@ void replace_temp_registers(chatastring& input) {
             }
         }
         id = to_int(id_str);
-        std::cout << "Found temp register: " << id << std::endl;
+        DBG(std::cout << "Found temp register: " << id << std::endl;)
 
         chatastring replacement;
 
@@ -199,7 +202,7 @@ void replace_temp_registers(chatastring& input) {
         }
 
         if (!replacement.empty()) {
-            std::cout << "Replacement: " << replacement << std::endl;
+            DBG(std::cout << "Replacement: " << replacement << std::endl;)
             input.replace(pos, placeholder_temp_floating_point_register.size() + id_str.size(), replacement);
             used_floating_point_registers.emplace_back(replacement);
             continue;
@@ -213,7 +216,7 @@ void replace_temp_registers(chatastring& input) {
             }
         }
 
-        std::cout << "Replacement: " << replacement << std::endl;
+        DBG(std::cout << "Replacement: " << replacement << std::endl;)
 
         temp_floating_point_register_id_to_replacement.emplace_back(id, replacement);
 
@@ -286,7 +289,7 @@ chatastring compile_code(chatavector<InternalFile>& files) {
 
     result = prelude + result + postlude;
 
-    // std::cout << "Result: " << result << std::endl;
+    // DBG(std::cout << "Result: " << result << std::endl;)
 
     replace_temp_registers(result);
 
@@ -294,9 +297,9 @@ chatastring compile_code(chatavector<InternalFile>& files) {
 
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(now - then);
 
-    std::cout << "Compilation took " << duration.count() << " microseconds" << std::endl;
+    DBG(std::cout << "Compilation took " << duration.count() << " microseconds" << std::endl;)
 
-    std::cout << "Result: " << result << std::endl;
+    DBG(std::cout << "Result: " << result << std::endl;)
 
     // exit(0);
 

@@ -1,4 +1,7 @@
+#include "debug.hpp"
 #include "libchata.hpp"
+
+
 
 namespace libchata_internal {
 
@@ -82,7 +85,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
             continue;
         }
 
-        std::cout << "if indent level: " << if_indent_level << std::endl;
+        DBG(std::cout << "if indent level: " << if_indent_level << std::endl;)
 
         // Save the condition and code block
         chatavector<chatastring> branch_code, code_block;
@@ -123,9 +126,9 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
 
         int inner_if_label_num = c.generated_label_num;
 
-        std::cout << "Operand 1: " << operand_1 << std::endl;
-        std::cout << "Operand 2: " << operand_2 << std::endl;
-        std::cout << "Condition: " << condition << std::endl;
+        DBG(std::cout << "Operand 1: " << operand_1 << std::endl;)
+        DBG(std::cout << "Operand 2: " << operand_2 << std::endl;)
+        DBG(std::cout << "Condition: " << condition << std::endl;)
 
         if (is_int_register(operand_1) && is_int_register(operand_2)) { //
             branch_code.push_back(condition_to_int_instruction(condition) + " " + operand_1 + ", " + operand_2 + ", " + allocate_label(inner_if_label_num));
@@ -234,9 +237,9 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
         }
         c.generated_label_num++;
 
-        std::cout << "Branch code: " << std::endl;
+        DBG(std::cout << "Branch code: " << std::endl;)
         for (auto& line : branch_code) {
-            std::cout << line << std::endl;
+            DBG(std::cout << line << std::endl;)
         }
 
         // Ok, now that we have the branch instruction, we can generate the code block
@@ -267,7 +270,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
         for (; i < file.data.size() && std::isblank(ch()); i++) {
             first_line_indent_level++;
             c.column++;
-            std::cout << "First line indent level: " << first_line_indent_level << std::endl;
+            DBG(std::cout << "First line indent level: " << first_line_indent_level << std::endl;)
         }
 
         for (; i < file.data.size() && ch() != '\n'; i++) {
@@ -285,8 +288,8 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
             c.line++;
         }
 
-        std::cout << "First line: " << line << std::endl;
-        std::cout << "First line indent level: " << first_line_indent_level << std::endl;
+        DBG(std::cout << "First line: " << line << std::endl;)
+        DBG(std::cout << "First line indent level: " << first_line_indent_level << std::endl;)
 
         if (first_line_indent_level == if_indent_level) {
             throw ChataError(ChataErrorType::Compiler, "Error! Code block must be indented", 0, 0);
@@ -300,7 +303,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
                 this_indent_level++;
                 c.column++;
             }
-            std::cout << "This indent level: " << this_indent_level << std::endl;
+            DBG(std::cout << "This indent level: " << this_indent_level << std::endl;)
             if (this_indent_level > if_indent_level && this_indent_level < first_line_indent_level) {
                 throw ChataError(ChataErrorType::Compiler, "Error! Code block must be indented the same as the first line", 0, 0);
             }
@@ -332,7 +335,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
             temp += line;
         }
 
-        std::cout << "Temp: " << temp << std::endl;
+        DBG(std::cout << "Temp: " << temp << std::endl;)
 
         file.data.replace(i_at_if_statement_start, i - i_at_if_statement_start, temp);
 

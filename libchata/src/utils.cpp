@@ -1,7 +1,9 @@
+#include "debug.hpp"
 #include "libchata.hpp"
 #include "registers.hpp"
 #include <algorithm>
 #include <charconv>
+
 
 namespace libchata_internal {
 
@@ -44,7 +46,7 @@ chatastring to_chatastring(int num) {
     for (auto i = temp.data(); i < res.ptr; i++) {
         result.push_back(*i);
     }
-    std::cout << "result: " << result << std::endl;
+    DBG(std::cout << "result: " << result << std::endl;)
     return result;
 }
 

@@ -49,33 +49,10 @@ static class GlobalMemoryBank {
     long pagesize = sysconf(_SC_PAGE_SIZE);
 
 public:
-    void* grab_some_memory(size_t requested) {
-        std::cout << "Allocating " << requested << " bytes, " << used << " used" << std::endl;
-        if (requested + used > pool.size()) {
-            return nullptr;
-        }
-        void* ptr = reinterpret_cast<void*>(pool.data() + used);
-        used += requested;
-        return ptr;
-    }
+    void* grab_some_memory(size_t requested);
+    
 
-    void* grab_aligned_memory(size_t requested) {
-        std::cout << "Allocating " << requested << " aligned bytes" << std::endl;
-        size_t current_offset = reinterpret_cast<size_t>(pool.data() + used);
-        size_t aligned_offset = (current_offset + pagesize - 1) & ~(pagesize - 1);
-        size_t padding = aligned_offset - current_offset;
-
-        // std::cout << "current_offset: " << current_offset << ", aligned_offset: " << aligned_offset << ", padding: " << padding << std::endl;
-
-        if (padding + requested + used > pool.size()) {
-            return nullptr;
-        }
-
-        used += padding;
-        void* ptr = reinterpret_cast<void*>(pool.data() + used);
-        used += requested;
-        return ptr;
-    }
+    void* grab_aligned_memory(size_t requested);
 
 } memory_bank;
 

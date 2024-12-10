@@ -1,3 +1,4 @@
+#include "debug.hpp"
 #include "instructions.hpp"
 #include "libchata.hpp"
 #include "registers.hpp"
@@ -8,6 +9,8 @@
 #include <variant>
 #include <cstdint>
 #include <string>
+
+
 
 namespace libchata_internal {
 
@@ -37,13 +40,13 @@ int string_to_label(chatastring& str, assembly_context& c) {
         str.pop_back();
     }
 
-    std::cout << "Converting label " << str << " to int" << std::endl;
+    DBG(std::cout << "Converting label " << str << " to int" << std::endl;)
     
     // Search for the label in the existing labels
     for (const auto& label : c.labels) {
-        std::cout << "Evaluating existing label " << label.first << std::endl;
+        DBG(std::cout << "Evaluating existing label " << label.first << std::endl;)
         if (label.first == str) {
-            std::cout << "Label " << str << " already exists with value " << label.second << std::endl;
+            DBG(std::cout << "Label " << str << " already exists with value " << label.second << std::endl;)
             return label.second; // Return the existing value
         }
     }
@@ -56,7 +59,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
     new_label++;
     c.labels.emplace_back(str, new_label);
     
-    std::cout << "Label " << str << " added with value " << new_label << std::endl;
+    DBG(std::cout << "Label " << str << " added with value " << new_label << std::endl;)
 
     return new_label;
 }
@@ -100,11 +103,11 @@ bool is_pseudoinst(const chatastring& inst) {
 }
 
 instruction make_inst(assembly_context& c) {
-    std::cout << "Making instruction" << std::endl;
-    std::cout << "Instruction: " << c.inst << std::endl;
-    std::cout << "arg1: " << c.arg1 << std::endl;
-    std::cout << "arg2: " << c.arg2 << std::endl;
-    std::cout << "arg3: " << c.arg3 << std::endl;
+    DBG(std::cout << "Making instruction" << std::endl;)
+    DBG(std::cout << "Instruction: " << c.inst << std::endl;)
+    DBG(std::cout << "arg1: " << c.arg1 << std::endl;)
+    DBG(std::cout << "arg2: " << c.arg2 << std::endl;)
+    DBG(std::cout << "arg3: " << c.arg3 << std::endl;)
 
     instruction i;
 
@@ -181,13 +184,13 @@ instruction make_inst(assembly_context& c) {
         i.rd = string_to_register(c.arg1, c);
     }
 
-    std::cout << "Instruction made" << std::endl;
+    DBG(std::cout << "Instruction made" << std::endl;)
 
     return i;
 }
 
 chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
-    if (c.inst == "li") {
+    if (c.inst == "li") { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
         // Case 1: imm is a 12-bit signed integer
         int imm;
         try {
@@ -210,33 +213,86 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         c.arg3 = to_chatastring(imm & 0xFFF);
         instruction i2 = make_inst(c);
         return {i1, i2};
-    } else if (c.inst == "la") {
+    } else if (c.inst == "la") { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
+        // Case 1: imm is a 12-bit signed integer
+        int imm;
+        try {
+            imm = to_int(c.arg2);
+        } catch (...) {
+            throw ChataError(ChataErrorType::Compiler, "Error! Invalid immediate " + c.arg2, c.line, c.column);
+        }
+        if (imm >= -2048 && imm <= 2047) {
+            c.inst = "addi";
+            c.arg2 = "zero";
+            c.arg3 = to_chatastring(imm);
+            return {make_inst(c)};
+        }
+        // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
+        c.inst = "auipc";
+        c.arg2 = to_chatastring(imm >> 12);
+        instruction i1 = make_inst(c);
+        c.inst = "addi";
+        c.arg2 = c.arg1;
+        c.arg3 = to_chatastring(imm & 0xFFF);
+        instruction i2 = make_inst(c);
+        return {i1, i2};
         
-    } else if (c.inst == "mv") {
-        
-    } else if (c.inst == "not") {
-        
-    } else if (c.inst == "neg") {
-        
-    } else if (c.inst == "bgt") {
-        
-        
-    } else if (c.inst == "ble") {
-        
-    } else if (c.inst == "bgtu") {
-        
-    } else if (c.inst == "bleu") {
-        
-    } else if (c.inst == "beqz") {
-        
-    } else if (c.inst == "bnez") {
-        
-    } else if (c.inst == "bgez") {
-        
-    } else if (c.inst == "blez") {
-        
-    } else if (c.inst == "bgtz") {
-        
+    } else if (c.inst == "mv") { // mv rd, rs -> addi rd, rs, 0
+        c.inst = "addi";
+        c.arg3 = "0";
+        return {make_inst(c)};
+    } else if (c.inst == "not") { // not rd, rs -> xori rd, rs, -1
+        c.inst = "xori";
+        c.arg3 = "-1";
+        return {make_inst(c)};
+    } else if (c.inst == "neg") { // neg rd, rs -> sub rd, zero, rs
+        c.inst = "sub";
+        c.arg3 = c.arg2;
+        c.arg2 = "zero";
+        return {make_inst(c)};
+    } else if (c.inst == "bgt") { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
+        c.inst = "blt";
+        std::swap(c.arg1, c.arg2);
+        return {make_inst(c)};
+    } else if (c.inst == "ble") { // ble rs1, rs2, label|imm -> bge rs2, rs1, label|imm
+        c.inst = "bge";
+        std::swap(c.arg1, c.arg2);
+        return {make_inst(c)};
+    } else if (c.inst == "bgtu") { // bgtu rs1, rs2, label|imm -> bltu rs2, rs1, label|imm
+        c.inst = "bltu";
+        std::swap(c.arg1, c.arg2);
+        return {make_inst(c)};
+    } else if (c.inst == "bleu") { // bleu rs1, rs2, label|imm -> bgeu rs2, rs1, label|imm
+        c.inst = "bgeu";
+        std::swap(c.arg1, c.arg2);
+        return {make_inst(c)};
+    } else if (c.inst == "beqz") { // beqz rs, label|imm -> beq rs, zero, label|imm
+        c.inst = "beq";
+        c.arg3 = c.arg2;
+        c.arg2 = "zero";
+        return {make_inst(c)};
+    } else if (c.inst == "bnez") { // bnez rs, label|imm -> bne rs, zero, label|imm
+        c.inst = "bne";
+        c.arg3 = c.arg2;
+        c.arg2 = "zero";
+        return {make_inst(c)};
+    } else if (c.inst == "bgez") { // bgez rs, label|imm -> bge rs, zero, label|imm
+        c.inst = "bge";
+        c.arg3 = c.arg2;
+        c.arg2 = "zero";
+        return {make_inst(c)};
+    } else if (c.inst == "blez") { // blez rs, label|imm -> bge zero, rs, label|imm
+        c.inst = "bge";
+        c.arg3 = c.arg2;
+        c.arg2 = c.arg1;
+        c.arg1 = "zero";
+        return {make_inst(c)};
+    } else if (c.inst == "bgtz") { // bgtz rs, label|imm -> blt zero, rs, label|imm
+        c.inst = "blt";
+        c.arg3 = c.arg2;
+        c.arg2 = c.arg1;
+        c.arg1 = "zero";
+        return {make_inst(c)};
     } else if (c.inst == "j") {
         c.inst = "jal";
         c.arg2 = c.arg1;
@@ -244,6 +300,21 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         return {make_inst(c)};
 
     } else if (c.inst == "call") {
+        // Case 1: imm is a 12-bit signed integer
+        int imm;
+        try {
+            imm = to_int(c.arg1);
+        } catch (...) {
+            throw ChataError(ChataErrorType::Compiler, "Error! Invalid immediate " + c.arg1, c.line, c.column);
+        }
+        if (imm >= -2048 && imm <= 2047) {
+            c.inst = "jalr";
+            c.arg3 = c.arg1;
+            c.arg2 = "ra";
+            c.arg1 = "ra";
+            return {make_inst(c)};
+        }
+        // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
         
     } else if (c.inst == "ret") {
         c.inst = "jalr";
@@ -252,12 +323,17 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         c.arg3 = "0";
         return {make_inst(c)};
     } else if (c.inst == "nop") {
-        
+        c.inst = "addi";
+        c.arg1 = "zero";
+        c.arg2 = "zero";
+        c.arg3 = "0";
+        return {make_inst(c)};
     } else if (c.inst == "fmv.w.x") {
         c.inst = "fcvt.w.s";
         return {make_inst(c)};
     } else if (c.inst == "fms.x.s") {
-        
+        c.inst = "fcvt.s.w";
+        return {make_inst(c)};
     }
     return {};
 }
@@ -278,11 +354,12 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
             c.inst.push_back(ch());
             c.column++;
         }
-        std::cout << "Instruction candidate: " << c.inst << std::endl;
+        DBG(std::cout << "Instruction candidate: " << c.inst << std::endl;)
         if (c.inst.front() == '.' || c.inst.front() == '#' || c.inst.back() == ':') {
-            std::cout << "Looks like this is a label or a comment or a directive" << std::endl;
-            if (c.inst.find(generated_label_prefix) != std::string::npos) {
-                std::cout << "Looks like this is a label!" << std::endl;
+            DBG(std::cout << "Looks like this is a label or a comment or a directive" << std::endl;)
+            //if (c.inst.find(generated_label_prefix) != std::string::npos) {
+            if (c.inst.back() == ':') {
+                DBG(std::cout << "Looks like this is a label!" << std::endl;)
                 c.nodes.push_back(string_to_label(c.inst, c));
             }
             break;
@@ -313,17 +390,8 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
 
 void solve_label_offsets(assembly_context& c) {
     auto bytes_in_instruction = [](const instruction& i) {
-        if (i.type == RVInstructionType::R) {
-            return 4;
-        } else if (i.type == RVInstructionType::I) {
-            return 4;
-        } else if (i.type == RVInstructionType::S) {
-            return 4;
-        } else if (i.type == RVInstructionType::B) {
-            return 4;
-        } else if (i.type == RVInstructionType::U) {
-            return 4;
-        } else if (i.type == RVInstructionType::J) {
+        using enum RVInstructionType;
+        if (i.type == R || i.type == I || i.type == S || i.type == B || i.type == U || i.type == J) {
             return 4;
         }
         return 2;
@@ -333,14 +401,14 @@ void solve_label_offsets(assembly_context& c) {
         if (std::holds_alternative<instruction>(c.nodes.at(i))) {
             auto& inst = std::get<instruction>(c.nodes.at(i));
             if (inst.imm_is_label) {
-                std::cout << "Label " << inst.imm << " found, searching for offset" << std::endl;
+                DBG(std::cout << "Label " << inst.imm << " found, searching for offset" << std::endl;)
                 int label_offset = 0;
                 
                 for (int j = i; j < c.nodes.size(); j++) {
                     if (std::holds_alternative<int>(c.nodes.at(j))) {
                         if (std::get<int>(c.nodes.at(j)) == inst.imm) {
                             label_offset += bytes_in_instruction(inst);
-                            std::cout << "Found offset for label " << inst.imm << ": " << label_offset << std::endl;
+                            DBG(std::cout << "Found offset for label " << inst.imm << ": " << label_offset << std::endl;)
                             inst.imm = label_offset;
                             inst.imm_is_label = false;
                             break;
@@ -351,7 +419,7 @@ void solve_label_offsets(assembly_context& c) {
                     }
                 }
                 if (inst.imm_is_label) {
-                    std::cout << "Label not found, searching backwards" << std::endl;
+                    DBG(std::cout << "Label not found, searching backwards" << std::endl;)
                     label_offset = 0;
                 } else {
                     continue;
@@ -359,7 +427,7 @@ void solve_label_offsets(assembly_context& c) {
                 for (int j = i; j >= 0; j--) {
                     if (std::holds_alternative<int>(c.nodes.at(j))) {
                         if (std::get<int>(c.nodes.at(j)) == inst.imm) {
-                            std::cout << "Found offset for label " << inst.imm << ": " << label_offset << std::endl;
+                            DBG(std::cout << "Found offset for label " << inst.imm << ": " << label_offset << std::endl;)
                             inst.imm = label_offset;
                             inst.imm_is_label = false;
                             break;
@@ -394,7 +462,6 @@ chatastring generate_machine_code(assembly_context& c) {
         uint32_t inst = 0;
         auto core_inst = get_core_inst(i.inst);
         inst |= core_inst.opcode;
-        if 
     
     }
 }
@@ -430,7 +497,7 @@ chatastring new_assembler(const chatastring& data) {
 
     for (auto& i : c.nodes) {
         if (!std::holds_alternative<instruction>(i)) {
-            std::cout << "Label: " << std::get<int>(i) << std::endl;
+            DBG(std::cout << "Label: " << std::get<int>(i) << std::endl;)
             continue;
         }
         auto this_i = std::get<instruction>(i);
@@ -441,35 +508,35 @@ chatastring new_assembler(const chatastring& data) {
                 break;
             }
         }
-        std::cout << "Instruction: " << string_representation << std::endl;
+        DBG(std::cout << "Instruction: " << string_representation << std::endl;)
         if (this_i.type == RVInstructionType::R) {
-            std::cout << "Instruction type: R" << std::endl;
+            DBG(std::cout << "Instruction type: R" << std::endl;)
         } else if (this_i.type == RVInstructionType::I) {
-            std::cout << "Instruction type: I" << std::endl;
+            DBG(std::cout << "Instruction type: I" << std::endl;)
         } else if (this_i.type == RVInstructionType::S) {
-            std::cout << "Instruction type: S" << std::endl;
+            DBG(std::cout << "Instruction type: S" << std::endl;)
         } else if (this_i.type == RVInstructionType::B) {
-            std::cout << "Instruction type: B" << std::endl;
+            DBG(std::cout << "Instruction type: B" << std::endl;)
         } else if (this_i.type == RVInstructionType::U) {
-            std::cout << "Instruction type: U" << std::endl;
+            DBG(std::cout << "Instruction type: U" << std::endl;)
         } else if (this_i.type == RVInstructionType::J) {
-            std::cout << "Instruction type: J" << std::endl;
+            DBG(std::cout << "Instruction type: J" << std::endl;)
         }
         for (auto& reg : registers) {
             if (reg.id == this_i.rd) {
-                std::cout << "rd: " << reg.alias << std::endl;
+                DBG(std::cout << "rd: " << reg.alias << std::endl;)
             }
             if (reg.id == this_i.rs1) {
-                std::cout << "rs1: " << reg.alias << std::endl;
+                DBG(std::cout << "rs1: " << reg.alias << std::endl;)
             }
             if (reg.id == this_i.rs2) {
-                std::cout << "rs2: " << reg.alias << std::endl;
+                DBG(std::cout << "rs2: " << reg.alias << std::endl;)
             }
         }
         if (!this_i.imm_is_label) {
-            std::cout << "offset: " << this_i.imm << std::endl;
+            DBG(std::cout << "offset: " << this_i.imm << std::endl;)
         } else {
-            std::cout << "label: " << this_i.imm << std::endl;
+            DBG(std::cout << "label: " << this_i.imm << std::endl;)
         }
     }
 
@@ -493,7 +560,7 @@ chatastring assemble_code(const chatastring& data) {
         int res = std::system("riscv64-linux-gnu-as temp.s -o temp.o");
 
         if (res != 0) {
-            // std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;
+            // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)
             // exit(1);
             throw ChataError(ChataErrorType::Assembler, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
         }
@@ -501,7 +568,7 @@ chatastring assemble_code(const chatastring& data) {
         res = std::system("riscv64-linux-gnu-objcopy -O binary temp.o temp.bin");
 
         if (res != 0) {
-            // std::cout << "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin" << std::endl;
+            // DBG(std::cout << "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin" << std::endl;)
             // exit(1);
             throw ChataError(ChataErrorType::Assembler, "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin", 0, 0);
         }

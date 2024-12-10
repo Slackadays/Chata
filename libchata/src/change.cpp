@@ -1,4 +1,7 @@
+#include "debug.hpp"
 #include "libchata.hpp"
+
+
 
 namespace libchata_internal {
 
@@ -30,7 +33,7 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
 
         auto this_line = read_this_line(file, c, i);
 
-        std::cout << "This line: " << this_line << std::endl;
+        DBG(std::cout << "This line: " << this_line << std::endl;)
 
         // Strategy: Assume the line is in the format "register1 operand register2" and then check if it fits the template
 
@@ -61,18 +64,18 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
             c.column++;
         }
 
-        std::cout << "Operand 1: " << operand_1 << std::endl;
-        std::cout << "Operand 2: " << operand_2 << std::endl;
-        std::cout << "Operation: " << operation << std::endl;
+        DBG(std::cout << "Operand 1: " << operand_1 << std::endl;)
+        DBG(std::cout << "Operand 2: " << operand_2 << std::endl;)
+        DBG(std::cout << "Operation: " << operation << std::endl;)
 
         // Now check if this line fits the template
 
         if (operand_1.empty() || operand_2.empty() || operation.empty() || j < this_line.size()) {
-            std::cout << "This line doesn't fit the template" << std::endl;
+            DBG(std::cout << "This line doesn't fit the template" << std::endl;)
             continue;
         }
 
-        std::cout << "Found a change operation: " << operand_1 << " " << operation << " " << operand_2 << std::endl;
+        DBG(std::cout << "Found a change operation: " << operand_1 << " " << operation << " " << operand_2 << std::endl;)
 
         // Now, generate the correct instruction
 
@@ -158,7 +161,7 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
                 lines.push_back("fdiv.d " + operand_1 + ", " + operand_1 + ", " + temp_reg_2);
             }
         } else {
-            std::cout << "Not supported yet" << std::endl;
+            DBG(std::cout << "Not supported yet" << std::endl;)
         }
 
         // Replace the original line with the generated instructions

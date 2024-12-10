@@ -42,6 +42,10 @@ add_library(chata MODULE
 
 add_compile_options(chata PRIVATE -fno-rtti)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  add_definitions(-DDEBUG)
+endif()
+
 install(TARGETS chata
     DESTINATION lib
 )

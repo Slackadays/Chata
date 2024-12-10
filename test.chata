@@ -16,7 +16,8 @@ fa0 += 2
 
 fa0 -= 1
 
-#j blah25
+j manually_added_label
+manually_added_label:
 
 if t0 = t1:
     fadd.d fa0, fa0, fa1

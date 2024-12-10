@@ -1,3 +1,4 @@
+#include "debug.hpp"
 #include "libchata.hpp"
 #include <filesystem>
 #include <fstream>
@@ -10,6 +11,34 @@ using namespace libchata_internal;
 
 constexpr std::string_view libchata_version_str = PROJECT_VERSION;
 
+void* GlobalMemoryBank::grab_some_memory(size_t requested) {
+        DBG(std::cout << "Allocating " << requested << " bytes, " << used << " used" << std::endl;)
+        if (requested + used > pool.size()) {
+            return nullptr;
+        }
+        void* ptr = reinterpret_cast<void*>(pool.data() + used);
+        used += requested;
+        return ptr;
+    }
+
+    void* GlobalMemoryBank::grab_aligned_memory(size_t requested) {
+        DBG(std::cout << "Allocating " << requested << " aligned bytes" << std::endl;)
+        size_t current_offset = reinterpret_cast<size_t>(pool.data() + used);
+        size_t aligned_offset = (current_offset + pagesize - 1) & ~(pagesize - 1);
+        size_t padding = aligned_offset - current_offset;
+
+        // DBG(std::cout << "current_offset: " << current_offset << ", aligned_offset: " << aligned_offset << ", padding: " << padding << std::endl;)
+
+        if (padding + requested + used > pool.size()) {
+            return nullptr;
+        }
+
+        used += padding;
+        void* ptr = reinterpret_cast<void*>(pool.data() + used);
+        used += requested;
+        return ptr;
+    }
+
 void ChataProcessor::process_data(chata_args& input) {
     executable_function(input);
 }
@@ -17,7 +46,7 @@ void ChataProcessor::process_data(chata_args& input) {
 void ChataProcessor::save_to_memory(const chatastring& data) {
     int mpres = mprotect(executable_memory.at(!current_executable_memory).data(), executable_memory.at(!current_executable_memory).size(), PROT_READ | PROT_WRITE);
     if (mpres != 0) {
-        std::cout << "mprotect failed: " << strerror(errno) << ", " << errno << std::endl;
+        DBG(std::cout << "mprotect failed: " << strerror(errno) << ", " << errno << std::endl;)
         exit(1);
     }
 
@@ -28,11 +57,11 @@ void ChataProcessor::save_to_memory(const chatastring& data) {
     errno = 0;
     mpres = mprotect(executable_memory.at(!current_executable_memory).data(), executable_memory.at(!current_executable_memory).size(), PROT_READ | PROT_EXEC);
     if (mpres != 0) {
-        std::cout << "mprotect failed: " << strerror(errno) << ", " << errno << std::endl;
+        DBG(std::cout << "mprotect failed: " << strerror(errno) << ", " << errno << std::endl;)
         exit(1);
     }
 
-    std::cout << "Executable memory first address: " << reinterpret_cast<long int>(executable_memory.at(!current_executable_memory).data()) << std::endl;
+    DBG(std::cout << "Executable memory first address: " << reinterpret_cast<long int>(executable_memory.at(!current_executable_memory).data()) << std::endl;)
 }
 
 void ChataProcessor::commit() {
@@ -49,17 +78,17 @@ void ChataProcessor::commit() {
 
     auto compiled = compile_code(files);
 
-    std::cout << "Ok, here's the processed code: " << compiled << std::endl;
+    DBG(std::cout << "Ok, here's the processed code: " << compiled << std::endl;)
 
     auto assembled = assemble_code(compiled);
 
-    std::cout << "Ok, here's the assembled code:" << std::endl;
+    DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
     for (auto c : assembled) {
         printf("%02x ", c);
     }
 
-    std::cout << std::endl;
+    DBG(std::cout << std::endl;)
 
     // exit(0);
 
@@ -82,7 +111,7 @@ void ChataProcessor::compile_and_commit(const std::span<InputFile> input) {
 
     commit();
 
-    std::cout << "Ok, here's the memory:" << std::endl;
+    DBG(std::cout << "Ok, here's the memory:" << std::endl;)
     for (auto c : executable_memory.at(current_executable_memory)) {
         printf("%02x ", c);
     }
@@ -100,3 +129,4 @@ void ChataProcessor::compile_and_commit(const std::string_view& code) {
 std::string_view libchata_version() {
     return libchata_version_str;
 }
+
