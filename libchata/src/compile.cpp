@@ -6,8 +6,6 @@
 #include <chrono>
 #include <iostream>
 
-
-
 namespace libchata_internal {
 
 chatastring generate_prelude() {

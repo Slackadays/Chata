@@ -1,8 +1,6 @@
 #include "debug.hpp"
 #include "libchata.hpp"
 
-
-
 namespace libchata_internal {
 
 chatastring condition_to_int_instruction(chatastring& condition) {

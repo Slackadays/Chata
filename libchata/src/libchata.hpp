@@ -50,7 +50,6 @@ static class GlobalMemoryBank {
 
 public:
     void* grab_some_memory(size_t requested);
-    
 
     void* grab_aligned_memory(size_t requested);
 

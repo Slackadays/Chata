@@ -1,8 +1,6 @@
 #include "debug.hpp"
 #include "libchata.hpp"
 
-
-
 namespace libchata_internal {
 
 void process_changes(InternalFile& file, struct compilation_context& c) {

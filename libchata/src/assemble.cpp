@@ -3,14 +3,12 @@
 #include "libchata.hpp"
 #include "registers.hpp"
 #include <bitset>
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <variant>
-#include <cstdint>
 #include <string>
-
-
+#include <variant>
 
 namespace libchata_internal {
 
@@ -24,7 +22,7 @@ struct instruction {
     bool imm_is_label = false;
 };
 
-struct assembly_context { 
+struct assembly_context {
     chatavector<std::variant<instruction, int>> nodes;
     chatavector<std::pair<chatastring, int>> labels;
     int line = 1;
@@ -41,7 +39,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
     }
 
     DBG(std::cout << "Converting label " << str << " to int" << std::endl;)
-    
+
     // Search for the label in the existing labels
     for (const auto& label : c.labels) {
         DBG(std::cout << "Evaluating existing label " << label.first << std::endl;)
@@ -50,7 +48,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
             return label.second; // Return the existing value
         }
     }
-    
+
     // If the label doesn't exist, add it and increment the highest value
     int new_label = -1;
     for (const auto& label : c.labels) {
@@ -58,7 +56,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
     }
     new_label++;
     c.labels.emplace_back(str, new_label);
-    
+
     DBG(std::cout << "Label " << str << " added with value " << new_label << std::endl;)
 
     return new_label;
@@ -99,7 +97,8 @@ bool is_special_snowflake_2_arg_R_inst(RVInstruction inst) {
 }
 
 bool is_pseudoinst(const chatastring& inst) {
-    return inst == "li" || inst == "la" || inst == "mv" || inst == "not" || inst == "neg" || inst == "bgt" || inst == "ble" || inst == "bgtu" || inst == "bleu" || inst == "beqz" || inst == "bnez" || inst == "bgez" || inst == "blez" || inst == "bgtz" || inst == "j" || inst == "call" || inst == "ret" || inst == "nop" || inst == "fmv.w.x" || inst == "fms.x.s";
+    return inst == "li" || inst == "la" || inst == "mv" || inst == "not" || inst == "neg" || inst == "bgt" || inst == "ble" || inst == "bgtu" || inst == "bleu" || inst == "beqz" || inst == "bnez"
+           || inst == "bgez" || inst == "blez" || inst == "bgtz" || inst == "j" || inst == "call" || inst == "ret" || inst == "nop" || inst == "fmv.w.x" || inst == "fms.x.s";
 }
 
 instruction make_inst(assembly_context& c) {
@@ -110,8 +109,6 @@ instruction make_inst(assembly_context& c) {
     DBG(std::cout << "arg3: " << c.arg3 << std::endl;)
 
     instruction i;
-
-    
 
     i.inst = string_to_instruction(c.inst, c);
     i.type = string_to_instruction_type(c.inst, c);
@@ -236,7 +233,7 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         c.arg3 = to_chatastring(imm & 0xFFF);
         instruction i2 = make_inst(c);
         return {i1, i2};
-        
+
     } else if (c.inst == "mv") { // mv rd, rs -> addi rd, rs, 0
         c.inst = "addi";
         c.arg3 = "0";
@@ -315,7 +312,7 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
             return {make_inst(c)};
         }
         // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-        
+
     } else if (c.inst == "ret") {
         c.inst = "jalr";
         c.arg1 = "zero";
@@ -357,7 +354,7 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
         DBG(std::cout << "Instruction candidate: " << c.inst << std::endl;)
         if (c.inst.front() == '.' || c.inst.front() == '#' || c.inst.back() == ':') {
             DBG(std::cout << "Looks like this is a label or a comment or a directive" << std::endl;)
-            //if (c.inst.find(generated_label_prefix) != std::string::npos) {
+            // if (c.inst.find(generated_label_prefix) != std::string::npos) {
             if (c.inst.back() == ':') {
                 DBG(std::cout << "Looks like this is a label!" << std::endl;)
                 c.nodes.push_back(string_to_label(c.inst, c));
@@ -433,6 +430,15 @@ void solve_label_offsets(assembly_context& c) {
     }
 }
 
+rvregister get_reg_by_id(RegisterID id) {
+    for (auto& r : registers) {
+        if (r.id == id) {
+            return r;
+        }
+    }
+    throw ChataError(ChataErrorType::Assembler, "Error! Invalid register ID", 0, 0);
+}
+
 chatastring generate_machine_code(assembly_context& c) {
     chatastring machine_code;
     auto get_core_inst = [](RVInstruction inst) {
@@ -450,7 +456,10 @@ chatastring generate_machine_code(assembly_context& c) {
         uint32_t inst = 0;
         auto core_inst = get_core_inst(i.inst);
         inst |= core_inst.opcode;
-    
+        using enum RVInstructionType;
+        if (i.type == R) {
+            inst |= get_reg_by_id(i.rd).encoding << 7;
+        }
     }
 }
 

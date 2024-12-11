@@ -1,5 +1,5 @@
-#include "debug.hpp"
 #include "libchata.hpp"
+#include "debug.hpp"
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -12,32 +12,32 @@ using namespace libchata_internal;
 constexpr std::string_view libchata_version_str = PROJECT_VERSION;
 
 void* GlobalMemoryBank::grab_some_memory(size_t requested) {
-        DBG(std::cout << "Allocating " << requested << " bytes, " << used << " used" << std::endl;)
-        if (requested + used > pool.size()) {
-            return nullptr;
-        }
-        void* ptr = reinterpret_cast<void*>(pool.data() + used);
-        used += requested;
-        return ptr;
+    DBG(std::cout << "Allocating " << requested << " bytes, " << used << " used" << std::endl;)
+    if (requested + used > pool.size()) {
+        return nullptr;
+    }
+    void* ptr = reinterpret_cast<void*>(pool.data() + used);
+    used += requested;
+    return ptr;
+}
+
+void* GlobalMemoryBank::grab_aligned_memory(size_t requested) {
+    DBG(std::cout << "Allocating " << requested << " aligned bytes" << std::endl;)
+    size_t current_offset = reinterpret_cast<size_t>(pool.data() + used);
+    size_t aligned_offset = (current_offset + pagesize - 1) & ~(pagesize - 1);
+    size_t padding = aligned_offset - current_offset;
+
+    // DBG(std::cout << "current_offset: " << current_offset << ", aligned_offset: " << aligned_offset << ", padding: " << padding << std::endl;)
+
+    if (padding + requested + used > pool.size()) {
+        return nullptr;
     }
 
-    void* GlobalMemoryBank::grab_aligned_memory(size_t requested) {
-        DBG(std::cout << "Allocating " << requested << " aligned bytes" << std::endl;)
-        size_t current_offset = reinterpret_cast<size_t>(pool.data() + used);
-        size_t aligned_offset = (current_offset + pagesize - 1) & ~(pagesize - 1);
-        size_t padding = aligned_offset - current_offset;
-
-        // DBG(std::cout << "current_offset: " << current_offset << ", aligned_offset: " << aligned_offset << ", padding: " << padding << std::endl;)
-
-        if (padding + requested + used > pool.size()) {
-            return nullptr;
-        }
-
-        used += padding;
-        void* ptr = reinterpret_cast<void*>(pool.data() + used);
-        used += requested;
-        return ptr;
-    }
+    used += padding;
+    void* ptr = reinterpret_cast<void*>(pool.data() + used);
+    used += requested;
+    return ptr;
+}
 
 void ChataProcessor::process_data(chata_args& input) {
     executable_function(input);
@@ -129,4 +129,3 @@ void ChataProcessor::compile_and_commit(const std::string_view& code) {
 std::string_view libchata_version() {
     return libchata_version_str;
 }
-

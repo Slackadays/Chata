@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <charconv>
 
-
 namespace libchata_internal {
 
 bool is_integer(const chatastring& str) {
