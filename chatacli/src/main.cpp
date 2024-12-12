@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MPL-2.0
 #include <array>
 #include <chrono>
 #include <cstring>
@@ -92,7 +93,7 @@ int main(int argc, char* argv[]) {
 
         std::cout << "New value: " << args.input1 << std::endl;
     } catch (ChataError& e) {
-        std::cout << "Error! " << e.what() << std::endl;
+        std::cout << "" << e.what() << std::endl;
         return 1;
     }
 

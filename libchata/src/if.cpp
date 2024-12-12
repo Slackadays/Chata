@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MPL-2.0
 #include "debug.hpp"
 #include "libchata.hpp"
 
@@ -17,7 +18,7 @@ chatastring condition_to_int_instruction(chatastring& condition) {
     } else if (condition == "=>") {
         return "bge";
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Error! Invalid condition", 0, 0);
+        throw ChataError(ChataErrorType::Compiler, "Invalid condition " + condition);
     }
 }
 
@@ -35,7 +36,7 @@ chatastring condition_to_float_instruction(chatastring& condition, chatastring& 
     } else if (condition == "=>") {
         return "fle.d " + result + ", " + operand_two + ", " + operand_one;
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Error! Invalid condition", 0, 0);
+        throw ChataError(ChataErrorType::Compiler, "Invalid condition " + condition);
     }
 }
 
@@ -231,7 +232,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
                 }
             }
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Error! Invalid operands", 0, 0);
+            throw ChataError(ChataErrorType::Compiler, "Invalid operands", 0, 0);
         }
         c.generated_label_num++;
 
@@ -290,7 +291,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
         DBG(std::cout << "First line indent level: " << first_line_indent_level << std::endl;)
 
         if (first_line_indent_level == if_indent_level) {
-            throw ChataError(ChataErrorType::Compiler, "Error! Code block must be indented", 0, 0);
+            throw ChataError(ChataErrorType::Compiler, "Code block must be indented", 0, 0);
         }
 
         int this_indent_level = 0;
@@ -303,7 +304,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
             }
             DBG(std::cout << "This indent level: " << this_indent_level << std::endl;)
             if (this_indent_level > if_indent_level && this_indent_level < first_line_indent_level) {
-                throw ChataError(ChataErrorType::Compiler, "Error! Code block must be indented the same as the first line", 0, 0);
+                throw ChataError(ChataErrorType::Compiler, "Code block must be indented the same as the first line", 0, 0);
             }
             if (this_indent_level <= if_indent_level) {
                 break;

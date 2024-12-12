@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MPL-2.0
 #include <array>
 #include <cstdint>
 #include <cstring>
@@ -145,7 +146,6 @@ constexpr std::string_view placeholder_temp_floating_point_register = "generated
 } // namespace libchata_internal
 
 enum class ChataErrorType {
-    Unspecified,
     Compiler,
     Assembler,
     Execution,
@@ -153,39 +153,70 @@ enum class ChataErrorType {
 };
 
 class ChataError : public std::exception {
+    std::string_view color_start = "\033[1;31m";
+    std::string_view color_end = "\033[0m";
+
+    void set_color() {
+        if (getenv("NO_COLOR") != nullptr) {
+            color_start = "";
+            color_end = "";
+        }
+    }
+
 public:
-    ChataErrorType type = ChataErrorType::Unspecified;
+    std::optional<ChataErrorType> type;
     std::optional<std::string_view> details;
-    int line = 0;
-    int column = 0;
+    std::optional<std::string_view> filename;
+    std::optional<int> line = 0;
+    std::optional<int> column = 0;
 
     char* what() {
+        set_color();
         libchata_internal::chatastring error_message;
-        switch (type) {
-        case ChataErrorType::Unspecified:
-            error_message = "Unspecified error ";
-            break;
-        case ChataErrorType::Compiler:
-            error_message = "Compiler error ";
-            break;
-        case ChataErrorType::Assembler:
-            error_message = "Assembler error ";
-            break;
-        case ChataErrorType::Execution:
-            error_message = "Execution error ";
-            break;
-        case ChataErrorType::Other:
-            error_message = "Other error ";
-            break;
+        error_message += "| ";
+        error_message += color_start;
+        if (!type.has_value()) {
+            error_message += "Unspecified error";
+        } else if (*type == ChataErrorType::Compiler) {
+            error_message += "Compiler error";
+        } else if (*type == ChataErrorType::Assembler) {
+            error_message += "Assembler error";
+        } else if (*type == ChataErrorType::Execution) {
+            error_message += "Execution error";
+        } else if (*type == ChataErrorType::Other) {
+            error_message += "Other error";
+        }
+        error_message += color_end;
+        error_message += " at line ";
+        if (line.has_value()) {
+            error_message += libchata_internal::to_chatastring(*line);
+        } else {
+            error_message += "(unknown)";
+        }
+        error_message += ", column ";
+        if (column.has_value()) {
+            error_message += libchata_internal::to_chatastring(*column);
+        } else {
+            error_message += "(unknown)";
+        }
+        error_message += " in file ";
+        if (filename.has_value()) {
+            error_message += *filename;
+            error_message += ":\n| ";
+        } else {
+            error_message += "(unknown):\n| ";
         }
         if (details.has_value()) {
             error_message += *details;
         }
-        error_message += " at line " + libchata_internal::to_chatastring(line) + ", column " + libchata_internal::to_chatastring(column);
         return error_message.data();
     }
 
+    ChataError(ChataErrorType type, std::string_view details, int line, int column, std::string_view filename) : type(type), details(details), line(line), column(column), filename(filename) {}
+
     ChataError(ChataErrorType type, std::optional<std::string_view> details, int line, int column) : type(type), details(details), line(line), column(column) {}
+
+    ChataError(ChataErrorType type, std::string_view details) : type(type), details(details) {}
 };
 
 struct chata_args {

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MPL-2.0
 #include "debug.hpp"
 #include "libchata.hpp"
 #include "registers.hpp"
