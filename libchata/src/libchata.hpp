@@ -203,16 +203,24 @@ class ChataProcessor {
     std::array<std::vector<unsigned char, AlignedMemory<unsigned char>>, 2> executable_memory;
     int current_executable_memory = 0;
 
+    size_t executable_size = 0;
+
+    size_t executable_instruction_count = 0;
+
+    size_t compiled_size = 0;
+
+    size_t compiled_instruction_count = 0;
+
     void (*executable_function)(chata_args&) = nullptr;
 
     void save_to_memory(const chatastring& data);
 
 public:
-    [[nodiscard]] chatastring compile(const std::string_view& code);
+    void compile(const std::string_view& code);
 
-    [[nodiscard]] chatastring compile(const InputFile& file);
+    void compile(const InputFile& file);
 
-    [[nodiscard]] chatastring compile(const std::span<InputFile> files);
+    void compile(const std::span<InputFile> files);
 
     void compile_and_commit(const std::string_view& code);
 
@@ -224,7 +232,19 @@ public:
 
     void commit();
 
+    [[nodiscard]] size_t get_executable_size() { return executable_size; }
+
+    [[nodiscard]] size_t get_executable_instruction_count() { return executable_instruction_count; }
+
+    [[nodiscard]] size_t get_compiled_size() { return compiled_size; }
+
+    [[nodiscard]] size_t get_compiled_instruction_count() { return compiled_instruction_count; }
+
     ChataProcessor(const std::string_view& code) { compile_and_commit(code); }
+
+    ChataProcessor(const InputFile& file) { compile_and_commit(file); }
+
+    ChataProcessor(const std::span<InputFile> files) { compile_and_commit(files); }
 
     ChataProcessor() = default;
 };

@@ -40,10 +40,10 @@ add_library(chata MODULE
     src/change.cpp
 )
 
-add_compile_options(chata PRIVATE -fno-rtti -Wall -Wextra -Wpedantic) 
-
+add_compile_options(chata PRIVATE -fno-rtti) 
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  #add_definitions(-DDEBUG -Wall -Wextra -Wpedantic)
   add_definitions(-DDEBUG)
 endif()
 

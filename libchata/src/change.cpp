@@ -19,10 +19,6 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
     c.column = 0;
 
     for (size_t i = 0; i < file.data.size(); i++) {
-        auto ch = [&]() {
-            return file.data.at(i);
-        };
-
         chatastring operand_1, operand_2, operation;
 
         // First, get the current line
@@ -35,30 +31,30 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
 
         // Strategy: Assume the line is in the format "register1 operand register2" and then check if it fits the template
 
-        int j = 0;
+        size_t j = 0;
 
         auto jch = [&]() {
             return this_line.at(j);
         };
 
-        for (; j < this_line.size() && std::isblank(this_line.at(j)); j++) {}
+        for (; j < this_line.size() && std::isblank(jch()); j++) {}
 
-        for (; j < this_line.size() && std::isalnum(this_line.at(j)); j++) {
-            operand_1.push_back(this_line.at(j));
+        for (; j < this_line.size() && std::isalnum(jch()); j++) {
+            operand_1.push_back(jch());
             c.column++;
         }
 
-        for (; j < this_line.size() && std::isblank(this_line.at(j)); j++) {}
+        for (; j < this_line.size() && std::isblank(jch()); j++) {}
 
-        for (; j < this_line.size() && (this_line.at(j) == '=' || this_line.at(j) == '+' || this_line.at(j) == '-' || this_line.at(j) == '*' || this_line.at(j) == '/'); j++) {
-            operation.push_back(this_line.at(j));
+        for (; j < this_line.size() && (jch() == '=' || jch() == '+' || jch() == '-' || jch() == '*' || jch() == '/'); j++) {
+            operation.push_back(jch());
             c.column++;
         }
 
-        for (; j < this_line.size() && std::isblank(this_line.at(j)); j++) {}
+        for (; j < this_line.size() && std::isblank(jch()); j++) {}
 
-        for (; j < this_line.size() && std::isalnum(this_line.at(j)); j++) {
-            operand_2.push_back(this_line.at(j));
+        for (; j < this_line.size() && std::isalnum(jch()); j++) {
+            operand_2.push_back(jch());
             c.column++;
         }
 

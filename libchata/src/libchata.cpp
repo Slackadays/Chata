@@ -70,7 +70,7 @@ void ChataProcessor::commit() {
     current_executable_memory = !current_executable_memory;
 }
 
-[[nodiscard]] chatastring ChataProcessor::compile(const std::span<InputFile> input) {
+void ChataProcessor::compile(const std::span<InputFile> input) {
     chatavector<InternalFile> files;
     for (const auto& file : input) {
         files.push_back(InternalFile(file));
@@ -92,22 +92,20 @@ void ChataProcessor::commit() {
 
     // exit(0);
 
-    return assembled;
+    save_to_memory(assembled);
 }
 
-[[nodiscard]] chatastring ChataProcessor::compile(const InputFile& file) {
+void ChataProcessor::compile(const InputFile& file) {
     std::array<InputFile, 1> temp = {file};
-    return compile(std::span(temp));
+    compile(std::span(temp));
 }
 
-[[nodiscard]] chatastring ChataProcessor::compile(const std::string_view& code) {
-    return compile(InputFile(code, std::nullopt));
+void ChataProcessor::compile(const std::string_view& code) {
+    compile(InputFile(code, std::nullopt));
 }
 
 void ChataProcessor::compile_and_commit(const std::span<InputFile> input) {
-    auto assembled = compile(input);
-
-    save_to_memory(assembled);
+    compile(input);
 
     commit();
 

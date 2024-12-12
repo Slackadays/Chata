@@ -234,7 +234,7 @@ void process_comments(InternalFile& file) {
 
     bool in_comment = false;
     bool partial_comment_possible = false;
-    for (int i = 0; i < file.data.size(); i++) {
+    for (size_t i = 0; i < file.data.size(); i++) {
         auto ch = [&]() {
             return file.data.at(i);
         };

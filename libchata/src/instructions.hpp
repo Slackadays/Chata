@@ -129,7 +129,52 @@ enum class RVInstruction {
     CSRRSI,
     CSRRCI,
     WRSNTO, // Zawrs
-    WRSSTO
+    WRSSTO,
+    CLWSP, // C
+    CLDSP,
+    CLQSP,
+    CFLWSP,
+    CFLDSP,
+    CSWSP,
+    CSDSP,
+    CSQSP,
+    CFSWSP,
+    CFSDSP,
+    CLW,
+    CLD,
+    CLQ,
+    CFLW,
+    CFLD,
+    CSW,
+    CSD,
+    CSQ,
+    CFSW,
+    CFSD,
+    CJ,
+    CJAL,
+    CJR,
+    CJALR,
+    CBEQZ,
+    CBNEZ,
+    CLI,
+    CLUI,
+    CADDI,
+    CADDIW,
+    CADDI16SP,
+    CSLLI,
+    CSRLI,
+    CSRAI,
+    CANDI,
+    CMV,
+    CADD,
+    CAND,
+    COR,
+    CXOR,
+    CSUB,
+    CADDW,
+    CSUBW,
+    CNOP,
+    CEBREAK,
 };
 
 enum class RVInstructionType {
@@ -139,7 +184,16 @@ enum class RVInstructionType {
     B,
     U,
     J,
-    R4
+    R4,
+    CR,
+    CI,
+    CSS,
+    CIW,
+    CL,
+    CS,
+    CA,
+    CB,
+    CJ
 };
 
 enum class RVInstructionSet {
@@ -159,7 +213,8 @@ enum class RVInstructionSet {
     RV64Zfh,
     Zifencei,
     Zicsr,
-    Zawrs
+    Zawrs,
+    C
 };
 
 struct rvinstruction {
@@ -171,7 +226,7 @@ struct rvinstruction {
     RVInstructionSet set;
 };
 
-constexpr std::array<rvinstruction, 131> instructions = {
+constexpr std::array<rvinstruction, 170> instructions = {
         {{"lui", RVInstructionType::U, RVInstruction::LUI, 0b0110111, 0b000, RVInstructionSet::RV32I},
          {"auipc", RVInstructionType::U, RVInstruction::AUIPC, 0b0010111, 0b000, RVInstructionSet::RV32I},
          {"jal", RVInstructionType::J, RVInstruction::JAL, 0b1101111, 0b000, RVInstructionSet::RV32I},
@@ -296,4 +351,50 @@ constexpr std::array<rvinstruction, 131> instructions = {
          {"csrrsi", RVInstructionType::I, RVInstruction::CSRRSI, 0b1110011, 0b110, RVInstructionSet::Zicsr},
          {"csrrci", RVInstructionType::I, RVInstruction::CSRRCI, 0b1110011, 0b111, RVInstructionSet::Zicsr},
          {"wrs.nto", RVInstructionType::I, RVInstruction::WRSNTO, 0b1110011, 0b100, RVInstructionSet::Zawrs},
-         {"wrs.sto", RVInstructionType::I, RVInstruction::WRSSTO, 0b1110011, 0b101, RVInstructionSet::Zawrs}}};
+         {"wrs.sto", RVInstructionType::I, RVInstruction::WRSSTO, 0b1110011, 0b101, RVInstructionSet::Zawrs},
+         {"c.lwsp", RVInstructionType::CIW, RVInstruction::CLWSP, 0b10, 0b010, RVInstructionSet::C},
+        {"c.ldsp", RVInstructionType::CIW, RVInstruction::CLDSP, 0b10, 0b011, RVInstructionSet::C},
+        {"c.lqsp", RVInstructionType::CIW, RVInstruction::CLQSP, 0b10, 0b001, RVInstructionSet::C},
+        {"c.flwsp", RVInstructionType::CIW, RVInstruction::CFLWSP, 0b10, 0b011, RVInstructionSet::C},
+        {"c.fldsp", RVInstructionType::CIW, RVInstruction::CFLDSP, 0b10, 0b001, RVInstructionSet::C},
+        {"c.swsp", RVInstructionType::CIW, RVInstruction::CSWSP, 0b10, 0b110, RVInstructionSet::C},
+        {"c.sdsp", RVInstructionType::CIW, RVInstruction::CSDSP, 0b10, 0b111, RVInstructionSet::C},
+        {"c.sqsp", RVInstructionType::CIW, RVInstruction::CSQSP, 0b10, 0b101, RVInstructionSet::C},
+        {"c.fswsp", RVInstructionType::CIW, RVInstruction::CFSWSP, 0b10, 0b111, RVInstructionSet::C},
+        {"c.fsdsp", RVInstructionType::CIW, RVInstruction::CFSDSP, 0b10, 0b101, RVInstructionSet::C},
+        {"c.lw", RVInstructionType::CI, RVInstruction::CLW, 0b00, 0b010, RVInstructionSet::C},
+        {"c.ld", RVInstructionType::CI, RVInstruction::CLD, 0b00, 0b011, RVInstructionSet::C},
+        {"c.lq", RVInstructionType::CI, RVInstruction::CLQ, 0b00, 0b001, RVInstructionSet::C},
+        {"c.flw", RVInstructionType::CI, RVInstruction::CFLW, 0b00, 0b011, RVInstructionSet::C},
+        {"c.fld", RVInstructionType::CI, RVInstruction::CFLD, 0b00, 0b001, RVInstructionSet::C},
+        {"c.sw", RVInstructionType::CI, RVInstruction::CSW, 0b00, 0b110, RVInstructionSet::C},
+        {"c.sd", RVInstructionType::CI, RVInstruction::CSD, 0b00, 0b111, RVInstructionSet::C},
+        {"c.sq", RVInstructionType::CI, RVInstruction::CSQ, 0b00, 0b101, RVInstructionSet::C},
+        {"c.fsw", RVInstructionType::CI, RVInstruction::CFSW, 0b00, 0b111, RVInstructionSet::C},
+        {"c.fsd", RVInstructionType::CI, RVInstruction::CFSD, 0b00, 0b101, RVInstructionSet::C},
+        {"c.j", RVInstructionType::CJ, RVInstruction::CJ, 0b01, 0b101, RVInstructionSet::C},
+        {"c.jal", RVInstructionType::CJ, RVInstruction::CJAL, 0b01, 0b001, RVInstructionSet::C},
+        {"c.jr", RVInstructionType::CR, RVInstruction::CJR, 0b10, 0b100, RVInstructionSet::C},
+        {"c.jalr", RVInstructionType::CR, RVInstruction::CJALR, 0b10, 0b100, RVInstructionSet::C},
+        {"c.beqz", RVInstructionType::CB, RVInstruction::CBEQZ, 0b01, 0b110, RVInstructionSet::C},
+        {"c.bnez", RVInstructionType::CB, RVInstruction::CBNEZ, 0b01, 0b111, RVInstructionSet::C},
+        {"c.li", RVInstructionType::CI, RVInstruction::CLI, 0b01, 0b010, RVInstructionSet::C},
+        {"c.lui", RVInstructionType::CI, RVInstruction::CLUI, 0b01, 0b011, RVInstructionSet::C},
+        {"c.addi", RVInstructionType::CI, RVInstruction::CADDI, 0b01, 0b000, RVInstructionSet::C},
+        {"c.addiw", RVInstructionType::CI, RVInstruction::CADDIW, 0b01, 0b001, RVInstructionSet::C},
+        {"c.addi16sp", RVInstructionType::CI, RVInstruction::CADDI16SP, 0b01, 0b011, RVInstructionSet::C},
+        {"c.slli", RVInstructionType::CI, RVInstruction::CSLLI, 0b10, 0b000, RVInstructionSet::C},
+        {"c.srli", RVInstructionType::CI, RVInstruction::CSRLI, 0b01, 0b100, RVInstructionSet::C},
+        {"c.srai", RVInstructionType::CI, RVInstruction::CSRAI, 0b01, 0b100, RVInstructionSet::C},
+        {"c.andi", RVInstructionType::CI, RVInstruction::CANDI, 0b01, 0b100, RVInstructionSet::C},
+        {"c.mv", RVInstructionType::CR, RVInstruction::CMV, 0b10, 0b100, RVInstructionSet::C},
+        {"c.add", RVInstructionType::CR, RVInstruction::CADD, 0b10, 0b100, RVInstructionSet::C},
+        {"c.and", RVInstructionType::CR, RVInstruction::CAND, 0b01, 0b100, RVInstructionSet::C},
+        {"c.or", RVInstructionType::CR, RVInstruction::COR, 0b01, 0b100, RVInstructionSet::C},
+        {"c.xor", RVInstructionType::CR, RVInstruction::CXOR, 0b01, 0b100, RVInstructionSet::C},
+        {"c.sub", RVInstructionType::CR, RVInstruction::CSUB, 0b01, 0b100, RVInstructionSet::C},
+        {"c.addw", RVInstructionType::CR, RVInstruction::CADDW, 0b01, 0b100, RVInstructionSet::C},
+        {"c.subw", RVInstructionType::CR, RVInstruction::CSUBW, 0b01, 0b100, RVInstructionSet::C},
+        {"c.nop", RVInstructionType::CR, RVInstruction::CNOP, 0b01, 0b000, RVInstructionSet::C},
+        {"c.ebreak", RVInstructionType::CR, RVInstruction::CEBREAK, 0b10, 0b100, RVInstructionSet::C}}};
+        

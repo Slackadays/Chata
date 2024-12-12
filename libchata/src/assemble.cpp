@@ -9,6 +9,7 @@
 #include <iostream>
 #include <string>
 #include <variant>
+#include <utility>
 
 namespace libchata_internal {
 
@@ -340,7 +341,7 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
     c.arg1.clear();
     c.arg2.clear();
     c.arg3.clear();
-    for (int i = 0; i < this_line.size(); i++) {
+    for (size_t i = 0; i < this_line.size(); i++) {
         auto ch = [&]() {
             return this_line.at(i);
         };
@@ -394,7 +395,7 @@ void solve_label_offsets(assembly_context& c) {
         return 2;
     };
 
-    for (int i = 0; i < c.nodes.size(); i++) {
+    for (size_t i = 0; i < c.nodes.size(); i++) {
         if (std::holds_alternative<instruction>(c.nodes.at(i))) {
             auto& inst = std::get<instruction>(c.nodes.at(i));
             if (inst.imm_is_label) {
@@ -436,7 +437,7 @@ rvregister get_reg_by_id(RegisterID id) {
             return r;
         }
     }
-    throw ChataError(ChataErrorType::Assembler, "Error! Invalid register ID", 0, 0);
+    throw ChataError(ChataErrorType::Assembler, "Error! Invalid register ID " + to_chatastring(std::to_underlying(id)), 0, 0);
 }
 
 chatastring generate_machine_code(assembly_context& c) {
@@ -454,20 +455,89 @@ chatastring generate_machine_code(assembly_context& c) {
         }
         auto i = std::get<instruction>(n);
         uint32_t inst = 0;
+        int bytes = 4;
         auto core_inst = get_core_inst(i.inst);
         inst |= core_inst.opcode;
         using enum RVInstructionType;
         if (i.type == R) {
-            inst |= get_reg_by_id(i.rd).encoding << 7;
+            DBG(std::cout << "Encoding R-type instruction" << std::endl;)
+            inst |= get_reg_by_id(i.rd).encoding << 7; // Add rd
+            inst |= (core_inst.funct << 12) & 0b111; // Add funct3
+            inst |= (get_reg_by_id(i.rs1).encoding << 15); // Add rs1
+            inst |= (get_reg_by_id(i.rs2).encoding << 20); // Add rs2
+            inst |= (core_inst.funct >> 3) << 25; // Add funct7
+        } else if (i.type == I) {
+            DBG(std::cout << "Encoding I-type instruction" << std::endl;)
+            inst |= get_reg_by_id(i.rd).encoding << 7; // Add rd
+            inst |= core_inst.funct << 12; // Add funct3
+            inst |= get_reg_by_id(i.rs1).encoding << 15; // Add rs1
+            inst |= i.imm << 20; // Add imm
+        } else if (i.type == S) {
+            DBG(std::cout << "Encoding S-type instruction" << std::endl;)
+            inst |= (i.imm & 0b11111) << 7; // Add imm[4:0]
+            inst |= core_inst.funct << 12;  // Add funct3
+            inst |= get_reg_by_id(i.rs1).encoding << 15; // Add rs1
+            inst |= get_reg_by_id(i.rs2).encoding << 20; // Add rs2  
+            inst |= (i.imm >> 5) << 25; // Add imm[11:5]
+        } else if (i.type == B) {
+            DBG(std::cout << "Encoding B-type instruction" << std::endl;)
+            inst |= (i.imm & 0b100000000000) >> 4; // Add imm[11] 
+            inst |= (i.imm & 0b11110) << 7; // Add imm[4:1]
+            inst |= core_inst.funct << 12; // Add funct3
+            inst |= get_reg_by_id(i.rs1).encoding << 15; // Add rs1
+            inst |= get_reg_by_id(i.rs2).encoding << 20; // Add rs2
+            inst |= (i.imm >> 5) << 25; // Add imm[10:5]
+            inst |= (i.imm >> 12) << 31; // Add imm[12]
+        } else if (i.type == U) { 
+            DBG(std::cout << "Encoding U-type instruction" << std::endl;)
+            inst |= get_reg_by_id(i.rd).encoding << 7; // Add rd
+            inst |= i.imm << 12; // Add imm[31:12]
+        } else if (i.type == J) {
+            DBG(std::cout << "Encoding J-type instruction" << std::endl;)
+            inst |= get_reg_by_id(i.rd).encoding << 7; // Add rd
+            inst |= (i.imm & 0b11111111) << 12; // Add imm[19:12]
+            inst |= (i.imm & 0b100000000000) << 20; // Add imm[11]
+            inst |= (i.imm & 0b11111111110) << 21; // Add imm[10:1]
+            inst |= (i.imm & 0b100000000000000000000) << 31; // Add imm[20]
+        } else if (i.type == R4) {
+
+        } else if (i.type == CR) {
+            
+        } else if (i.type == CI) {
+
+        } else if (i.type == CSS) {
+
+        } else if (i.type == CIW) {
+
+        } else if (i.type == CL) {
+
+        } else if (i.type == CS) {
+
+        } else if (i.type == CA) {
+
+        } else if (i.type == CB) {
+
+        } else if (i.type == CJ) {
+
+        }
+        if (bytes == 4) {
+            machine_code.push_back((inst >> 0) & 0xFF);
+            machine_code.push_back((inst >> 8) & 0xFF);
+            machine_code.push_back((inst >> 16) & 0xFF);
+            machine_code.push_back((inst >> 24) & 0xFF);
+        } else if (bytes == 2) {
+            machine_code.push_back((inst >> 0) & 0xFF);
+            machine_code.push_back((inst >> 8) & 0xFF);
         }
     }
+    return machine_code;
 }
 
 chatastring new_assembler(const chatastring& data) {
     chatastring machine_code;
     chatastring this_line;
     struct assembly_context c;
-    for (int i = 0; i < data.size(); i++) {
+    for (size_t i = 0; i < data.size(); i++) {
         this_line.push_back(data.at(i));
         if (data.at(i) == '\n' || i == data.size() - 1) {
             if (data.at(i) == '\n') {
@@ -538,6 +608,14 @@ chatastring new_assembler(const chatastring& data) {
     }
 
     solve_label_offsets(c);
+
+    machine_code = generate_machine_code(c);
+
+    DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
+    // Show the code in hex form
+    for (auto c : machine_code) {
+        printf("%02x ", c);
+    }
 
     exit(0);
 
