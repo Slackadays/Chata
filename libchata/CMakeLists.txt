@@ -38,6 +38,7 @@ add_library(chata MODULE
     src/utils.cpp
     src/if.cpp
     src/change.cpp
+    src/instructions.cpp
 )
 
 add_compile_options(chata PRIVATE -fno-rtti) 

@@ -16,7 +16,7 @@ namespace libchata_internal {
 
 struct instruction {
     RVInstruction inst;
-    RVInstructionType type;
+    RVInstructionFormat type;
     RegisterID rd;
     RegisterID rs1;
     RegisterID rs2;
@@ -73,7 +73,7 @@ RVInstruction string_to_instruction(const chatastring& str, assembly_context& c)
     throw ChataError(ChataErrorType::Compiler, "Invalid instruction " + str, c.line, c.column);
 }
 
-RVInstructionType string_to_instruction_type(const chatastring& str, assembly_context& c) {
+RVInstructionFormat string_to_instruction_type(const chatastring& str, assembly_context& c) {
     for (auto& i : instructions) {
         if (i.name == str) {
             return i.type;
@@ -114,7 +114,7 @@ instruction make_inst(assembly_context& c) {
 
     i.inst = string_to_instruction(c.inst, c);
     i.type = string_to_instruction_type(c.inst, c);
-    using enum RVInstructionType;
+    using enum RVInstructionFormat;
 
     if (i.type == I || i.type == S) {
         try {
@@ -389,7 +389,7 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
 
 void solve_label_offsets(assembly_context& c) {
     auto bytes_in_instruction = [](const instruction& i) {
-        using enum RVInstructionType;
+        using enum RVInstructionFormat;
         if (i.type == R || i.type == I || i.type == S || i.type == B || i.type == U || i.type == J) {
             return 4;
         }
@@ -459,7 +459,7 @@ chatastring generate_machine_code(assembly_context& c) {
         int bytes = 4;
         auto core_inst = get_core_inst(i.inst);
         inst |= core_inst.opcode;
-        using enum RVInstructionType;
+        using enum RVInstructionFormat;
         if (i.type == R) {
             DBG(std::cout << "Encoding R-type instruction" << std::endl;)
             inst |= get_reg_by_id(i.rd).encoding << 7;     // Add rd
@@ -576,17 +576,17 @@ chatastring new_assembler(const chatastring& data) {
             }
         }
         DBG(std::cout << "Instruction: " << string_representation << std::endl;)
-        if (this_i.type == RVInstructionType::R) {
+        if (this_i.type == RVInstructionFormat::R) {
             DBG(std::cout << "Instruction type: R" << std::endl;)
-        } else if (this_i.type == RVInstructionType::I) {
+        } else if (this_i.type == RVInstructionFormat::I) {
             DBG(std::cout << "Instruction type: I" << std::endl;)
-        } else if (this_i.type == RVInstructionType::S) {
+        } else if (this_i.type == RVInstructionFormat::S) {
             DBG(std::cout << "Instruction type: S" << std::endl;)
-        } else if (this_i.type == RVInstructionType::B) {
+        } else if (this_i.type == RVInstructionFormat::B) {
             DBG(std::cout << "Instruction type: B" << std::endl;)
-        } else if (this_i.type == RVInstructionType::U) {
+        } else if (this_i.type == RVInstructionFormat::U) {
             DBG(std::cout << "Instruction type: U" << std::endl;)
-        } else if (this_i.type == RVInstructionType::J) {
+        } else if (this_i.type == RVInstructionFormat::J) {
             DBG(std::cout << "Instruction type: J" << std::endl;)
         }
         for (auto& reg : registers) {
