@@ -15,7 +15,7 @@
 namespace libchata_internal {
 
 struct instruction {
-    RVInstruction inst;
+    RVInstructionID inst;
     RVInstructionFormat type;
     RegisterID rd;
     RegisterID rs1;
@@ -64,7 +64,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
     return new_label;
 }
 
-RVInstruction string_to_instruction(const chatastring& str, assembly_context& c) {
+RVInstructionID string_to_instruction(const chatastring& str, assembly_context& c) {
     for (auto& i : instructions) {
         if (i.name == str) {
             return i.id;
@@ -91,7 +91,7 @@ RegisterID string_to_register(const chatastring& str, assembly_context& c) {
     throw ChataError(ChataErrorType::Compiler, "Invalid register " + str, c.line, c.column);
 }
 
-rvinstruction get_inst_by_id(RVInstruction id) {
+rvinstruction get_inst_by_id(RVInstructionID id) {
     for (auto& i : instructions) {
         if (i.id == id) {
             return i;

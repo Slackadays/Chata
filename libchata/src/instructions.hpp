@@ -4,7 +4,7 @@
 #include <string_view>
 #include <optional>
 
-enum class RVInstruction {
+enum class RVInstructionID {
     LUI, // RV32I
     AUIPC,
     JAL,
@@ -226,7 +226,7 @@ struct special_snowflake_args {
 struct rvinstruction {
     std::string_view name;
     RVInstructionFormat type;
-    RVInstruction id;
+    RVInstructionID id;
     uint8_t opcode;
     uint16_t funct;
     RVInstructionSet set;

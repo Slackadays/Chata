@@ -5,7 +5,7 @@
 #include "instructions.hpp"
 
 using enum RVInstructionFormat;
-using enum RVInstruction;
+using enum RVInstructionID;
 using enum RVInstructionSet;
 
 const std::array<rvinstruction, 170> instructions = {
