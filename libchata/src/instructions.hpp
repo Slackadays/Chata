@@ -230,7 +230,8 @@ struct rvinstruction {
     uint8_t opcode;
     uint16_t funct;
     RVInstructionSet set;
-    std::optional<special_snowflake_args> ssargs = {std::nullopt};
+    std::optional<special_snowflake_args> ssargs;
+    rvinstruction(std::string_view name, RVInstructionFormat type, RVInstructionID id, uint8_t opcode, uint16_t funct, RVInstructionSet set) : name(name), type(type), id(id), opcode(opcode), funct(funct), set(set), ssargs(std::nullopt) {}
 };
 
 extern const std::array<rvinstruction, 170> instructions;

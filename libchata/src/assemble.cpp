@@ -17,8 +17,8 @@ namespace libchata_internal {
 struct instruction {
     RVInstructionID inst;
     RVInstructionFormat type;
-    RegisterID rd;
-    RegisterID rs1;
+    uint8_t rd;
+    uint8_t rs1;
     uint8_t rs2;
     int imm;
     bool imm_is_label = false;
@@ -82,10 +82,10 @@ RVInstructionFormat string_to_instruction_type(const chatastring& str, assembly_
     throw ChataError(ChataErrorType::Compiler, "Invalid instruction type", c.line, c.column);
 }
 
-RegisterID string_to_register(const chatastring& str, assembly_context& c) {
+rvregister string_to_register(const chatastring& str, assembly_context& c) {
     for (auto& r : registers) {
         if (r.name == str || r.alias == str) {
-            return r.id;
+            return r;
         }
     }
     throw ChataError(ChataErrorType::Compiler, "Invalid register " + str, c.line, c.column);
@@ -121,7 +121,7 @@ instruction make_inst(assembly_context& c) {
     if (i.type == I || i.type == S) {
         try {
             i.imm = to_int(c.arg3);
-            i.rs1 = string_to_register(c.arg2, c);
+            i.rs1 = string_to_register(c.arg2, c).encoding;
         } catch (...) {
             // Check if arg2 fits the template offset(reg)
             int offset = 0;
@@ -139,9 +139,9 @@ instruction make_inst(assembly_context& c) {
                 reg.push_back(c.arg2.at(j));
             }
             if (i.type == I) {
-                i.rs1 = string_to_register(reg, c);
+                i.rs1 = string_to_register(reg, c).encoding;
             } else { // S
-                i.rs2 = string_to_register(reg, c);
+                i.rs2 = string_to_register(reg, c).encoding;
             }
         }
     } else if (i.type == B) {
@@ -167,24 +167,24 @@ instruction make_inst(assembly_context& c) {
     }
 
     if (i.type == R) {
-        i.rd = string_to_register(c.arg1, c);
-        i.rs1 = string_to_register(c.arg2, c);
+        i.rd = string_to_register(c.arg1, c).encoding;
+        i.rs1 = string_to_register(c.arg2, c).encoding;
         if (get_inst_by_id(i.inst).ssargs == std::nullopt) {
-            i.rs2 = string_to_register(c.arg3, c);
+            i.rs2 = string_to_register(c.arg3, c).encoding;
         } else {
             i.rs2 = get_inst_by_id(i.inst).ssargs.value().rs2.value();
         }
     } else if (i.type == I) {
-        i.rd = string_to_register(c.arg1, c);
+        i.rd = string_to_register(c.arg1, c).encoding;
     } else if (i.type == S) {
-        i.rs1 = string_to_register(c.arg1, c);
+        i.rs1 = string_to_register(c.arg1, c).encoding;
     } else if (i.type == B) {
-        i.rs1 = string_to_register(c.arg1, c);
-        i.rs2 = string_to_register(c.arg2, c);
+        i.rs1 = string_to_register(c.arg1, c).encoding;
+        i.rs2 = string_to_register(c.arg2, c).encoding;
     } else if (i.type == U) {
-        i.rd = string_to_register(c.arg1, c);
+        i.rd = string_to_register(c.arg1, c).encoding;
     } else if (i.type == J) {
-        i.rd = string_to_register(c.arg1, c);
+        i.rd = string_to_register(c.arg1, c).encoding;
     }
 
     DBG(std::cout << "Instruction made" << std::endl;)
@@ -394,10 +394,12 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
 void solve_label_offsets(assembly_context& c) {
     auto bytes_in_instruction = [](const instruction& i) {
         using enum RVInstructionFormat;
-        if (i.type == R || i.type == I || i.type == S || i.type == B || i.type == U || i.type == J) {
+        if (i.type == R || i.type == R4 || i.type == I || i.type == S || i.type == B || i.type == U || i.type == J) {
             return 4;
+        } else if (i.type == CR || i.type == CI || i.type == CSS || i.type == CIW || i.type == CL || i.type == CS || i.type == CA || i.type == CB || i.type == CJ) {
+            return 2;
         }
-        return 2;
+        throw ChataError(ChataErrorType::Assembler, "Invalid instruction type");
     };
 
     for (size_t i = 0; i < c.nodes.size(); i++) {
@@ -436,15 +438,6 @@ void solve_label_offsets(assembly_context& c) {
     }
 }
 
-rvregister get_reg_by_id(RegisterID id) {
-    for (auto& r : registers) {
-        if (r.id == id) {
-            return r;
-        }
-    }
-    throw ChataError(ChataErrorType::Assembler, "Invalid register ID " + to_chatastring(std::to_underlying(id)));
-}
-
 chatastring generate_machine_code(assembly_context& c) {
     chatastring machine_code;
     for (auto& n : c.nodes) {
@@ -459,40 +452,40 @@ chatastring generate_machine_code(assembly_context& c) {
         using enum RVInstructionFormat;
         if (i.type == R) {
             DBG(std::cout << "Encoding R-type instruction" << std::endl;)
-            inst |= get_reg_by_id(i.rd).encoding << 7;     // Add rd
+            inst |= i.rd<< 7;     // Add rd
             inst |= (core_inst.funct << 12) & 0b111;       // Add funct3
-            inst |= (get_reg_by_id(i.rs1).encoding << 15); // Add rs1
-            inst |= (get_reg_by_id(i.rs2).encoding << 20); // Add rs2
+            inst |= i.rs1 << 15; // Add rs1
+            inst |= i.rs2 << 20; // Add rs2
             inst |= (core_inst.funct >> 3) << 25;          // Add funct7
         } else if (i.type == I) {
             DBG(std::cout << "Encoding I-type instruction" << std::endl;)
-            inst |= get_reg_by_id(i.rd).encoding << 7;   // Add rd
+            inst |= i.rd << 7;   // Add rd
             inst |= core_inst.funct << 12;               // Add funct3
-            inst |= get_reg_by_id(i.rs1).encoding << 15; // Add rs1
+            inst |= i.rs1 << 15; // Add rs1
             inst |= i.imm << 20;                         // Add imm
         } else if (i.type == S) {
             DBG(std::cout << "Encoding S-type instruction" << std::endl;)
             inst |= (i.imm & 0b11111) << 7;              // Add imm[4:0]
             inst |= core_inst.funct << 12;               // Add funct3
-            inst |= get_reg_by_id(i.rs1).encoding << 15; // Add rs1
-            inst |= get_reg_by_id(i.rs2).encoding << 20; // Add rs2
+            inst |= i.rs1 << 15; // Add rs1
+            inst |= i.rs2 << 20; // Add rs2
             inst |= (i.imm >> 5) << 25;                  // Add imm[11:5]
         } else if (i.type == B) {
             DBG(std::cout << "Encoding B-type instruction" << std::endl;)
             inst |= (i.imm & 0b100000000000) >> 4;       // Add imm[11]
             inst |= (i.imm & 0b11110) << 7;              // Add imm[4:1]
             inst |= core_inst.funct << 12;               // Add funct3
-            inst |= get_reg_by_id(i.rs1).encoding << 15; // Add rs1
-            inst |= get_reg_by_id(i.rs2).encoding << 20; // Add rs2
+            inst |= i.rs1 << 15; // Add rs1
+            inst |= i.rs2 << 20; // Add rs2
             inst |= (i.imm >> 5) << 25;                  // Add imm[10:5]
             inst |= (i.imm >> 12) << 31;                 // Add imm[12]
         } else if (i.type == U) {
             DBG(std::cout << "Encoding U-type instruction" << std::endl;)
-            inst |= get_reg_by_id(i.rd).encoding << 7; // Add rd
+            inst |= i.rd << 7; // Add rd
             inst |= i.imm << 12;                       // Add imm[31:12]
         } else if (i.type == J) {
             DBG(std::cout << "Encoding J-type instruction" << std::endl;)
-            inst |= get_reg_by_id(i.rd).encoding << 7;       // Add rd
+            inst |= i.rd << 7;       // Add rd
             inst |= (i.imm & 0b11111111) << 12;              // Add imm[19:12]
             inst |= (i.imm & 0b100000000000) << 20;          // Add imm[11]
             inst |= (i.imm & 0b11111111110) << 21;           // Add imm[10:1]
@@ -587,13 +580,13 @@ chatastring new_assembler(const chatastring& data) {
             DBG(std::cout << "Instruction type: J" << std::endl;)
         }
         for (auto& reg : registers) {
-            if (reg.id == this_i.rd) {
+            if (reg.encoding == this_i.rd) {
                 DBG(std::cout << "rd: " << reg.alias << std::endl;)
             }
-            if (reg.id == this_i.rs1) {
+            if (reg.encoding == this_i.rs1) {
                 DBG(std::cout << "rs1: " << reg.alias << std::endl;)
             }
-            if (reg.id == this_i.rs2) {
+            if (reg.encoding == this_i.rs2) {
                 DBG(std::cout << "rs2: " << reg.alias << std::endl;)
             }
         }

@@ -2,6 +2,7 @@
 #include <array>
 #include <cstdint>
 #include <string_view>
+#include <initializer_list>
 #include "instructions.hpp"
 
 using enum RVInstructionFormat;
