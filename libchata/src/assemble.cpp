@@ -19,7 +19,7 @@ struct instruction {
     RVInstructionFormat type;
     RegisterID rd;
     RegisterID rs1;
-    RegisterID rs2;
+    uint8_t rs2;
     int imm;
     bool imm_is_label = false;
 };
@@ -91,11 +91,13 @@ RegisterID string_to_register(const chatastring& str, assembly_context& c) {
     throw ChataError(ChataErrorType::Compiler, "Invalid register " + str, c.line, c.column);
 }
 
-bool is_special_snowflake_2_arg_R_inst(RVInstruction inst) {
-    using enum RVInstruction;
-    return inst == FMVWX || inst == FMVXW || inst == FMVDX || inst == FMVXD || inst == FCVTSW || inst == FCVTDW || inst == FCVTSWU || inst == FCVTDWU || inst == FCVTWS || inst == FCVTWD
-           || inst == FCVTWUS || inst == FCVTWUD || inst == FCVTSL || inst == FCVTDL || inst == FCVTSLU || inst == FCVTDLU || inst == FCVTLS || inst == FCVTLD || inst == FCVTLUS || inst == FCVTLUD
-           || inst == FSQRTS || inst == FSQRTD || inst == FCLASSS || inst == FCLASSD || inst == FCVTDS || inst == FCVTSD;
+rvinstruction get_inst_by_id(RVInstruction id) {
+    for (auto& i : instructions) {
+        if (i.id == id) {
+            return i;
+        }
+    }
+    throw ChataError(ChataErrorType::Assembler, "Invalid instruction ID " + to_chatastring(std::to_underlying(id)));
 }
 
 bool is_pseudoinst(const chatastring& inst) {
@@ -167,8 +169,10 @@ instruction make_inst(assembly_context& c) {
     if (i.type == R) {
         i.rd = string_to_register(c.arg1, c);
         i.rs1 = string_to_register(c.arg2, c);
-        if (!is_special_snowflake_2_arg_R_inst(i.inst)) {
+        if (get_inst_by_id(i.inst).ssargs == std::nullopt) {
             i.rs2 = string_to_register(c.arg3, c);
+        } else {
+            i.rs2 = get_inst_by_id(i.inst).ssargs.value().rs2.value();
         }
     } else if (i.type == I) {
         i.rd = string_to_register(c.arg1, c);
@@ -443,13 +447,6 @@ rvregister get_reg_by_id(RegisterID id) {
 
 chatastring generate_machine_code(assembly_context& c) {
     chatastring machine_code;
-    auto get_core_inst = [](RVInstruction inst) {
-        for (auto& i : instructions) {
-            if (i.id == inst) {
-                return i;
-            }
-        }
-    };
     for (auto& n : c.nodes) {
         if (!std::holds_alternative<instruction>(n)) {
             continue;
@@ -457,7 +454,7 @@ chatastring generate_machine_code(assembly_context& c) {
         auto i = std::get<instruction>(n);
         uint32_t inst = 0;
         int bytes = 4;
-        auto core_inst = get_core_inst(i.inst);
+        auto core_inst = get_inst_by_id(i.inst);
         inst |= core_inst.opcode;
         using enum RVInstructionFormat;
         if (i.type == R) {
