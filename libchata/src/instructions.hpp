@@ -3,8 +3,9 @@
 #include <cstdint>
 #include <string_view>
 #include <optional>
+#include <initializer_list>
 
-enum class RVInstructionID {
+enum class RVInstructionID : uint16_t {
     LUI, // RV32I
     AUIPC,
     JAL,
@@ -179,7 +180,7 @@ enum class RVInstructionID {
     CEBREAK,
 };
 
-enum class RVInstructionFormat {
+enum class RVInstructionFormat : uint8_t {
     R,
     I,
     S,
@@ -198,7 +199,7 @@ enum class RVInstructionFormat {
     CJ
 };
 
-enum class RVInstructionSet {
+enum class RVInstructionSet : uint8_t {
     RV32I,
     RV64I,
     RV32M,
@@ -221,6 +222,7 @@ enum class RVInstructionSet {
 
 struct special_snowflake_args {
     std::optional<uint8_t> rs2;
+    std::optional<bool> use_rm_for_funct3;
 };
 
 struct rvinstruction {
@@ -230,8 +232,7 @@ struct rvinstruction {
     uint8_t opcode;
     uint16_t funct;
     RVInstructionSet set;
-    std::optional<special_snowflake_args> ssargs;
-    rvinstruction(std::string_view name, RVInstructionFormat type, RVInstructionID id, uint8_t opcode, uint16_t funct, RVInstructionSet set) : name(name), type(type), id(id), opcode(opcode), funct(funct), set(set), ssargs(std::nullopt) {}
+    std::optional<special_snowflake_args> ssargs = std::nullopt;
 };
 
 extern const std::array<rvinstruction, 170> instructions;

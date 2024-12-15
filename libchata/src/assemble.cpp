@@ -20,6 +20,7 @@ struct instruction {
     uint8_t rd;
     uint8_t rs1;
     uint8_t rs2;
+    uint8_t rs3;
     int imm;
     bool imm_is_label = false;
 };
@@ -453,7 +454,7 @@ chatastring generate_machine_code(assembly_context& c) {
         if (i.type == R) {
             DBG(std::cout << "Encoding R-type instruction" << std::endl;)
             inst |= i.rd<< 7;     // Add rd
-            inst |= (core_inst.funct << 12) & 0b111;       // Add funct3
+            inst |= (core_inst.funct & 0b111) << 12;       // Add funct3
             inst |= i.rs1 << 15; // Add rs1
             inst |= i.rs2 << 20; // Add rs2
             inst |= (core_inst.funct >> 3) << 25;          // Add funct7
@@ -491,7 +492,13 @@ chatastring generate_machine_code(assembly_context& c) {
             inst |= (i.imm & 0b11111111110) << 21;           // Add imm[10:1]
             inst |= (i.imm & 0b100000000000000000000) << 31; // Add imm[20]
         } else if (i.type == R4) {
-
+            DBG(std::cout << "Encoding R4-type instruction" << std::endl;)
+            inst |= i.rd << 7;     // Add rd
+            inst |= (core_inst.funct & 0b111) << 12;       // Add funct3
+            inst |= i.rs1 << 15; // Add rs1
+            inst |= i.rs2 << 20; // Add rs2
+            inst |= (core_inst.funct >> 3) << 25;          // Add funct2
+            inst |= i.rs3 << 27; // Add rs3
         } else if (i.type == CR) {
 
         } else if (i.type == CI) {
@@ -604,6 +611,42 @@ chatastring new_assembler(const chatastring& data) {
     DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
     for (auto c : machine_code) {
+        printf("%02x ", c);
+    }
+
+    DBG(std::cout << "Let's compare this against the reference, gcc as" << std::endl;)
+
+    std::ofstream out("temp.s");
+    out << data;
+    out.close();
+
+    int res = std::system("riscv64-linux-gnu-as temp.s -o temp.o");
+
+    if (res != 0) {
+        // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)
+            // exit(1);
+        throw ChataError(ChataErrorType::Assembler, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
+    }
+
+    res = std::system("riscv64-linux-gnu-objcopy -O binary temp.o temp.bin");
+
+    if (res != 0) {
+        // DBG(std::cout << "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin" << std::endl;)
+        // exit(1);
+        throw ChataError(ChataErrorType::Assembler, "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin", 0, 0);
+    }
+
+    std::ifstream in("temp.bin", std::ios::binary);
+    chatastring result((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    in.close();
+
+    std::filesystem::remove("temp.s");
+    // std::filesystem::remove("temp.o");
+    std::filesystem::remove("temp.bin");
+
+    DBG(std::cout << "Ok, here's the reference code:" << std::endl;)
+    // Show the code in hex form
+    for (auto c : result) {
         printf("%02x ", c);
     }
 
