@@ -104,6 +104,7 @@ enum class RVInstructionID : uint16_t {
     FEQD,
     FLD,
     FLED,
+    FLTD,
     FMADDD,
     FMAXD,
     FMAXMD,
@@ -235,4 +236,4 @@ struct rvinstruction {
     std::optional<special_snowflake_args> ssargs = std::nullopt;
 };
 
-extern const std::array<rvinstruction, 170> instructions;
+extern const std::array<rvinstruction, 171> instructions;

@@ -246,7 +246,9 @@ void process_comments(InternalFile& file) {
             partial_comment_possible = true;
         }
         if (std::isprint(ch()) && ch() == '#' && !partial_comment_possible) {
-            for (; i < file.data.size() && ch() != '\n'; i++) {}
+            for (; i < file.data.size() && ch() != '\n'; i++) {
+                file.data.at(i) = ' ';
+            }
             continue;
         }
         if (ch() == '#' && partial_comment_possible) {
