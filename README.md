@@ -1,19 +1,31 @@
-<h1>Welcome to the Chata programming language</h1>
+# Welcome to the Chata project!
+
+Chata is a free and open-source solution for DSP, or Digital Signal Processing.
+
+Chata aims to fix problems other DSP libraries and languages have such as poor documentation, overly focused design, and lack of real world applications.
+
+**The project currently consists of these four parts:**
+
+-> **`libchata`** The core C++ library with the compiler, assembler, and execution environment.
+
+-> **`chatadsp`** The standard library of DSP effects.
+
+-> **`chatacli`** A convenient wrapper so you can use Chata code in your favorite terminal.
+
+-> **`chatapanel`** A web management panel so you can use Chata effects with your audio hardware.
+
+Each part's documentation lives under their respective folder in this repo.
+
+> [!TIP] 
+> Click here to go to <a href="libchata/README.md">libchata</a>, <a href="chatadsp">chatadsp</a>, <a href="chatacli/README.md">chatacli</a>, and <a href="chatapanel/README.md">chatapanel</a> directly.
+
+Everything that follows in this page has to do with Chata as a whole and the programming language specification.
+
+<h1>The Chata programming language</h1>
 
 Chata is an idea for a programming language that's just for DSP, or Digital Signal Processing.
 
 There's no junk or cruft with Chata, so it lets you do great things easier than ever!
-
-# October 2024: Important Update
-
-It's been months since I last touched this project because I wasn't feeling good vibes from it.
-
-Consider this: A language that's like RISC-V assembly (the way Old Chata worked) is reinventing the wheel. I'm placing a bet that in the long term (say, 30 years), everything will become RISC-V, making a language similar to it that can run on other platforms redundant.
-
-Therefore, why not just base Chata off of assembly directly? We can borrow a subset of RISC-V simply, expand it with convenient building blocks, and provide a runtime emulatable on other platforms too. That's the new idea going forward.
-
-> [!NOTE]
-> <a href="readme/README-old.md">Click here for Old Chata's README.</a>
 
 # 😕 The problem (and the solution)
 
@@ -115,71 +127,15 @@ Like with my other projects, I'm accepting any contributions you might want to m
 
 # 🗺️ Roadmap
 
-<details><summary>Click here to see the roadmap</summary>
+Status of each part:
 
-- [ ] Chata Language Standard
-  - [ ] basic ideas for a general look
-    - [ ] what should it look like?
-    - [ ] what kinds of looks are feasible?
-    - [ ] how nice can it look?
-  - [ ] types
-    - [ ] int types
-    - [ ] float types
-    - [ ] buffer (array) types
-    - [ ] other types?
-  - [ ] versioning
-  - [ ] syntax
-    - [x] procedural, functional, imperative?
-    - [ ] how should "stuff" work?
-    - [ ] generics/templates
-  - [ ] IO
-    - [x] ~~in != out IO~~
-  - [ ] names
-    - [x] what kind of capitalization? **Follow RISC-V**
-    - [ ] what abbreviations should we use?
-  - [ ] math symbols
-    - [ ] what symbols can we support?
-    - [ ] can we seamlessly integrate math symbols into the code?
-  - [ ] standard library
-    - [ ] what features can we include?
-    - [ ] how should we implement the library?
-  - [ ] concurrency
-    - [ ] how can we determine concurrency support?
-  - [ ] platform support
-    - [ ] how can we support DSP processors?
-    - [ ] what ISAs should we support?
-    - [ ] should we use something like LLVM IR?
-  - [ ] multi-language support
-    - [ ] should we support multiple languages?
-- [ ] Official Implementation
-  - [x] license **MPL 2.0**
-  - [ ] basic working interpreter
-    - [ ] what language?
-    - [ ] at what standard should it be built?
-  - [x] ~~a JIT/faster interpreter~~ 
-  - [x] ~~code generator~~
-    - [x] what languages? **RISC-V**
-  - [ ] native binary generator
-    - [ ] what ISAs?
-    - [ ] what platforms?
-- [ ] Alternative Implementation
-  - [ ] who will make it?
-  - [ ] license
-  - [ ] what language?
-- [ ] Documentation
-  - [x] readme with basic details **Right here**
-  - [ ] Chata logo
-  - [ ] sample programs
-    - [ ] "hello world" (sine wave)
-    - [ ] delay
-    - [ ] EQ
-    - [ ] reverb
-  - [ ] website
-  - [ ] online playground
-- [ ] Your checkbox here!
-  - [ ] Feel free to contribute to this roadmap!
+-> **`libchata`** In progress
 
-</details>
+-> **`chatadsp`** Not started yet
+
+-> **`chatacli`** Works, but with few features
+
+-> **`chatapanel`** In progress
 
 # 🖥️ Chata language standard
 
