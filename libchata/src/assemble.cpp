@@ -482,7 +482,7 @@ chatastring generate_machine_code(assembly_context& c) {
         auto i = std::get<instruction>(n);
         uint32_t inst = 0;
         int bytes = 4;
-        auto core_inst = get_inst_by_id(i.inst);
+        auto& core_inst = get_inst_by_id(i.inst);
         inst |= core_inst.opcode;
         using enum RVInstructionFormat;
         if (i.type == R) {
@@ -572,6 +572,9 @@ chatastring new_assembler(const chatastring& data) {
     chatastring machine_code;
     chatastring this_line;
     struct assembly_context c;
+
+    auto then = std::chrono::high_resolution_clock::now();
+
     for (size_t i = 0; i < data.size(); i++) {
         this_line.push_back(data.at(i));
         if (data.at(i) == '\n' || i == data.size() - 1) {
@@ -597,7 +600,7 @@ chatastring new_assembler(const chatastring& data) {
         }
     }
 
-    for (auto& i : c.nodes) {
+    /*for (auto& i : c.nodes) {
         if (!std::holds_alternative<instruction>(i)) {
             DBG(std::cout << "Label: " << std::get<int>(i) << std::endl;)
             continue;
@@ -640,13 +643,17 @@ chatastring new_assembler(const chatastring& data) {
         } else {
             DBG(std::cout << "label: " << this_i.imm << std::endl;)
         }
-    }
+    }*/
 
     solve_label_offsets(c);
 
     machine_code = generate_machine_code(c);
 
-    DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
+    auto now = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - then);
+    std::cout << "Assembling took " << duration.count() << "ms" << std::endl;
+
+    /*DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
     for (auto c : machine_code) {
         printf("%02x ", c);
@@ -686,7 +693,7 @@ chatastring new_assembler(const chatastring& data) {
     // Show the code in hex form
     for (auto c : result) {
         printf("%02x ", c);
-    }
+    }*/
 
     exit(0);
 
