@@ -10,18 +10,20 @@
 namespace libchata_internal {
 
 chatastring generate_prelude() {
-    return "fld fa0, 0(a0)\n"
+    /*return "fld fa0, 0(a0)\n"
            "fld fa1, 8(a0)\n"
            "fld fa2, 16(a0)\n"
-           "fld fa3, 24(a0)\n";
+           "fld fa3, 24(a0)\n";*/
+        return "";
 }
 
 chatastring generate_postlude() {
-    return "\nfsd fa0, 0(a0)\n"
+    /*return "\nfsd fa0, 0(a0)\n"
            "fsd fa1, 8(a0)\n"
            "fsd fa2, 16(a0)\n"
            "fsd fa3, 24(a0)\n"
-           "ret";
+           "ret";*/
+        return "";
 }
 
 chatastring allocate_label(struct compilation_context& c) {
