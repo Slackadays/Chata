@@ -45,3 +45,10 @@ format:
 check-format:
   cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose --dry-run '{}' +
   cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose --dry-run '{}' +
+
+test:
+  @just test-lib
+
+test-lib:
+  cd libchata/build; ./test_libchata
+  

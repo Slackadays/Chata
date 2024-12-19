@@ -31,9 +31,9 @@ if(lto_supported AND NOT NO_LTO)
   endif()
 endif()
 
-add_library(chata MODULE
+add_library(objchata OBJECT
     src/libchata.cpp
-    src/assemble.cpp
+    src/assembler.cpp
     src/compile.cpp
     src/utils.cpp
     src/if.cpp
@@ -42,14 +42,31 @@ add_library(chata MODULE
     src/registers.cpp
 )
 
-add_compile_options(chata PRIVATE -fno-rtti) 
+add_library(chatashared SHARED $<TARGET_OBJECTS:objchata>)
+set_property(TARGET chatashared PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+add_library(chatastatic STATIC $<TARGET_OBJECTS:objchata>)
+set_target_properties(chatastatic PROPERTIES OUTPUT_NAME chata)
+set_target_properties(chatashared PROPERTIES OUTPUT_NAME chata)
+
+add_executable(test_libchata
+  src/test.cpp
+)
+
+target_link_libraries(test_libchata chata)
+
+add_compile_options(objchata PRIVATE -fno-rtti) 
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   #add_definitions(-DDEBUG -Wall -Wextra -Wpedantic)
   add_definitions(-DDEBUG)
 endif()
 
-install(TARGETS chata
+install(TARGETS chatashared
+    DESTINATION lib
+)
+
+install(TARGETS chatastatic
     DESTINATION lib
 )
 

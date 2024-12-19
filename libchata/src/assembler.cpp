@@ -31,6 +31,7 @@ struct assembly_context {
     chatavector<std::pair<chatastring, int>> labels;
     int line = 1;
     int column = 0;
+    
     chatastring inst;
     chatastring arg1;
     chatastring arg2;
@@ -482,7 +483,7 @@ chatastring generate_machine_code(assembly_context& c) {
         auto i = std::get<instruction>(n);
         uint32_t inst = 0;
         int bytes = 4;
-        auto& core_inst = get_inst_by_id(i.inst);
+        auto core_inst = get_inst_by_id(i.inst);
         inst |= core_inst.opcode;
         using enum RVInstructionFormat;
         if (i.type == R) {
@@ -653,7 +654,7 @@ chatastring new_assembler(const chatastring& data) {
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - then);
     std::cout << "Assembling took " << duration.count() << "ms" << std::endl;
 
-    /*DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
+    DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
     for (auto c : machine_code) {
         printf("%02x ", c);
@@ -693,9 +694,9 @@ chatastring new_assembler(const chatastring& data) {
     // Show the code in hex form
     for (auto c : result) {
         printf("%02x ", c);
-    }*/
+    }
 
-    exit(0);
+    //exit(0);
 
     return machine_code;
 }
