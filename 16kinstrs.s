@@ -4,9 +4,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -24,9 +24,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -44,9 +44,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -64,9 +64,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -84,9 +84,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -104,9 +104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -124,9 +124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -144,9 +144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -164,9 +164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -184,9 +184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -204,9 +204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -224,9 +224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -244,9 +244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -264,9 +264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -284,9 +284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -304,9 +304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -324,9 +324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -344,9 +344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -364,9 +364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -384,9 +384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -404,9 +404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -424,9 +424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -444,9 +444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -464,9 +464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -484,9 +484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -504,9 +504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -524,9 +524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -544,9 +544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -564,9 +564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -584,9 +584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -604,9 +604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -624,9 +624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -644,9 +644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -664,9 +664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -684,9 +684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -704,9 +704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -724,9 +724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -744,9 +744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -764,9 +764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -784,9 +784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -804,9 +804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -824,9 +824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -844,9 +844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -864,9 +864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -884,9 +884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -904,9 +904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -924,9 +924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -944,9 +944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -964,9 +964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -984,9 +984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1004,9 +1004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1024,9 +1024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1044,9 +1044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1064,9 +1064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1084,9 +1084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1104,9 +1104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1124,9 +1124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1144,9 +1144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1164,9 +1164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1184,9 +1184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1204,9 +1204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1224,9 +1224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1244,9 +1244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1264,9 +1264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1284,9 +1284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1304,9 +1304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1324,9 +1324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1344,9 +1344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1364,9 +1364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1384,9 +1384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1404,9 +1404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1424,9 +1424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1444,9 +1444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1464,9 +1464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1484,9 +1484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1504,9 +1504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1524,9 +1524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1544,9 +1544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1564,9 +1564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1584,9 +1584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1604,9 +1604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1624,9 +1624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1644,9 +1644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1664,9 +1664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1684,9 +1684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1704,9 +1704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1724,9 +1724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1744,9 +1744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1764,9 +1764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1784,9 +1784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1804,9 +1804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1824,9 +1824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1844,9 +1844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1864,9 +1864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1884,9 +1884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1904,9 +1904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1924,9 +1924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1944,9 +1944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1964,9 +1964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -1984,9 +1984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2004,9 +2004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2024,9 +2024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2044,9 +2044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2064,9 +2064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2084,9 +2084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2104,9 +2104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2124,9 +2124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2144,9 +2144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2164,9 +2164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2184,9 +2184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2204,9 +2204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2224,9 +2224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2244,9 +2244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2264,9 +2264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2284,9 +2284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2304,9 +2304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2324,9 +2324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2344,9 +2344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2364,9 +2364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2384,9 +2384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2404,9 +2404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2424,9 +2424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2444,9 +2444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2464,9 +2464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2484,9 +2484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2504,9 +2504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2524,9 +2524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2544,9 +2544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2564,9 +2564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2584,9 +2584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2604,9 +2604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2624,9 +2624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2644,9 +2644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2664,9 +2664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2684,9 +2684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2704,9 +2704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2724,9 +2724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2744,9 +2744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2764,9 +2764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2784,9 +2784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2804,9 +2804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2824,9 +2824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2844,9 +2844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2864,9 +2864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2884,9 +2884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2904,9 +2904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2924,9 +2924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2944,9 +2944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2964,9 +2964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -2984,9 +2984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3004,9 +3004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3024,9 +3024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3044,9 +3044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3064,9 +3064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3084,9 +3084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3104,9 +3104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3124,9 +3124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3144,9 +3144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3164,9 +3164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3184,9 +3184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3204,9 +3204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3224,9 +3224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3244,9 +3244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3264,9 +3264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3284,9 +3284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3304,9 +3304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3324,9 +3324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3344,9 +3344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3364,9 +3364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3384,9 +3384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3404,9 +3404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3424,9 +3424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3444,9 +3444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3464,9 +3464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3484,9 +3484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3504,9 +3504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3524,9 +3524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3544,9 +3544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3564,9 +3564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3584,9 +3584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3604,9 +3604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3624,9 +3624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3644,9 +3644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3664,9 +3664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3684,9 +3684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3704,9 +3704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3724,9 +3724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3744,9 +3744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3764,9 +3764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3784,9 +3784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3804,9 +3804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3824,9 +3824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3844,9 +3844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3864,9 +3864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3884,9 +3884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3904,9 +3904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3924,9 +3924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3944,9 +3944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3964,9 +3964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -3984,9 +3984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4004,9 +4004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4024,9 +4024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4044,9 +4044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4064,9 +4064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4084,9 +4084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4104,9 +4104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4124,9 +4124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4144,9 +4144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4164,9 +4164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4184,9 +4184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4204,9 +4204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4224,9 +4224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4244,9 +4244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4264,9 +4264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4284,9 +4284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4304,9 +4304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4324,9 +4324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4344,9 +4344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4364,9 +4364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4384,9 +4384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4404,9 +4404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4424,9 +4424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4444,9 +4444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4464,9 +4464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4484,9 +4484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4504,9 +4504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4524,9 +4524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4544,9 +4544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4564,9 +4564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4584,9 +4584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4604,9 +4604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4624,9 +4624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4644,9 +4644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4664,9 +4664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4684,9 +4684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4704,9 +4704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4724,9 +4724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4744,9 +4744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4764,9 +4764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4784,9 +4784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4804,9 +4804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4824,9 +4824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4844,9 +4844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4864,9 +4864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4884,9 +4884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4904,9 +4904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4924,9 +4924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4944,9 +4944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4964,9 +4964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -4984,9 +4984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5004,9 +5004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5024,9 +5024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5044,9 +5044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5064,9 +5064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5084,9 +5084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5104,9 +5104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5124,9 +5124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5144,9 +5144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5164,9 +5164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5184,9 +5184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5204,9 +5204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5224,9 +5224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5244,9 +5244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5264,9 +5264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5284,9 +5284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5304,9 +5304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5324,9 +5324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5344,9 +5344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5364,9 +5364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5384,9 +5384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5404,9 +5404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5424,9 +5424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5444,9 +5444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5464,9 +5464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5484,9 +5484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5504,9 +5504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5524,9 +5524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5544,9 +5544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5564,9 +5564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5584,9 +5584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5604,9 +5604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5624,9 +5624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5644,9 +5644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5664,9 +5664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5684,9 +5684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5704,9 +5704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5724,9 +5724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5744,9 +5744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5764,9 +5764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5784,9 +5784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5804,9 +5804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5824,9 +5824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5844,9 +5844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5864,9 +5864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5884,9 +5884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5904,9 +5904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5924,9 +5924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5944,9 +5944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5964,9 +5964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -5984,9 +5984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6004,9 +6004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6024,9 +6024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6044,9 +6044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6064,9 +6064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6084,9 +6084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6104,9 +6104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6124,9 +6124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6144,9 +6144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6164,9 +6164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6184,9 +6184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6204,9 +6204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6224,9 +6224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6244,9 +6244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6264,9 +6264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6284,9 +6284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6304,9 +6304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6324,9 +6324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6344,9 +6344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6364,9 +6364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6384,9 +6384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6404,9 +6404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6424,9 +6424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6444,9 +6444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6464,9 +6464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6484,9 +6484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6504,9 +6504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6524,9 +6524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6544,9 +6544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6564,9 +6564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6584,9 +6584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6604,9 +6604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6624,9 +6624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6644,9 +6644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6664,9 +6664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6684,9 +6684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6704,9 +6704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6724,9 +6724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6744,9 +6744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6764,9 +6764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6784,9 +6784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6804,9 +6804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6824,9 +6824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6844,9 +6844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6864,9 +6864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6884,9 +6884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6904,9 +6904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6924,9 +6924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6944,9 +6944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6964,9 +6964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -6984,9 +6984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7004,9 +7004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7024,9 +7024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7044,9 +7044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7064,9 +7064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7084,9 +7084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7104,9 +7104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7124,9 +7124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7144,9 +7144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7164,9 +7164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7184,9 +7184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7204,9 +7204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7224,9 +7224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7244,9 +7244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7264,9 +7264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7284,9 +7284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7304,9 +7304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7324,9 +7324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7344,9 +7344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7364,9 +7364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7384,9 +7384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7404,9 +7404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7424,9 +7424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7444,9 +7444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7464,9 +7464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7484,9 +7484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7504,9 +7504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7524,9 +7524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7544,9 +7544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7564,9 +7564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7584,9 +7584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7604,9 +7604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7624,9 +7624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7644,9 +7644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7664,9 +7664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7684,9 +7684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7704,9 +7704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7724,9 +7724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7744,9 +7744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7764,9 +7764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7784,9 +7784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7804,9 +7804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7824,9 +7824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7844,9 +7844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7864,9 +7864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7884,9 +7884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7904,9 +7904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7924,9 +7924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7944,9 +7944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7964,9 +7964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -7984,9 +7984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8004,9 +8004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8024,9 +8024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8044,9 +8044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8064,9 +8064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8084,9 +8084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8104,9 +8104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8124,9 +8124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8144,9 +8144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8164,9 +8164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8184,9 +8184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8204,9 +8204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8224,9 +8224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8244,9 +8244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8264,9 +8264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8284,9 +8284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8304,9 +8304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8324,9 +8324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8344,9 +8344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8364,9 +8364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8384,9 +8384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8404,9 +8404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8424,9 +8424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8444,9 +8444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8464,9 +8464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8484,9 +8484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8504,9 +8504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8524,9 +8524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8544,9 +8544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8564,9 +8564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8584,9 +8584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8604,9 +8604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8624,9 +8624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8644,9 +8644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8664,9 +8664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8684,9 +8684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8704,9 +8704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8724,9 +8724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8744,9 +8744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8764,9 +8764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8784,9 +8784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8804,9 +8804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8824,9 +8824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8844,9 +8844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8864,9 +8864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8884,9 +8884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8904,9 +8904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8924,9 +8924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8944,9 +8944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8964,9 +8964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -8984,9 +8984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9004,9 +9004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9024,9 +9024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9044,9 +9044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9064,9 +9064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9084,9 +9084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9104,9 +9104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9124,9 +9124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9144,9 +9144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9164,9 +9164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9184,9 +9184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9204,9 +9204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9224,9 +9224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9244,9 +9244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9264,9 +9264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9284,9 +9284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9304,9 +9304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9324,9 +9324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9344,9 +9344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9364,9 +9364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9384,9 +9384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9404,9 +9404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9424,9 +9424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9444,9 +9444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9464,9 +9464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9484,9 +9484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9504,9 +9504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9524,9 +9524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9544,9 +9544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9564,9 +9564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9584,9 +9584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9604,9 +9604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9624,9 +9624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9644,9 +9644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9664,9 +9664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9684,9 +9684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9704,9 +9704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9724,9 +9724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9744,9 +9744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9764,9 +9764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9784,9 +9784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9804,9 +9804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9824,9 +9824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9844,9 +9844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9864,9 +9864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9884,9 +9884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9904,9 +9904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9924,9 +9924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9944,9 +9944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9964,9 +9964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -9984,9 +9984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10004,9 +10004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10024,9 +10024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10044,9 +10044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10064,9 +10064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10084,9 +10084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10104,9 +10104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10124,9 +10124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10144,9 +10144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10164,9 +10164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10184,9 +10184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10204,9 +10204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10224,9 +10224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10244,9 +10244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10264,9 +10264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10284,9 +10284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10304,9 +10304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10324,9 +10324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10344,9 +10344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10364,9 +10364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10384,9 +10384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10404,9 +10404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10424,9 +10424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10444,9 +10444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10464,9 +10464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10484,9 +10484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10504,9 +10504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10524,9 +10524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10544,9 +10544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10564,9 +10564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10584,9 +10584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10604,9 +10604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10624,9 +10624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10644,9 +10644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10664,9 +10664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10684,9 +10684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10704,9 +10704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10724,9 +10724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10744,9 +10744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10764,9 +10764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10784,9 +10784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10804,9 +10804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10824,9 +10824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10844,9 +10844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10864,9 +10864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10884,9 +10884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10904,9 +10904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10924,9 +10924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10944,9 +10944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10964,9 +10964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -10984,9 +10984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11004,9 +11004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11024,9 +11024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11044,9 +11044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11064,9 +11064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11084,9 +11084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11104,9 +11104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11124,9 +11124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11144,9 +11144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11164,9 +11164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11184,9 +11184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11204,9 +11204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11224,9 +11224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11244,9 +11244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11264,9 +11264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11284,9 +11284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11304,9 +11304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11324,9 +11324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11344,9 +11344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11364,9 +11364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11384,9 +11384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11404,9 +11404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11424,9 +11424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11444,9 +11444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11464,9 +11464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11484,9 +11484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11504,9 +11504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11524,9 +11524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11544,9 +11544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11564,9 +11564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11584,9 +11584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11604,9 +11604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11624,9 +11624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11644,9 +11644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11664,9 +11664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11684,9 +11684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11704,9 +11704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11724,9 +11724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11744,9 +11744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11764,9 +11764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11784,9 +11784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11804,9 +11804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11824,9 +11824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11844,9 +11844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11864,9 +11864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11884,9 +11884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11904,9 +11904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11924,9 +11924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11944,9 +11944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11964,9 +11964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -11984,9 +11984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12004,9 +12004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12024,9 +12024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12044,9 +12044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12064,9 +12064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12084,9 +12084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12104,9 +12104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12124,9 +12124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12144,9 +12144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12164,9 +12164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12184,9 +12184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12204,9 +12204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12224,9 +12224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12244,9 +12244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12264,9 +12264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12284,9 +12284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12304,9 +12304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12324,9 +12324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12344,9 +12344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12364,9 +12364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12384,9 +12384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12404,9 +12404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12424,9 +12424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12444,9 +12444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12464,9 +12464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12484,9 +12484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12504,9 +12504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12524,9 +12524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12544,9 +12544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12564,9 +12564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12584,9 +12584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12604,9 +12604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12624,9 +12624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12644,9 +12644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12664,9 +12664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12684,9 +12684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12704,9 +12704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12724,9 +12724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12744,9 +12744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12764,9 +12764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12784,9 +12784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12804,9 +12804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12824,9 +12824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12844,9 +12844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12864,9 +12864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12884,9 +12884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12904,9 +12904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12924,9 +12924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12944,9 +12944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12964,9 +12964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -12984,9 +12984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13004,9 +13004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13024,9 +13024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13044,9 +13044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13064,9 +13064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13084,9 +13084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13104,9 +13104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13124,9 +13124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13144,9 +13144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13164,9 +13164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13184,9 +13184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13204,9 +13204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13224,9 +13224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13244,9 +13244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13264,9 +13264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13284,9 +13284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13304,9 +13304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13324,9 +13324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13344,9 +13344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13364,9 +13364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13384,9 +13384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13404,9 +13404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13424,9 +13424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13444,9 +13444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13464,9 +13464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13484,9 +13484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13504,9 +13504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13524,9 +13524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13544,9 +13544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13564,9 +13564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13584,9 +13584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13604,9 +13604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13624,9 +13624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13644,9 +13644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13664,9 +13664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13684,9 +13684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13704,9 +13704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13724,9 +13724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13744,9 +13744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13764,9 +13764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13784,9 +13784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13804,9 +13804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13824,9 +13824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13844,9 +13844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13864,9 +13864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13884,9 +13884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13904,9 +13904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13924,9 +13924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13944,9 +13944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13964,9 +13964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -13984,9 +13984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14004,9 +14004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14024,9 +14024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14044,9 +14044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14064,9 +14064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14084,9 +14084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14104,9 +14104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14124,9 +14124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14144,9 +14144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14164,9 +14164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14184,9 +14184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14204,9 +14204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14224,9 +14224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14244,9 +14244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14264,9 +14264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14284,9 +14284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14304,9 +14304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14324,9 +14324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14344,9 +14344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14364,9 +14364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14384,9 +14384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14404,9 +14404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14424,9 +14424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14444,9 +14444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14464,9 +14464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14484,9 +14484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14504,9 +14504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14524,9 +14524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14544,9 +14544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14564,9 +14564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14584,9 +14584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14604,9 +14604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14624,9 +14624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14644,9 +14644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14664,9 +14664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14684,9 +14684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14704,9 +14704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14724,9 +14724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14744,9 +14744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14764,9 +14764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14784,9 +14784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14804,9 +14804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14824,9 +14824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14844,9 +14844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14864,9 +14864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14884,9 +14884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14904,9 +14904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14924,9 +14924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14944,9 +14944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14964,9 +14964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -14984,9 +14984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15004,9 +15004,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15024,9 +15024,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15044,9 +15044,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15064,9 +15064,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15084,9 +15084,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15104,9 +15104,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15124,9 +15124,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15144,9 +15144,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15164,9 +15164,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15184,9 +15184,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15204,9 +15204,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15224,9 +15224,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15244,9 +15244,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15264,9 +15264,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15284,9 +15284,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15304,9 +15304,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15324,9 +15324,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15344,9 +15344,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15364,9 +15364,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15384,9 +15384,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15404,9 +15404,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15424,9 +15424,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15444,9 +15444,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15464,9 +15464,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15484,9 +15484,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15504,9 +15504,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15524,9 +15524,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15544,9 +15544,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15564,9 +15564,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15584,9 +15584,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15604,9 +15604,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15624,9 +15624,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15644,9 +15644,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15664,9 +15664,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15684,9 +15684,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15704,9 +15704,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15724,9 +15724,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15744,9 +15744,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15764,9 +15764,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15784,9 +15784,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15804,9 +15804,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15824,9 +15824,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15844,9 +15844,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15864,9 +15864,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15884,9 +15884,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15904,9 +15904,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15924,9 +15924,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15944,9 +15944,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15964,9 +15964,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40
@@ -15984,9 +15984,9 @@ sub x3, x4, x5
 and x6, x7, x8
 or x9, x10, x11
 xor x12, x13, x14
-slli x15, x16, 4
-srli x17, x18, 2
-srai x19, x20, 3
+div a4, a4, a4
+li a0, 500
+mul a5, a5, a5
 slt x21, x22, x23
 sltu x24, x25, x26
 beq x27, x28, 40

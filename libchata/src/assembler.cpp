@@ -31,7 +31,7 @@ struct assembly_context {
     chatavector<std::pair<chatastring, int>> labels;
     int line = 1;
     int column = 0;
-    
+    rvinstruction real_inst;
     chatastring inst;
     chatastring arg1;
     chatastring arg2;
@@ -52,7 +52,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
         DBG(std::cout << "Evaluating existing label " << label.first << std::endl;)
         if (label.first == str) {
             DBG(std::cout << "Label " << str << " already exists with value " << label.second << std::endl;)
-            return label.second; // Return the existing value
+            return label.second;
         }
     }
 
@@ -67,24 +67,6 @@ int string_to_label(chatastring& str, assembly_context& c) {
     DBG(std::cout << "Label " << str << " added with value " << new_label << std::endl;)
 
     return new_label;
-}
-
-RVInstructionID string_to_instruction(const chatastring& str, assembly_context& c) {
-    for (auto& i : instructions) {
-        if (i.name == str) {
-            return i.id;
-        }
-    }
-    throw ChataError(ChataErrorType::Compiler, "Invalid instruction " + str, c.line, c.column);
-}
-
-RVInstructionFormat string_to_instruction_type(const chatastring& str, assembly_context& c) {
-    for (auto& i : instructions) {
-        if (i.name == str) {
-            return i.type;
-        }
-    }
-    throw ChataError(ChataErrorType::Compiler, "Invalid instruction type", c.line, c.column);
 }
 
 rvregister string_to_register(const chatastring& str, assembly_context& c) {
@@ -103,11 +85,6 @@ rvinstruction get_inst_by_id(RVInstructionID id) {
         }
     }
     throw ChataError(ChataErrorType::Assembler, "Invalid instruction ID " + to_chatastring(std::to_underlying(id)));
-}
-
-bool is_pseudoinst(const chatastring& inst) {
-    return inst == "li" || inst == "la" || inst == "mv" || inst == "not" || inst == "neg" || inst == "bgt" || inst == "ble" || inst == "bgtu" || inst == "bleu" || inst == "beqz" || inst == "bnez"
-           || inst == "bgez" || inst == "blez" || inst == "bgtz" || inst == "j" || inst == "call" || inst == "ret" || inst == "nop" || inst == "fmv.s.x" || inst == "fmv.x.s";
 }
 
 uint8_t decode_frm(chatastring& frm) {
@@ -137,8 +114,8 @@ instruction make_inst(assembly_context& c) {
 
     instruction i;
 
-    i.inst = string_to_instruction(c.inst, c);
-    i.type = string_to_instruction_type(c.inst, c);
+    i.inst = c.real_inst.id;
+    i.type = c.real_inst.type;
     using enum RVInstructionFormat;
 
     if (i.type == I || i.type == S) {
@@ -188,12 +165,11 @@ instruction make_inst(assembly_context& c) {
     if (i.type == R || i.type == R4) {
         i.rd = string_to_register(c.arg1, c).encoding;
         i.rs1 = string_to_register(c.arg2, c).encoding;
-        auto this_inst = get_inst_by_id(i.inst);
-        auto no_rs2 = this_inst.ssargs.has_value() && this_inst.ssargs.value().rs2.has_value();
+        auto no_rs2 = c.real_inst.ssargs.rs2.has_value();
         if (!no_rs2) {
             i.rs2 = string_to_register(c.arg3, c).encoding;
         } else {
-            i.rs2 = this_inst.ssargs.value().rs2.value();
+            i.rs2 = c.real_inst.ssargs.rs2.value();
         }
         if (i.type == R) {
             if (!c.arg4.empty() && no_rs2) {
@@ -201,7 +177,7 @@ instruction make_inst(assembly_context& c) {
             } else if (!c.arg5.empty() && !no_rs2) {
                 i.frm = decode_frm(c.arg5);
             } else {
-                if (this_inst.ssargs.has_value() && this_inst.ssargs.value().use_rm_for_funct3.has_value() && this_inst.ssargs.value().use_rm_for_funct3.value()) {
+                if (c.real_inst.ssargs.use_rm_for_funct3.has_value() && c.real_inst.ssargs.use_rm_for_funct3.value()) {
                     i.frm = 0b111;
                 }
             }
@@ -210,7 +186,7 @@ instruction make_inst(assembly_context& c) {
             if (!c.arg5.empty()) {
                 i.frm = decode_frm(c.arg5);
             } else {
-                if (this_inst.ssargs.has_value() && this_inst.ssargs.value().use_rm_for_funct3.has_value() && this_inst.ssargs.value().use_rm_for_funct3.value()) {
+                if (c.real_inst.ssargs.use_rm_for_funct3.has_value() && c.real_inst.ssargs.use_rm_for_funct3.value()) {
                     i.frm = 0b111;
                 }
             }
@@ -243,16 +219,16 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
         if (imm >= -2048 && imm <= 2047) {
-            c.inst = "addi";
+            c.real_inst = get_inst_by_id(RVInstructionID::ADDI);
             c.arg2 = "zero";
             c.arg3 = to_chatastring(imm);
             return {make_inst(c)};
         }
         // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-        c.inst = "lui";
+        c.real_inst = get_inst_by_id(RVInstructionID::LUI);
         c.arg2 = to_chatastring(imm >> 12);
         instruction i1 = make_inst(c);
-        c.inst = "addi";
+        c.real_inst = get_inst_by_id(RVInstructionID::ADDI);
         c.arg2 = c.arg1;
         c.arg3 = to_chatastring(imm & 0xFFF);
         instruction i2 = make_inst(c);
@@ -266,79 +242,79 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
         if (imm >= -2048 && imm <= 2047) {
-            c.inst = "addi";
+            c.real_inst = get_inst_by_id(RVInstructionID::ADDI);
             c.arg2 = "zero";
             c.arg3 = to_chatastring(imm);
             return {make_inst(c)};
         }
         // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-        c.inst = "auipc";
+        c.real_inst = get_inst_by_id(RVInstructionID::AUIPC);
         c.arg2 = to_chatastring(imm >> 12);
         instruction i1 = make_inst(c);
-        c.inst = "addi";
+        c.real_inst = get_inst_by_id(RVInstructionID::ADDI);
         c.arg2 = c.arg1;
         c.arg3 = to_chatastring(imm & 0xFFF);
         instruction i2 = make_inst(c);
         return {i1, i2};
 
     } else if (c.inst == "mv") { // mv rd, rs -> addi rd, rs, 0
-        c.inst = "addi";
+        c.real_inst = get_inst_by_id(RVInstructionID::ADDI);
         c.arg3 = "0";
         return {make_inst(c)};
     } else if (c.inst == "not") { // not rd, rs -> xori rd, rs, -1
-        c.inst = "xori";
+        c.real_inst = get_inst_by_id(RVInstructionID::XORI);
         c.arg3 = "-1";
         return {make_inst(c)};
     } else if (c.inst == "neg") { // neg rd, rs -> sub rd, zero, rs
-        c.inst = "sub";
+        c.real_inst = get_inst_by_id(RVInstructionID::SUB);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
     } else if (c.inst == "bgt") { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
-        c.inst = "blt";
+        c.real_inst = get_inst_by_id(RVInstructionID::BLT);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
     } else if (c.inst == "ble") { // ble rs1, rs2, label|imm -> bge rs2, rs1, label|imm
-        c.inst = "bge";
+        c.real_inst = get_inst_by_id(RVInstructionID::BGE);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
     } else if (c.inst == "bgtu") { // bgtu rs1, rs2, label|imm -> bltu rs2, rs1, label|imm
-        c.inst = "bltu";
+        c.real_inst = get_inst_by_id(RVInstructionID::BLTU);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
     } else if (c.inst == "bleu") { // bleu rs1, rs2, label|imm -> bgeu rs2, rs1, label|imm
-        c.inst = "bgeu";
+        c.real_inst = get_inst_by_id(RVInstructionID::BGEU);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
     } else if (c.inst == "beqz") { // beqz rs, label|imm -> beq rs, zero, label|imm
-        c.inst = "beq";
+        c.real_inst = get_inst_by_id(RVInstructionID::BEQ);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
     } else if (c.inst == "bnez") { // bnez rs, label|imm -> bne rs, zero, label|imm
-        c.inst = "bne";
+        c.real_inst = get_inst_by_id(RVInstructionID::BNE);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
     } else if (c.inst == "bgez") { // bgez rs, label|imm -> bge rs, zero, label|imm
-        c.inst = "bge";
+        c.real_inst = get_inst_by_id(RVInstructionID::BGE);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
     } else if (c.inst == "blez") { // blez rs, label|imm -> bge zero, rs, label|imm
-        c.inst = "bge";
+        c.real_inst = get_inst_by_id(RVInstructionID::BGE);
         c.arg3 = c.arg2;
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
     } else if (c.inst == "bgtz") { // bgtz rs, label|imm -> blt zero, rs, label|imm
-        c.inst = "blt";
+        c.real_inst = get_inst_by_id(RVInstructionID::BLT);
         c.arg3 = c.arg2;
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
     } else if (c.inst == "j") {
-        c.inst = "jal";
+        c.real_inst = get_inst_by_id(RVInstructionID::JAL);
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
@@ -352,7 +328,7 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg1, c.line, c.column);
         }
         if (imm >= -2048 && imm <= 2047) {
-            c.inst = "jalr";
+            c.real_inst = get_inst_by_id(RVInstructionID::JALR);
             c.arg3 = c.arg1;
             c.arg2 = "ra";
             c.arg1 = "ra";
@@ -361,22 +337,22 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
 
     } else if (c.inst == "ret") {
-        c.inst = "jalr";
+        c.real_inst = get_inst_by_id(RVInstructionID::JALR);
         c.arg1 = "zero";
         c.arg2 = "ra";
         c.arg3 = "0";
         return {make_inst(c)};
     } else if (c.inst == "nop") {
-        c.inst = "addi";
+        c.real_inst = get_inst_by_id(RVInstructionID::ADDI);
         c.arg1 = "zero";
         c.arg2 = "zero";
         c.arg3 = "0";
         return {make_inst(c)};
     } else if (c.inst == "fmv.s.x") {
-        c.inst = "fmv.w.x";
+        c.real_inst = get_inst_by_id(RVInstructionID::FMVWX);
         return {make_inst(c)};
     } else if (c.inst == "fmv.x.s") {
-        c.inst = "fcvt.x.w";
+        c.real_inst = get_inst_by_id(RVInstructionID::FMVXW);
         return {make_inst(c)};
     }
     return {};
@@ -489,7 +465,7 @@ chatastring generate_machine_code(assembly_context& c) {
         if (i.type == R) {
             DBG(std::cout << "Encoding R-type instruction with name " << core_inst.name << std::endl;)
             inst |= i.rd << 7;     // Add rd
-            if (core_inst.ssargs.has_value() && core_inst.ssargs.value().use_rm_for_funct3.has_value() && core_inst.ssargs.value().use_rm_for_funct3.value()) {
+            if (core_inst.ssargs.use_rm_for_funct3.has_value() && core_inst.ssargs.use_rm_for_funct3.value()) {
                 inst |= i.frm << 12; // Add frm
             } else {
                 inst |= (core_inst.funct & 0b111) << 12;       // Add funct3
@@ -583,18 +559,21 @@ chatastring new_assembler(const chatastring& data) {
                 this_line.pop_back();
             }
             parse_this_line(this_line, c);
-            for (auto& i : instructions) {
-                if (i.name == c.inst) {
-                    c.nodes.push_back(make_inst(c));
-                    break;
-                } else if (is_pseudoinst(c.inst)) {
-                    for (auto& inst : make_inst_from_pseudoinst(c)) {
-                        c.nodes.push_back(inst);
+            if (auto instrs = make_inst_from_pseudoinst(c); !instrs.empty()) {
+                for (auto& inst : instrs) {
+                    c.nodes.push_back(inst);
+                }
+            } else {
+                for (auto& i : instructions) {
+                    if (i.name == c.inst) {
+                        c.real_inst = i;
+                        c.nodes.push_back(make_inst(c));
+                        break;
                     }
-                    break;
                 }
             }
             this_line.clear();
+            c.real_inst = {};
             c.line++;
             c.column = 0;
             continue;
@@ -656,9 +635,7 @@ chatastring new_assembler(const chatastring& data) {
 
     DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
-    for (auto c : machine_code) {
-        printf("%02x ", c);
-    }
+    DBG(for (auto c : machine_code) { printf("%02x ", c); })
 
     DBG(std::cout << "Let's compare this against the reference, gcc as" << std::endl;)
 
@@ -692,9 +669,7 @@ chatastring new_assembler(const chatastring& data) {
 
     DBG(std::cout << "Ok, here's the reference code:" << std::endl;)
     // Show the code in hex form
-    for (auto c : result) {
-        printf("%02x ", c);
-    }
+    DBG(for (auto c : result) { printf("%02x ", c); })
 
     //exit(0);
 

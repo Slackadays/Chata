@@ -15,13 +15,9 @@ namespace libchata_internal {
 class InternalFile;
 }
 
-class InputFile {
+struct InputFile {
     std::string_view data;
     std::optional<std::string_view> filename;
-    friend libchata_internal::InternalFile;
-
-public:
-    InputFile(std::string_view data, std::optional<std::string_view> filename) : data(data), filename(filename) {}
 };
 
 namespace libchata_internal {
@@ -88,8 +84,7 @@ public:
     void deallocate(T* ptr, size_t requested) { return; }
 };
 
-class InternalFile {
-public:
+struct InternalFile {
     chatastring data;
     std::optional<std::string_view> filename;
     InternalFile(InputFile file) : data(file.data.begin(), file.data.end()), filename(file.filename) {}
@@ -281,3 +276,5 @@ public:
 };
 
 std::string_view libchata_version();
+
+std::string_view libchata_assemble(std::string_view code);

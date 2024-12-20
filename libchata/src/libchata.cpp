@@ -128,3 +128,7 @@ void ChataProcessor::compile_and_commit(const std::string_view& code) {
 std::string_view libchata_version() {
     return libchata_version_str;
 }
+
+std::string_view libchata_assemble(std::string_view code) {
+    return assemble_code(chatastring(code));
+}

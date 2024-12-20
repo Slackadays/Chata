@@ -14,6 +14,8 @@
 
 namespace fs = std::filesystem;
 
+bool assemble_flag = false;
+
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__HAIKU__) || defined(__FreeBSD__) \
         || defined(__posix__)
 #define UNIX_OR_UNIX_LIKE
@@ -62,7 +64,21 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    fs::path filePath = argv[1];
+    std::vector<std::string> args;
+    for (int i = 0; i < argc; i++) {
+        args.push_back(argv[i]);
+    }
+
+    // Search args for "-a" and assign to assemble_flag
+    for (size_t i = 0; i < args.size(); i++) {
+        if (args.at(i) == "-a") {
+            assemble_flag = true;
+            args.erase(args.begin() + i);
+            break;
+        }
+    }
+
+    fs::path filePath = args.back();
     auto contents = fileContents(filePath);
 
     if (contents) {
@@ -72,9 +88,20 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    std::cout << "Ok, now processing this file..." << std::endl;
+    std::cout << "Processing the file " << filePath.string() << std::endl;
 
     InputFile file(*contents, filePath.string());
+
+    if (assemble_flag) {
+        std::cout << "Assembling" << std::endl;
+        try {
+            std::string result(libchata_assemble(file.data));
+            return 0;
+        } catch (ChataError& e) {
+            std::cout << "Error: " << e.what() << std::endl;
+            return 1;
+        }
+    }
 
     ChataProcessor processor;
 

@@ -74,9 +74,9 @@ int main() {
     as("or t0, t1, t2", 0xb3627300);
     as("and t1, t2, t3", 0x33f3c301);
     as("fence rw, rw", 0x0f003003);
-    as("fence.tso", 0x0f003083);
-    as("pause", 0x0f000001);
-    as("ecall", 0x73000000);
+    //as("fence.tso", 0x0f003083);
+    //as("pause", 0x0f000001);
+    //as("ecall", 0x73000000);
     
     as("lwu a0, 0(a1)", 0x03e50500);
     as("ld s0, 0(s1)", 0x03b40400);

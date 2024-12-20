@@ -13,7 +13,7 @@ build:
 build-lib:
   if [ ! -d "libchata/build" ]; then mkdir libchata/build; fi 
 
-  if [ ! -d "libchata/build/CMakeFiles" ]; then cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE=Debug; fi
+  if [ ! -d "libchata/build/CMakeFiles" ]; then cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE=Release; fi
 
   cd libchata/build; cmake --build . -j 4
 
