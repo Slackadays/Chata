@@ -22,7 +22,7 @@ build-lib:
 build-cli:
   if [ ! -d "chatacli/build" ]; then mkdir chatacli/build; fi 
 
-  if [ ! -d "chatacli/build/CMakeFiles" ]; then cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE=Debug; fi
+  if [ ! -d "chatacli/build/CMakeFiles" ]; then cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE=Release; fi
 
   cd chatacli/build; cmake --build .
 

@@ -39,6 +39,20 @@ struct assembly_context {
     chatastring arg5;
 };
 
+bool fast_eq(const auto& first, const auto& second) {
+    if (first.size() != second.size()) { // First make sure the sizes are equal because no two strings can ever be the same if they have different sizes. Also, this lets us save on future bound checks because we're already checking it here.
+        return false;
+    }
+    for (uint16_t i = 0; i < first.size(); i++) {
+        if (first[i] != second[i]) { [[likely]]
+            return false;
+        } else { [[unlikely]]
+            continue;
+        }
+    }
+    return true;
+}
+
 int string_to_label(chatastring& str, assembly_context& c) {
     while (str.back() == ':') {
         str.pop_back();
@@ -49,7 +63,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
     // Search for the label in the existing labels
     for (const auto& label : c.labels) {
         DBG(std::cout << "Evaluating existing label " << label.first << std::endl;)
-        if (label.first == str) {
+        if (fast_eq(label.first, str)) {
             DBG(std::cout << "Label " << str << " already exists with value " << label.second << std::endl;)
             return label.second;
         }
@@ -69,19 +83,6 @@ int string_to_label(chatastring& str, assembly_context& c) {
 }
 
 rvregister string_to_register(const chatastring& str, assembly_context& c) {
-    auto fast_eq = [](const auto& first, const auto& second) {
-        if (first.size() != second.size()) {
-            return false;
-        }
-        for (uint16_t i = 0; i < first.size(); i++) {
-            if (first[i] != second[i]) { [[likely]]
-                return false;
-            } else { [[unlikely]]
-                continue;
-            }
-        }
-        return true;
-    };
     for (auto& r : registers) {
         if (fast_eq(r.name, str) || fast_eq(r.alias, str)) {
             return r;
@@ -225,7 +226,7 @@ instruction make_inst(assembly_context& c) {
 
 chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
     using enum RVInstructionID;
-    if (c.inst == "li") { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
+    if (fast_eq(c.inst, std::string_view("li"))) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
         // Case 1: imm is a 12-bit signed integer
         int imm;
         try {
@@ -248,7 +249,7 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         c.arg3 = to_chatastring(imm & 0xFFF);
         instruction i2 = make_inst(c);
         return {i1, i2};
-    } else if (c.inst == "la") { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
+    } else if (fast_eq(c.inst, std::string_view("la"))) { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
         // Case 1: imm is a 12-bit signed integer
         int imm;
         try {
@@ -272,69 +273,69 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         instruction i2 = make_inst(c);
         return {i1, i2};
 
-    } else if (c.inst == "mv") { // mv rd, rs -> addi rd, rs, 0
+    } else if (fast_eq(c.inst, std::string_view("mv"))) { // mv rd, rs -> addi rd, rs, 0
         c.inst_offset = get_inst_offset_by_id(ADDI);
         c.arg3 = "0";
         return {make_inst(c)};
-    } else if (c.inst == "not") { // not rd, rs -> xori rd, rs, -1
+    } else if (fast_eq(c.inst, std::string_view("not"))) { // not rd, rs -> xori rd, rs, -1
         c.inst_offset = get_inst_offset_by_id(XORI);
         c.arg3 = "-1";
         return {make_inst(c)};
-    } else if (c.inst == "neg") { // neg rd, rs -> sub rd, zero, rs
+    } else if (fast_eq(c.inst, std::string_view("neg"))) { // neg rd, rs -> sub rd, zero, rs
         c.inst_offset = get_inst_offset_by_id(SUB);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
-    } else if (c.inst == "bgt") { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
+    } else if (fast_eq(c.inst, std::string_view("bgt"))) { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
         c.inst_offset = get_inst_offset_by_id(BLT);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
-    } else if (c.inst == "ble") { // ble rs1, rs2, label|imm -> bge rs2, rs1, label|imm
+    } else if (fast_eq(c.inst, std::string_view("ble"))) { // ble rs1, rs2, label|imm -> bge rs2, rs1, label|imm
         c.inst_offset = get_inst_offset_by_id(BGE);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
-    } else if (c.inst == "bgtu") { // bgtu rs1, rs2, label|imm -> bltu rs2, rs1, label|imm
+    } else if (fast_eq(c.inst, std::string_view("bgtu"))) { // bgtu rs1, rs2, label|imm -> bltu rs2, rs1, label|imm
         c.inst_offset = get_inst_offset_by_id(BLTU);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
-    } else if (c.inst == "bleu") { // bleu rs1, rs2, label|imm -> bgeu rs2, rs1, label|imm
+    } else if (fast_eq(c.inst, std::string_view("bleu"))) { // bleu rs1, rs2, label|imm -> bgeu rs2, rs1, label|imm
         c.inst_offset = get_inst_offset_by_id(BGEU);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
-    } else if (c.inst == "beqz") { // beqz rs, label|imm -> beq rs, zero, label|imm
+    } else if (fast_eq(c.inst, std::string_view("beqz"))) { // beqz rs, label|imm -> beq rs, zero, label|imm
         c.inst_offset = get_inst_offset_by_id(BEQ);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
-    } else if (c.inst == "bnez") { // bnez rs, label|imm -> bne rs, zero, label|imm
+    } else if (fast_eq(c.inst, std::string_view("bnez"))) { // bnez rs, label|imm -> bne rs, zero, label|imm
         c.inst_offset = get_inst_offset_by_id(BNE);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
-    } else if (c.inst == "bgez") { // bgez rs, label|imm -> bge rs, zero, label|imm
+    } else if (fast_eq(c.inst, std::string_view("bgez"))) { // bgez rs, label|imm -> bge rs, zero, label|imm
         c.inst_offset = get_inst_offset_by_id(BGE);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
-    } else if (c.inst == "blez") { // blez rs, label|imm -> bge zero, rs, label|imm
+    } else if (fast_eq(c.inst, std::string_view("blez"))) { // blez rs, label|imm -> bge zero, rs, label|imm
         c.inst_offset = get_inst_offset_by_id(BGE);
         c.arg3 = c.arg2;
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
-    } else if (c.inst == "bgtz") { // bgtz rs, label|imm -> blt zero, rs, label|imm
+    } else if (fast_eq(c.inst, std::string_view("bgtz"))) { // bgtz rs, label|imm -> blt zero, rs, label|imm
         c.inst_offset = get_inst_offset_by_id(BLT);
         c.arg3 = c.arg2;
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
-    } else if (c.inst == "j") {
+    } else if (fast_eq(c.inst, std::string_view("j"))) {
         c.inst_offset = get_inst_offset_by_id(JAL);
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
 
-    } else if (c.inst == "call") {
+    } else if (fast_eq(c.inst, std::string_view("call"))) {
         // Case 1: imm is a 12-bit signed integer
         int imm;
         try {
@@ -351,22 +352,22 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         }
         // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
 
-    } else if (c.inst == "ret") {
+    } else if (fast_eq(c.inst, std::string_view("ret"))) {
         c.inst_offset = get_inst_offset_by_id(JALR);
         c.arg1 = "zero";
         c.arg2 = "ra";
         c.arg3 = "0";
         return {make_inst(c)};
-    } else if (c.inst == "nop") {
+    } else if (fast_eq(c.inst, std::string_view("nop"))) {
         c.inst_offset = get_inst_offset_by_id(ADDI);
         c.arg1 = "zero";
         c.arg2 = "zero";
         c.arg3 = "0";
         return {make_inst(c)};
-    } else if (c.inst == "fmv.s.x") {
+    } else if (fast_eq(c.inst, std::string_view("fmv.s.x"))) {
         c.inst_offset = get_inst_offset_by_id(FMVWX);
         return {make_inst(c)};
-    } else if (c.inst == "fmv.x.s") {
+    } else if (fast_eq(c.inst, std::string_view("fmv.x.s"))) {
         c.inst_offset = get_inst_offset_by_id(FMVXW);
         return {make_inst(c)};
     }
@@ -384,7 +385,7 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
         auto ch = [&]() {
             return this_line.at(i);
         };
-        for (; i < this_line.size() && std::isspace(ch()); i++) {
+        for (; i < this_line.size() && std::isblank(ch()); i++) {
             c.column++;
         }
         for (; i < this_line.size() && !std::isblank(ch()); i++) {
@@ -581,7 +582,7 @@ chatastring new_assembler(const chatastring& data) {
                 }
             } else {
                 for (uint16_t i = 0; i < instructions.size(); i++) {
-                    if (instructions.at(i).name == c.inst) {
+                    if (fast_eq(instructions.at(i).name, c.inst)) {
                         c.inst_offset = i;
                         c.nodes.push_back(make_inst(c));
                         break;
@@ -649,7 +650,7 @@ chatastring new_assembler(const chatastring& data) {
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - then);
     std::cout << "Assembling took " << duration.count() << "ms" << std::endl;
 
-    DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
+    /*DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
     DBG(for (auto c : machine_code) { printf("%02x ", c); })
 
@@ -687,7 +688,7 @@ chatastring new_assembler(const chatastring& data) {
     // Show the code in hex form
     DBG(for (auto c : result) { printf("%02x ", c); })
 
-    //exit(0);
+    //exit(0);*/
 
     return machine_code;
 }
