@@ -69,8 +69,21 @@ int string_to_label(chatastring& str, assembly_context& c) {
 }
 
 rvregister string_to_register(const chatastring& str, assembly_context& c) {
+    auto fast_eq = [](const auto& first, const auto& second) {
+        if (first.size() != second.size()) {
+            return false;
+        }
+        for (uint16_t i = 0; i < first.size(); i++) {
+            if (first[i] != second[i]) { [[likely]]
+                return false;
+            } else { [[unlikely]]
+                continue;
+            }
+        }
+        return true;
+    };
     for (auto& r : registers) {
-        if (r.name == str || r.alias == str) {
+        if (fast_eq(r.name, str) || fast_eq(r.alias, str)) {
             return r;
         }
     }
