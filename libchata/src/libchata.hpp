@@ -165,7 +165,47 @@ public:
     std::optional<int> line = 0;
     std::optional<int> column = 0;
 
-    virtual char* what();
+    char* what() {
+        set_color();
+        libchata_internal::chatastring error_message;
+        error_message += "| ";
+        error_message += color_start;
+        if (!type.has_value()) {
+            error_message += "Unspecified error";
+        } else if (*type == ChataErrorType::Compiler) {
+            error_message += "Compiler error";
+        } else if (*type == ChataErrorType::Assembler) {
+            error_message += "Assembler error";
+        } else if (*type == ChataErrorType::Execution) {
+            error_message += "Execution error";
+        } else if (*type == ChataErrorType::Other) {
+            error_message += "Other error";
+        }
+        error_message += color_end;
+        error_message += " at line ";
+        if (line.has_value()) {
+            error_message += libchata_internal::to_chatastring(*line);
+        } else {
+            error_message += "(unknown)";
+        }
+        error_message += ", column ";
+        if (column.has_value()) {
+            error_message += libchata_internal::to_chatastring(*column);
+        } else {
+            error_message += "(unknown)";
+        }
+        error_message += " in file ";
+        if (filename.has_value()) {
+            error_message += *filename;
+            error_message += ":\n| ";
+        } else {
+            error_message += "(unknown):\n| ";
+        }
+        if (details.has_value()) {
+            error_message += *details;
+        }
+        return error_message.data();
+    }
 
     ChataError(ChataErrorType type, std::string_view details, int line, int column, std::string_view filename) : type(type), details(details), line(line), column(column), filename(filename) {}
 

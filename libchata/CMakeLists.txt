@@ -42,9 +42,9 @@ add_library(objchata OBJECT
     src/registers.cpp
 )
 
-add_library(chatashared SHARED $<TARGET_OBJECTS:objchata>)
-set_property(TARGET chatashared PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET objchata PROPERTY POSITION_INDEPENDENT_CODE ON)
 
+add_library(chatashared SHARED $<TARGET_OBJECTS:objchata>)
 add_library(chatastatic STATIC $<TARGET_OBJECTS:objchata>)
 set_target_properties(chatastatic PROPERTIES OUTPUT_NAME chata)
 set_target_properties(chatashared PROPERTIES OUTPUT_NAME chata)
@@ -53,7 +53,7 @@ add_executable(test_libchata
   src/test.cpp
 )
 
-target_link_libraries(test_libchata chata)
+target_link_libraries(test_libchata PRIVATE chatashared)
 
 add_compile_options(objchata PRIVATE -fno-rtti) 
 
