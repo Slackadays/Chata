@@ -21,7 +21,7 @@ struct instruction {
     uint8_t rs2 = 0;
     uint8_t rs3 = 0;
     uint8_t frm = 0;
-    int imm = 0;
+    int32_t imm = 0;
     bool imm_is_label = false;
 };
 
@@ -43,7 +43,7 @@ bool fast_eq(const auto& first, const auto& second) {
     if (first.size() != second.size()) { // First make sure the sizes are equal because no two strings can ever be the same if they have different sizes. Also, this lets us save on future bound checks because we're already checking it here.
         return false;
     }
-    for (uint16_t i = 0; i < first.size(); i++) {
+    for (size_t i = 0; i < first.size(); i++) {
         if (first[i] != second[i]) { [[likely]]
             return false;
         } else { [[unlikely]]
@@ -92,7 +92,7 @@ rvregister string_to_register(const chatastring& str, assembly_context& c) {
 }
 
 uint16_t get_inst_offset_by_id(RVInstructionID id) {
-    for (uint16_t i = 0; i < instructions.size(); i++) {
+    for (size_t i = 0; i < instructions.size(); i++) {
         if (instructions.at(i).id == id) {
             return i;
         }
@@ -581,7 +581,7 @@ chatastring new_assembler(const chatastring& data) {
                     c.nodes.push_back(inst);
                 }
             } else {
-                for (uint16_t i = 0; i < instructions.size(); i++) {
+                for (size_t i = 0; i < instructions.size(); i++) {
                     if (fast_eq(instructions.at(i).name, c.inst)) {
                         c.inst_offset = i;
                         c.nodes.push_back(make_inst(c));
