@@ -443,27 +443,22 @@ void solve_label_offsets(assembly_context& c) {
     };
 
     for (size_t i = 0; i < c.nodes.size(); i++) {
-        //if (!c.nodes.at(i).this_is_label_loc) {
         if (c.nodes.at(i).imm_purpose != LABEL_NODE) {
             auto& inst = c.nodes.at(i);
-            //if (inst.imm_is_label_dest) {
             if (inst.imm_purpose == LABEL_DEST) {
                 DBG(std::cout << "Label " << inst.imm << " found, searching for offset" << std::endl;)
                 auto search_for_label = [&](int end, int step) {
                     int label_offset = 0;
                     for (int j = i + step; j != end; j += step) {
-                        //if (c.nodes.at(j).this_is_label_loc) {
                         if (c.nodes.at(j).imm_purpose == LABEL_NODE) {
                             if (c.nodes.at(j).imm == inst.imm) {
                                 label_offset += bytes_in_instruction(inst);
                                 DBG(std::cout << "Found offset for label " << inst.imm << ": " << label_offset << std::endl;)
                                 inst.imm = label_offset;
-                                //inst.imm_is_label_dest = false;
                                 inst.imm_purpose = INSTR_IMM;
                                 break;
                             }
                         }
-                        //if (!c.nodes.at(j).this_is_label_loc) {
                         if (c.nodes.at(j).imm_purpose != LABEL_NODE) {
                             label_offset += bytes_in_instruction(c.nodes.at(j));
                         }
@@ -471,12 +466,10 @@ void solve_label_offsets(assembly_context& c) {
                     return label_offset;
                 };
                 int label_offset = search_for_label(c.nodes.size(), 1);
-                //if (inst.imm_is_label_dest) {
                 if (inst.imm_purpose == LABEL_DEST) {
                     DBG(std::cout << "Label not found, searching backwards" << std::endl;)
                     label_offset = search_for_label(-1, -1);
                 }
-                //if (inst.imm_is_label_dest) {
                 if (inst.imm_purpose == LABEL_DEST) {
                     throw ChataError(ChataErrorType::Assembler, "Label " + to_chatastring(inst.imm) + " not found", 0, 0);
                 }
@@ -488,7 +481,6 @@ void solve_label_offsets(assembly_context& c) {
 chatastring generate_machine_code(assembly_context& c) {
     chatastring machine_code;
     for (auto& n : c.nodes) {
-        //if (n.this_is_label_loc) {
         if (n.imm_purpose == LABEL_NODE) {
             continue;
         }
