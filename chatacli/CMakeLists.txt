@@ -37,6 +37,11 @@ add_executable(chatacli
     src/main.cpp
 )
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  #add_definitions(-DDEBUG -Wall -Wextra -Wpedantic)
+  add_definitions(-DDEBUG)
+endif()
+
 target_link_libraries(chatacli PRIVATE chata)
 
 set_property(

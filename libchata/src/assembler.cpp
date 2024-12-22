@@ -14,6 +14,14 @@
 
 namespace libchata_internal {
 
+enum class InstrImmPurpose : uint8_t {
+    INSTR_IMM,
+    LABEL_DEST,
+    LABEL_NODE
+};
+
+using enum InstrImmPurpose;
+
 struct instruction {
     uint16_t inst_offset = 0; // The offset from the instructions array at which our instruction is (saves memory and prevents O(n) lookups)
     uint8_t rd = 0;
@@ -22,11 +30,11 @@ struct instruction {
     uint8_t rs3 = 0;
     uint8_t frm = 0;
     int32_t imm = 0;
-    bool imm_is_label = false;
+    InstrImmPurpose imm_purpose = INSTR_IMM;
 };
 
 struct assembly_context {
-    chatavector<std::variant<instruction, int>> nodes;
+    chatavector<instruction> nodes;
     chatavector<std::pair<chatastring, int>> labels;
     int line = 1;
     int column = 0;
@@ -91,7 +99,7 @@ rvregister string_to_register(const chatastring& str, assembly_context& c) {
     throw ChataError(ChataErrorType::Compiler, "Invalid register " + str, c.line, c.column);
 }
 
-uint16_t get_inst_offset_by_id(RVInstructionID id) {
+uint16_t get_inst_offset_by_id(const RVInstructionID& id) {
     for (size_t i = 0; i < instructions.size(); i++) {
         if (instructions.at(i).id == id) {
             return i;
@@ -160,7 +168,8 @@ instruction make_inst(assembly_context& c) {
             i.imm = to_int(c.arg3);
         } catch (...) {
             i.imm = string_to_label(c.arg3, c);
-            i.imm_is_label = true;
+            //i.imm_is_label_dest = true;
+            i.imm_purpose = LABEL_DEST;
         }
     } else if (base_i.type == U) {
         try {
@@ -173,7 +182,8 @@ instruction make_inst(assembly_context& c) {
             i.imm = to_int(c.arg2);
         } catch (...) {
             i.imm = string_to_label(c.arg2, c);
-            i.imm_is_label = true;
+            //i.imm_is_label_dest = true;
+            i.imm_purpose = LABEL_DEST;
         }
     }
 
@@ -398,7 +408,8 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
             // if (c.inst.find(generated_label_prefix) != std::string::npos) {
             if (c.inst.back() == ':') {
                 DBG(std::cout << "Looks like this is a label!" << std::endl;)
-                c.nodes.push_back(string_to_label(c.inst, c));
+                //c.nodes.push_back(instruction{.imm = string_to_label(c.inst, c), .this_is_label_loc = true});
+                c.nodes.push_back(instruction{.imm = string_to_label(c.inst, c), .imm_purpose = LABEL_NODE});
             }
             break;
         }
@@ -432,34 +443,41 @@ void solve_label_offsets(assembly_context& c) {
     };
 
     for (size_t i = 0; i < c.nodes.size(); i++) {
-        if (std::holds_alternative<instruction>(c.nodes.at(i))) {
-            auto& inst = std::get<instruction>(c.nodes.at(i));
-            if (inst.imm_is_label) {
+        //if (!c.nodes.at(i).this_is_label_loc) {
+        if (c.nodes.at(i).imm_purpose != LABEL_NODE) {
+            auto& inst = c.nodes.at(i);
+            //if (inst.imm_is_label_dest) {
+            if (inst.imm_purpose == LABEL_DEST) {
                 DBG(std::cout << "Label " << inst.imm << " found, searching for offset" << std::endl;)
                 auto search_for_label = [&](int end, int step) {
                     int label_offset = 0;
                     for (int j = i + step; j != end; j += step) {
-                        if (std::holds_alternative<int>(c.nodes.at(j))) {
-                            if (std::get<int>(c.nodes.at(j)) == inst.imm) {
+                        //if (c.nodes.at(j).this_is_label_loc) {
+                        if (c.nodes.at(j).imm_purpose == LABEL_NODE) {
+                            if (c.nodes.at(j).imm == inst.imm) {
                                 label_offset += bytes_in_instruction(inst);
                                 DBG(std::cout << "Found offset for label " << inst.imm << ": " << label_offset << std::endl;)
                                 inst.imm = label_offset;
-                                inst.imm_is_label = false;
+                                //inst.imm_is_label_dest = false;
+                                inst.imm_purpose = INSTR_IMM;
                                 break;
                             }
                         }
-                        if (std::holds_alternative<instruction>(c.nodes.at(j))) {
-                            label_offset += bytes_in_instruction(std::get<instruction>(c.nodes.at(j)));
+                        //if (!c.nodes.at(j).this_is_label_loc) {
+                        if (c.nodes.at(j).imm_purpose != LABEL_NODE) {
+                            label_offset += bytes_in_instruction(c.nodes.at(j));
                         }
                     }
                     return label_offset;
                 };
                 int label_offset = search_for_label(c.nodes.size(), 1);
-                if (inst.imm_is_label) {
+                //if (inst.imm_is_label_dest) {
+                if (inst.imm_purpose == LABEL_DEST) {
                     DBG(std::cout << "Label not found, searching backwards" << std::endl;)
                     label_offset = search_for_label(-1, -1);
                 }
-                if (inst.imm_is_label) {
+                //if (inst.imm_is_label_dest) {
+                if (inst.imm_purpose == LABEL_DEST) {
                     throw ChataError(ChataErrorType::Assembler, "Label " + to_chatastring(inst.imm) + " not found", 0, 0);
                 }
             }
@@ -470,10 +488,11 @@ void solve_label_offsets(assembly_context& c) {
 chatastring generate_machine_code(assembly_context& c) {
     chatastring machine_code;
     for (auto& n : c.nodes) {
-        if (!std::holds_alternative<instruction>(n)) {
+        //if (n.this_is_label_loc) {
+        if (n.imm_purpose == LABEL_NODE) {
             continue;
         }
-        auto i = std::get<instruction>(n);
+        auto i = n;
         uint32_t inst = 0;
         int bytes = 4;
         auto base_inst = instructions.at(i.inst_offset);
@@ -562,7 +581,7 @@ chatastring generate_machine_code(assembly_context& c) {
     return machine_code;
 }
 
-chatastring new_assembler(const chatastring& data) {
+chatastring assemble_code(const chatastring& data) {
     chatastring machine_code;
     chatastring this_line;
     struct assembly_context c;
@@ -635,7 +654,7 @@ chatastring new_assembler(const chatastring& data) {
                 DBG(std::cout << "rs2: " << reg.alias << std::endl;)
             }
         }
-        if (!this_i.imm_is_label) {
+        if (!this_i.imm_is_label_dest) {
             DBG(std::cout << "offset: " << this_i.imm << std::endl;)
         } else {
             DBG(std::cout << "label: " << this_i.imm << std::endl;)
@@ -691,46 +710,6 @@ chatastring new_assembler(const chatastring& data) {
     //exit(0);*/
 
     return machine_code;
-}
-
-chatastring assemble_code(const chatastring& data) {
-    bool use_new_assembler = true;
-
-    if (!use_new_assembler) {
-        // Assemble by putting everything into a .s file, then invoke as, then convert to binary with objcopy
-
-        std::ofstream out("temp.s");
-        out << data;
-        out.close();
-
-        int res = std::system("riscv64-linux-gnu-as temp.s -o temp.o");
-
-        if (res != 0) {
-            // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)
-            // exit(1);
-            throw ChataError(ChataErrorType::Assembler, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
-        }
-
-        res = std::system("riscv64-linux-gnu-objcopy -O binary temp.o temp.bin");
-
-        if (res != 0) {
-            // DBG(std::cout << "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin" << std::endl;)
-            // exit(1);
-            throw ChataError(ChataErrorType::Assembler, "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin", 0, 0);
-        }
-
-        std::ifstream in("temp.bin", std::ios::binary);
-        chatastring result((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
-        in.close();
-
-        std::filesystem::remove("temp.s");
-        // std::filesystem::remove("temp.o");
-        std::filesystem::remove("temp.bin");
-
-        return result;
-    } else {
-        return new_assembler(data);
-    }
 }
 
 } // namespace libchata_internal
