@@ -92,11 +92,9 @@ enum class RVInstructionID : uint16_t {
     FCVTSLU,
     FADDD, // RV32D
     FCLASSD,
-    FCVTDH,
     FCVTDS,
     FCVTDW,
     FCVTDWU,
-    FCVTHD,
     FCVTSD,
     FCVTWD,
     FCVTWUD,
@@ -224,6 +222,7 @@ enum class RVInstructionSet : uint8_t {
 struct special_snowflake_args {
     std::optional<uint8_t> rs2;
     std::optional<bool> use_rm_for_funct3;
+    std::optional<bool> use_imm_for_rs2;
 };
 
 struct rvinstruction {
@@ -236,4 +235,4 @@ struct rvinstruction {
     special_snowflake_args ssargs = {};
 };
 
-extern const std::array<rvinstruction, 171> instructions;
+extern const std::array<rvinstruction, 169> instructions;

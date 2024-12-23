@@ -74,10 +74,10 @@ int main() {
     as("or t0, t1, t2", 0xb3627300);
     as("and t1, t2, t3", 0x33f3c301);
     as("fence rw, rw", 0x0f003003);
-    //as("fence.tso", 0x0f003083);
-    //as("pause", 0x0f000001);
-    //as("ecall", 0x73000000);
-    
+    as("fence.tso", 0x0f003083);
+    as("pause", 0x0f000001);
+    as("ecall", 0x73000000);
+    as("ebreak", 0x73001000);
     as("lwu a0, 0(a1)", 0x03e50500);
     as("ld s0, 0(s1)", 0x03b40400);
     as("sd s1, 0(s2)", 0x23309900);
@@ -85,6 +85,81 @@ int main() {
     as("slliw s3, s4, 8", 0x9b198a00);
     as("srliw s4, s5, 16", 0x1bda0a01);
     as("sraiw s5, s6, 24", 0x9b5a8b41);
+    as("addw s6, s7, s0", 0x3b8b8b00);
+    as("subw s7, t0, t1", 0xbb8b6240);
+    as("sllw t0, t1, t2", 0xbb127300);
+    as("srlw t1, t2, t3", 0x3bd3c301);
+    as("sraw t2, t3, t4", 0xbb53de41);
+    as("fmadd.s f0, f1, f2, f3", 0x43f02018);
+    as("fmsub.s f4, f5, f6, f7", 0x47f26238);
+    as("fnmsub.s f8, f9, f10, f11", 0x4bf4a458);
+    as("fnmadd.s f12, f13, f14, f15", 0x4ff6e678);
+    as("fadd.s f16, f17, f18", 0x53f82801);
+    as("fsub.s f19, f20, f21", 0xd3795a09);
+    as("fmul.s f22, f23, f24", 0x53fb8b11);
+    as("fdiv.s f25, f26, f27", 0xd37cbd19);
+    as("fsqrt.s f28, f29", 0x53fe0e58);
+    as("fsgnj.s f30, f31, f0", 0x538f0f20);
+    as("fsgnjn.s f1, f2, f3", 0xd3103120);
+    as("fsgnjx.s f4, f5, f6", 0x53a26220);
+    as("fmin.s f7, f8, f9", 0xd3039428);
+    as("fmax.s f10, f11, f12", 0x5395c528);
+    as("fcvt.w.s a0, f0", 0x537500c0);
+    as("fcvt.wu.s a1, f1", 0xd3f510c0);
+    as("fmv.x.w a2, f2", 0x530601e0);
+    as("feq.s a3, f3, f4", 0xd3a641a0);
+    as("flt.s a4, f4, f5", 0x531752a0);
+    as("fle.s a5, f5, f6", 0xd38762a0);
+    as("fclass.s a6, f6", 0x531803e0);
+    as("fcvt.s.w f7, a7", 0xd3f308d0);
+    as("fcvt.s.wu f8, s0", 0x537414d0);
+    as("fmv.w.x f9, s1", 0xd38404f0);
+    as("flw f10, 0(a0)", 0x07250500);
+    as("fsw f11, 0(a1)", 0x27a0b500);
+    as("fcvt.l.s a2, f12", 0x537626c0);
+    as("fcvt.lu.s a3, f13", 0xd3f636c0);
+    as("fcvt.s.l f14, a4", 0x537727d0);
+    as("fcvt.s.lu f15, a5", 0xd3f737d0);
+    as("fadd.d f16, f17, f18", 0x53f82803);
+    as("fmadd.d f19, f20, f21, f22", 0xc3795ab3);
+    as("fclass.d a0, f23", 0x53950be2);
+    as("fcvt.d.s fa0, fa1", 0x53f50542);
+    as("fcvt.d.w fa2, a1", 0x53f605d2);
+    as("fcvt.d.wu fa3, a2", 0xd37616d2);
+    as("fcvt.s.d f24, f25", 0x53fc1c40);
+    as("fcvt.w.d a4, f26", 0x53770dc2);
+    as("fcvt.wu.d a5, f27", 0xd3f71dc2);
+    as("fdiv.d f28, f29, f30", 0x53feee1b);
+    as("feq.d t3, f0, f1", 0x532e10a2);
+    as("flt.d t4, f2, f3", 0xd31e31a2);
+    as("fle.d t5, f4, f5", 0x530f52a2);
+    as("fld f6, 4(a6)", 0x07334800);
+    as("fmin.d f7, f8, f9", 0xd303942a);
+    as("fmsub.d f10, f11, f12, f13", 0x47f5c56a);
+    as("fmul.d f14, f15, f16", 0x53f70713);
+    as("fnmadd.d f17, f18, f19, f20", 0xcf7839a3);
+    as("fnmsub.d f21, f22, f23, f24", 0xcb7a7bc3);
+    as("fsd f25, 8(a7)", 0x27b49801);
+    as("fsgnj.d f26, f27, f28", 0x538dcd23);
+    as("fsgnjn.d f29, f30, f31", 0xd31eff23);
+    as("fsgnjx.d f0, f1, f2", 0x53a02022);
+    as("fsqrt.d f3, f4", 0xd371025a);
+    as("fsub.d f5, f6, f7", 0xd372730a);
+    as("fcvt.l.d a0, f8", 0x537524c2);
+    as("fcvt.lu.d a1, f9", 0xd3f534c2);
+    as("fmv.x.d a2, f10", 0x530605e2);
+    as("fcvt.d.l f11, a3", 0xd3f526d2);
+    as("fcvt.d.lu f12, a4", 0x537637d2);
+    as("fmv.d.x f13, a5", 0xd38607f2);
+    //as("fence.i
+    //as("csrrw
+    //as("csrrs
+    //as("csrrc
+    //as("csrrwi
+    //as("csrrsi
+    //as("csrrci
+    //as("wrs.nto
+    //as("wrs.sto
 
     std::cout << passed_tests << " tests passed, " << failed_tests << " tests failed, " << passed_tests + failed_tests << " tests total" << std::endl;
 

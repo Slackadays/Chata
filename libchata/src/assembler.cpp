@@ -47,7 +47,7 @@ struct assembly_context {
     chatastring arg5;
 };
 
-bool fast_eq(const auto& first, const auto& second) {
+bool fast_eq(const auto& first, const std::string_view& second) {
     if (first.size() != second.size()) { // First make sure the sizes are equal because no two strings can ever be the same if they have different sizes. Also, this lets us save on future bound checks because we're already checking it here.
         return false;
     }
@@ -108,22 +108,58 @@ uint16_t get_inst_offset_by_id(const RVInstructionID& id) {
     throw ChataError(ChataErrorType::Assembler, "Invalid instruction ID " + to_chatastring(std::to_underlying(id)));
 }
 
-uint8_t decode_frm(chatastring& frm) {
-    if (frm == "rne") {
+uint8_t decode_frm(const chatastring& frm) {
+    if (fast_eq(frm, "rne")) {
         return 0b000;
-    } else if (frm == "rtz") {
+    } else if (fast_eq(frm, "rtz")) {
         return 0b001;
-    } else if (frm == "rdn") {
+    } else if (fast_eq(frm, "rdn")) {
         return 0b010;
-    } else if (frm == "rup") {
+    } else if (fast_eq(frm, "rup")) {
         return 0b011;
-    } else if (frm == "rmm") {
+    } else if (fast_eq(frm, "rmm")) {
         return 0b100;
-    } else if (frm == "dyn") {
+    } else if (fast_eq(frm, "dyn")) {
         return 0b111;
     } else {
         throw ChataError(ChataErrorType::Compiler, "Invalid rounding mode " + frm);
     }
+}
+
+uint8_t decode_fence(const chatastring& setting) {
+    if (fast_eq(setting, "r")) {
+        return 0b0010;
+    } else if (fast_eq(setting, "w")) {
+        return 0b0001;
+    } else if (fast_eq(setting, "rw")) {
+        return 0b0011;
+    } else {
+        throw ChataError(ChataErrorType::Compiler, "Invalid fence setting " + setting);
+    }
+}
+
+bool handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i, const assembly_context& c) {
+    using enum RVInstructionID;
+    if (base_i.id == FENCE) {
+        i.imm |= decode_fence(c.arg1) << 4; // Add pred
+        i.imm |= decode_fence(c.arg2); // Add succ
+        DBG(std::cout << "FENCE instruction made" << std::endl;)
+    } else if (base_i.id == FENCETSO) {
+        i.imm = 0b100000110011; // Set imm to the TSO fence value
+        DBG(std::cout << "FENCE.TSO instruction made" << std::endl;)
+    } else if (base_i.id == PAUSE) {
+        i.imm = 0b000000010000; // Set imm to the PAUSE value
+        DBG(std::cout << "PAUSE instruction made" << std::endl;)
+    } else if (base_i.id == ECALL) {
+        i.imm = 0b000000000000; // Set imm to the ECALL value
+        DBG(std::cout << "ECALL instruction made" << std::endl;)
+    } else if (base_i.id == EBREAK) {
+        i.imm = 0b000000000001; // Set imm to the EBREAK value
+        DBG(std::cout << "EBREAK instruction made" << std::endl;)
+    } else {
+        return false;
+    }
+    return true;
 }
 
 instruction make_inst(assembly_context& c) {
@@ -139,9 +175,21 @@ instruction make_inst(assembly_context& c) {
 
     auto base_i = instructions.at(i.inst_offset);
 
+    if (handle_super_special_snowflakes(i, base_i, c)) {
+        return i;
+    }
+
     using enum RVInstructionFormat;
 
-    if (base_i.type == I || base_i.type == S) {
+    if (base_i.type == R) {
+        if (base_i.ssargs.use_imm_for_rs2.has_value() && base_i.ssargs.use_imm_for_rs2.value()) {
+            try {
+                i.imm = to_int(c.arg3);
+            } catch (...) {
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+            }
+        }
+    } else if (base_i.type == I || base_i.type == S) {
         try {
             i.imm = to_int(c.arg3);
             i.rs1 = string_to_register(c.arg2, c).encoding;
@@ -154,7 +202,7 @@ instruction make_inst(assembly_context& c) {
             }
             i.imm = offset;
             if (c.arg2.at(j) != '(') {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate", c.line, c.column);
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
             }
             j++;
             chatastring reg;
@@ -175,7 +223,7 @@ instruction make_inst(assembly_context& c) {
         try {
             i.imm = to_int(c.arg2);
         } catch (...) {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate", c.line, c.column);
+            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
     } else if (base_i.type == J) {
         try {
@@ -192,7 +240,11 @@ instruction make_inst(assembly_context& c) {
         i.rs1 = string_to_register(c.arg2, c).encoding;
         auto no_rs2 = base_i.ssargs.rs2.has_value();
         if (!no_rs2) {
-            i.rs2 = string_to_register(c.arg3, c).encoding;
+            if (base_i.ssargs.use_imm_for_rs2.has_value() && base_i.ssargs.use_imm_for_rs2.value()) {
+                i.rs2 = i.imm;
+            } else {
+                i.rs2 = string_to_register(c.arg3, c).encoding;
+            }
         } else {
             i.rs2 = base_i.ssargs.rs2.value();
         }
@@ -236,7 +288,7 @@ instruction make_inst(assembly_context& c) {
 
 chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
     using enum RVInstructionID;
-    if (fast_eq(c.inst, std::string_view("li"))) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
+    if (fast_eq(c.inst, "li")) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
         // Case 1: imm is a 12-bit signed integer
         int imm;
         try {
@@ -259,7 +311,7 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         c.arg3 = to_chatastring(imm & 0xFFF);
         instruction i2 = make_inst(c);
         return {i1, i2};
-    } else if (fast_eq(c.inst, std::string_view("la"))) { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
+    } else if (fast_eq(c.inst, "la")) { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
         // Case 1: imm is a 12-bit signed integer
         int imm;
         try {
@@ -283,69 +335,69 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         instruction i2 = make_inst(c);
         return {i1, i2};
 
-    } else if (fast_eq(c.inst, std::string_view("mv"))) { // mv rd, rs -> addi rd, rs, 0
+    } else if (fast_eq(c.inst, "mv")) { // mv rd, rs -> addi rd, rs, 0
         c.inst_offset = get_inst_offset_by_id(ADDI);
         c.arg3 = "0";
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("not"))) { // not rd, rs -> xori rd, rs, -1
+    } else if (fast_eq(c.inst, "not")) { // not rd, rs -> xori rd, rs, -1
         c.inst_offset = get_inst_offset_by_id(XORI);
         c.arg3 = "-1";
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("neg"))) { // neg rd, rs -> sub rd, zero, rs
+    } else if (fast_eq(c.inst, "neg")) { // neg rd, rs -> sub rd, zero, rs
         c.inst_offset = get_inst_offset_by_id(SUB);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("bgt"))) { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
+    } else if (fast_eq(c.inst, "bgt")) { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
         c.inst_offset = get_inst_offset_by_id(BLT);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("ble"))) { // ble rs1, rs2, label|imm -> bge rs2, rs1, label|imm
+    } else if (fast_eq(c.inst, "ble")) { // ble rs1, rs2, label|imm -> bge rs2, rs1, label|imm
         c.inst_offset = get_inst_offset_by_id(BGE);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("bgtu"))) { // bgtu rs1, rs2, label|imm -> bltu rs2, rs1, label|imm
+    } else if (fast_eq(c.inst, "bgtu")) { // bgtu rs1, rs2, label|imm -> bltu rs2, rs1, label|imm
         c.inst_offset = get_inst_offset_by_id(BLTU);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("bleu"))) { // bleu rs1, rs2, label|imm -> bgeu rs2, rs1, label|imm
+    } else if (fast_eq(c.inst, "bleu")) { // bleu rs1, rs2, label|imm -> bgeu rs2, rs1, label|imm
         c.inst_offset = get_inst_offset_by_id(BGEU);
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("beqz"))) { // beqz rs, label|imm -> beq rs, zero, label|imm
+    } else if (fast_eq(c.inst, "beqz")) { // beqz rs, label|imm -> beq rs, zero, label|imm
         c.inst_offset = get_inst_offset_by_id(BEQ);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("bnez"))) { // bnez rs, label|imm -> bne rs, zero, label|imm
+    } else if (fast_eq(c.inst, "bnez")) { // bnez rs, label|imm -> bne rs, zero, label|imm
         c.inst_offset = get_inst_offset_by_id(BNE);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("bgez"))) { // bgez rs, label|imm -> bge rs, zero, label|imm
+    } else if (fast_eq(c.inst, "bgez")) { // bgez rs, label|imm -> bge rs, zero, label|imm
         c.inst_offset = get_inst_offset_by_id(BGE);
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("blez"))) { // blez rs, label|imm -> bge zero, rs, label|imm
+    } else if (fast_eq(c.inst, "blez")) { // blez rs, label|imm -> bge zero, rs, label|imm
         c.inst_offset = get_inst_offset_by_id(BGE);
         c.arg3 = c.arg2;
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("bgtz"))) { // bgtz rs, label|imm -> blt zero, rs, label|imm
+    } else if (fast_eq(c.inst, "bgtz")) { // bgtz rs, label|imm -> blt zero, rs, label|imm
         c.inst_offset = get_inst_offset_by_id(BLT);
         c.arg3 = c.arg2;
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("j"))) {
+    } else if (fast_eq(c.inst, "j")) {
         c.inst_offset = get_inst_offset_by_id(JAL);
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
 
-    } else if (fast_eq(c.inst, std::string_view("call"))) {
+    } else if (fast_eq(c.inst, "call")) {
         // Case 1: imm is a 12-bit signed integer
         int imm;
         try {
@@ -362,22 +414,22 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         }
         // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
 
-    } else if (fast_eq(c.inst, std::string_view("ret"))) {
+    } else if (fast_eq(c.inst, "ret")) {
         c.inst_offset = get_inst_offset_by_id(JALR);
         c.arg1 = "zero";
         c.arg2 = "ra";
         c.arg3 = "0";
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("nop"))) {
+    } else if (fast_eq(c.inst, "nop")) {
         c.inst_offset = get_inst_offset_by_id(ADDI);
         c.arg1 = "zero";
         c.arg2 = "zero";
         c.arg3 = "0";
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("fmv.s.x"))) {
+    } else if (fast_eq(c.inst, "fmv.s.x")) {
         c.inst_offset = get_inst_offset_by_id(FMVWX);
         return {make_inst(c)};
-    } else if (fast_eq(c.inst, std::string_view("fmv.x.s"))) {
+    } else if (fast_eq(c.inst, "fmv.x.s")) {
         c.inst_offset = get_inst_offset_by_id(FMVXW);
         return {make_inst(c)};
     }
@@ -537,7 +589,11 @@ chatastring generate_machine_code(assembly_context& c) {
         } else if (base_inst.type == R4) {
             DBG(std::cout << "Encoding R4-type instruction with name " << base_inst.name << std::endl;)
             inst |= i.rd << 7;     // Add rd
-            inst |= (base_inst.funct & 0b111) << 12;       // Add funct3
+            if (base_inst.ssargs.use_rm_for_funct3.has_value() && base_inst.ssargs.use_rm_for_funct3.value()) {
+                inst |= i.frm << 12; // Add frm
+            } else {
+                inst |= (base_inst.funct & 0b111) << 12;       // Add funct3
+            }
             inst |= i.rs1 << 15; // Add rs1
             inst |= i.rs2 << 20; // Add rs2
             inst |= (base_inst.funct >> 3) << 25;          // Add funct2
@@ -661,7 +717,7 @@ chatastring assemble_code(const chatastring& data) {
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - then);
     std::cout << "Assembling took " << duration.count() << "ms" << std::endl;
 
-    /*DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
+    DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
     DBG(for (auto c : machine_code) { printf("%02x ", c); })
 
@@ -699,7 +755,7 @@ chatastring assemble_code(const chatastring& data) {
     // Show the code in hex form
     DBG(for (auto c : result) { printf("%02x ", c); })
 
-    //exit(0);*/
+    //exit(0);
 
     return machine_code;
 }
