@@ -3,6 +3,7 @@
 #include "instructions.hpp"
 #include "libchata.hpp"
 #include "registers.hpp"
+#include "csrs.hpp"
 #include <bitset>
 #include <cstdint>
 #include <filesystem>
@@ -92,7 +93,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
 
 rvregister string_to_register(const chatastring& str, assembly_context& c) {
     for (auto& r : registers) {
-        if (fast_eq(r.name, str) || fast_eq(r.alias, str)) {
+        if (fast_eq(str, r.name) || fast_eq(str, r.alias)) {
             return r;
         }
     }
@@ -138,7 +139,16 @@ uint8_t decode_fence(const chatastring& setting) {
     }
 }
 
-bool handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i, const assembly_context& c) {
+uint16_t decode_csr(const chatastring& csr) {
+    for (const auto& c : csrs) {
+        if (fast_eq(csr, c.first)) {
+            return c.second;
+        }
+    }
+    throw ChataError(ChataErrorType::Compiler, "Invalid CSR " + csr);
+}
+
+bool handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i, assembly_context& c) {
     using enum RVInstructionID;
     if (base_i.id == FENCE) {
         i.imm |= decode_fence(c.arg1) << 4; // Add pred
@@ -156,6 +166,25 @@ bool handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i
     } else if (base_i.id == EBREAK) {
         i.imm = 0b000000000001; // Set imm to the EBREAK value
         DBG(std::cout << "EBREAK instruction made" << std::endl;)
+    } else if (base_i.id == FENCEI) {
+        i.imm = 0b000000000000; // Set imm to the FENCE.I value
+        DBG(std::cout << "FENCE.I instruction made" << std::endl;)
+    } else if (base_i.id == CSRRW || base_i.id == CSRRS || base_i.id == CSRRC) {
+        i.rd = string_to_register(c.arg1, c).encoding;
+        i.imm = decode_csr(c.arg2);
+        i.rs1 = string_to_register(c.arg3, c).encoding;
+        DBG(std::cout << "CSR instruction made" << std::endl;)
+    } else if (base_i.id == CSRRWI || base_i.id == CSRRSI || base_i.id == CSRRCI) {
+        i.rd = string_to_register(c.arg1, c).encoding;
+        i.imm = decode_csr(c.arg2);
+        i.rs1 = to_int(c.arg3);
+        DBG(std::cout << "CSR instruction made" << std::endl;)
+    } else if (base_i.id == WRSNTO) {
+        i.imm = 0b000000001101; // Set imm to the WRSNTO value
+        DBG(std::cout << "WRSNTO instruction made" << std::endl;)
+    } else if (base_i.id == WRSSTO) {
+        i.imm = 0b000000011101; // Set imm to the WRSSTO value
+        DBG(std::cout << "WRSSTO instruction made" << std::endl;)
     } else {
         return false;
     }
@@ -716,6 +745,8 @@ chatastring assemble_code(const chatastring& data) {
     auto now = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - then);
     std::cout << "Assembling took " << duration.count() << "ms" << std::endl;
+
+    return machine_code;
 
     DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form

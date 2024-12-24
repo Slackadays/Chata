@@ -151,15 +151,15 @@ int main() {
     as("fcvt.d.l f11, a3", 0xd3f526d2);
     as("fcvt.d.lu f12, a4", 0x537637d2);
     as("fmv.d.x f13, a5", 0xd38607f2);
-    //as("fence.i
-    //as("csrrw
-    //as("csrrs
-    //as("csrrc
-    //as("csrrwi
-    //as("csrrsi
-    //as("csrrci
-    //as("wrs.nto
-    //as("wrs.sto
+    as("fence.i", 0x0f100000);
+    as("csrrw a0, mvendorid, a1", 0x739515f1);
+    as("csrrs a2, mvendorid, a3", 0x73a616f1);
+    as("csrrc a4, marchid, a5", 0x73b727f1);
+    as("csrrwi a6, mimpid, 6", 0x735833f1);
+    as("csrrsi a7, mhartid, 7", 0xf3e843f1);
+    as("csrrci t0, mstatus, 8", 0xf3720430);
+    as("wrs.nto", 0x7300d000);
+    as("wrs.sto", 0x7300d001);
 
     std::cout << passed_tests << " tests passed, " << failed_tests << " tests failed, " << passed_tests + failed_tests << " tests total" << std::endl;
 
