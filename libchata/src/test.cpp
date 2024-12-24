@@ -90,6 +90,21 @@ int main() {
     as("sllw t0, t1, t2", 0xbb127300);
     as("srlw t1, t2, t3", 0x3bd3c301);
     as("sraw t2, t3, t4", 0xbb53de41);
+    as("mul t3, t4, t5", 0x338eee03);
+    as("mulh t4, t5, t6", 0xb31eff03);
+    as("mulhsu t5, t6, t6", 0x33afff03);
+    as("mulhu x0, x1, x2", 0x33b02002);
+    as("div x3, x4, x5", 0xb3415202);
+    as("divu x4, x5, x6", 0x33d26202);
+    as("rem x5, x6, x7", 0xb3627302);
+    as("remu x6, x7, x8", 0x33f38302);
+    as("mulw x7, x8, x9", 0xbb039402);
+    as("divw x8, x9, x10", 0x3bc4a402);
+    as("divuw x9, x10, x11", 0xbb54b502);
+    as("remw x10, x11, x12", 0x3be5c502);
+    as("remuw x11, x12, x13", 0xbb75d602);
+    //as("lr.w a0, 0(a1)", 0x03e50500);
+
     as("fmadd.s f0, f1, f2, f3", 0x43f02018);
     as("fmsub.s f4, f5, f6, f7", 0x47f26238);
     as("fnmsub.s f8, f9, f10, f11", 0x4bf4a458);
@@ -122,6 +137,7 @@ int main() {
     as("fcvt.s.lu f15, a5", 0xd3f737d0);
     as("fadd.d f16, f17, f18", 0x53f82803);
     as("fmadd.d f19, f20, f21, f22", 0xc3795ab3);
+    as("fmax.d f23, f24, f25", 0xd31b9c2b);
     as("fclass.d a0, f23", 0x53950be2);
     as("fcvt.d.s fa0, fa1", 0x53f50542);
     as("fcvt.d.w fa2, a1", 0x53f605d2);
@@ -151,6 +167,8 @@ int main() {
     as("fcvt.d.l f11, a3", 0xd3f526d2);
     as("fcvt.d.lu f12, a4", 0x537637d2);
     as("fmv.d.x f13, a5", 0xd38607f2);
+    as("flq f14, 0(a6)", 0x07334800);
+    
     as("fence.i", 0x0f100000);
     as("csrrw a0, mvendorid, a1", 0x739515f1);
     as("csrrs a2, mvendorid, a3", 0x73a616f1);

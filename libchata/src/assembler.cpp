@@ -62,6 +62,8 @@ bool fast_eq(const auto& first, const std::string_view& second) {
     return true;
 }
 
+int16_t fast_instr_search(const chatastring& inst);
+
 int string_to_label(chatastring& str, assembly_context& c) {
     while (str.back() == ':') {
         str.pop_back();
@@ -677,12 +679,9 @@ chatastring assemble_code(const chatastring& data) {
                     c.nodes.push_back(inst);
                 }
             } else {
-                for (size_t i = 0; i < instructions.size(); i++) {
-                    if (fast_eq(instructions.at(i).name, c.inst)) {
-                        c.inst_offset = i;
-                        c.nodes.push_back(make_inst(c));
-                        break;
-                    }
+                if (auto inst = fast_instr_search(c.inst); inst != -1) {
+                    c.inst_offset = inst;
+                    c.nodes.push_back(make_inst(c));
                 }
             }
             this_line.clear();
