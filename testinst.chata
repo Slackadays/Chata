@@ -1,1 +1,1 @@
-flq f14, 0(a6)
+fcvt.q.lu f19, a1
