@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MPL-2.0
 #include <array>
 #include <cstdint>
-#include <string_view>
-#include <optional>
 #include <initializer_list>
+#include <optional>
+#include <string_view>
 
 enum class RVInstructionID : uint16_t {
     LUI, // RV32I

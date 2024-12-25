@@ -9,22 +9,21 @@ namespace libchata_internal {
 void as(std::string_view input, uint32_t expected_output) {
     chatastring result;
     try {
-     result = assemble_code(chatastring(input));
+        result = assemble_code(chatastring(input));
     } catch (ChataError& e) {
         std::cout << e.what() << std::endl;
         failed_tests++;
         return;
     }
     uint32_t result_int = 0;
-    
+
     for (size_t i = 0; i < result.size(); i++) {
         result_int |= static_cast<uint32_t>(result[result.size() - i - 1]) << (i * 8);
     }
 
     if (result_int != expected_output) {
-        std::cout << "❌ Test FAILED for " << input << ": expected " << std::hex << expected_output << std::dec 
-        <<  " (" << std::bitset<32>(expected_output) << "), but got " << std::hex << result_int << std::dec 
-        << " (" << std::bitset<32>(result_int) << ")" << std::endl;
+        std::cout << "❌ Test FAILED for " << input << ": expected " << std::hex << expected_output << std::dec << " (" << std::bitset<32>(expected_output) << "), but got " << std::hex << result_int
+                  << std::dec << " (" << std::bitset<32>(result_int) << ")" << std::endl;
         failed_tests++;
     } else {
         std::cout << "✅ Test passed for " << input << std::endl;
@@ -103,7 +102,7 @@ int main() {
     as("divuw x9, x10, x11", 0xbb54b502);
     as("remw x10, x11, x12", 0x3be5c502);
     as("remuw x11, x12, x13", 0xbb75d602);
-    //as("lr.w a0, 0(a1)", 0x03e50500);
+    // as("lr.w a0, 0(a1)", 0x03e50500);
 
     as("fmadd.s f0, f1, f2, f3", 0x43f02018);
     as("fmsub.s f4, f5, f6, f7", 0x47f26238);

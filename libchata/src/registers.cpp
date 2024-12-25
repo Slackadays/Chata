@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
+#include "registers.hpp"
 #include <array>
 #include <string_view>
-#include "registers.hpp"
 
 using enum RegisterType;
 using enum RegisterID;

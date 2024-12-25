@@ -13,7 +13,7 @@ build:
 build-lib:
   if [ ! -d "libchata/build" ]; then mkdir libchata/build; fi 
 
-  if [ ! -d "libchata/build/CMakeFiles" ]; then cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE=Debug; fi
+  if [ ! -d "libchata/build/CMakeFiles" ]; then cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE=Release; fi
 
   cd libchata/build; cmake --build . -j 4
 
@@ -22,7 +22,7 @@ build-lib:
 build-cli:
   if [ ! -d "chatacli/build" ]; then mkdir chatacli/build; fi 
 
-  if [ ! -d "chatacli/build/CMakeFiles" ]; then cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE=Debug; fi
+  if [ ! -d "chatacli/build/CMakeFiles" ]; then cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE=Release; fi
 
   cd chatacli/build; cmake --build .
 
@@ -45,6 +45,9 @@ format:
 check-format:
   cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose --dry-run '{}' +
   cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose --dry-run '{}' +
+
+generate:
+  cd libchata/src; python3 generate_instruction_search.py
 
 test:
   @just test-lib

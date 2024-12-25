@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #include <array>
-#include <string_view>
 #include <cstdint>
+#include <string_view>
 
 constexpr std::array<std::string_view, 15> integer_register_replacement_priority_list = {"t0", "t1", "t2", "t3", "t4", "t5", "t6", "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7"};
 

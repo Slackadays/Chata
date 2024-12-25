@@ -49,14 +49,15 @@ struct assembly_context {
 };
 
 bool fast_eq(const auto& first, const std::string_view& second) {
-    if (first.size() != second.size()) { // First make sure the sizes are equal because no two strings can ever be the same if they have different sizes. Also, this lets us save on future bound checks because we're already checking it here.
+    if (first.size() != second.size()) { // First make sure the sizes are equal because no two strings can ever be the same if they have different sizes. Also, this lets us save on future bound checks
+                                         // because we're already checking it here.
         return false;
     }
     for (size_t i = 0; i < first.size(); i++) {
-        if (first[i] != second[i]) { [[likely]]
-            return false;
-        } else { [[unlikely]]
-            continue;
+        if (first[i] != second[i]) {
+            [[likely]] return false;
+        } else {
+            [[unlikely]] continue;
         }
     }
     return true;
@@ -154,7 +155,7 @@ bool handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i
     using enum RVInstructionID;
     if (base_i.id == FENCE) {
         i.imm |= decode_fence(c.arg1) << 4; // Add pred
-        i.imm |= decode_fence(c.arg2); // Add succ
+        i.imm |= decode_fence(c.arg2);      // Add succ
         DBG(std::cout << "FENCE instruction made" << std::endl;)
     } else if (base_i.id == FENCETSO) {
         i.imm = 0b100000110011; // Set imm to the TSO fence value
@@ -247,7 +248,7 @@ instruction make_inst(assembly_context& c) {
             i.imm = to_int(c.arg3);
         } catch (...) {
             i.imm = string_to_label(c.arg3, c);
-            //i.imm_is_label_dest = true;
+            // i.imm_is_label_dest = true;
             i.imm_purpose = LABEL_DEST;
         }
     } else if (base_i.type == U) {
@@ -261,7 +262,7 @@ instruction make_inst(assembly_context& c) {
             i.imm = to_int(c.arg2);
         } catch (...) {
             i.imm = string_to_label(c.arg2, c);
-            //i.imm_is_label_dest = true;
+            // i.imm_is_label_dest = true;
             i.imm_purpose = LABEL_DEST;
         }
     }
@@ -491,8 +492,8 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
             // if (c.inst.find(generated_label_prefix) != std::string::npos) {
             if (c.inst.back() == ':') {
                 DBG(std::cout << "Looks like this is a label!" << std::endl;)
-                //c.nodes.push_back(instruction{.imm = string_to_label(c.inst, c), .this_is_label_loc = true});
-                c.nodes.push_back(instruction{.imm = string_to_label(c.inst, c), .imm_purpose = LABEL_NODE});
+                // c.nodes.push_back(instruction{.imm = string_to_label(c.inst, c), .this_is_label_loc = true});
+                c.nodes.push_back(instruction {.imm = string_to_label(c.inst, c), .imm_purpose = LABEL_NODE});
             }
             break;
         }
@@ -575,60 +576,60 @@ chatastring generate_machine_code(assembly_context& c) {
         using enum RVInstructionFormat;
         if (base_inst.type == R) {
             DBG(std::cout << "Encoding R-type instruction with name " << base_inst.name << std::endl;)
-            inst |= i.rd << 7;     // Add rd
+            inst |= i.rd << 7; // Add rd
             if (base_inst.ssargs.use_rm_for_funct3.has_value() && base_inst.ssargs.use_rm_for_funct3.value()) {
                 inst |= i.frm << 12; // Add frm
             } else {
-                inst |= (base_inst.funct & 0b111) << 12;       // Add funct3
+                inst |= (base_inst.funct & 0b111) << 12; // Add funct3
             }
-            inst |= i.rs1 << 15; // Add rs1
-            inst |= i.rs2 << 20; // Add rs2
-            inst |= (base_inst.funct >> 3) << 25;          // Add funct7
+            inst |= i.rs1 << 15;                  // Add rs1
+            inst |= i.rs2 << 20;                  // Add rs2
+            inst |= (base_inst.funct >> 3) << 25; // Add funct7
         } else if (base_inst.type == I) {
             DBG(std::cout << "Encoding I-type instruction with name " << base_inst.name << std::endl;)
-            inst |= i.rd << 7;   // Add rd
-            inst |= base_inst.funct << 12;               // Add funct3
-            inst |= i.rs1 << 15; // Add rs1
-            inst |= i.imm << 20;                         // Add imm
+            inst |= i.rd << 7;             // Add rd
+            inst |= base_inst.funct << 12; // Add funct3
+            inst |= i.rs1 << 15;           // Add rs1
+            inst |= i.imm << 20;           // Add imm
         } else if (base_inst.type == S) {
             DBG(std::cout << "Encoding S-type instruction with name " << base_inst.name << std::endl;)
-            inst |= (i.imm & 0b11111) << 7;              // Add imm[4:0]
-            inst |= base_inst.funct << 12;               // Add funct3
-            inst |= i.rs1 << 15; // Add rs1
-            inst |= i.rs2 << 20; // Add rs2
-            inst |= (i.imm >> 5) << 25;                  // Add imm[11:5]
+            inst |= (i.imm & 0b11111) << 7; // Add imm[4:0]
+            inst |= base_inst.funct << 12;  // Add funct3
+            inst |= i.rs1 << 15;            // Add rs1
+            inst |= i.rs2 << 20;            // Add rs2
+            inst |= (i.imm >> 5) << 25;     // Add imm[11:5]
         } else if (base_inst.type == B) {
             DBG(std::cout << "Encoding B-type instruction with name " << base_inst.name << std::endl;)
-            inst |= ((i.imm >> 11) & 0b1) << 7;          // Add imm[11]
-            inst |= ((i.imm >> 1) & 0b1111) << 8;              // Add imm[4:1]
-            inst |= base_inst.funct << 12;               // Add funct3
-            inst |= i.rs1 << 15; // Add rs1
-            inst |= i.rs2 << 20; // Add rs2
-            inst |= ((i.imm >> 5) & 0b111111) << 25;                  // Add imm[10:5]
-            inst |= ((i.imm >> 12) & 0b1) << 31;                 // Add imm[12]
+            inst |= ((i.imm >> 11) & 0b1) << 7;      // Add imm[11]
+            inst |= ((i.imm >> 1) & 0b1111) << 8;    // Add imm[4:1]
+            inst |= base_inst.funct << 12;           // Add funct3
+            inst |= i.rs1 << 15;                     // Add rs1
+            inst |= i.rs2 << 20;                     // Add rs2
+            inst |= ((i.imm >> 5) & 0b111111) << 25; // Add imm[10:5]
+            inst |= ((i.imm >> 12) & 0b1) << 31;     // Add imm[12]
         } else if (base_inst.type == U) {
             DBG(std::cout << "Encoding U-type instruction with name " << base_inst.name << std::endl;)
-            inst |= i.rd << 7; // Add rd
-            inst |= i.imm << 12;                       // Add imm[31:12]
+            inst |= i.rd << 7;   // Add rd
+            inst |= i.imm << 12; // Add imm[31:12]
         } else if (base_inst.type == J) {
             DBG(std::cout << "Encoding J-type instruction with name " << base_inst.name << std::endl;)
-            inst |= i.rd << 7;       // Add rd
-            inst |= ((i.imm >> 12) & 0b11111111) << 12;              // Add imm[19:12]
-            inst |= ((i.imm >> 11) & 0b1) << 20;          // Add imm[11]
-            inst |= ((i.imm >> 1) & 0b1111111111) << 21;           // Add imm[10:1]
-            inst |= ((i.imm >> 20) & 0b1) << 31; // Add imm[20]
+            inst |= i.rd << 7;                           // Add rd
+            inst |= ((i.imm >> 12) & 0b11111111) << 12;  // Add imm[19:12]
+            inst |= ((i.imm >> 11) & 0b1) << 20;         // Add imm[11]
+            inst |= ((i.imm >> 1) & 0b1111111111) << 21; // Add imm[10:1]
+            inst |= ((i.imm >> 20) & 0b1) << 31;         // Add imm[20]
         } else if (base_inst.type == R4) {
             DBG(std::cout << "Encoding R4-type instruction with name " << base_inst.name << std::endl;)
-            inst |= i.rd << 7;     // Add rd
+            inst |= i.rd << 7; // Add rd
             if (base_inst.ssargs.use_rm_for_funct3.has_value() && base_inst.ssargs.use_rm_for_funct3.value()) {
                 inst |= i.frm << 12; // Add frm
             } else {
-                inst |= (base_inst.funct & 0b111) << 12;       // Add funct3
+                inst |= (base_inst.funct & 0b111) << 12; // Add funct3
             }
-            inst |= i.rs1 << 15; // Add rs1
-            inst |= i.rs2 << 20; // Add rs2
-            inst |= (base_inst.funct >> 3) << 25;          // Add funct2
-            inst |= i.rs3 << 27; // Add rs3
+            inst |= i.rs1 << 15;                  // Add rs1
+            inst |= i.rs2 << 20;                  // Add rs2
+            inst |= (base_inst.funct >> 3) << 25; // Add funct2
+            inst |= i.rs3 << 27;                  // Add rs3
         } else if (base_inst.type == CR) {
 
         } else if (base_inst.type == CI) {
@@ -745,7 +746,7 @@ chatastring assemble_code(const chatastring& data) {
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - then);
     std::cout << "Assembling took " << duration.count() << "ms" << std::endl;
 
-    //return machine_code;
+    return machine_code;
 
     DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
@@ -761,7 +762,7 @@ chatastring assemble_code(const chatastring& data) {
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)
-            // exit(1);
+        // exit(1);
         throw ChataError(ChataErrorType::Assembler, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
     }
 
@@ -785,7 +786,7 @@ chatastring assemble_code(const chatastring& data) {
     // Show the code in hex form
     DBG(for (auto c : result) { printf("%02x ", c); })
 
-    //exit(0);
+    // exit(0);
 
     return machine_code;
 }
