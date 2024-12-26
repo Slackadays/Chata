@@ -6,23 +6,25 @@ copy:
   . ./credentials.sh; \
   rsync -rRv -e ssh ./ $CHATA_CROSS_USERNAME@$CHATA_CROSS_IP:$CHATA_CROSS_PATH --exclude="*/build" --exclude=".git/*" --exclude="*a.out" --exclude="*.png" 
 
-build:
-  @just build-lib
-  @just build-cli
+set positional-arguments
 
-build-lib:
+build type='Release':
+  @just build-lib {{type}}
+  @just build-cli {{type}}
+
+build-lib type='Release':
   if [ ! -d "libchata/build" ]; then mkdir libchata/build; fi 
 
-  if [ ! -d "libchata/build/CMakeFiles" ]; then cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE=Release; fi
+  if [ ! -d "libchata/build/CMakeFiles" ]; then cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE="{{type}}"; fi
 
   cd libchata/build; cmake --build . -j 4
 
   cd libchata/build; sudo cmake --install .
 
-build-cli:
+build-cli type='Release':
   if [ ! -d "chatacli/build" ]; then mkdir chatacli/build; fi 
 
-  if [ ! -d "chatacli/build/CMakeFiles" ]; then cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE=Release; fi
+  if [ ! -d "chatacli/build/CMakeFiles" ]; then cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE="{{type}}"; fi
 
   cd chatacli/build; cmake --build .
 

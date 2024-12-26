@@ -103,7 +103,7 @@ int main() {
     as("divuw x9, x10, x11", 0xbb54b502);
     as("remw x10, x11, x12", 0x3be5c502);
     as("remuw x11, x12, x13", 0xbb75d602);
-    // as("lr.w a0, 0(a1)", 0x03e50500);
+    as("lr.w a0, (a1)", 0x2fa50510);
 
     as("fmadd.s f0, f1, f2, f3", 0x43f02018);
     as("fmsub.s f4, f5, f6, f7", 0x47f26238);

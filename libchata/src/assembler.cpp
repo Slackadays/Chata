@@ -4,14 +4,12 @@
 #include "libchata.hpp"
 #include "registers.hpp"
 #include "csrs.hpp"
-#include <bitset>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <utility>
-#include <variant>
 
 namespace libchata_internal {
 
@@ -285,6 +283,17 @@ instruction make_inst(assembly_context& c) {
 
     if (base_i.type == R || base_i.type == R4) {
         i.rd = string_to_register(c.arg1, c).encoding;
+        if (base_i.set == RVInstructionSet::RV32A || base_i.set == RVInstructionSet::RV64A) { // The RV32A and RV64A sets sometimes use registers that look like (a0)
+            if (c.arg2.front() == '0') {
+                c.arg2.erase(0, 1);
+            }
+            if (c.arg2.front() == '(') {
+                c.arg2.erase(0, 1);
+            }
+            if (c.arg2.back() == ')') {
+                c.arg2.pop_back();
+            }
+        }
         i.rs1 = string_to_register(c.arg2, c).encoding;
         auto no_rs2 = base_i.ssargs.rs2.has_value();
         if (!no_rs2) {
@@ -760,7 +769,7 @@ chatavector<uint8_t> assemble_code(const chatastring& data) {
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - then);
     std::cout << "Assembling took " << duration.count() << "ms" << std::endl;
 
-    return machine_code;
+    //return machine_code;
 
     DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
@@ -772,7 +781,7 @@ chatavector<uint8_t> assemble_code(const chatastring& data) {
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as -march=rv64gcqzfh temp.s -o temp.o");
+    int res = std::system("riscv64-linux-gnu-as -march=rv64gqc temp.s -o temp.o");
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)

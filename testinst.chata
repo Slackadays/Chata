@@ -1,1 +1,1 @@
-fmsub.h f26, f27, f28, f29
+lr.w a0, (a1)
