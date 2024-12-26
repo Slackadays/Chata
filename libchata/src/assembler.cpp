@@ -491,14 +491,17 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
     c.arg3.clear();
     c.arg4.clear();
     c.arg5.clear();
+    auto is_whitespace = [](const char& c) {
+        return c == '\t' || c == ' ';
+    };
     for (size_t i = 0; i < this_line.size(); i++) {
         auto ch = [&]() {
             return this_line.at(i);
         };
-        for (; i < this_line.size() && std::isblank(ch()); i++) {
+        for (; i < this_line.size() && is_whitespace(ch()); i++) {
             c.column++;
         }
-        for (; i < this_line.size() && !std::isblank(ch()); i++) {
+        for (; i < this_line.size() && !is_whitespace(ch()); i++) {
             c.inst.push_back(ch());
             c.column++;
         }
@@ -514,10 +517,10 @@ void parse_this_line(chatastring& this_line, assembly_context& c) {
             break;
         }
         auto parse_arg = [&](chatastring& arg) {
-            for (; i < this_line.size() && (std::isblank(ch()) || ch() == ','); i++) {
+            for (; i < this_line.size() && (is_whitespace(ch()) || ch() == ','); i++) {
                 c.column++;
             }
-            for (; i < this_line.size() && (!std::isblank(ch()) && ch() != ','); i++) {
+            for (; i < this_line.size() && !(is_whitespace(ch()) || ch() == ','); i++) {
                 arg.push_back(ch());
                 c.column++;
             }
