@@ -12,6 +12,7 @@ void as(std::string_view input, uint32_t expected_output) {
         result = assemble_code(chatastring(input));
     } catch (ChataError& e) {
         std::cout << e.what() << std::endl;
+        std::cout << "❌ Test FAILED for " << input << ": expected " << std::hex << expected_output << std::dec << " (" << std::bitset<32>(expected_output) << "), but got an error" << std::endl;
         failed_tests++;
         return;
     }
@@ -198,7 +199,42 @@ int main() {
     as("fcvt.lu.q a7, f17", 0xd3f838c6);
     as("fcvt.q.l f18, a0", 0x537925d6);
     as("fcvt.q.lu f19, a1", 0xd3f935d6);
-
+    as("flh f20, 2(a2)", 0x071a2600);
+    as("fsh f21, 4(a3)", 0x27925601);
+    as("fmadd.h f22, f23, f24, f25", 0x43fb8bcd);
+    as("fmsub.h f26, f27, f28, f29", 0x47fdcded);
+    as("fnmsub.h f30, f31, f0, f1", 0x4bff0f0c);
+    as("fnmadd.h f2, f3, f4, f5", 0x4ff1412c);
+    as("fadd.h f6, f7, f8", 0x53f38304);
+    as("fsub.h f9, f10, f11", 0xd374b50c);
+    as("fmul.h f12, f13, f14", 0x53f6e614);
+    as("fdiv.h f15, f16, f17", 0xd377181d);
+    as("fsqrt.h f18, f19", 0x53f9095c);
+    as("fsgnj.h f20, f21, f22", 0x538a6a25);
+    as("fsgnjn.h f23, f24, f25", 0xd31b9c25);
+    as("fsgnjx.h f26, f27, f28", 0x53adcd25);
+    as("fmin.h f29, f30, f31", 0xd30eff2d);
+    as("fmax.h f0, f1, f2", 0x5390202c);
+    as("fcvt.s.h f3, f4", 0xd3712240);
+    as("fcvt.h.s f5, f6", 0xd3720344);
+    as("fcvt.d.h f7, f8", 0xd3732442);
+    as("fcvt.h.d f9, f10", 0xd3741544);
+    as("fcvt.q.h f11, f12", 0xd3752646);
+    as("fcvt.h.q f13, f14", 0xd3763744);
+    as("feq.h a0, f15, f16", 0x53a507a5);
+    as("flt.h a1, f17, f18", 0xd39528a5);
+    as("fle.h a2, f19, f20", 0x538649a5);
+    as("fclass.h a3, f21", 0xd3960ae4);
+    as("fcvt.w.h a4, f22", 0x53770bc4);
+    as("fcvt.wu.h a5, f23", 0xd3f71bc4);
+    as("fmv.x.h a6, f24", 0x53080ce4);
+    as("fcvt.h.w f25, a7", 0xd3fc08d4);
+    as("fcvt.h.wu f26, s0", 0x537d14d4);
+    as("fmv.h.x f27, s1", 0xd38d04f4);
+    as("fcvt.l.h a0, f28", 0x53752ec4);
+    as("fcvt.lu.h a1, f29", 0xd3f53ec4);
+    as("fcvt.h.l f30, a2", 0x537f26d4);
+    as("fcvt.h.lu f31, a3", 0xd3ff36d4);
     as("fence.i", 0x0f100000);
     as("csrrw a0, mvendorid, a1", 0x739515f1);
     as("csrrs a2, mvendorid, a3", 0x73a616f1);

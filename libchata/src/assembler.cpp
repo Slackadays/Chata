@@ -64,6 +64,7 @@ bool fast_eq(const auto& first, const std::string_view& second) {
 }
 
 int16_t fast_instr_search(const chatastring& inst);
+int8_t fast_reg_search(const chatastring& reg);
 
 int string_to_label(chatastring& str, assembly_context& c) {
     while (str.back() == ':') {
@@ -95,10 +96,8 @@ int string_to_label(chatastring& str, assembly_context& c) {
 }
 
 rvregister string_to_register(const chatastring& str, assembly_context& c) {
-    for (auto& r : registers) {
-        if (fast_eq(str, r.name) || fast_eq(str, r.alias)) {
-            return r;
-        }
+    if (auto reg = fast_reg_search(str); reg != -1) {
+        return registers[reg];
     }
     throw ChataError(ChataErrorType::Compiler, "Invalid register " + str, c.line, c.column);
 }
@@ -758,7 +757,7 @@ chatastring assemble_code(const chatastring& data) {
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as -march=rv64gcq temp.s -o temp.o");
+    int res = std::system("riscv64-linux-gnu-as -march=rv64gcqzfh temp.s -o temp.o");
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)

@@ -48,6 +48,7 @@ check-format:
 
 generate:
   cd libchata/src; python3 generate_instruction_search.py
+  cd libchata/src; python3 generate_register_search.py
 
 test:
   @just test-lib

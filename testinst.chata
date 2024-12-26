@@ -1,1 +1,1 @@
-fcvt.q.lu f19, a1
+fmsub.h f26, f27, f28, f29
