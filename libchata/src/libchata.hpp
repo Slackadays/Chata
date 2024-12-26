@@ -98,7 +98,7 @@ struct compilation_context {
     int column = 0;
 };
 
-chatastring assemble_code(const chatastring& data);
+chatavector<uint8_t> assemble_code(const chatastring& data);
 
 chatastring compile_code(chatavector<InternalFile>& files);
 
@@ -226,7 +226,7 @@ class ChataProcessor {
     template <typename T>
     using AlignedMemory = libchata_internal::AlignedMemory<T>;
 
-    std::array<std::vector<unsigned char, AlignedMemory<unsigned char>>, 2> executable_memory;
+    std::array<std::vector<uint8_t, AlignedMemory<uint8_t>>, 2> executable_memory;
     int current_executable_memory = 0;
 
     size_t executable_size = 0;
@@ -239,7 +239,7 @@ class ChataProcessor {
 
     void (*executable_function)(chata_args&) = nullptr;
 
-    void save_to_memory(const chatastring& data);
+    void save_to_memory(const libchata_internal::chatavector<uint8_t>& data);
 
 public:
     void compile(const std::string_view& code);
@@ -277,4 +277,4 @@ public:
 
 std::string_view libchata_version();
 
-std::string_view libchata_assemble(std::string_view code);
+std::span<uint8_t> libchata_assemble(std::string_view code);

@@ -7,7 +7,7 @@ int failed_tests = 0;
 namespace libchata_internal {
 
 void as(std::string_view input, uint32_t expected_output) {
-    chatastring result;
+    chatavector<uint8_t> result;
     try {
         result = assemble_code(chatastring(input));
     } catch (ChataError& e) {

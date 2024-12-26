@@ -44,7 +44,7 @@ void ChataProcessor::process_data(chata_args& input) {
     executable_function(input);
 }
 
-void ChataProcessor::save_to_memory(const chatastring& data) {
+void ChataProcessor::save_to_memory(const chatavector<uint8_t>& data) {
     int mpres = mprotect(executable_memory.at(!current_executable_memory).data(), executable_memory.at(!current_executable_memory).size(), PROT_READ | PROT_WRITE);
     if (mpres != 0) {
         DBG(std::cout << "mprotect failed: " << strerror(errno) << ", " << errno << std::endl;)
@@ -129,6 +129,7 @@ std::string_view libchata_version() {
     return libchata_version_str;
 }
 
-std::string_view libchata_assemble(std::string_view code) {
-    return assemble_code(chatastring(code));
+std::span<uint8_t> libchata_assemble(std::string_view code) {
+    auto assembled = assemble_code(chatastring(code));
+    return std::span<uint8_t>(assembled.data(), assembled.size());
 }

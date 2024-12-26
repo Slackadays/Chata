@@ -95,7 +95,7 @@ int main(int argc, char* argv[]) {
     if (assemble_flag) {
         std::cout << "Assembling" << std::endl;
         try {
-            std::string result(libchata_assemble(file.data));
+            volatile auto result = libchata_assemble(file.data);
             return 0;
         } catch (ChataError& e) {
             std::cout << "Error: " << e.what() << std::endl;
