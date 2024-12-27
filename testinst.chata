@@ -1,1 +1,1 @@
-amomaxu.w x12, x13, (x14)
+amomaxu.d x12, x13, (x14)
