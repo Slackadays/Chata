@@ -293,6 +293,19 @@ instruction make_inst(assembly_context& c) {
             if (c.arg2.back() == ')') {
                 c.arg2.pop_back();
             }
+            if (c.arg3.front() == '0') {
+                c.arg3.erase(0, 1);
+            }
+            if (c.arg3.front() == '(') {
+                c.arg3.erase(0, 1);
+            }
+            if (c.arg3.back() == ')') {
+                c.arg3.pop_back();
+            }
+            using enum RVInstructionID;
+            if (base_i.id != LRW && base_i.id != LRWAQ && base_i.id != LRWRL && base_i.id != LRWAQRL && base_i.id != LRD && base_i.id != LRDAQ && base_i.id != LRDRL && base_i.id != LRDAQRL) {
+                std::swap(c.arg2, c.arg3); // For the case of instr rd, rs2, (rs1)
+            }
         }
         i.rs1 = string_to_register(c.arg2, c).encoding;
         auto no_rs2 = base_i.ssargs.rs2.has_value();
@@ -716,51 +729,6 @@ chatavector<uint8_t> assemble_code(const chatastring& data) {
         }
     }
 
-    /*for (auto& i : c.nodes) {
-        if (!std::holds_alternative<instruction>(i)) {
-            DBG(std::cout << "Label: " << std::get<int>(i) << std::endl;)
-            continue;
-        }
-        auto this_i = std::get<instruction>(i);
-        chatastring string_representation;
-        for (auto& inst : instructions) {
-            if (inst.id == this_i.inst) {
-                string_representation = inst.name;
-                break;
-            }
-        }
-        DBG(std::cout << "Instruction: " << string_representation << std::endl;)
-        if (this_i.type == RVInstructionFormat::R) {
-            DBG(std::cout << "Instruction type: R" << std::endl;)
-        } else if (this_i.type == RVInstructionFormat::I) {
-            DBG(std::cout << "Instruction type: I" << std::endl;)
-        } else if (this_i.type == RVInstructionFormat::S) {
-            DBG(std::cout << "Instruction type: S" << std::endl;)
-        } else if (this_i.type == RVInstructionFormat::B) {
-            DBG(std::cout << "Instruction type: B" << std::endl;)
-        } else if (this_i.type == RVInstructionFormat::U) {
-            DBG(std::cout << "Instruction type: U" << std::endl;)
-        } else if (this_i.type == RVInstructionFormat::J) {
-            DBG(std::cout << "Instruction type: J" << std::endl;)
-        }
-        for (auto& reg : registers) {
-            if (reg.encoding == this_i.rd) {
-                DBG(std::cout << "rd: " << reg.alias << std::endl;)
-            }
-            if (reg.encoding == this_i.rs1) {
-                DBG(std::cout << "rs1: " << reg.alias << std::endl;)
-            }
-            if (reg.encoding == this_i.rs2) {
-                DBG(std::cout << "rs2: " << reg.alias << std::endl;)
-            }
-        }
-        if (!this_i.imm_is_label_dest) {
-            DBG(std::cout << "offset: " << this_i.imm << std::endl;)
-        } else {
-            DBG(std::cout << "label: " << this_i.imm << std::endl;)
-        }
-    }*/
-
     solve_label_offsets(c);
 
     machine_code = generate_machine_code(c);
@@ -769,7 +737,10 @@ chatavector<uint8_t> assemble_code(const chatastring& data) {
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - then);
     std::cout << "Assembling took " << duration.count() << "ms" << std::endl;
 
-    //return machine_code;
+#if !defined(DEBUG)
+    return machine_code;
+#endif
+#if defined(DEBUG)
 
     DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
@@ -812,6 +783,7 @@ chatavector<uint8_t> assemble_code(const chatastring& data) {
     // exit(0);
 
     return machine_code;
+#endif
 }
 
 } // namespace libchata_internal
