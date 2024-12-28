@@ -11,6 +11,8 @@
 #include <unistd.h>
 #include <vector>
 
+#pragma once
+
 namespace libchata_internal {
 class InternalFile;
 }
@@ -108,7 +110,7 @@ bool is_integer(const chatastring& str);
 
 bool is_number(const chatastring& str);
 
-int to_int(const chatastring& str);
+std::optional<int> to_int(const chatastring& str);
 
 double to_float(const chatastring& str);
 

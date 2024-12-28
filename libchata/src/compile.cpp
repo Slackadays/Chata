@@ -138,7 +138,11 @@ void replace_temp_registers(chatastring& input) {
                 break;
             }
         }
-        id = to_int(id_str);
+        if (auto num = to_int(id_str); num.has_value()) {
+            id = num.value();
+        } else {
+            throw ChataError(ChataErrorType::Compiler, "Invalid temporary integer register ID " + id_str);
+        }
         DBG(std::cout << "Found temp register: " << id << std::endl;)
 
         chatastring replacement;
@@ -187,7 +191,11 @@ void replace_temp_registers(chatastring& input) {
                 break;
             }
         }
-        id = to_int(id_str);
+        if (auto num = to_int(id_str); num.has_value()) {
+            id = num.value();
+        } else {
+            throw ChataError(ChataErrorType::Compiler, "Invalid temporary floating point register ID " + id_str);
+        }
         DBG(std::cout << "Found temp register: " << id << std::endl;)
 
         chatastring replacement;

@@ -55,9 +55,10 @@ current_instr = ""
 
 code = "// SPDX-License-Identifier: MPL-2.0\n"
 code += "// The generate_instruction_search.py script automatically generated this code. DO NOT MODIFY!\n"
-code += "#include \"libchata.hpp\"\n\n"
+code += "#include \"libchata.hpp\"\n"
+code += "#include \"instructions.hpp\"\n\n"
 code += "namespace libchata_internal {\n\n"
-code += "int16_t fast_instr_search(const chatastring& inst) {\n"
+code += "const uint16_t fast_instr_search(const chatastring& inst) {\n"
 
 def ind():
     return "    " * (depth + 1)
@@ -81,7 +82,7 @@ def process_depth():
     if instr_exists(current_instr):
         code += ind() + f"if (inst.size() < {depth + 1}) return {instructions[[i[0] for i in instructions].index(current_instr)][1]};\n"
     else:
-        code += ind() + f"if (inst.size() < {depth + 1}) return -1;\n"
+        code += ind() + f"if (inst.size() < {depth + 1}) return instr_search_failed;\n"
     for letter in potentialchars:
         if prefix_exists(current_instr + letter):
             code += ind() + f"if (inst[{depth}] == '{letter}') {{\n"

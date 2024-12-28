@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MPL-2.0
 // The generate_register_search.py script automatically generated this code. DO NOT MODIFY!
 #include "libchata.hpp"
+#include "registers.hpp"
 
 namespace libchata_internal {
 
-int8_t fast_reg_search(const chatastring& reg) {
-    if (reg.size() < 1) return -1;
+const uint8_t fast_reg_search(const chatastring& reg) {
+    if (reg.size() < 1) return reg_search_failed;
     if (reg[0] == 'a') {
-        if (reg.size() < 2) return -1;
+        if (reg.size() < 2) return reg_search_failed;
         if (reg[1] == '0') {
             if (reg.size() < 3) return 10;
         }
@@ -34,9 +35,9 @@ int8_t fast_reg_search(const chatastring& reg) {
         }
     }
     if (reg[0] == 'f') {
-        if (reg.size() < 2) return -1;
+        if (reg.size() < 2) return reg_search_failed;
         if (reg[1] == 'a') {
-            if (reg.size() < 3) return -1;
+            if (reg.size() < 3) return reg_search_failed;
             if (reg[2] == '0') {
                 if (reg.size() < 4) return 42;
             }
@@ -162,7 +163,7 @@ int8_t fast_reg_search(const chatastring& reg) {
             if (reg.size() < 3) return 2;
         }
         if (reg[1] == 's') {
-            if (reg.size() < 3) return -1;
+            if (reg.size() < 3) return reg_search_failed;
             if (reg[2] == '0') {
                 if (reg.size() < 4) return 40;
             }
@@ -201,7 +202,7 @@ int8_t fast_reg_search(const chatastring& reg) {
             }
         }
         if (reg[1] == 't') {
-            if (reg.size() < 3) return -1;
+            if (reg.size() < 3) return reg_search_failed;
             if (reg[2] == '0') {
                 if (reg.size() < 4) return 32;
             }
@@ -241,7 +242,7 @@ int8_t fast_reg_search(const chatastring& reg) {
         }
     }
     if (reg[0] == 's') {
-        if (reg.size() < 2) return -1;
+        if (reg.size() < 2) return reg_search_failed;
         if (reg[1] == '0') {
             if (reg.size() < 3) return 8;
         }
@@ -283,7 +284,7 @@ int8_t fast_reg_search(const chatastring& reg) {
         }
     }
     if (reg[0] == 't') {
-        if (reg.size() < 2) return -1;
+        if (reg.size() < 2) return reg_search_failed;
         if (reg[1] == '0') {
             if (reg.size() < 3) return 5;
         }
@@ -307,19 +308,19 @@ int8_t fast_reg_search(const chatastring& reg) {
         }
     }
     if (reg[0] == 'g') {
-        if (reg.size() < 2) return -1;
+        if (reg.size() < 2) return reg_search_failed;
         if (reg[1] == 'p') {
             if (reg.size() < 3) return 4;
         }
     }
     if (reg[0] == 'r') {
-        if (reg.size() < 2) return -1;
+        if (reg.size() < 2) return reg_search_failed;
         if (reg[1] == 'a') {
             if (reg.size() < 3) return 1;
         }
     }
     if (reg[0] == 'v') {
-        if (reg.size() < 2) return -1;
+        if (reg.size() < 2) return reg_search_failed;
         if (reg[1] == '0') {
             if (reg.size() < 3) return 64;
         }
@@ -418,7 +419,7 @@ int8_t fast_reg_search(const chatastring& reg) {
         }
     }
     if (reg[0] == 'x') {
-        if (reg.size() < 2) return -1;
+        if (reg.size() < 2) return reg_search_failed;
         if (reg[1] == '0') {
             if (reg.size() < 3) return 0;
         }
@@ -517,11 +518,11 @@ int8_t fast_reg_search(const chatastring& reg) {
         }
     }
     if (reg[0] == 'z') {
-        if (reg.size() < 2) return -1;
+        if (reg.size() < 2) return reg_search_failed;
         if (reg[1] == 'e') {
-            if (reg.size() < 3) return -1;
+            if (reg.size() < 3) return reg_search_failed;
             if (reg[2] == 'r') {
-                if (reg.size() < 4) return -1;
+                if (reg.size() < 4) return reg_search_failed;
                 if (reg[3] == 'o') {
                     if (reg.size() < 5) return 0;
                 }

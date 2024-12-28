@@ -286,6 +286,10 @@ int main() {
     as("amomaxu.d x12, x13, x14", 0x2f36d7e0);
     as("amomaxu.d x12, x13, (x14)", 0x2f36d7e0);
     as("amomaxu.d x12, x13, 0(x14)", 0x2f36d7e0);
+    as("amoswap.d.aq x15, x16, x17", 0xafb7080d);
+    as("amoswap.d.aq x15, x16, (x17)", 0xafb7080d);
+    as("amoswap.d.aq x15, x16, 0(x17)", 0xafb7080d);
+    
 
     as("fmadd.s f0, f1, f2, f3", 0x43f02018);
     as("fmsub.s f4, f5, f6, f7", 0x47f26238);

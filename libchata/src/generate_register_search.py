@@ -32,9 +32,10 @@ current_reg = ""
 
 code = "// SPDX-License-Identifier: MPL-2.0\n"
 code += "// The generate_register_search.py script automatically generated this code. DO NOT MODIFY!\n"
-code += "#include \"libchata.hpp\"\n\n"
+code += "#include \"libchata.hpp\"\n"
+code += "#include \"registers.hpp\"\n\n"
 code += "namespace libchata_internal {\n\n"
-code += "int8_t fast_reg_search(const chatastring& reg) {\n"
+code += "const uint8_t fast_reg_search(const chatastring& reg) {\n"
 
 def ind():
     return "    " * (depth + 1)
@@ -58,7 +59,7 @@ def process_depth():
     if reg_exists(current_reg):
         code += ind() + f"if (reg.size() < {depth + 1}) return {registers[[i[0] for i in registers].index(current_reg)][1]};\n"
     else:
-        code += ind() + f"if (reg.size() < {depth + 1}) return -1;\n"
+        code += ind() + f"if (reg.size() < {depth + 1}) return reg_search_failed;\n"
     for letter in potentialchars:
         if prefix_exists(current_reg + letter):
             code += ind() + f"if (reg[{depth}] == '{letter}') {{\n"

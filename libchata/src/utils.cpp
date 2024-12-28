@@ -50,11 +50,11 @@ chatastring to_chatastring(int num) {
     return result;
 }
 
-int to_int(const chatastring& str) {
+std::optional<int> to_int(const chatastring& str) {
     int result = 0;
     auto res = std::from_chars(str.data(), str.data() + str.size(), result);
     if (res.ec != std::errc() || res.ptr != str.data() + str.size()) {
-        throw ChataError(ChataErrorType::Other, "Invalid integer " + str);
+        return std::nullopt;
     }
     return result;
 }

@@ -5,6 +5,8 @@
 #include <initializer_list>
 #include <string_view>
 
+namespace libchata_internal {
+
 using enum RVInstructionFormat;
 using enum RVInstructionID;
 using enum RVInstructionSet;
@@ -350,3 +352,5 @@ const std::array<rvinstruction, 339> instructions = {
          {"c.subw", CR, CSUBW, 0b01, 0b100, C},
          {"c.nop", CR, CNOP, 0b01, 0b000, C},
          {"c.ebreak", CR, CEBREAK, 0b10, 0b100, C}}};
+
+} // namespace libchata_internal

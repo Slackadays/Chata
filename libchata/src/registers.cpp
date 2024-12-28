@@ -3,6 +3,8 @@
 #include <array>
 #include <string_view>
 
+namespace libchata_internal {
+
 using enum RegisterType;
 using enum RegisterID;
 
@@ -103,3 +105,5 @@ const std::array<rvregister, 96> registers = {
          {"v29", "v29", Vector, v29, 29},
          {"v30", "v30", Vector, v30, 30},
          {"v31", "v31", Vector, v31, 31}}};
+
+} // namespace libchata_internal

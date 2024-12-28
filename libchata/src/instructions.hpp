@@ -4,6 +4,12 @@
 #include <initializer_list>
 #include <optional>
 #include <string_view>
+#include "libchata.hpp"
+
+namespace libchata_internal {
+
+constexpr uint16_t instr_search_failed = (uint16_t)-1;
+const uint16_t fast_instr_search(const chatastring& inst);
 
 enum class RVInstructionID : uint16_t {
     LUI, // RV32I
@@ -404,3 +410,5 @@ struct rvinstruction {
 };
 
 extern const std::array<rvinstruction, 339> instructions;
+
+} // namespace libchata_internal

@@ -192,8 +192,8 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
             }
         } else if (is_number(operand_1) && is_number(operand_2)) {
             // We don't actually need to write any runtime checks, so do a quick check here and then insert a dummy branch instruction
-            auto num_1 = to_int(operand_1);
-            auto num_2 = to_int(operand_2);
+            auto num_1 = to_int(operand_1).value();
+            auto num_2 = to_int(operand_2).value();
             if (condition == "=") {
                 if (num_1 == num_2) {
                     branch_code.push_back("beq zero, zero, " + allocate_label(inner_if_label_num));

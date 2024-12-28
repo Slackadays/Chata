@@ -62,9 +62,6 @@ bool fast_eq(const auto& first, const std::string_view& second) {
     return true;
 }
 
-int16_t fast_instr_search(const chatastring& inst);
-int8_t fast_reg_search(const chatastring& reg);
-
 int string_to_label(chatastring& str, assembly_context& c) {
     while (str.back() == ':') {
         str.pop_back();
@@ -95,7 +92,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
 }
 
 rvregister string_to_register(const chatastring& str, assembly_context& c) {
-    if (auto reg = fast_reg_search(str); reg != -1) {
+    if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
         return registers[reg];
     }
     throw ChataError(ChataErrorType::Compiler, "Invalid register " + str, c.line, c.column);
@@ -178,7 +175,11 @@ bool handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i
     } else if (base_i.id == CSRRWI || base_i.id == CSRRSI || base_i.id == CSRRCI) {
         i.rd = string_to_register(c.arg1, c).encoding;
         i.imm = decode_csr(c.arg2);
-        i.rs1 = to_int(c.arg3);
+        if (auto num = to_int(c.arg3); num.has_value()) {
+            i.rs1 = num.value();
+        } else {
+            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+        }
         DBG(std::cout << "CSR instruction made" << std::endl;)
     } else if (base_i.id == WRSNTO) {
         i.imm = 0b000000001101; // Set imm to the WRSNTO value
@@ -215,6 +216,13 @@ instruction make_inst(assembly_context& c) {
 
     instruction i;
 
+    /*i.inst_offset = get_inst_offset_by_id(RVInstructionID::ADD);
+    i.rd = 0;
+    i.rs1 = 1;
+    i.rs2 = 2;
+    c.instruction_bytes += 4;
+    return i;*/
+
     i.inst_offset = c.inst_offset;
 
     auto base_i = instructions.at(i.inst_offset);
@@ -229,17 +237,17 @@ instruction make_inst(assembly_context& c) {
 
     if (base_i.type == R) {
         if (base_i.ssargs.use_imm_for_rs2.has_value() && base_i.ssargs.use_imm_for_rs2.value()) {
-            try {
-                i.imm = to_int(c.arg3);
-            } catch (...) {
+            if (auto num = to_int(c.arg3); num.has_value()) {
+                i.imm = num.value();
+            } else {
                 throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         }
     } else if (base_i.type == I || base_i.type == S) {
-        try {
-            i.imm = to_int(c.arg3);
+        if (auto num = to_int(c.arg3); num.has_value()) {
+            i.imm = num.value();
             i.rs1 = string_to_register(c.arg2, c).encoding;
-        } catch (...) {
+        } else {
             // Check if arg2 fits the template offset(reg)
             int offset = 0;
             int j = 0;
@@ -258,23 +266,23 @@ instruction make_inst(assembly_context& c) {
             i.rs1 = string_to_register(reg, c).encoding;
         }
     } else if (base_i.type == B) {
-        try {
-            i.imm = to_int(c.arg3);
-        } catch (...) {
+        if (auto num = to_int(c.arg3); num.has_value()) {
+            i.imm = num.value();
+        } else {
             i.imm = string_to_label(c.arg3, c);
             // i.imm_is_label_dest = true;
             i.imm_purpose = LABEL_DEST;
         }
     } else if (base_i.type == U) {
-        try {
-            i.imm = to_int(c.arg2);
-        } catch (...) {
+        if (auto num = to_int(c.arg2); num.has_value()) {
+            i.imm = num.value();
+        } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
     } else if (base_i.type == J) {
-        try {
-            i.imm = to_int(c.arg2);
-        } catch (...) {
+        if (auto num = to_int(c.arg2); num.has_value()) {
+            i.imm = num.value();
+        } else {
             i.imm = string_to_label(c.arg2, c);
             // i.imm_is_label_dest = true;
             i.imm_purpose = LABEL_DEST;
@@ -349,6 +357,24 @@ instruction make_inst(assembly_context& c) {
         i.rd = string_to_register(c.arg1, c).encoding;
     } else if (base_i.type == J) {
         i.rd = string_to_register(c.arg1, c).encoding;
+    } else if (base_i.type == CR) {
+
+    } else if (base_i.type == CI) {
+        
+    } else if (base_i.type == CSS) {
+
+    } else if (base_i.type == CIW) {
+
+    } else if (base_i.type == CL) {
+
+    } else if (base_i.type == CS) {
+
+    } else if (base_i.type == CA) {
+
+    } else if (base_i.type == CB) {
+
+    } else if (base_i.type == CJ) {
+
     }
 
     DBG(std::cout << "Instruction made" << std::endl;)
@@ -361,9 +387,9 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
     if (fast_eq(c.inst, "li")) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
         // Case 1: imm is a 12-bit signed integer
         int imm;
-        try {
-            imm = to_int(c.arg2);
-        } catch (...) {
+        if (auto num = to_int(c.arg2); num.has_value()) {
+            imm = num.value();
+        } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
         if (imm >= -2048 && imm <= 2047) {
@@ -384,9 +410,9 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
     } else if (fast_eq(c.inst, "la")) { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
         // Case 1: imm is a 12-bit signed integer
         int imm;
-        try {
-            imm = to_int(c.arg2);
-        } catch (...) {
+        if (auto num = to_int(c.arg2); num.has_value()) {
+            imm = num.value();
+        } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
         if (imm >= -2048 && imm <= 2047) {
@@ -470,9 +496,9 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
     } else if (fast_eq(c.inst, "call")) {
         // Case 1: imm is a 12-bit signed integer
         int imm;
-        try {
-            imm = to_int(c.arg1);
-        } catch (...) {
+        if (auto num = to_int(c.arg1); num.has_value()) {
+            imm = num.value();
+        } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg1, c.line, c.column);
         }
         if (imm >= -2048 && imm <= 2047) {
@@ -504,55 +530,6 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         return {make_inst(c)};
     }
     return {};
-}
-
-void parse_this_line(chatastring& this_line, assembly_context& c) {
-    c.inst.clear();
-    c.arg1.clear();
-    c.arg2.clear();
-    c.arg3.clear();
-    c.arg4.clear();
-    c.arg5.clear();
-    auto is_whitespace = [](const char& c) {
-        return c == '\t' || c == ' ';
-    };
-    for (size_t i = 0; i < this_line.size(); i++) {
-        auto ch = [&]() {
-            return this_line.at(i);
-        };
-        for (; i < this_line.size() && is_whitespace(ch()); i++) {
-            c.column++;
-        }
-        for (; i < this_line.size() && !is_whitespace(ch()); i++) {
-            c.inst.push_back(ch());
-            c.column++;
-        }
-        DBG(std::cout << "Instruction candidate: " << c.inst << std::endl;)
-        if (c.inst.front() == '.' || c.inst.front() == '#' || c.inst.back() == ':') {
-            DBG(std::cout << "Looks like this is a label or a comment or a directive" << std::endl;)
-            // if (c.inst.find(generated_label_prefix) != std::string::npos) {
-            if (c.inst.back() == ':') {
-                DBG(std::cout << "Looks like this is a label!" << std::endl;)
-                // c.nodes.push_back(instruction{.imm = string_to_label(c.inst, c), .this_is_label_loc = true});
-                c.nodes.push_back(instruction {.imm = string_to_label(c.inst, c), .imm_purpose = LABEL_NODE});
-            }
-            break;
-        }
-        auto parse_arg = [&](chatastring& arg) {
-            for (; i < this_line.size() && (is_whitespace(ch()) || ch() == ','); i++) {
-                c.column++;
-            }
-            for (; i < this_line.size() && !(is_whitespace(ch()) || ch() == ','); i++) {
-                arg.push_back(ch());
-                c.column++;
-            }
-        };
-        parse_arg(c.arg1);
-        parse_arg(c.arg2);
-        parse_arg(c.arg3);
-        parse_arg(c.arg4);
-        parse_arg(c.arg5);
-    }
 }
 
 void solve_label_offsets(assembly_context& c) {
@@ -697,45 +674,85 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
     return machine_code;
 }
 
+void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
+    c.inst.clear();
+    c.arg1.clear();
+    c.arg2.clear();
+    c.arg3.clear();
+    c.arg4.clear();
+    c.arg5.clear();
+    auto is_whitespace = [](const char& c) {
+        return c == '\t' || c == ' ';
+    };
+    while (i < data.size() && data.at(i) != '\n') {
+        auto ch = [&]() {
+            return data.at(i);
+        };
+        for (; i < data.size() && is_whitespace(ch()) && ch() != '\n'; i++) {
+            c.column++;
+        }
+        for (; i < data.size() && !is_whitespace(ch()) && ch() != '\n'; i++) {
+            c.inst.push_back(ch());
+            c.column++;
+        }
+        DBG(std::cout << "Instruction candidate: " << c.inst << std::endl;)
+        if (c.inst.front() == '.' || c.inst.front() == '#' || c.inst.back() == ':') {
+            DBG(std::cout << "Looks like this is a label or a comment or a directive" << std::endl;)
+            if (c.inst.back() == ':') {
+                DBG(std::cout << "Looks like this is a label!" << std::endl;)
+                c.nodes.push_back(instruction {.imm = string_to_label(c.inst, c), .imm_purpose = LABEL_NODE});
+            }
+            break;
+        }
+        auto parse_arg = [&](chatastring& arg) {
+            for (; i < data.size() && (is_whitespace(ch()) || ch() == ',') && ch() != '\n'; i++) {
+                c.column++;
+            }
+            for (; i < data.size() && !(is_whitespace(ch()) || ch() == ',') && ch() != '\n'; i++) {
+                arg.push_back(ch());
+                c.column++;
+            }
+        };
+        parse_arg(c.arg1);
+        parse_arg(c.arg2);
+        parse_arg(c.arg3);
+        parse_arg(c.arg4);
+        parse_arg(c.arg5);
+    }
+    while (i < data.size() && data.at(i) == '\n') {
+        i++;
+    }
+}
+
 chatavector<uint8_t> assemble_code(const chatastring& data) {
     chatavector<uint8_t> machine_code;
-    chatastring this_line;
     struct assembly_context c;
 
-    auto then = std::chrono::high_resolution_clock::now();
+    //auto then = std::chrono::high_resolution_clock::now();
 
-    for (size_t i = 0; i < data.size(); i++) {
-        this_line.push_back(data.at(i));
-        if (data.at(i) == '\n' || i == data.size() - 1) {
-            if (data.at(i) == '\n') {
-                this_line.pop_back();
-            }
-            parse_this_line(this_line, c);
+    for (size_t i = 0; i < data.size();) {
+            parse_this_line(i, data, c);
             if (auto instrs = make_inst_from_pseudoinst(c); !instrs.empty()) {
                 for (auto& inst : instrs) {
                     c.nodes.push_back(inst);
                 }
             } else {
-                if (auto inst = fast_instr_search(c.inst); inst != -1) {
-                    c.inst_offset = inst;
+                if (c.inst_offset = fast_instr_search(c.inst); c.inst_offset != instr_search_failed) {
                     c.nodes.push_back(make_inst(c));
                 }
             }
-            this_line.clear();
             c.inst_offset = 0;
             c.line++;
             c.column = 0;
-            continue;
-        }
     }
 
     solve_label_offsets(c);
 
     machine_code = generate_machine_code(c);
 
-    auto now = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - then);
-    std::cout << "Assembling took " << duration.count() << "ms" << std::endl;
+    //auto now = std::chrono::high_resolution_clock::now();
+    //auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - then);
+    //std::cout << "Assembling took " << duration.count() << "ms" << std::endl;
 
 #if !defined(DEBUG)
     return machine_code;
