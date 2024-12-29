@@ -677,11 +677,6 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
 
 void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
     c.inst.clear();
-    c.arg1.clear();
-    c.arg2.clear();
-    c.arg3.clear();
-    c.arg4.clear();
-    c.arg5.clear();
     auto is_whitespace = [](const char& c) {
         return c == '\t' || c == ' ';
     };
@@ -706,6 +701,7 @@ void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
             break;
         }
         auto parse_arg = [&](chatastring& arg) {
+            arg.clear();
             for (; i < data.size() && (is_whitespace(ch()) || ch() == ',') && ch() != '\n'; i++) {
                 c.column++;
             }
