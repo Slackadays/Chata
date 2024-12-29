@@ -390,7 +390,8 @@ enum class RVInstructionSet : uint8_t {
     Zifencei,
     Zicsr,
     Zawrs,
-    C
+    C,
+    V
 };
 
 struct special_snowflake_args {

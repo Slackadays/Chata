@@ -45,6 +45,7 @@ struct assembly_context {
     chatastring arg3;
     chatastring arg4;
     chatastring arg5;
+    chatastring arg6;
 };
 
 bool fast_eq(const auto& first, const std::string_view& second) {
@@ -718,6 +719,7 @@ void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
         parse_arg(c.arg3);
         parse_arg(c.arg4);
         parse_arg(c.arg5);
+        parse_arg(c.arg6);
     }
     while (i < data.size() && data.at(i) == '\n') {
         i++;
