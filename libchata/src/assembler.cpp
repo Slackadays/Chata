@@ -147,7 +147,7 @@ uint16_t decode_csr(const chatastring& csr) {
     throw ChataError(ChataErrorType::Compiler, "Invalid CSR " + csr);
 }
 
-bool handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i, assembly_context& c) {
+void handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i, assembly_context& c) {
     using enum RVInstructionID;
     if (base_i.id == FENCE) {
         i.imm |= decode_fence(c.arg1) << 4; // Add pred
@@ -181,17 +181,14 @@ bool handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
         }
-        DBG(std::cout << "CSR instruction made" << std::endl;)
+        DBG(std::cout << "CSRI instruction made" << std::endl;)
     } else if (base_i.id == WRSNTO) {
         i.imm = 0b000000001101; // Set imm to the WRSNTO value
         DBG(std::cout << "WRSNTO instruction made" << std::endl;)
     } else if (base_i.id == WRSSTO) {
         i.imm = 0b000000011101; // Set imm to the WRSSTO value
         DBG(std::cout << "WRSSTO instruction made" << std::endl;)
-    } else {
-        return false;
     }
-    return true;
 }
 
 size_t bytes_in_instruction(const rvinstruction& i) {
@@ -206,6 +203,29 @@ size_t bytes_in_instruction(const rvinstruction& i) {
 
 size_t bytes_in_instruction(const instruction& i) {
     return bytes_in_instruction(instructions.at(i.inst_offset));
+}
+
+std::pair<int, chatastring> decode_offset_plus_reg(const chatastring& str) {
+    int offset = 0;
+    int j = 0;
+    if (str.front() == '-') {
+        j++;
+    }
+    for (; std::isdigit(str.at(j)); j++) {
+        offset = offset * 10 + (str.at(j) - '0');
+    }
+    if (str.front() == '-') {
+        offset = -offset;
+    }
+    if (str.at(j) != '(') {
+        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + str);
+    }
+    j++;
+    chatastring reg;
+    for (; str.at(j) != ')'; j++) {
+        reg.push_back(str.at(j));
+    }
+    return {offset, reg};
 }
 
 instruction make_inst(assembly_context& c) {
@@ -230,67 +250,20 @@ instruction make_inst(assembly_context& c) {
 
     c.instruction_bytes += bytes_in_instruction(base_i);
 
-    if (handle_super_special_snowflakes(i, base_i, c)) {
-        return i;
-    }
-
     using enum RVInstructionFormat;
 
-    if (base_i.type == R) {
-        if (base_i.ssargs.use_imm_for_rs2.has_value() && base_i.ssargs.use_imm_for_rs2.value()) {
-            if (auto num = to_int(c.arg3); num.has_value()) {
-                i.imm = num.value();
-            } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
-            }
+    if (base_i.ssargs.super_special_snowflake) {
+        handle_super_special_snowflakes(i, base_i, c);
+    } else if (base_i.type == R || base_i.type == R4) {
+        if (base_i.type == R) {
+            if (base_i.ssargs.use_imm_for_rs2) {
+                if (auto num = to_int(c.arg3); num.has_value()) {
+                    i.imm = num.value();
+                } else {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+                }
+            }  
         }
-    } else if (base_i.type == I || base_i.type == S) {
-        if (auto num = to_int(c.arg3); num.has_value()) {
-            i.imm = num.value();
-            i.rs1 = string_to_register(c.arg2, c).encoding;
-        } else {
-            // Check if arg2 fits the template offset(reg)
-            int offset = 0;
-            int j = 0;
-            for (; std::isdigit(c.arg2.at(j)); j++) {
-                offset = offset * 10 + (c.arg2.at(j) - '0');
-            }
-            i.imm = offset;
-            if (c.arg2.at(j) != '(') {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
-            }
-            j++;
-            chatastring reg;
-            for (; c.arg2.at(j) != ')'; j++) {
-                reg.push_back(c.arg2.at(j));
-            }
-            i.rs1 = string_to_register(reg, c).encoding;
-        }
-    } else if (base_i.type == B) {
-        if (auto num = to_int(c.arg3); num.has_value()) {
-            i.imm = num.value();
-        } else {
-            i.imm = string_to_label(c.arg3, c);
-            // i.imm_is_label_dest = true;
-            i.imm_purpose = LABEL_DEST;
-        }
-    } else if (base_i.type == U) {
-        if (auto num = to_int(c.arg2); num.has_value()) {
-            i.imm = num.value();
-        } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
-        }
-    } else if (base_i.type == J) {
-        if (auto num = to_int(c.arg2); num.has_value()) {
-            i.imm = num.value();
-        } else {
-            i.imm = string_to_label(c.arg2, c);
-            // i.imm_is_label_dest = true;
-            i.imm_purpose = LABEL_DEST;
-        }
-    }
-
-    if (base_i.type == R || base_i.type == R4) {
         i.rd = string_to_register(c.arg1, c).encoding;
         if (base_i.set == RVInstructionSet::RV32A || base_i.set == RVInstructionSet::RV64A) { // The RV32A and RV64A sets sometimes use registers that look like (a0)
             if (c.arg2.front() == '0') {
@@ -319,7 +292,7 @@ instruction make_inst(assembly_context& c) {
         i.rs1 = string_to_register(c.arg2, c).encoding;
         auto no_rs2 = base_i.ssargs.rs2.has_value();
         if (!no_rs2) {
-            if (base_i.ssargs.use_imm_for_rs2.has_value() && base_i.ssargs.use_imm_for_rs2.value()) {
+            if (base_i.ssargs.use_imm_for_rs2) {
                 i.rs2 = i.imm;
             } else {
                 i.rs2 = string_to_register(c.arg3, c).encoding;
@@ -333,7 +306,7 @@ instruction make_inst(assembly_context& c) {
             } else if (!c.arg5.empty() && !no_rs2) {
                 i.frm = decode_frm(c.arg5);
             } else {
-                if (base_i.ssargs.use_rm_for_funct3.has_value() && base_i.ssargs.use_rm_for_funct3.value()) {
+                if (base_i.ssargs.use_rm_for_funct3) {
                     i.frm = 0b111;
                 }
             }
@@ -342,40 +315,117 @@ instruction make_inst(assembly_context& c) {
             if (!c.arg5.empty()) {
                 i.frm = decode_frm(c.arg5);
             } else {
-                if (base_i.ssargs.use_rm_for_funct3.has_value() && base_i.ssargs.use_rm_for_funct3.value()) {
+                if (base_i.ssargs.use_rm_for_funct3) {
                     i.frm = 0b111;
                 }
             }
         }
-    } else if (base_i.type == I) {
-        i.rd = string_to_register(c.arg1, c).encoding;
-    } else if (base_i.type == S) {
-        i.rs2 = string_to_register(c.arg1, c).encoding;
+    } else if (base_i.type == I || base_i.type == S) {
+        if (auto num = to_int(c.arg3); num.has_value()) {
+            i.imm = num.value();
+            i.rs1 = string_to_register(c.arg2, c).encoding;
+        } else {
+            auto [offset, reg] = decode_offset_plus_reg(c.arg2);
+            i.imm = offset;
+            i.rs1 = string_to_register(reg, c).encoding;
+        }
+        if (base_i.type == I) {
+            i.rd = string_to_register(c.arg1, c).encoding;
+        } else if (base_i.type == S) {
+            i.rs2 = string_to_register(c.arg1, c).encoding;
+        }
     } else if (base_i.type == B) {
+        if (auto num = to_int(c.arg3); num.has_value()) {
+            i.imm = num.value();
+        } else {
+            i.imm = string_to_label(c.arg3, c);
+            i.imm_purpose = LABEL_DEST;
+        }
         i.rs1 = string_to_register(c.arg1, c).encoding;
         i.rs2 = string_to_register(c.arg2, c).encoding;
     } else if (base_i.type == U) {
+        if (auto num = to_int(c.arg2); num.has_value()) {
+            i.imm = num.value();
+        } else {
+            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+        }
         i.rd = string_to_register(c.arg1, c).encoding;
     } else if (base_i.type == J) {
+        if (auto num = to_int(c.arg2); num.has_value()) {
+            i.imm = num.value();
+        } else {
+            i.imm = string_to_label(c.arg2, c);
+            i.imm_purpose = LABEL_DEST;
+        }
         i.rd = string_to_register(c.arg1, c).encoding;
-    } else if (base_i.type == CR) {
-
-    } else if (base_i.type == CI) {
-        
-    } else if (base_i.type == CSS) {
-
-    } else if (base_i.type == CIW) {
-
-    } else if (base_i.type == CL) {
-
-    } else if (base_i.type == CS) {
-
-    } else if (base_i.type == CA) {
-
-    } else if (base_i.type == CB) {
-
     } else if (base_i.type == CJ) {
-
+        if (auto num = to_int(c.arg1); num.has_value()) {
+            i.imm = num.value();
+        } else {
+            i.imm = string_to_label(c.arg1, c);
+            i.imm_purpose = LABEL_DEST;
+        }
+    } else if (base_i.type == CL) {
+        if (auto num = to_int(c.arg3); num.has_value()) {
+            i.imm = num.value();
+            i.rs1 = string_to_register(c.arg2, c).encoding & 0b111;
+        } else {
+            auto [offset, reg] = decode_offset_plus_reg(c.arg2);
+            i.imm = offset;
+            i.rs1 = string_to_register(reg, c).encoding & 0b111;
+        }
+        i.rd = string_to_register(c.arg1, c).encoding & 0b111;
+    } else if (base_i.type == CS) {
+        if (auto num = to_int(c.arg3); num.has_value()) {
+            i.imm = num.value();
+            i.rs1 = string_to_register(c.arg2, c).encoding;
+        } else {
+            auto [offset, reg] = decode_offset_plus_reg(c.arg2);
+            i.imm = offset;
+            i.rs1 = string_to_register(reg, c).encoding;
+        }
+        i.rs2 = string_to_register(c.arg1, c).encoding & 0b111;
+    } else if (base_i.type == CB) {
+        if (auto num = to_int(c.arg2); num.has_value()) {
+            i.imm = num.value();
+        } else {
+            i.imm = string_to_label(c.arg2, c);
+            i.imm_purpose = LABEL_NODE;
+        }
+        i.rs1 = string_to_register(c.arg1, c).encoding;
+    } else if (base_i.type == CR) {
+        i.rd = string_to_register(c.arg1, c).encoding;
+        if (base_i.ssargs.rs2.has_value()) {
+            i.rs2 = base_i.ssargs.rs2.value();
+        } else {
+            i.rs2 = string_to_register(c.arg2, c).encoding;
+        }
+    } else if (base_i.type == CI) {
+        i.rd = string_to_register(c.arg1, c).encoding;
+        if (auto num = to_int(c.arg2); num.has_value()) {
+            i.imm = num.value();
+        } else {
+            auto [offset, reg] = decode_offset_plus_reg(c.arg2); // discard reg
+            i.imm = offset;
+        }
+    } else if (base_i.type == CSS) {
+        i.rs2 = string_to_register(c.arg1, c).encoding;
+        if (auto num = to_int(c.arg2); num.has_value()) {
+            i.imm = num.value();
+        } else {
+            auto [offset, reg] = decode_offset_plus_reg(c.arg2); // discard reg
+            i.imm = offset;
+        }
+    } else if (base_i.type == CIW) {
+        i.rd = string_to_register(c.arg1, c).encoding & 0b111; // Only use the lower 3 bits
+        if (auto num = to_int(c.arg2); num.has_value()) {
+            i.imm = num.value();
+        } else {
+            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+        }
+    } else if (base_i.type == CA) {
+        i.rd = string_to_register(c.arg1, c).encoding;
+        i.rs2 = string_to_register(c.arg2, c).encoding;
     }
 
     DBG(std::cout << "Instruction made" << std::endl;)
@@ -580,89 +630,185 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
         }
         uint32_t inst = 0;
         size_t i_size = 0;
-        auto base_inst = instructions.at(i.inst_offset);
-        inst |= base_inst.opcode;
+        auto base_i = instructions.at(i.inst_offset);
+        inst |= base_i.opcode;
         using enum RVInstructionFormat;
-        if (base_inst.type == R) {
-            DBG(std::cout << "Encoding R-type instruction with name " << base_inst.name << std::endl;)
+        using enum RVInstructionID;
+        if (base_i.type == R) {
+            DBG(std::cout << "Encoding R-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 7; // Add rd
-            if (base_inst.ssargs.use_rm_for_funct3.has_value() && base_inst.ssargs.use_rm_for_funct3.value()) {
+            if (base_i.ssargs.use_rm_for_funct3) {
                 inst |= i.frm << 12; // Add frm
             } else {
-                inst |= (base_inst.funct & 0b111) << 12; // Add funct3
+                inst |= (base_i.funct & 0b111) << 12; // Add funct3
             }
             inst |= i.rs1 << 15;                  // Add rs1
             inst |= i.rs2 << 20;                  // Add rs2
-            inst |= (base_inst.funct >> 3) << 25; // Add funct7
+            inst |= (base_i.funct >> 3) << 25; // Add funct7
             i_size = 4;
-        } else if (base_inst.type == I) {
-            DBG(std::cout << "Encoding I-type instruction with name " << base_inst.name << std::endl;)
+        } else if (base_i.type == I) {
+            DBG(std::cout << "Encoding I-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 7;             // Add rd
-            inst |= base_inst.funct << 12; // Add funct3
+            inst |= base_i.funct << 12; // Add funct3
             inst |= i.rs1 << 15;           // Add rs1
             inst |= i.imm << 20;           // Add imm
             i_size = 4;
-        } else if (base_inst.type == S) {
-            DBG(std::cout << "Encoding S-type instruction with name " << base_inst.name << std::endl;)
+        } else if (base_i.type == S) {
+            DBG(std::cout << "Encoding S-type instruction with name " << base_i.name << std::endl;)
             inst |= (i.imm & 0b11111) << 7; // Add imm[4:0]
-            inst |= base_inst.funct << 12;  // Add funct3
+            inst |= base_i.funct << 12;  // Add funct3
             inst |= i.rs1 << 15;            // Add rs1
             inst |= i.rs2 << 20;            // Add rs2
             inst |= (i.imm >> 5) << 25;     // Add imm[11:5]
             i_size = 4;
-        } else if (base_inst.type == B) {
-            DBG(std::cout << "Encoding B-type instruction with name " << base_inst.name << std::endl;)
+        } else if (base_i.type == B) {
+            DBG(std::cout << "Encoding B-type instruction with name " << base_i.name << std::endl;)
             inst |= ((i.imm >> 11) & 0b1) << 7;      // Add imm[11]
             inst |= ((i.imm >> 1) & 0b1111) << 8;    // Add imm[4:1]
-            inst |= base_inst.funct << 12;           // Add funct3
+            inst |= base_i.funct << 12;           // Add funct3
             inst |= i.rs1 << 15;                     // Add rs1
             inst |= i.rs2 << 20;                     // Add rs2
             inst |= ((i.imm >> 5) & 0b111111) << 25; // Add imm[10:5]
             inst |= ((i.imm >> 12) & 0b1) << 31;     // Add imm[12]
             i_size = 4;
-        } else if (base_inst.type == U) {
-            DBG(std::cout << "Encoding U-type instruction with name " << base_inst.name << std::endl;)
+        } else if (base_i.type == U) {
+            DBG(std::cout << "Encoding U-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 7;   // Add rd
             inst |= i.imm << 12; // Add imm[31:12]
             i_size = 4;
-        } else if (base_inst.type == J) {
-            DBG(std::cout << "Encoding J-type instruction with name " << base_inst.name << std::endl;)
+        } else if (base_i.type == J) {
+            DBG(std::cout << "Encoding J-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 7;                           // Add rd
             inst |= ((i.imm >> 12) & 0b11111111) << 12;  // Add imm[19:12]
             inst |= ((i.imm >> 11) & 0b1) << 20;         // Add imm[11]
             inst |= ((i.imm >> 1) & 0b1111111111) << 21; // Add imm[10:1]
             inst |= ((i.imm >> 20) & 0b1) << 31;         // Add imm[20]
             i_size = 4;
-        } else if (base_inst.type == R4) {
-            DBG(std::cout << "Encoding R4-type instruction with name " << base_inst.name << std::endl;)
+        } else if (base_i.type == R4) {
+            DBG(std::cout << "Encoding R4-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 7; // Add rd
-            if (base_inst.ssargs.use_rm_for_funct3.has_value() && base_inst.ssargs.use_rm_for_funct3.value()) {
+            if (base_i.ssargs.use_rm_for_funct3) {
                 inst |= i.frm << 12; // Add frm
             } else {
-                inst |= (base_inst.funct & 0b111) << 12; // Add funct3
+                inst |= (base_i.funct & 0b111) << 12; // Add funct3
             }
             inst |= i.rs1 << 15;                  // Add rs1
             inst |= i.rs2 << 20;                  // Add rs2
-            inst |= (base_inst.funct >> 3) << 25; // Add funct2
+            inst |= (base_i.funct >> 3) << 25; // Add funct2
             inst |= i.rs3 << 27;                  // Add rs3
             i_size = 4;
-        } else if (base_inst.type == CR) {
-
-        } else if (base_inst.type == CI) {
-
-        } else if (base_inst.type == CSS) {
-
-        } else if (base_inst.type == CIW) {
-
-        } else if (base_inst.type == CL) {
-
-        } else if (base_inst.type == CS) {
-
-        } else if (base_inst.type == CA) {
-
-        } else if (base_inst.type == CB) {
-
-        } else if (base_inst.type == CJ) {
+        } else if (base_i.type == CI) {
+            DBG(std::cout << "Encoding CI-type instruction with name " << base_i.name << std::endl;)
+            if (base_i.id == CLWSP || base_i.id == CFLWSP) { // offset[4:2|7:6]
+                inst |= ((i.imm >> 6) & 0b11) << 2; // Add offset[7:6]
+                inst |= ((i.imm >> 2) & 0b1111) << 4; // Add offset[4:2]
+            } else if (base_i.id == CLDSP || base_i.id == CFLDSP) { // offset[4:3|8:6]
+                inst |= ((i.imm >> 6) & 0b111) << 2; // Add offset[8:6]
+                inst |= ((i.imm >> 3) & 0b11) << 5; // Add offset[4:3]
+            } else { // offset[4|9:6]
+                inst |= ((i.imm >> 6) & 0b1111) << 2; // Add offset[9:6]
+                inst |= ((i.imm >> 4) & 0b1) << 6; // Add offset[4]
+            }
+            inst |= i.rd << 7;             // Add rd
+            inst |= ((i.imm >> 5) & 0b1) << 12; // Add offset[5]
+            inst |= base_i.funct << 13; // Add funct3
+            i_size = 2;
+        } else if (base_i.type == CR) {
+            DBG(std::cout << "Encoding CR-type instruction with name " << base_i.name << std::endl;)
+            inst |= i.rs2 << 2; // Add rs2
+            inst |= i.rd << 7;  // Add rd
+            inst |= base_i.funct << 12; // Add funct4
+            i_size = 2;
+        } else if (base_i.type == CSS) {
+            DBG(std::cout << "Encoding CSS-type instruction with name " << base_i.name << std::endl;)
+            inst |= i.rs2 << 2; // Add rs2
+            if (base_i.id == CSWSP || base_i.id == CFSWSP) { // offset[5:2|7:6]
+                inst |= ((i.imm >> 6) & 0b11) << 7; // Add offset[7:6]
+                inst |= ((i.imm >> 2) & 0b1111) << 9; // Add offset[5:2]
+            } else if (base_i.id == CSDSP || base_i.id == CFSDSP) { // offset[5:3|8:6]
+                inst |= ((i.imm >> 6) & 0b111) << 7; // Add offset[8:6]
+                inst |= ((i.imm >> 3) & 0b111) << 10; // Add offset[5:3]
+            } else { // offset[5:4|9:6]
+                inst |= ((i.imm >> 6) & 0b1111) << 7; // Add offset[9:6]
+                inst |= ((i.imm >> 4) & 0b11) << 11; // Add offset[5:4]
+            }
+            inst |= base_i.funct << 13; // Add funct3
+            i_size = 2;
+        } else if (base_i.type == CIW) {
+            DBG(std::cout << "Encoding CIW-type instruction with name " << base_i.name << std::endl;)
+            inst |= i.rd << 2; // Add rd' (just 3 bits)
+            inst |= ((i.imm >> 3) & 0b1) << 5; // Add nzuimm[3]
+            inst |= ((i.imm >> 2) & 0b1) << 6; // Add nzuimm[2]
+            inst |= ((i.imm >> 6) & 0b1111) << 7; // Add nzuimm[9:6]
+            inst |= ((i.imm >> 4) & 0b11) << 11; // Add nzuimm[5:4]
+            inst |= base_i.funct << 13; // Add funct3
+            i_size = 2;
+        } else if (base_i.type == CL) {
+            DBG(std::cout << "Encoding CL-type instruction with name " << base_i.name << std::endl;)
+            inst |= i.rd << 2; // Add rd' (just 3 bits)
+            if (base_i.id == CLW || base_i.id == CFLW) { // offset[2|6]
+                inst |= ((i.imm >> 6) & 0b1) << 5; // Add offset[6]
+                inst |= ((i.imm >> 2) & 0b1) << 6; // Add offset[2]
+            } else if (base_i.id == CLD || base_i.id == CLQ || base_i.id == CFLD) { //offset[7:6]
+                inst |= ((i.imm >> 6) & 0b11) << 5; // Add offset[7:6]
+            }
+            inst |= i.rs1 << 7; // Add rs1' (just 3 bits)
+            if (base_i.id == CLW || base_i.id == CLD || base_i.id == CFLW || base_i.id == CFLD) { // offset[5:3]
+                inst |= ((i.imm >> 3) & 0b111) << 10; // Add offset[5:3]
+            } else if (base_i.id == CLQ) { // offset[5|4|8]
+                inst |= ((i.imm >> 8) & 0b1) << 10; // Add offset[8]
+                inst |= ((i.imm >> 4) & 0b1) << 11; // Add offset[4]
+                inst |= ((i.imm >> 5) & 0b1) << 12; // Add offset[5]
+            }
+            inst |= base_i.funct << 13; // Add funct3
+            i_size = 2;
+        } else if (base_i.type == CS) {
+            DBG(std::cout << "Encoding CS-type instruction with name " << base_i.name << std::endl;)
+            inst |= i.rs2 << 2; // Add rs2' (just 3 bits)
+            if (base_i.id == CSW || base_i.id == CFSW) { // offset[2|6]
+                inst |= ((i.imm >> 6) & 0b1) << 5; // Add offset[6]
+                inst |= ((i.imm >> 2) & 0b1) << 6; // Add offset[2]
+            } else if (base_i.id == CSD || base_i.id == CSQ || base_i.id == CFSD) { //offset[7:6]
+                inst |= ((i.imm >> 6) & 0b11) << 5; // Add offset[7:6]
+            }
+            inst |= i.rs1 << 7; // Add rs1' (just 3 bits)
+            if (base_i.id == CSW || base_i.id == CSD || base_i.id == CFSW || base_i.id == CFSD) { // offset[5:3]
+                inst |= ((i.imm >> 3) & 0b111) << 10; // Add offset[5:3]
+            } else if (base_i.id == CSQ) { // offset[5|4|8]
+                inst |= ((i.imm >> 8) & 0b1) << 10; // Add offset[8]
+                inst |= ((i.imm >> 4) & 0b1) << 11; // Add offset[4]
+                inst |= ((i.imm >> 5) & 0b1) << 12; // Add offset[5]
+            }
+            inst |= base_i.funct << 13; // Add funct3
+            i_size = 2;
+        } else if (base_i.type == CA) {
+            DBG(std::cout << "Encoding CA-type instruction with name " << base_i.name << std::endl;)
+            inst |= i.rs2 << 2; // Add rs2' (just 3 bits)
+            inst |= base_i.funct << 5; // Add funct2
+            inst |= i.rd << 7; // Add rd' (just 3 bits)
+            inst |= (base_i.funct >> 2) << 10; // Add funct6
+            i_size = 2;
+        } else if (base_i.type == CB) {
+            DBG(std::cout << "Encoding CB-type instruction with name " << base_i.name << std::endl;)
+            inst |= ((i.imm >> 5) & 0b1) << 2; // Add offset[5]
+            inst |= ((i.imm >> 1) & 0b11) << 3; // Add offset[2:1]
+            inst |= ((i.imm >> 6) & 0b11) << 5; // Add offset[7:6]
+            inst |= i.rs1 << 7; // Add rs1' (just 3 bits)
+            inst |= ((i.imm >> 3) & 0b11) << 10; // Add offset[4:3]
+            inst |= ((i.imm >> 8) & 0b1) << 12; // Add offset[8]
+            inst |= base_i.funct << 13; // Add funct3
+            i_size = 2;
+        } else if (base_i.type == CJ) {
+            DBG(std::cout << "Encoding CJ-type instruction with name " << base_i.name << std::endl;)
+            inst |= ((i.imm >> 5) & 0b1) << 2; // Add offset[5]
+            inst |= ((i.imm >> 1) & 0b111) << 3; // Add offset[3:1]
+            inst |= ((i.imm >> 7) & 0b1) << 6; // Add offset[7]
+            inst |= ((i.imm >> 6) & 0b1) << 7; // Add offset[6]
+            inst |= ((i.imm >> 10) & 0b1) << 8; // Add offset[10]
+            inst |= ((i.imm >> 8) & 0b11) << 9; // Add offset[9:8]
+            inst |= ((i.imm >> 4) & 0b1) << 11; // Add offset[4]
+            inst |= ((i.imm >> 11) & 0b1) << 12; // Add offset[11]
+            inst |= base_i.funct << 13; // Add funct3
         }
         if (i_size == 4) {
             reinterpret_cast<uint32_t&>(machine_code.data()[offset]) = inst;
@@ -767,7 +913,7 @@ chatavector<uint8_t> assemble_code(const chatastring& data) {
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as -march=rv64gqc temp.s -o temp.o");
+    int res = std::system("riscv64-linux-gnu-as -march=rv32gdc temp.s -o temp.o");
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)

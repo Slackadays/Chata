@@ -19,7 +19,7 @@ void as(std::string_view input, uint32_t expected_output) {
     uint32_t result_int = 0;
 
     for (size_t i = 0; i < result.size(); i++) {
-        result_int |= static_cast<uint32_t>(result[result.size() - i - 1]) << (i * 8);
+        result_int |= static_cast<uint32_t>(result[result.size() - i - 1]) << (i * 8); // Assign everything in reverse
     }
 
     if (result_int != expected_output) {
@@ -43,19 +43,30 @@ int main() {
     as("auipc t0, 100", 0x97420600);
     as("jal zero, 4", 0x6f004000);
     as("jalr zero, 4(a0)", 0x67004500);
+    as("jalr x0, a0, 4", 0x67004500);
+    as("jalr x0, -800(a0)", 0x670005ce);
+    as("jalr x0, a0, -800", 0x670005ce);
     as("beq s1, t6, 40", 0x6384f403);
     as("bne s0, a2, 36", 0x6312c402);
     as("blt t4, t5, 16", 0x6398ee01);
     as("bge t3, t2, 12", 0x63467e00);
     as("bltu t1, t0, 8", 0x63545300);
     as("bgeu s2, s3, 4", 0x63623901);
+    as("lb a0, a1, 0", 0x03850500);
     as("lb a0, 0(a1)", 0x03850500);
+    as("lh a1, a2, 0", 0x83150600);
     as("lh a1, 0(a2)", 0x83150600);
+    as("lw a2, a3, 0", 0x03a60600);
     as("lw a2, 0(a3)", 0x03a60600);
+    as("lbu a3, a4, 0", 0x83460700);
     as("lbu a3, 0(a4)", 0x83460700);
+    as("lhu a4, a5, 0", 0x03d70700);
     as("lhu a4, 0(a5)", 0x03d70700);
+    as("sb a5, a6, 0", 0x2300f800);
     as("sb a5, 0(a6)", 0x2300f800);
+    as("sh a6, a7, 0", 0x23900801);
     as("sh a6, 0(a7)", 0x23900801);
+    as("sw a7, s0, 0", 0x23201401);
     as("sw a7, 0(s0)", 0x23201401);
     as("addi a0, a1, 10", 0x1385a500);
     as("addi a0, a1, -10", 0x138565ff);
@@ -506,6 +517,25 @@ int main() {
     as("csrrci t0, mstatus, 8", 0xf3720430);
     as("wrs.nto", 0x7300d000);
     as("wrs.sto", 0x7300d001);
+    as("c.lwsp a0, 0", 0x0245);
+    as("c.lwsp a0, 0(sp)", 0x0245);
+    as("c.ldsp a1, 8", 0xa265);
+    as("c.ldsp a1, 8(sp)", 0xa265);
+    as("c.flwsp f0, 0", 0x0260);
+    as("c.flwsp f0, 0(sp)", 0x0260);
+    as("c.fldsp f1, 8", 0xa220);
+    as("c.fldsp f1, 8(sp)", 0xa220);
+    as("c.swsp a2, 0", 0x32c0);
+    as("c.swsp a2, 0(sp)", 0x32c0);
+    as("c.sdsp a3, 8", 0x36e4);
+    as("c.sdsp a3, 8(sp)", 0x36e4);
+    as("c.fswsp f4, 0", 0x12e0);
+    as("c.fswsp f4, 0(sp)", 0x12e0);
+    as("c.fsdsp f5, 8", 0x16a4);
+    as("c.fsdsp f5, 8(sp)", 0x16a4);
+    as("c.lw x8, x9", 0x8040);
+    as("c.lw x8, (x9)", 0x8040);
+    as("c.lw x8, 0(x9)", 0x8040);
 
     std::cout << passed_tests << " tests passed, " << failed_tests << " tests failed, " << passed_tests + failed_tests << " tests total" << std::endl;
 
