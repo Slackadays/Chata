@@ -308,22 +308,18 @@ enum class RVInstructionID : uint16_t {
     WRSSTO,
     CLWSP, // C
     CLDSP,
-    CLQSP,
     CFLWSP,
     CFLDSP,
     CSWSP,
     CSDSP,
-    CSQSP,
     CFSWSP,
     CFSDSP,
     CLW,
     CLD,
-    CLQ,
     CFLW,
     CFLD,
     CSW,
     CSD,
-    CSQ,
     CFSW,
     CFSD,
     CJump,
@@ -411,6 +407,6 @@ struct rvinstruction {
     special_snowflake_args ssargs = {};
 };
 
-extern const std::array<rvinstruction, 339> instructions;
+extern const std::array<rvinstruction, 335> instructions;
 
 } // namespace libchata_internal

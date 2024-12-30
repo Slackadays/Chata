@@ -749,17 +749,11 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             if (base_i.id == CLW || base_i.id == CFLW) { // offset[2|6]
                 inst |= ((i.imm >> 6) & 0b1) << 5; // Add offset[6]
                 inst |= ((i.imm >> 2) & 0b1) << 6; // Add offset[2]
-            } else if (base_i.id == CLD || base_i.id == CLQ || base_i.id == CFLD) { //offset[7:6]
+            } else if (base_i.id == CLD || base_i.id == CFLD) { //offset[7:6]
                 inst |= ((i.imm >> 6) & 0b11) << 5; // Add offset[7:6]
             }
             inst |= i.rs1 << 7; // Add rs1' (just 3 bits)
-            if (base_i.id == CLW || base_i.id == CLD || base_i.id == CFLW || base_i.id == CFLD) { // offset[5:3]
-                inst |= ((i.imm >> 3) & 0b111) << 10; // Add offset[5:3]
-            } else if (base_i.id == CLQ) { // offset[5|4|8]
-                inst |= ((i.imm >> 8) & 0b1) << 10; // Add offset[8]
-                inst |= ((i.imm >> 4) & 0b1) << 11; // Add offset[4]
-                inst |= ((i.imm >> 5) & 0b1) << 12; // Add offset[5]
-            }
+            inst |= ((i.imm >> 3) & 0b111) << 10; // Add offset[5:3]
             inst |= base_i.funct << 13; // Add funct3
             i_size = 2;
         } else if (base_i.type == CS) {
@@ -768,17 +762,11 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             if (base_i.id == CSW || base_i.id == CFSW) { // offset[2|6]
                 inst |= ((i.imm >> 6) & 0b1) << 5; // Add offset[6]
                 inst |= ((i.imm >> 2) & 0b1) << 6; // Add offset[2]
-            } else if (base_i.id == CSD || base_i.id == CSQ || base_i.id == CFSD) { //offset[7:6]
+            } else if (base_i.id == CSD || base_i.id == CFSD) { //offset[7:6]
                 inst |= ((i.imm >> 6) & 0b11) << 5; // Add offset[7:6]
             }
             inst |= i.rs1 << 7; // Add rs1' (just 3 bits)
-            if (base_i.id == CSW || base_i.id == CSD || base_i.id == CFSW || base_i.id == CFSD) { // offset[5:3]
-                inst |= ((i.imm >> 3) & 0b111) << 10; // Add offset[5:3]
-            } else if (base_i.id == CSQ) { // offset[5|4|8]
-                inst |= ((i.imm >> 8) & 0b1) << 10; // Add offset[8]
-                inst |= ((i.imm >> 4) & 0b1) << 11; // Add offset[4]
-                inst |= ((i.imm >> 5) & 0b1) << 12; // Add offset[5]
-            }
+            inst |= ((i.imm >> 3) & 0b111) << 10; // Add offset[5:3]
             inst |= base_i.funct << 13; // Add funct3
             i_size = 2;
         } else if (base_i.type == CA) {

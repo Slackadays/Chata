@@ -12,7 +12,7 @@ using enum RVInstructionID;
 using enum RVInstructionSet;
 using std::nullopt;
 
-const std::array<rvinstruction, 339> instructions = {
+const std::array<rvinstruction, 335> instructions = {
         {{"lui", U, LUI, 0b0110111, 0b000, RV32I},
          {"auipc", U, AUIPC, 0b0010111, 0b000, RV32I},
          {"jal", J, JAL, 0b1101111, 0b000, RV32I},

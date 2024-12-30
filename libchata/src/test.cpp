@@ -533,7 +533,7 @@ int main() {
     as("c.fswsp f4, 0(sp)", 0x12e0);
     as("c.fsdsp f5, 8", 0x16a4);
     as("c.fsdsp f5, 8(sp)", 0x16a4);
-    as("c.lw x8, x9", 0x8040);
+    as("c.lw x8, x9, 0", 0x8040);
     as("c.lw x8, (x9)", 0x8040);
     as("c.lw x8, 0(x9)", 0x8040);
 
