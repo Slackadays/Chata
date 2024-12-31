@@ -188,6 +188,12 @@ void handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i
     } else if (base_i.id == WRSSTO) {
         i.imm = 0b000000011101; // Set imm to the WRSSTO value
         DBG(std::cout << "WRSSTO instruction made" << std::endl;)
+    } else if (base_i.id == CNOP) {
+        i.imm = 0b000000000000; // Set imm to the CNOP value
+        DBG(std::cout << "CNOP instruction made" << std::endl;)
+    } else if (base_i.id == CEBREAK) {
+        i.imm = 0b000000000000;
+        DBG(std::cout << "CEBREAK instruction made" << std::endl;)
     }
 }
 
@@ -378,11 +384,11 @@ instruction make_inst(assembly_context& c) {
     } else if (base_i.type == CS) {
         if (auto num = to_int(c.arg3); num.has_value()) {
             i.imm = num.value();
-            i.rs1 = string_to_register(c.arg2, c).encoding;
+            i.rs1 = string_to_register(c.arg2, c).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2);
             i.imm = offset;
-            i.rs1 = string_to_register(reg, c).encoding;
+            i.rs1 = string_to_register(reg, c).encoding & 0b111;
         }
         i.rs2 = string_to_register(c.arg1, c).encoding & 0b111;
     } else if (base_i.type == CB) {
@@ -392,7 +398,7 @@ instruction make_inst(assembly_context& c) {
             i.imm = string_to_label(c.arg2, c);
             i.imm_purpose = LABEL_NODE;
         }
-        i.rs1 = string_to_register(c.arg1, c).encoding;
+        i.rs1 = string_to_register(c.arg1, c).encoding & 0b111;
     } else if (base_i.type == CR) {
         i.rd = string_to_register(c.arg1, c).encoding;
         if (base_i.ssargs.rs2.has_value()) {
@@ -424,8 +430,8 @@ instruction make_inst(assembly_context& c) {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
     } else if (base_i.type == CA) {
-        i.rd = string_to_register(c.arg1, c).encoding;
-        i.rs2 = string_to_register(c.arg2, c).encoding;
+        i.rd = string_to_register(c.arg1, c).encoding & 0b111; // Only use the lower 3 bits
+        i.rs2 = string_to_register(c.arg2, c).encoding & 0b111;
     }
 
     DBG(std::cout << "Instruction made" << std::endl;)
@@ -702,16 +708,34 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             if (base_i.id == CLWSP || base_i.id == CFLWSP) { // offset[4:2|7:6]
                 inst |= ((i.imm >> 6) & 0b11) << 2; // Add offset[7:6]
                 inst |= ((i.imm >> 2) & 0b1111) << 4; // Add offset[4:2]
+                inst |= ((i.imm >> 5) & 0b1) << 12; // Add offset[5]
             } else if (base_i.id == CLDSP || base_i.id == CFLDSP) { // offset[4:3|8:6]
                 inst |= ((i.imm >> 6) & 0b111) << 2; // Add offset[8:6]
                 inst |= ((i.imm >> 3) & 0b11) << 5; // Add offset[4:3]
+                inst |= ((i.imm >> 5) & 0b1) << 12; // Add offset[5]
+            } else if (base_i.id == CLI || base_i.id == CADDI || base_i.id == CADDIW || base_i.id == CSLLI) { // imm[5], imm[4:0]
+                inst |= (i.imm & 0b11111) << 2; // Add imm[4:0]
+                inst |= ((i.imm >> 5) & 0b1) << 12; // Add imm[5]
+            } else if (base_i.id == CLUI) { // nzimm[17], imm[16:12]
+                inst |= ((i.imm >> 12) & 0b11111) << 2; // Add imm[16:12]
+                inst |= ((i.imm >> 17) & 0b1) << 12; // Add nzimm[17]
+            } else if (base_i.id == CADDI16SP) { // nzimm[9], nzimm[4|6|8:7|5]
+                inst |= ((i.imm >> 5) & 0b1) << 2; // Add nzimm[5]
+                inst |= ((i.imm >> 7) & 0b11) << 3; // Add nzimm[8:7]
+                inst |= ((i.imm >> 6) & 0b1) << 5; // Add nzimm[6]
+                inst |= ((i.imm >> 4) & 0b1) << 6; // Add nzimm[4]
+                inst |= ((i.imm >> 9) & 0b1) << 12; // Add nzimm[9]
             } else { // offset[4|9:6]
                 inst |= ((i.imm >> 6) & 0b1111) << 2; // Add offset[9:6]
                 inst |= ((i.imm >> 4) & 0b1) << 6; // Add offset[4]
+                inst |= ((i.imm >> 5) & 0b1) << 12; // Add offset[5]
             }
             inst |= i.rd << 7;             // Add rd
-            inst |= ((i.imm >> 5) & 0b1) << 12; // Add offset[5]
-            inst |= base_i.funct << 13; // Add funct3
+            if (base_i.id == CEBREAK) {
+                inst |= base_i.funct << 12; // Add funct4
+            } else {
+                inst |= base_i.funct << 13; // Add funct3
+            }
             i_size = 2;
         } else if (base_i.type == CR) {
             DBG(std::cout << "Encoding CR-type instruction with name " << base_i.name << std::endl;)
@@ -772,19 +796,29 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
         } else if (base_i.type == CA) {
             DBG(std::cout << "Encoding CA-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rs2 << 2; // Add rs2' (just 3 bits)
-            inst |= base_i.funct << 5; // Add funct2
+            inst |= (base_i.funct & 0b11) << 5; // Add funct2
             inst |= i.rd << 7; // Add rd' (just 3 bits)
             inst |= (base_i.funct >> 2) << 10; // Add funct6
             i_size = 2;
         } else if (base_i.type == CB) {
             DBG(std::cout << "Encoding CB-type instruction with name " << base_i.name << std::endl;)
-            inst |= ((i.imm >> 5) & 0b1) << 2; // Add offset[5]
-            inst |= ((i.imm >> 1) & 0b11) << 3; // Add offset[2:1]
-            inst |= ((i.imm >> 6) & 0b11) << 5; // Add offset[7:6]
+            if (base_i.id == CSRLI || base_i.id == CSRAI || base_i.id == CANDI) { // shamt[5], shamt[4:0]
+                inst |= (i.imm & 0b11111) << 2; // Add shamt[4:0]
+                inst |= ((i.imm >> 5) & 0b1) << 12; // Add shamt[5]
+            } else {
+                inst |= ((i.imm >> 5) & 0b1) << 2; // Add offset[5]
+                inst |= ((i.imm >> 1) & 0b11) << 3; // Add offset[2:1]
+                inst |= ((i.imm >> 6) & 0b11) << 5; // Add offset[7:6]
+                inst |= ((i.imm >> 3) & 0b11) << 10; // Add offset[4:3]
+                inst |= ((i.imm >> 8) & 0b1) << 12; // Add offset[8]
+            }
             inst |= i.rs1 << 7; // Add rs1' (just 3 bits)
-            inst |= ((i.imm >> 3) & 0b11) << 10; // Add offset[4:3]
-            inst |= ((i.imm >> 8) & 0b1) << 12; // Add offset[8]
-            inst |= base_i.funct << 13; // Add funct3
+            if (base_i.id == CSRLI || base_i.id == CSRAI || base_i.id == CANDI) {
+                inst |= (base_i.funct & 0b11) << 10; // Add funct2
+                inst |= ((base_i.funct >> 2) & 0b111) << 13; // Add funct3
+            } else {
+                inst |= base_i.funct << 13; // Add funct3
+            }
             i_size = 2;
         } else if (base_i.type == CJ) {
             DBG(std::cout << "Encoding CJ-type instruction with name " << base_i.name << std::endl;)
@@ -797,6 +831,7 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= ((i.imm >> 4) & 0b1) << 11; // Add offset[4]
             inst |= ((i.imm >> 11) & 0b1) << 12; // Add offset[11]
             inst |= base_i.funct << 13; // Add funct3
+            i_size = 2;
         }
         if (i_size == 4) {
             reinterpret_cast<uint32_t&>(machine_code.data()[offset]) = inst;
@@ -901,7 +936,7 @@ chatavector<uint8_t> assemble_code(const chatastring& data) {
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as -march=rv32gdc temp.s -o temp.o");
+    int res = std::system("riscv64-linux-gnu-as -march=rv64gdc temp.s -o temp.o");
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)

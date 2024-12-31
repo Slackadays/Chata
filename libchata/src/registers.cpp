@@ -11,9 +11,9 @@ using enum RegisterID;
 const std::array<rvregister, 96> registers = {
         {{"x0", "zero", Integer, x0, 0},
          {"x1", "ra", Integer, x1, 1},
-         {"x2", "fp", Integer, x2, 2},
-         {"x3", "sp", Integer, x3, 3},
-         {"x4", "gp", Integer, x4, 4},
+         {"x2", "sp", Integer, x2, 2},
+         {"x3", "gp", Integer, x3, 3},
+         {"x4", "tp", Integer, x4, 4},
          {"x5", "t0", Integer, x5, 5},
          {"x6", "t1", Integer, x6, 6},
          {"x7", "t2", Integer, x7, 7},

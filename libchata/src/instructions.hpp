@@ -951,7 +951,6 @@ enum class RVInstructionID : uint16_t {
     VMSETM,
     VMNOTM,
     VCPOPM,
-    VCPOPM,
     VFIRSTM,
     VMSBFM,
     VMSIFM,

@@ -159,9 +159,6 @@ const uint8_t fast_reg_search(const chatastring& reg) {
         if (reg[1] == '9') {
             if (reg.size() < 3) return 41;
         }
-        if (reg[1] == 'p') {
-            if (reg.size() < 3) return 2;
-        }
         if (reg[1] == 's') {
             if (reg.size() < 3) return reg_search_failed;
             if (reg[2] == '0') {
@@ -280,7 +277,7 @@ const uint8_t fast_reg_search(const chatastring& reg) {
             if (reg.size() < 3) return 25;
         }
         if (reg[1] == 'p') {
-            if (reg.size() < 3) return 3;
+            if (reg.size() < 3) return 2;
         }
     }
     if (reg[0] == 't') {
@@ -306,11 +303,14 @@ const uint8_t fast_reg_search(const chatastring& reg) {
         if (reg[1] == '6') {
             if (reg.size() < 3) return 31;
         }
+        if (reg[1] == 'p') {
+            if (reg.size() < 3) return 4;
+        }
     }
     if (reg[0] == 'g') {
         if (reg.size() < 2) return reg_search_failed;
         if (reg[1] == 'p') {
-            if (reg.size() < 3) return 4;
+            if (reg.size() < 3) return 3;
         }
     }
     if (reg[0] == 'r') {
