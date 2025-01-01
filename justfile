@@ -17,7 +17,7 @@ build-lib type='Release':
 
   if [ ! -d "libchata/build/CMakeFiles" ]; then cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE="{{type}}"; fi
 
-  cd libchata/build; cmake --build . -j 4
+  cd libchata/build; cmake --build . -j 10
 
   cd libchata/build; sudo cmake --install .
 

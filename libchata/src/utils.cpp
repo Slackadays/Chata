@@ -52,7 +52,36 @@ chatastring to_chatastring(int num) {
 
 std::optional<int> to_int(const chatastring& str) {
     int result = 0;
-    auto res = std::from_chars(str.data(), str.data() + str.size(), result);
+    std::from_chars_result res;
+    if (str.size() > 2) {
+        if (str[0] == '0') { 
+            if (str[1] == 'x' || str[1] == 'X') {
+                res = std::from_chars(str.data() + 2, str.data() + str.size(), result, 16);
+            } else if (str[1] == 'b' || str[1] == 'B') {
+                res = std::from_chars(str.data() + 2, str.data() + str.size(), result, 2);
+            } else {
+                res = std::from_chars(str.data(), str.data() + str.size(), result);
+            }
+        } else if (str[0] == '-' && str[1] == '0') {
+            if (str.size() > 3) {
+                if (str[2] == 'x' || str[2] == 'X') {
+                    res = std::from_chars(str.data() + 3, str.data() + str.size(), result, 16);
+                    result = -result;
+                } else if (str[2] == 'b' || str[2] == 'B') {
+                    res = std::from_chars(str.data() + 3, str.data() + str.size(), result, 2);
+                    result = -result;
+                } else {
+                    res = std::from_chars(str.data(), str.data() + str.size(), result);
+                }
+            } else {
+                res = std::from_chars(str.data(), str.data() + str.size(), result);
+            }
+        } else {
+            res = std::from_chars(str.data(), str.data() + str.size(), result);
+        }
+    } else {
+        res = std::from_chars(str.data(), str.data() + str.size(), result);
+    }
     if (res.ec != std::errc() || res.ptr != str.data() + str.size()) {
         return std::nullopt;
     }

@@ -40,7 +40,11 @@ int main() {
     std::cout << "Running your tests..." << std::endl;
 
     as("lui a0, 12345", 0x37950303);
+    as("lui a0, 0x12345", 0x37553412);
+    as("lui a0, 0b100", 0x37450000);
+    as("auipc t0, 0b100", 0x97420000);
     as("auipc t0, 100", 0x97420600);
+    as("auipc t0, 0x100", 0x97021000);
     as("jal zero, 4", 0x6f004000);
     as("jalr zero, 4(a0)", 0x67004500);
     as("jalr x0, a0, 4", 0x67004500);
@@ -70,6 +74,8 @@ int main() {
     as("sw a7, 0(s0)", 0x23201401);
     as("addi a0, a1, 10", 0x1385a500);
     as("addi a0, a1, -10", 0x138565ff);
+    as("addi t0, a0, 0x30", 0x93020503);
+    as("addi t0, a0, -0x30", 0x930205fd);
     as("slti a0, a1, 10", 0x13a5a500);
     as("sltiu a4, a4, 10", 0x1337a700);
     as("srli a2, a2, 8", 0x13568600);
