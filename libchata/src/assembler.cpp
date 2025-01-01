@@ -340,7 +340,7 @@ instruction make_inst(assembly_context& c) {
             } else if (!c.arg5.empty() && !no_rs2) {
                 i.frm = decode_frm(c.arg5);
             } else {
-                if (base_i.ssargs.use_rm_for_funct3) {
+                if (base_i.ssargs.use_frm_for_funct3) {
                     i.frm = 0b111;
                 }
             }
@@ -349,7 +349,7 @@ instruction make_inst(assembly_context& c) {
             if (!c.arg5.empty()) {
                 i.frm = decode_frm(c.arg5);
             } else {
-                if (base_i.ssargs.use_rm_for_funct3) {
+                if (base_i.ssargs.use_frm_for_funct3) {
                     i.frm = 0b111;
                 }
             }
@@ -671,7 +671,7 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
         if (base_i.type == R) {
             DBG(std::cout << "Encoding R-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 7; // Add rd
-            if (base_i.ssargs.use_rm_for_funct3) {
+            if (base_i.ssargs.use_frm_for_funct3) {
                 inst |= i.frm << 12; // Add frm
             } else {
                 inst |= (base_i.funct & 0b111) << 12; // Add funct3
@@ -721,7 +721,7 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
         } else if (base_i.type == R4) {
             DBG(std::cout << "Encoding R4-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 7; // Add rd
-            if (base_i.ssargs.use_rm_for_funct3) {
+            if (base_i.ssargs.use_frm_for_funct3) {
                 inst |= i.frm << 12; // Add frm
             } else {
                 inst |= (base_i.funct & 0b111) << 12; // Add funct3

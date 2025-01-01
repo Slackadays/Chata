@@ -1073,7 +1073,7 @@ enum class RVInstructionSet : uint8_t {
 
 struct special_snowflake_args {
     std::optional<uint8_t> rs2;
-    bool use_rm_for_funct3 = false;
+    bool use_frm_for_funct3 = false;
     bool use_imm_for_rs2 = false;
     bool super_special_snowflake = false;
 };
