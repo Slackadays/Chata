@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MPL-2.0
+#include "libchata.hpp"
 #include <array>
 #include <cstdint>
 #include <initializer_list>
 #include <optional>
 #include <string_view>
-#include "libchata.hpp"
 
 namespace libchata_internal {
 

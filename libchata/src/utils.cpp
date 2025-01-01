@@ -54,7 +54,7 @@ std::optional<int> to_int(const chatastring& str) {
     int result = 0;
     std::from_chars_result res;
     if (str.size() > 2) {
-        if (str[0] == '0') { 
+        if (str[0] == '0') {
             if (str[1] == 'x' || str[1] == 'X') {
                 res = std::from_chars(str.data() + 2, str.data() + str.size(), result, 16);
             } else if (str[1] == 'b' || str[1] == 'B') {
