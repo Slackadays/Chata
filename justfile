@@ -1,6 +1,8 @@
+# show this list
 default:
   @just --list
 
+# copy all files to a remote system
 copy:
   python setup-credentials.py
   . ./credentials.sh; \
@@ -8,10 +10,12 @@ copy:
 
 set positional-arguments
 
+# build everything
 build type='Release':
   @just build-lib {{type}}
   @just build-cli {{type}}
 
+# build just libchata
 build-lib type='Release':
   if [ ! -d "libchata/build" ]; then mkdir libchata/build; fi 
 
@@ -21,6 +25,7 @@ build-lib type='Release':
 
   cd libchata/build; sudo cmake --install .
 
+# build just chatacli
 build-cli type='Release':
   if [ ! -d "chatacli/build" ]; then mkdir chatacli/build; fi 
 
@@ -30,31 +35,39 @@ build-cli type='Release':
 
   cd chatacli/build; sudo cmake --install .
 
+# clear all CMake files for everything
 clean:
   @just clean-lib
   @just clean-cli
 
+# clear all CMake files for just libchata
 clean-lib:
   if [ -d "libchata/build" ]; then rm -rf libchata/build; fi
 
+# clear all CMake files for just chatacli
 clean-cli:
   if [ -d "chatacli/build" ]; then rm -rf chatacli/build; fi
 
+# format all code
 format:
   cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose '{}' +
   cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose '{}' +
 
+# check if all code is formatted
 check-format:
   cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose --dry-run '{}' +
   cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose --dry-run '{}' +
 
+# run codegen scripts
 generate:
   cd libchata/src; python3 generate_instruction_search.py
   cd libchata/src; python3 generate_register_search.py
 
+# run testsuites for everything
 test:
   @just test-lib
 
+# run testsuite for just libchata
 test-lib:
   cd libchata/build; ./test_libchata
   
