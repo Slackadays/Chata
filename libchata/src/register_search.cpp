@@ -529,7 +529,7 @@ const uint8_t fast_reg_search(const chatastring& reg) {
             }
         }
     }
-    return -1;
+    return reg_search_failed;
 }
 
 } // namespace libchata_internal

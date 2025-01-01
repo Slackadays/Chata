@@ -73,7 +73,7 @@ def process_depth():
 
 process_depth()
 
-code += ind() + "return -1;\n"
+code += ind() + "return reg_search_failed;\n"
 code += "}\n\n"
 code += "} // namespace libchata_internal"
 

@@ -21,7 +21,7 @@ build-lib type='Release':
 
   if [ ! -d "libchata/build/CMakeFiles" ]; then cd libchata/build; cmake .. -DCMAKE_BUILD_TYPE="{{type}}"; fi
 
-  cd libchata/build; cmake --build . -j 10
+  cd libchata/build; cmake --build . -j 12
 
   cd libchata/build; sudo cmake --install .
 
@@ -62,6 +62,7 @@ check-format:
 generate:
   cd libchata/src; python3 generate_instruction_search.py
   cd libchata/src; python3 generate_register_search.py
+  cd libchata/src; python3 generate_csr_search.py
 
 # run testsuites for everything
 test:

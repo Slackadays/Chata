@@ -139,10 +139,8 @@ uint8_t decode_fence(const chatastring& setting) {
 }
 
 uint16_t decode_csr(const chatastring& csr) {
-    for (const auto& c : csrs) {
-        if (fast_eq(csr, c.first)) {
-            return c.second;
-        }
+    if (auto res = fast_csr_search(csr); res != csr_search_failed) {
+        return csrs[res].second;
     }
     throw ChataError(ChataErrorType::Compiler, "Invalid CSR " + csr);
 }
@@ -225,20 +223,6 @@ void handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i
     }
 }
 
-size_t bytes_in_instruction(const rvinstruction& i) {
-    uint8_t len_bits = i.opcode & 0b11;
-    if (len_bits == 0b00 || len_bits == 0b01 || len_bits == 0b10) {
-        return 2;
-    } else if (len_bits == 0b11) {
-        return 4;
-    }
-    throw ChataError(ChataErrorType::Assembler, "Invalid instruction length");
-}
-
-size_t bytes_in_instruction(const instruction& i) {
-    return bytes_in_instruction(instructions.at(i.inst_offset));
-}
-
 std::pair<int, chatastring> decode_offset_plus_reg(const chatastring& str) {
     int offset = 0;
     int j = 0;
@@ -282,7 +266,7 @@ instruction make_inst(assembly_context& c) {
 
     auto base_i = instructions.at(i.inst_offset);
 
-    c.instruction_bytes += bytes_in_instruction(base_i);
+    c.instruction_bytes += base_i.bytes;
 
     using enum RVInstructionFormat;
 
@@ -628,7 +612,7 @@ void solve_label_offsets(assembly_context& c) {
                     for (int j = i + step; j != end; j += step) {
                         if (c.nodes.at(j).imm_purpose == LABEL_NODE) {
                             if (c.nodes.at(j).imm == inst.imm) {
-                                label_offset += bytes_in_instruction(inst);
+                                label_offset += instructions.at(inst.inst_offset).bytes;
                                 DBG(std::cout << "Found offset for label " << inst.imm << ": " << label_offset << std::endl;)
                                 inst.imm = label_offset;
                                 inst.imm_purpose = INSTR_IMM;
@@ -636,7 +620,7 @@ void solve_label_offsets(assembly_context& c) {
                             }
                         }
                         if (c.nodes.at(j).imm_purpose != LABEL_NODE) {
-                            label_offset += bytes_in_instruction(c.nodes.at(j));
+                            label_offset += instructions.at(c.nodes.at(j).inst_offset).bytes;
                         }
                     }
                     return label_offset;
@@ -663,7 +647,6 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             continue;
         }
         uint32_t inst = 0;
-        size_t i_size = 0;
         auto base_i = instructions.at(i.inst_offset);
         inst |= base_i.opcode;
         using enum RVInstructionFormat;
@@ -679,14 +662,12 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= i.rs1 << 15;               // Add rs1
             inst |= i.rs2 << 20;               // Add rs2
             inst |= (base_i.funct >> 3) << 25; // Add funct7
-            i_size = 4;
         } else if (base_i.type == I) {
             DBG(std::cout << "Encoding I-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 7;          // Add rd
             inst |= base_i.funct << 12; // Add funct3
             inst |= i.rs1 << 15;        // Add rs1
             inst |= i.imm << 20;        // Add imm
-            i_size = 4;
         } else if (base_i.type == S) {
             DBG(std::cout << "Encoding S-type instruction with name " << base_i.name << std::endl;)
             inst |= (i.imm & 0b11111) << 7; // Add imm[4:0]
@@ -694,7 +675,6 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= i.rs1 << 15;            // Add rs1
             inst |= i.rs2 << 20;            // Add rs2
             inst |= (i.imm >> 5) << 25;     // Add imm[11:5]
-            i_size = 4;
         } else if (base_i.type == B) {
             DBG(std::cout << "Encoding B-type instruction with name " << base_i.name << std::endl;)
             inst |= ((i.imm >> 11) & 0b1) << 7;      // Add imm[11]
@@ -704,12 +684,10 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= i.rs2 << 20;                     // Add rs2
             inst |= ((i.imm >> 5) & 0b111111) << 25; // Add imm[10:5]
             inst |= ((i.imm >> 12) & 0b1) << 31;     // Add imm[12]
-            i_size = 4;
         } else if (base_i.type == U) {
             DBG(std::cout << "Encoding U-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 7;   // Add rd
             inst |= i.imm << 12; // Add imm[31:12]
-            i_size = 4;
         } else if (base_i.type == J) {
             DBG(std::cout << "Encoding J-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 7;                           // Add rd
@@ -717,7 +695,6 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= ((i.imm >> 11) & 0b1) << 20;         // Add imm[11]
             inst |= ((i.imm >> 1) & 0b1111111111) << 21; // Add imm[10:1]
             inst |= ((i.imm >> 20) & 0b1) << 31;         // Add imm[20]
-            i_size = 4;
         } else if (base_i.type == R4) {
             DBG(std::cout << "Encoding R4-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 7; // Add rd
@@ -730,7 +707,6 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= i.rs2 << 20;               // Add rs2
             inst |= (base_i.funct >> 3) << 25; // Add funct2
             inst |= i.rs3 << 27;               // Add rs3
-            i_size = 4;
         } else if (base_i.type == CI) {
             DBG(std::cout << "Encoding CI-type instruction with name " << base_i.name << std::endl;)
             if (base_i.id == CLWSP || base_i.id == CFLWSP) {                                                  // offset[4:2|7:6]
@@ -764,13 +740,11 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             } else {
                 inst |= base_i.funct << 13; // Add funct3
             }
-            i_size = 2;
         } else if (base_i.type == CR) {
             DBG(std::cout << "Encoding CR-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rs2 << 2;         // Add rs2
             inst |= i.rd << 7;          // Add rd
             inst |= base_i.funct << 12; // Add funct4
-            i_size = 2;
         } else if (base_i.type == CSS) {
             DBG(std::cout << "Encoding CSS-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rs2 << 2;                                     // Add rs2
@@ -785,7 +759,6 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
                 inst |= ((i.imm >> 4) & 0b11) << 11;                // Add offset[5:4]
             }
             inst |= base_i.funct << 13; // Add funct3
-            i_size = 2;
         } else if (base_i.type == CIW) {
             DBG(std::cout << "Encoding CIW-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 2;                    // Add rd' (just 3 bits)
@@ -794,7 +767,6 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= ((i.imm >> 6) & 0b1111) << 7; // Add nzuimm[9:6]
             inst |= ((i.imm >> 4) & 0b11) << 11;  // Add nzuimm[5:4]
             inst |= base_i.funct << 13;           // Add funct3
-            i_size = 2;
         } else if (base_i.type == CL) {
             DBG(std::cout << "Encoding CL-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rd << 2;                                  // Add rd' (just 3 bits)
@@ -807,7 +779,6 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= i.rs1 << 7;                   // Add rs1' (just 3 bits)
             inst |= ((i.imm >> 3) & 0b111) << 10; // Add offset[5:3]
             inst |= base_i.funct << 13;           // Add funct3
-            i_size = 2;
         } else if (base_i.type == CS) {
             DBG(std::cout << "Encoding CS-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rs2 << 2;                                 // Add rs2' (just 3 bits)
@@ -820,14 +791,12 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= i.rs1 << 7;                   // Add rs1' (just 3 bits)
             inst |= ((i.imm >> 3) & 0b111) << 10; // Add offset[5:3]
             inst |= base_i.funct << 13;           // Add funct3
-            i_size = 2;
         } else if (base_i.type == CA) {
             DBG(std::cout << "Encoding CA-type instruction with name " << base_i.name << std::endl;)
             inst |= i.rs2 << 2;                 // Add rs2' (just 3 bits)
             inst |= (base_i.funct & 0b11) << 5; // Add funct2
             inst |= i.rd << 7;                  // Add rd' (just 3 bits)
             inst |= (base_i.funct >> 2) << 10;  // Add funct6
-            i_size = 2;
         } else if (base_i.type == CB) {
             DBG(std::cout << "Encoding CB-type instruction with name " << base_i.name << std::endl;)
             if (base_i.id == CSRLI || base_i.id == CSRAI || base_i.id == CANDI) { // shamt[5], shamt[4:0]
@@ -847,7 +816,6 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             } else {
                 inst |= base_i.funct << 13; // Add funct3
             }
-            i_size = 2;
         } else if (base_i.type == CJ) {
             DBG(std::cout << "Encoding CJ-type instruction with name " << base_i.name << std::endl;)
             inst |= ((i.imm >> 5) & 0b1) << 2;   // Add offset[5]
@@ -859,15 +827,9 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= ((i.imm >> 4) & 0b1) << 11;  // Add offset[4]
             inst |= ((i.imm >> 11) & 0b1) << 12; // Add offset[11]
             inst |= base_i.funct << 13;          // Add funct3
-            i_size = 2;
         }
-        if (i_size == 4) {
-            reinterpret_cast<uint32_t&>(machine_code.data()[offset]) = inst;
-            offset += 4;
-        } else if (i_size == 2) {
-            reinterpret_cast<uint16_t&>(machine_code.data()[offset]) = inst;
-            offset += 2;
-        }
+        reinterpret_cast<uint32_t&>(machine_code.data()[offset]) = inst;
+        offset += base_i.bytes;
     }
     return machine_code;
 }

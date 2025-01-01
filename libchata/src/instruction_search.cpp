@@ -2224,7 +2224,7 @@ const uint16_t fast_instr_search(const chatastring& inst) {
             }
         }
     }
-    return -1;
+    return instr_search_failed;
 }
 
 } // namespace libchata_internal

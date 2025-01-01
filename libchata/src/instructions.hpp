@@ -1085,6 +1085,7 @@ struct rvinstruction {
     uint8_t opcode;
     uint16_t funct;
     RVInstructionSet set;
+    uint8_t bytes;
     special_snowflake_args ssargs = {};
 };
 

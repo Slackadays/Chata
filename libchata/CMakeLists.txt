@@ -40,8 +40,10 @@ add_library(objchata OBJECT
     src/change.cpp
     src/instructions.cpp
     src/registers.cpp
+    src/csrs.cpp
     src/instruction_search.cpp
     src/register_search.cpp
+    src/csr_search.cpp
 )
 
 set_property(TARGET objchata PROPERTY POSITION_INDEPENDENT_CODE ON)
