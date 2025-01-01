@@ -374,11 +374,11 @@ const std::array<rvinstruction, 367> instructions = {
          {"c.zext.w", CU, CZEXTW, 0b01, 0b10011111100, Zcb},
          {"c.not", CU, CNOT, 0b01, 0b10011111101, Zcb},
          {"c.mul", CA, CMUL, 0b01, 0b10011110, Zcb},
-         {"cm.push", CMPP, CMPUSH, 0b10, 0b10111000, Zcb},
-         {"cm.pop", CMPP, CMPOP, 0b10, 0b10111010, Zcb},
-         {"cm.popretz", CMPP, CMPOPRETZ, 0b10, 0b10111100, Zcb},
-         {"cm.popret", CMPP, CMPOPRET, 0b10, 0b10111110, Zcb},
-         {"cm.mvsa01", CMMV, CMMVSA01, 0b10, 0b10101101, Zcb},
-         {"cm.mva01s", CMMV, CMMVA01S, 0b10, 0b10101111, Zcb}}};
+         {"cm.push", CMPP, CMPUSH, 0b10, 0b10111000, Zcmp},
+         {"cm.pop", CMPP, CMPOP, 0b10, 0b10111010, Zcmp},
+         {"cm.popretz", CMPP, CMPOPRETZ, 0b10, 0b10111100, Zcmp},
+         {"cm.popret", CMPP, CMPOPRET, 0b10, 0b10111110, Zcmp},
+         {"cm.mvsa01", CMMV, CMMVSA01, 0b10, 0b10101101, Zcmp},
+         {"cm.mva01s", CMMV, CMMVA01S, 0b10, 0b10101111, Zcmp}}};
 
 } // namespace libchata_internal
