@@ -147,6 +147,34 @@ uint16_t decode_csr(const chatastring& csr) {
     throw ChataError(ChataErrorType::Compiler, "Invalid CSR " + csr);
 }
 
+uint8_t decode_vsew(const chatastrng& str) {
+    if (fast_eq(str, "e8")) {
+        return 0b000;
+    } else if (fast_eq(str, "e16")) {
+        return 0b001;
+    } else if (fast_eq(str, "e32")) {
+        return 0b010;
+    } else if (fast_eq(str, "e64")) {
+        return 0b011;
+    } else {
+        throw ChataError(ChataErrorType::Compiler, "Invalid VSEW " + str);
+    }
+}
+
+std::optional<uint8_t> decode_vlmul(const chatastring& str) {
+    if (fast_eq(str, "m1")) {
+        return 0b000;
+    } else if (fast_eq(str, "m2")) {
+        return 0b001;
+    } else if (fast_eq(str, "m4")) {
+        return 0b010;
+    } else if (fast_eq(str, "m8")) {
+        return 0b011;
+    } else {
+        return std::nullopt;
+    }
+}
+
 void handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i, assembly_context& c) {
     using enum RVInstructionID;
     if (base_i.id == FENCE) {
