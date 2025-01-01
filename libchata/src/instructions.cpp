@@ -12,7 +12,7 @@ using enum RVInstructionID;
 using enum RVInstructionSet;
 using std::nullopt;
 
-const std::array<rvinstruction, 335> instructions = {
+const std::array<rvinstruction, 367> instructions = {
         {{"lui", U, LUI, 0b0110111, 0b000, RV32I},
          {"auipc", U, AUIPC, 0b0010111, 0b000, RV32I},
          {"jal", J, JAL, 0b1101111, 0b000, RV32I},
@@ -347,6 +347,38 @@ const std::array<rvinstruction, 335> instructions = {
          {"c.addw", CA, CADDW, 0b01, 0b10011101, C},
          {"c.subw", CA, CSUBW, 0b01, 0b10011100, C},
          {"c.nop", CI, CNOP, 0b01, 0b000, C, {nullopt, false, false, true}},
-         {"c.ebreak", CI, CEBREAK, 0b10, 0b1001, C, {nullopt, false, false, true}}}};
+         {"c.ebreak", CI, CEBREAK, 0b10, 0b1001, C, {nullopt, false, false, true}},
+         {"czero.eqz", R, CZEROEQZ, 0b0110011, 0b0000111101, Zicond},
+         {"czero.nez", R, CZERONEZ, 0b0110011, 0b0000111111, Zicond},
+         {"amocas.w", R, AMOCASW, 0b0101111, 0b0010100010, Zacas},
+         {"amocas.d", R, AMOCASD, 0b0101111, 0b0010100011, Zacas},
+         {"amocas.q", R, AMOCASQ, 0b0101111, 0b0010100100, Zacas},
+         {"amocas.w.aq", R, AMOCASWAQ, 0b0101111, 0b0010110010, Zacas},
+         {"amocas.d.aq", R, AMOCASDAQ, 0b0101111, 0b0010110011, Zacas},
+         {"amocas.q.aq", R, AMOCASQAQ, 0b0101111, 0b0010110100, Zacas},
+         {"amocas.w.rl", R, AMOCASWRL, 0b0101111, 0b0010101010, Zacas},
+         {"amocas.d.rl", R, AMOCASDRL, 0b0101111, 0b0010101011, Zacas},
+         {"amocas.q.rl", R, AMOCASQRL, 0b0101111, 0b0010101100, Zacas},
+         {"amocas.w.aqrl", R, AMOCASWAQRL, 0b0101111, 0b0010111010, Zacas},
+         {"amocas.d.aqrl", R, AMOCASDAQRL, 0b0101111, 0b0010111011, Zacas},
+         {"amocas.q.aqrl", R, AMOCASQAQRL, 0b0101111, 0b0010111100, Zacas},
+         {"c.lbu", CLB, CLBU, 0b00, 0b100000, Zcb},
+         {"c.lhu", CLHfmt, CLHU, 0b00, 0b1000010, Zcb},
+         {"c.lh", CLHfmt, CLH, 0b00, 0b1000011, Zcb},
+         {"c.sb", CSHfmt, CSB, 0b00, 0b100010, Zcb},
+         {"c.sh", CSHfmt, CSH, 0b00, 0b1000110, Zcb},
+         {"c.zext.b", CU, CZEXTB, 0b01, 0b10011111000, Zcb},
+         {"c.sext.b", CU, CSEXTB, 0b01, 0b10011111001, Zcb},
+         {"c.zext.h", CU, CZEXTH, 0b01, 0b10011111010, Zcb},
+         {"c.sext.h", CU, CSEXTH, 0b01, 0b10011111011, Zcb},
+         {"c.zext.w", CU, CZEXTW, 0b01, 0b10011111100, Zcb},
+         {"c.not", CU, CNOT, 0b01, 0b10011111101, Zcb},
+         {"c.mul", CA, CMUL, 0b01, 0b10011110, Zcb},
+         {"cm.push", CMPP, CMPUSH, 0b10, 0b10111000, Zcb},
+         {"cm.pop", CMPP, CMPOP, 0b10, 0b10111010, Zcb},
+         {"cm.popretz", CMPP, CMPOPRETZ, 0b10, 0b10111100, Zcb},
+         {"cm.popret", CMPP, CMPOPRET, 0b10, 0b10111110, Zcb},
+         {"cm.mvsa01", CMMV, CMMVSA01, 0b10, 0b10101101, Zcb},
+         {"cm.mva01s", CMMV, CMMVA01S, 0b10, 0b10101111, Zcb}}};
 
 } // namespace libchata_internal

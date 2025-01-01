@@ -347,6 +347,38 @@ enum class RVInstructionID : uint16_t {
     CSUBW,
     CNOP,
     CEBREAK,
+    CZEROEQZ, // Zicond
+    CZERONEZ,
+    AMOCASW, // Zacas
+    AMOCASD,
+    AMOCASQ,
+    AMOCASWAQ,
+    AMOCASDAQ,
+    AMOCASQAQ,
+    AMOCASWRL,
+    AMOCASDRL,
+    AMOCASQRL,
+    AMOCASWAQRL,
+    AMOCASDAQRL,
+    AMOCASQAQRL,
+    CLBU, // Zcb,
+    CLHU,
+    CLH,
+    CSB,
+    CSH,
+    CZEXTB,
+    CSEXTB,
+    CZEXTH,
+    CSEXTH,
+    CZEXTW,
+    CNOT,
+    CMUL,
+    CMPUSH, // Zcmp
+    CMPOP,
+    CMPOPRETZ,
+    CMPOPRET,
+    CMMVSA01,
+    CMMVA01S,
     VSETVLI, // V
     VSETIVLI,
     VSETVL,
@@ -1003,6 +1035,14 @@ enum class RVInstructionFormat : uint8_t {
     VS,
     VSS,
     VSX,
+    CLB,
+    CSBfmt,
+    CLHfmt,
+    CSHfmt,
+    CU,
+    CMMV,
+    CMJT,
+    CMPP
 };
 
 enum class RVInstructionSet : uint8_t {
@@ -1023,6 +1063,10 @@ enum class RVInstructionSet : uint8_t {
     Zifencei,
     Zicsr,
     Zawrs,
+    Zicond,
+    Zacas,
+    Zcb,
+    Zcmp,
     C,
     V
 };
@@ -1044,6 +1088,6 @@ struct rvinstruction {
     special_snowflake_args ssargs = {};
 };
 
-extern const std::array<rvinstruction, 335> instructions;
+extern const std::array<rvinstruction, 367> instructions;
 
 } // namespace libchata_internal

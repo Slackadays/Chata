@@ -147,7 +147,7 @@ uint16_t decode_csr(const chatastring& csr) {
     throw ChataError(ChataErrorType::Compiler, "Invalid CSR " + csr);
 }
 
-uint8_t decode_vsew(const chatastrng& str) {
+uint8_t decode_vsew(const chatastring& str) {
     if (fast_eq(str, "e8")) {
         return 0b000;
     } else if (fast_eq(str, "e16")) {
