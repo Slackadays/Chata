@@ -13,14 +13,35 @@ const uint16_t fast_instr_search(const chatastring& inst) {
             if (inst.size() < 3) return instr_search_failed;
             if (inst[2] == 'd') {
                 if (inst.size() < 4) return 27;
+                if (inst[3] == '.') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'u') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'w') {
+                            if (inst.size() < 7) return 369;
+                        }
+                    }
+                }
+                if (inst[3] == 'w') {
+                    if (inst.size() < 5) return 49;
+                }
                 if (inst[3] == 'i') {
                     if (inst.size() < 5) return 18;
                     if (inst[4] == 'w') {
                         if (inst.size() < 6) return 45;
                     }
                 }
-                if (inst[3] == 'w') {
-                    if (inst.size() < 5) return 49;
+            }
+        }
+        if (inst[1] == 'u') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'i') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'p') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'c') {
+                        if (inst.size() < 6) return 1;
+                    }
                 }
             }
         }
@@ -643,17 +664,8 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                 if (inst[3] == 'i') {
                     if (inst.size() < 5) return 23;
                 }
-            }
-        }
-        if (inst[1] == 'u') {
-            if (inst.size() < 3) return instr_search_failed;
-            if (inst[2] == 'i') {
-                if (inst.size() < 4) return instr_search_failed;
-                if (inst[3] == 'p') {
-                    if (inst.size() < 5) return instr_search_failed;
-                    if (inst[4] == 'c') {
-                        if (inst.size() < 6) return 1;
-                    }
+                if (inst[3] == 'n') {
+                    if (inst.size() < 5) return 370;
                 }
             }
         }
@@ -664,13 +676,28 @@ const uint16_t fast_instr_search(const chatastring& inst) {
             if (inst.size() < 3) return instr_search_failed;
             if (inst[2] == 'v') {
                 if (inst.size() < 4) return 58;
-                if (inst[3] == 'w') {
-                    if (inst.size() < 5) return 63;
-                }
                 if (inst[3] == 'u') {
                     if (inst.size() < 5) return 59;
                     if (inst[4] == 'w') {
                         if (inst.size() < 6) return 64;
+                    }
+                }
+                if (inst[3] == 'w') {
+                    if (inst.size() < 5) return 63;
+                }
+            }
+        }
+    }
+    if (inst[0] == 'u') {
+        if (inst.size() < 2) return instr_search_failed;
+        if (inst[1] == 'n') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'z') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'i') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'p') {
+                        if (inst.size() < 6) return 414;
                     }
                 }
             }
@@ -708,6 +735,15 @@ const uint16_t fast_instr_search(const chatastring& inst) {
     }
     if (inst[0] == 'm') {
         if (inst.size() < 2) return instr_search_failed;
+        if (inst[1] == 'a') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'x') {
+                if (inst.size() < 4) return 388;
+                if (inst[3] == 'u') {
+                    if (inst.size() < 5) return 389;
+                }
+            }
+        }
         if (inst[1] == 'u') {
             if (inst.size() < 3) return instr_search_failed;
             if (inst[2] == 'l') {
@@ -717,15 +753,24 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                 }
                 if (inst[3] == 'h') {
                     if (inst.size() < 5) return 55;
+                    if (inst[4] == 'u') {
+                        if (inst.size() < 6) return 57;
+                    }
                     if (inst[4] == 's') {
                         if (inst.size() < 6) return instr_search_failed;
                         if (inst[5] == 'u') {
                             if (inst.size() < 7) return 56;
                         }
                     }
-                    if (inst[4] == 'u') {
-                        if (inst.size() < 6) return 57;
-                    }
+                }
+            }
+        }
+        if (inst[1] == 'i') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'n') {
+                if (inst.size() < 4) return 390;
+                if (inst[3] == 'u') {
+                    if (inst.size() < 5) return 391;
                 }
             }
         }
@@ -737,22 +782,67 @@ const uint16_t fast_instr_search(const chatastring& inst) {
             if (inst[2] == 'i') {
                 if (inst.size() < 4) return 22;
             }
+            if (inst[2] == 'n') {
+                if (inst.size() < 4) return 393;
+            }
+            if (inst[2] == 'c') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == '.') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'b') {
+                        if (inst.size() < 6) return 392;
+                    }
+                }
+            }
         }
     }
     if (inst[0] == 'r') {
         if (inst.size() < 2) return instr_search_failed;
+        if (inst[1] == 'o') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'r') {
+                if (inst.size() < 4) return 401;
+                if (inst[3] == 'w') {
+                    if (inst.size() < 5) return 404;
+                }
+                if (inst[3] == 'i') {
+                    if (inst.size() < 5) return 402;
+                    if (inst[4] == 'w') {
+                        if (inst.size() < 6) return 403;
+                    }
+                }
+            }
+            if (inst[2] == 'l') {
+                if (inst.size() < 4) return 399;
+                if (inst[3] == 'w') {
+                    if (inst.size() < 5) return 400;
+                }
+            }
+        }
         if (inst[1] == 'e') {
             if (inst.size() < 3) return instr_search_failed;
             if (inst[2] == 'm') {
                 if (inst.size() < 4) return 60;
-                if (inst[3] == 'w') {
-                    if (inst.size() < 5) return 65;
-                }
                 if (inst[3] == 'u') {
                     if (inst.size() < 5) return 61;
                     if (inst[4] == 'w') {
                         if (inst.size() < 6) return 66;
                     }
+                }
+                if (inst[3] == 'w') {
+                    if (inst.size() < 5) return 65;
+                }
+            }
+            if (inst[2] == 'v') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == '.') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'b') {
+                        if (inst.size() < 6) return 398;
+                    }
+                }
+                if (inst[3] == '8') {
+                    if (inst.size() < 5) return 397;
                 }
             }
         }
@@ -761,6 +851,12 @@ const uint16_t fast_instr_search(const chatastring& inst) {
         if (inst.size() < 2) return instr_search_failed;
         if (inst[1] == 'd') {
             if (inst.size() < 3) return 43;
+        }
+        if (inst[1] == 'u') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'i') {
+                if (inst.size() < 4) return 0;
+            }
         }
         if (inst[1] == 'w') {
             if (inst.size() < 3) return 12;
@@ -822,12 +918,6 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                 }
             }
         }
-        if (inst[1] == 'u') {
-            if (inst.size() < 3) return instr_search_failed;
-            if (inst[2] == 'i') {
-                if (inst.size() < 4) return 0;
-            }
-        }
         if (inst[1] == 'b') {
             if (inst.size() < 3) return 10;
             if (inst[2] == 'u') {
@@ -843,72 +933,6 @@ const uint16_t fast_instr_search(const chatastring& inst) {
     }
     if (inst[0] == 'c') {
         if (inst.size() < 2) return instr_search_failed;
-        if (inst[1] == 'm') {
-            if (inst.size() < 3) return instr_search_failed;
-            if (inst[2] == '.') {
-                if (inst.size() < 4) return instr_search_failed;
-                if (inst[3] == 'm') {
-                    if (inst.size() < 5) return instr_search_failed;
-                    if (inst[4] == 'v') {
-                        if (inst.size() < 6) return instr_search_failed;
-                        if (inst[5] == 'a') {
-                            if (inst.size() < 7) return instr_search_failed;
-                            if (inst[6] == '0') {
-                                if (inst.size() < 8) return instr_search_failed;
-                                if (inst[7] == '1') {
-                                    if (inst.size() < 9) return instr_search_failed;
-                                    if (inst[8] == 's') {
-                                        if (inst.size() < 10) return 366;
-                                    }
-                                }
-                            }
-                        }
-                        if (inst[5] == 's') {
-                            if (inst.size() < 7) return instr_search_failed;
-                            if (inst[6] == 'a') {
-                                if (inst.size() < 8) return instr_search_failed;
-                                if (inst[7] == '0') {
-                                    if (inst.size() < 9) return instr_search_failed;
-                                    if (inst[8] == '1') {
-                                        if (inst.size() < 10) return 365;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if (inst[3] == 'p') {
-                    if (inst.size() < 5) return instr_search_failed;
-                    if (inst[4] == 'o') {
-                        if (inst.size() < 6) return instr_search_failed;
-                        if (inst[5] == 'p') {
-                            if (inst.size() < 7) return 362;
-                            if (inst[6] == 'r') {
-                                if (inst.size() < 8) return instr_search_failed;
-                                if (inst[7] == 'e') {
-                                    if (inst.size() < 9) return instr_search_failed;
-                                    if (inst[8] == 't') {
-                                        if (inst.size() < 10) return 364;
-                                        if (inst[9] == 'z') {
-                                            if (inst.size() < 11) return 363;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    if (inst[4] == 'u') {
-                        if (inst.size() < 6) return instr_search_failed;
-                        if (inst[5] == 's') {
-                            if (inst.size() < 7) return instr_search_failed;
-                            if (inst[6] == 'h') {
-                                if (inst.size() < 8) return 361;
-                            }
-                        }
-                    }
-                }
-            }
-        }
         if (inst[1] == '.') {
             if (inst.size() < 3) return instr_search_failed;
             if (inst[2] == 'a') {
@@ -917,6 +941,9 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                     if (inst.size() < 5) return instr_search_failed;
                     if (inst[4] == 'd') {
                         if (inst.size() < 6) return 326;
+                        if (inst[5] == 'w') {
+                            if (inst.size() < 7) return 331;
+                        }
                         if (inst[5] == 'i') {
                             if (inst.size() < 7) return 318;
                             if (inst[6] == 'w') {
@@ -934,9 +961,6 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                                     }
                                 }
                             }
-                        }
-                        if (inst[5] == 'w') {
-                            if (inst.size() < 7) return 331;
                         }
                     }
                 }
@@ -979,8 +1003,11 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                         }
                     }
                 }
-                if (inst[3] == 'i') {
-                    if (inst.size() < 5) return 316;
+                if (inst[3] == 'u') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'i') {
+                        if (inst.size() < 6) return 317;
+                    }
                 }
                 if (inst[3] == 'w') {
                     if (inst.size() < 5) return 302;
@@ -991,11 +1018,8 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                         }
                     }
                 }
-                if (inst[3] == 'u') {
-                    if (inst.size() < 5) return instr_search_failed;
-                    if (inst[4] == 'i') {
-                        if (inst.size() < 6) return 317;
-                    }
+                if (inst[3] == 'i') {
+                    if (inst.size() < 5) return 316;
                 }
                 if (inst[3] == 'b') {
                     if (inst.size() < 5) return instr_search_failed;
@@ -1033,6 +1057,15 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                         }
                     }
                 }
+                if (inst[3] == 'u') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'b') {
+                        if (inst.size() < 6) return 330;
+                        if (inst[5] == 'w') {
+                            if (inst.size() < 7) return 332;
+                        }
+                    }
+                }
                 if (inst[3] == 'w') {
                     if (inst.size() < 5) return 306;
                     if (inst[4] == 's') {
@@ -1063,15 +1096,6 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                         if (inst.size() < 6) return instr_search_failed;
                         if (inst[5] == 'i') {
                             if (inst.size() < 7) return 321;
-                        }
-                    }
-                }
-                if (inst[3] == 'u') {
-                    if (inst.size() < 5) return instr_search_failed;
-                    if (inst[4] == 'b') {
-                        if (inst.size() < 6) return 330;
-                        if (inst[5] == 'w') {
-                            if (inst.size() < 7) return 332;
                         }
                     }
                 }
@@ -1233,6 +1257,111 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                 }
             }
         }
+        if (inst[1] == 'm') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == '.') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'm') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'v') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'a') {
+                            if (inst.size() < 7) return instr_search_failed;
+                            if (inst[6] == '0') {
+                                if (inst.size() < 8) return instr_search_failed;
+                                if (inst[7] == '1') {
+                                    if (inst.size() < 9) return instr_search_failed;
+                                    if (inst[8] == 's') {
+                                        if (inst.size() < 10) return 366;
+                                    }
+                                }
+                            }
+                        }
+                        if (inst[5] == 's') {
+                            if (inst.size() < 7) return instr_search_failed;
+                            if (inst[6] == 'a') {
+                                if (inst.size() < 8) return instr_search_failed;
+                                if (inst[7] == '0') {
+                                    if (inst.size() < 9) return instr_search_failed;
+                                    if (inst[8] == '1') {
+                                        if (inst.size() < 10) return 365;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (inst[3] == 'p') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'u') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 's') {
+                            if (inst.size() < 7) return instr_search_failed;
+                            if (inst[6] == 'h') {
+                                if (inst.size() < 8) return 361;
+                            }
+                        }
+                    }
+                    if (inst[4] == 'o') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'p') {
+                            if (inst.size() < 7) return 362;
+                            if (inst[6] == 'r') {
+                                if (inst.size() < 8) return instr_search_failed;
+                                if (inst[7] == 'e') {
+                                    if (inst.size() < 9) return instr_search_failed;
+                                    if (inst[8] == 't') {
+                                        if (inst.size() < 10) return 364;
+                                        if (inst[9] == 'z') {
+                                            if (inst.size() < 11) return 363;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (inst[3] == 'j') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'a') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'l') {
+                            if (inst.size() < 7) return instr_search_failed;
+                            if (inst[6] == 't') {
+                                if (inst.size() < 8) return 368;
+                            }
+                        }
+                    }
+                    if (inst[4] == 't') {
+                        if (inst.size() < 6) return 367;
+                    }
+                }
+            }
+        }
+        if (inst[1] == 'l') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'm') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'u') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'l') {
+                        if (inst.size() < 6) return 379;
+                        if (inst[5] == 'r') {
+                            if (inst.size() < 7) return 381;
+                        }
+                        if (inst[5] == 'h') {
+                            if (inst.size() < 7) return 380;
+                        }
+                    }
+                }
+            }
+            if (inst[2] == 'z') {
+                if (inst.size() < 4) return 382;
+                if (inst[3] == 'w') {
+                    if (inst.size() < 5) return 383;
+                }
+            }
+        }
         if (inst[1] == 's') {
             if (inst.size() < 3) return instr_search_failed;
             if (inst[2] == 'r') {
@@ -1257,6 +1386,27 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                             if (inst.size() < 7) return 290;
                         }
                     }
+                }
+            }
+        }
+        if (inst[1] == 'p') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'o') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'p') {
+                    if (inst.size() < 5) return 384;
+                    if (inst[4] == 'w') {
+                        if (inst.size() < 6) return 385;
+                    }
+                }
+            }
+        }
+        if (inst[1] == 't') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'z') {
+                if (inst.size() < 4) return 386;
+                if (inst[3] == 'w') {
+                    if (inst.size() < 5) return 387;
                 }
             }
         }
@@ -1299,6 +1449,15 @@ const uint16_t fast_instr_search(const chatastring& inst) {
         if (inst[1] == 'd') {
             if (inst.size() < 3) return 44;
         }
+        if (inst[1] == 'u') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'b') {
+                if (inst.size() < 4) return 28;
+                if (inst[3] == 'w') {
+                    if (inst.size() < 5) return 50;
+                }
+            }
+        }
         if (inst[1] == 'w') {
             if (inst.size() < 3) return 17;
         }
@@ -1306,26 +1465,26 @@ const uint16_t fast_instr_search(const chatastring& inst) {
             if (inst.size() < 3) return instr_search_failed;
             if (inst[2] == 'a') {
                 if (inst.size() < 4) return 34;
+                if (inst[3] == 'w') {
+                    if (inst.size() < 5) return 53;
+                }
                 if (inst[3] == 'i') {
                     if (inst.size() < 5) return 26;
                     if (inst[4] == 'w') {
                         if (inst.size() < 6) return 48;
                     }
                 }
-                if (inst[3] == 'w') {
-                    if (inst.size() < 5) return 53;
-                }
             }
             if (inst[2] == 'l') {
                 if (inst.size() < 4) return 33;
+                if (inst[3] == 'w') {
+                    if (inst.size() < 5) return 52;
+                }
                 if (inst[3] == 'i') {
                     if (inst.size() < 5) return 25;
                     if (inst[4] == 'w') {
                         if (inst.size() < 6) return 47;
                     }
-                }
-                if (inst[3] == 'w') {
-                    if (inst.size() < 5) return 52;
                 }
             }
         }
@@ -1333,26 +1492,35 @@ const uint16_t fast_instr_search(const chatastring& inst) {
             if (inst.size() < 3) return instr_search_failed;
             if (inst[2] == 'l') {
                 if (inst.size() < 4) return 29;
+                if (inst[3] == 'w') {
+                    if (inst.size() < 5) return 51;
+                }
                 if (inst[3] == 'i') {
                     if (inst.size() < 5) return 24;
+                    if (inst[4] == '.') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'u') {
+                            if (inst.size() < 7) return instr_search_failed;
+                            if (inst[6] == 'w') {
+                                if (inst.size() < 8) return 413;
+                            }
+                        }
+                    }
                     if (inst[4] == 'w') {
                         if (inst.size() < 6) return 46;
                     }
                 }
-                if (inst[3] == 'w') {
-                    if (inst.size() < 5) return 51;
-                }
             }
             if (inst[2] == 't') {
                 if (inst.size() < 4) return 30;
+                if (inst[3] == 'u') {
+                    if (inst.size() < 5) return 31;
+                }
                 if (inst[3] == 'i') {
                     if (inst.size() < 5) return 19;
                     if (inst[4] == 'u') {
                         if (inst.size() < 6) return 20;
                     }
-                }
-                if (inst[3] == 'u') {
-                    if (inst.size() < 5) return 31;
                 }
             }
         }
@@ -1410,20 +1578,83 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                 }
             }
         }
-        if (inst[1] == 'u') {
-            if (inst.size() < 3) return instr_search_failed;
-            if (inst[2] == 'b') {
-                if (inst.size() < 4) return 28;
-                if (inst[3] == 'w') {
-                    if (inst.size() < 5) return 50;
-                }
-            }
-        }
         if (inst[1] == 'b') {
             if (inst.size() < 3) return 15;
         }
+        if (inst[1] == 'e') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'x') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 't') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == '.') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'b') {
+                            if (inst.size() < 7) return 405;
+                        }
+                        if (inst[5] == 'h') {
+                            if (inst.size() < 7) return 406;
+                        }
+                    }
+                }
+            }
+        }
         if (inst[1] == 'h') {
             if (inst.size() < 3) return 16;
+            if (inst[2] == '1') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'a') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'd') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'd') {
+                            if (inst.size() < 7) return 407;
+                        }
+                    }
+                }
+            }
+            if (inst[2] == '2') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'a') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'd') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'd') {
+                            if (inst.size() < 7) return 409;
+                            if (inst[6] == '.') {
+                                if (inst.size() < 8) return instr_search_failed;
+                                if (inst[7] == 'u') {
+                                    if (inst.size() < 9) return instr_search_failed;
+                                    if (inst[8] == 'w') {
+                                        if (inst.size() < 10) return 408;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (inst[2] == '3') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'a') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'd') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'd') {
+                            if (inst.size() < 7) return 411;
+                            if (inst[6] == '.') {
+                                if (inst.size() < 8) return instr_search_failed;
+                                if (inst[7] == 'u') {
+                                    if (inst.size() < 9) return instr_search_failed;
+                                    if (inst[8] == 'w') {
+                                        if (inst.size() < 10) return 412;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     if (inst[0] == 'x') {
@@ -1434,6 +1665,36 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                 if (inst.size() < 4) return 32;
                 if (inst[3] == 'i') {
                     if (inst.size() < 5) return 21;
+                }
+            }
+        }
+        if (inst[1] == 'n') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'o') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'r') {
+                    if (inst.size() < 5) return 415;
+                }
+            }
+        }
+        if (inst[1] == 'p') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'e') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'r') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == 'm') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == '.') {
+                            if (inst.size() < 7) return instr_search_failed;
+                            if (inst[6] == 'n') {
+                                if (inst.size() < 8) return 417;
+                            }
+                            if (inst[6] == 'b') {
+                                if (inst.size() < 8) return 416;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -1451,10 +1712,34 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                     }
                 }
             }
+            if (inst[2] == 'c') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'k') {
+                    if (inst.size() < 5) return 394;
+                    if (inst[4] == 'w') {
+                        if (inst.size() < 6) return 396;
+                    }
+                    if (inst[4] == 'h') {
+                        if (inst.size() < 6) return 395;
+                    }
+                }
+            }
         }
     }
     if (inst[0] == 'b') {
         if (inst.size() < 2) return instr_search_failed;
+        if (inst[1] == 'i') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'n') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'v') {
+                    if (inst.size() < 5) return 375;
+                    if (inst[4] == 'i') {
+                        if (inst.size() < 6) return 376;
+                    }
+                }
+            }
+        }
         if (inst[1] == 'l') {
             if (inst.size() < 3) return instr_search_failed;
             if (inst[2] == 't') {
@@ -1470,10 +1755,43 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                 if (inst.size() < 4) return 5;
             }
         }
+        if (inst[1] == 'c') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'l') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'r') {
+                    if (inst.size() < 5) return 371;
+                    if (inst[4] == 'i') {
+                        if (inst.size() < 6) return 372;
+                    }
+                }
+            }
+        }
+        if (inst[1] == 's') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'e') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 't') {
+                    if (inst.size() < 5) return 377;
+                    if (inst[4] == 'i') {
+                        if (inst.size() < 6) return 378;
+                    }
+                }
+            }
+        }
         if (inst[1] == 'e') {
             if (inst.size() < 3) return instr_search_failed;
             if (inst[2] == 'q') {
                 if (inst.size() < 4) return 4;
+            }
+            if (inst[2] == 'x') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 't') {
+                    if (inst.size() < 5) return 373;
+                    if (inst[4] == 'i') {
+                        if (inst.size() < 6) return 374;
+                    }
+                }
             }
         }
         if (inst[1] == 'g') {
@@ -1510,6 +1828,30 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                         if (inst.size() < 6) return instr_search_failed;
                         if (inst[5] == 'k') {
                             if (inst.size() < 7) return 41;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if (inst[0] == 'z') {
+        if (inst.size() < 2) return instr_search_failed;
+        if (inst[1] == 'i') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'p') {
+                if (inst.size() < 4) return 419;
+            }
+        }
+        if (inst[1] == 'e') {
+            if (inst.size() < 3) return instr_search_failed;
+            if (inst[2] == 'x') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 't') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == '.') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'h') {
+                            if (inst.size() < 7) return 418;
                         }
                     }
                 }
@@ -1610,6 +1952,27 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                     }
                 }
             }
+            if (inst[2] == 'u') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'l') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == '.') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'd') {
+                            if (inst.size() < 7) return 202;
+                        }
+                        if (inst[5] == 'q') {
+                            if (inst.size() < 7) return 225;
+                        }
+                        if (inst[5] == 's') {
+                            if (inst.size() < 7) return 161;
+                        }
+                        if (inst[5] == 'h') {
+                            if (inst.size() < 7) return 257;
+                        }
+                    }
+                }
+            }
             if (inst[2] == 'i') {
                 if (inst.size() < 4) return instr_search_failed;
                 if (inst[3] == 'n') {
@@ -1651,27 +2014,6 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                             if (inst[6] == 'h') {
                                 if (inst.size() < 8) return 252;
                             }
-                        }
-                    }
-                }
-            }
-            if (inst[2] == 'u') {
-                if (inst.size() < 4) return instr_search_failed;
-                if (inst[3] == 'l') {
-                    if (inst.size() < 5) return instr_search_failed;
-                    if (inst[4] == '.') {
-                        if (inst.size() < 6) return instr_search_failed;
-                        if (inst[5] == 'd') {
-                            if (inst.size() < 7) return 202;
-                        }
-                        if (inst[5] == 'q') {
-                            if (inst.size() < 7) return 225;
-                        }
-                        if (inst[5] == 's') {
-                            if (inst.size() < 7) return 161;
-                        }
-                        if (inst[5] == 'h') {
-                            if (inst.size() < 7) return 257;
                         }
                     }
                 }
@@ -2054,6 +2396,27 @@ const uint16_t fast_instr_search(const chatastring& inst) {
             if (inst[2] == 'd') {
                 if (inst.size() < 4) return 205;
             }
+            if (inst[2] == 'u') {
+                if (inst.size() < 4) return instr_search_failed;
+                if (inst[3] == 'b') {
+                    if (inst.size() < 5) return instr_search_failed;
+                    if (inst[4] == '.') {
+                        if (inst.size() < 6) return instr_search_failed;
+                        if (inst[5] == 'd') {
+                            if (inst.size() < 7) return 210;
+                        }
+                        if (inst[5] == 'q') {
+                            if (inst.size() < 7) return 224;
+                        }
+                        if (inst[5] == 's') {
+                            if (inst.size() < 7) return 160;
+                        }
+                        if (inst[5] == 'h') {
+                            if (inst.size() < 7) return 256;
+                        }
+                    }
+                }
+            }
             if (inst[2] == 'w') {
                 if (inst.size() < 4) return 180;
             }
@@ -2077,27 +2440,6 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                             if (inst[6] == 'h') {
                                 if (inst.size() < 8) return 259;
                             }
-                        }
-                    }
-                }
-            }
-            if (inst[2] == 'u') {
-                if (inst.size() < 4) return instr_search_failed;
-                if (inst[3] == 'b') {
-                    if (inst.size() < 5) return instr_search_failed;
-                    if (inst[4] == '.') {
-                        if (inst.size() < 6) return instr_search_failed;
-                        if (inst[5] == 'd') {
-                            if (inst.size() < 7) return 210;
-                        }
-                        if (inst[5] == 'q') {
-                            if (inst.size() < 7) return 224;
-                        }
-                        if (inst[5] == 's') {
-                            if (inst.size() < 7) return 160;
-                        }
-                        if (inst[5] == 'h') {
-                            if (inst.size() < 7) return 256;
                         }
                     }
                 }

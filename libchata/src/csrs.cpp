@@ -1,9 +1,9 @@
-#include "libchata.hpp"
 #include "csrs.hpp"
+#include "libchata.hpp"
 
 namespace libchata_internal {
 
-const std::array<std::pair<std::string_view, uint16_t>, 375> csrs = {{
+const std::array<std::pair<std::string_view, uint16_t>, 376> csrs = {{
         {"fflags", 0x001},
         {"frm", 0x002},
         {"fcsr", 0x003},
@@ -15,6 +15,7 @@ const std::array<std::pair<std::string_view, uint16_t>, 375> csrs = {{
         {"vtype", 0xC21},
         {"vlenb", 0xC22},
         {"ssp", 0x011},
+        {"jvt", 0x017},
         {"cycle", 0xC00},
         {"time", 0xC01},
         {"instret", 0xC02},

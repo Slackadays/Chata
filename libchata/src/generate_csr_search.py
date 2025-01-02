@@ -1,4 +1,4 @@
-input = "csrs.hpp"
+input = "csrs.cpp"
 output = "csr_search.cpp"
 
 import re

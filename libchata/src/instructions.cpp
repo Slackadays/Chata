@@ -12,7 +12,7 @@ using enum RVInstructionID;
 using enum RVInstructionSet;
 using std::nullopt;
 
-const std::array<rvinstruction, 367> instructions = {
+const std::array<rvinstruction, 420> instructions = {
         {{"lui", U, LUI, 0b0110111, 0b000, RV32I, 4},
          {"auipc", U, AUIPC, 0b0010111, 0b000, RV32I, 4},
          {"jal", J, JAL, 0b1101111, 0b000, RV32I, 4},
@@ -379,6 +379,61 @@ const std::array<rvinstruction, 367> instructions = {
          {"cm.popretz", CMPP, CMPOPRETZ, 0b10, 0b10111100, Zcmp, 2},
          {"cm.popret", CMPP, CMPOPRET, 0b10, 0b10111110, Zcmp, 2},
          {"cm.mvsa01", CMMV, CMMVSA01, 0b10, 0b10101101, Zcmp, 2},
-         {"cm.mva01s", CMMV, CMMVA01S, 0b10, 0b10101111, Zcmp, 2}}};
+         {"cm.mva01s", CMMV, CMMVA01S, 0b10, 0b10101111, Zcmp, 2},
+         {"cm.jt", CMJTfmt, CMJT, 0b10, 0b101000, Zcmt, 2},
+         {"cm.jalt", CMJTfmt, CMJALT, 0b10, 0b101000, Zcmt, 2},
+         {"add.uw", R, ADDUW, 0b0111011, 0b0000100000, Bit, 4},
+         {"andn", R, ANDN, 0b0110011, 0b0100000111, Bit, 4},
+         {"bclr", R, BCLR, 0b0110011, 0b0100100001, Bit, 4},
+         {"bclri", R, BCLRI, 0b0010011, 0b0100100001, Bit, 4, {nullopt, false, true}}, // This one "requires" an extra bit in shamt for RV64, but in reality it's a special case where shamt is big
+                                                                                       // enough to clear a 64 bit register, so we just add the extra bit to rs2 and let the extra available space
+                                                                                       // handle it transparently
+         {"bext", R, BEXT, 0b0110011, 0b0100100101, Bit, 4},
+         {"bexti", R, BEXTI, 0b0010011, 0b0100100101, Bit, 4, {nullopt, false, true}}, // Same idea as bclri
+         {"binv", R, BINV, 0b0110011, 0b0110100001, Bit, 4},
+         {"binvi", R, BINVI, 0b0010011, 0b0110100001, Bit, 4, {nullopt, false, true}}, // Same idea as bclri
+         {"bset", R, BSET, 0b0110011, 0b0010100001, Bit, 4},
+         {"bseti", R, BSETI, 0b0010011, 0b0010100001, Bit, 4, {nullopt, false, true}}, // Same idea as bclri
+         {"clmul", R, CLMUL, 0b0110011, 0b0000101001, Bit, 4},
+         {"clmulh", R, CLMULH, 0b0110011, 0b0000101011, Bit, 4},
+         {"clmulr", R, CLMULR, 0b0110011, 0b0000101010, Bit, 4},
+         {"clz", R, CLZ, 0b0010011, 0b0110000001, Bit, 4, {0b00000}},
+         {"clzw", R, CLZW, 0b0011011, 0b0110000001, Bit, 4, {0b00000}},
+         {"cpop", R, CPOP, 0b0010011, 0b0110000001, Bit, 4, {0b00010}},
+         {"cpopw", R, CPOPW, 0b0011011, 0b0110000001, Bit, 4, {0b00010}},
+         {"ctz", R, CTZ, 0b0010011, 0b0110000001, Bit, 4, {0b00001}},
+         {"ctzw", R, CTZW, 0b0011011, 0b0110000001, Bit, 4, {0b00001}},
+         {"max", R, MAX, 0b0110011, 0b0000101110, Bit, 4},
+         {"maxu", R, MAXU, 0b0110011, 0b0000101111, Bit, 4},
+         {"min", R, MIN, 0b0110011, 0b0000101100, Bit, 4},
+         {"minu", R, MINU, 0b0110011, 0b0000101101, Bit, 4},
+         {"orc.b", R, ORCB, 0b0010011, 0b0010100101, Bit, 4, {0b00111}},
+         {"orn", R, ORN, 0b0110011, 0b0100000110, Bit, 4},
+         {"pack", R, PACK, 0b0110011, 0b0000100100, Bit, 4},
+         {"packh", R, PACKH, 0b0110011, 0b0000100111, Bit, 4},
+         {"packw", R, PACKW, 0b0111011, 0b0000100100, Bit, 4},
+         {"rev8", R, REV8, 0b0010011, 0b0110100101, Bit, 4, {0b11000}}, // This one is similar to bclri, but it instead makes bit 25 1 on rv64 and otherwise stays the same
+         {"rev.b", R, REVB, 0b0010011, 0b0110100101, Bit, 4, {0b00111}},
+         {"rol", R, ROL, 0b0110011, 0b0110000001, Bit, 4},
+         {"rolw", R, ROLW, 0b0111011, 0b0110000001, Bit, 4},
+         {"ror", R, ROR, 0b0110011, 0b0110000101, Bit, 4},
+         {"rori", R, RORI, 0b0010011, 0b0110000101, Bit, 4, {nullopt, false, true}}, // Same idea as bclri
+         {"roriw", R, RORIW, 0b0011011, 0b0110000101, Bit, 4, {nullopt, false, true}},
+         {"rorw", R, RORW, 0b0111011, 0b0110000101, Bit, 4},
+         {"sext.b", R, SEXTB, 0b0010011, 0b0110000001, Bit, 4, {0b00100}},
+         {"sext.h", R, SEXTH, 0b0010011, 0b0110000001, Bit, 4, {0b00101}},
+         {"sh1add", R, SH1ADD, 0b0110011, 0b0010000010, Bit, 4},
+         {"sh2add.uw", R, SH1ADDUW, 0b0111011, 0b0010000010, Bit, 4},
+         {"sh2add", R, SH2ADD, 0b0110011, 0b0010000100, Bit, 4},
+         {"sh2add.uw", R, SH2ADDUW, 0b0111011, 0b0010000100, Bit, 4},
+         {"sh3add", R, SH3ADD, 0b0110011, 0b0010000110, Bit, 4},
+         {"sh3add.uw", R, SH3ADDUW, 0b0111011, 0b0010000110, Bit, 4},
+         {"slli.uw", R, SLLIUW, 0b0011011, 0b000010001, Bit, 4, {nullopt, false, true}},
+         {"unzip", R, UNZIP, 0b0010011, 0b0000100101, Bit, 4, {0b11111}},
+         {"xnor", R, XNOR, 0b0110011, 0b0100000100, Bit, 4},
+         {"xperm.b", R, XPERMB, 0b0110011, 0b0010100100, Bit, 4},
+         {"xperm.n", R, XPERMN, 0b0110011, 0b0010100010, Bit, 4},
+         {"zext.h", R, ZEXTH, 0b0110011, 0b0000100100, Bit, 4, {0b00000}}, // Similar to rev8, but we make bit 4 (in the opcode) 1 instead for rv64
+         {"zip", R, ZIP, 0b0010011, 0b0000100001, Bit, 4, {0b11110}}}};
 
 } // namespace libchata_internal
