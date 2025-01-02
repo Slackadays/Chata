@@ -32,13 +32,57 @@ void as(std::string_view input, uint32_t expected_output) {
     }
 }
 
+void as(std::string_view input, std::vector<uint8_t> expected_output) {
+    std::vector<uint8_t> result;
+    try {
+        auto temp = assemble_code(chatastring(input));
+        result = std::vector<uint8_t>(temp.begin(), temp.end());
+    } catch (ChataError& e) {
+        std::cout << e.what() << std::endl;
+        std::cout << "❌ Test FAILED for " << input << ": expected ";
+        for (auto& byte : expected_output) {
+            std::cout << std::hex << static_cast<uint32_t>(byte) << " ";
+        }
+        std::cout << std::dec << " (";
+        for (auto& byte : expected_output) {
+            std::cout << std::bitset<8>(byte);
+        }
+        std::cout << "), but got an error" << std::endl;
+        return;
+    }
+
+    if (result != expected_output) {
+        std::cout << "❌ Test FAILED for " << input << ": expected ";
+        for (auto& byte : expected_output) {
+            std::cout << std::hex << static_cast<uint32_t>(byte) << " ";
+        }
+        std::cout << std::dec << " (";
+        for (auto& byte : expected_output) {
+            std::cout << std::bitset<8>(byte);
+        }
+        std::cout << "), but got ";
+        for (auto& byte : result) {
+            std::cout << std::hex << static_cast<uint32_t>(byte) << " ";
+        }
+        std::cout << std::dec << " (";
+        for (auto& byte : result) {
+            std::cout << std::bitset<8>(byte);
+        }
+        std::cout << ")" << std::endl;
+        failed_tests++;
+        return;
+    }
+
+    std::cout << "✅ Test passed for " << input << std::endl;
+    passed_tests++;
+}
+
 } // namespace libchata_internal
 
 using namespace libchata_internal;
 
 int main() {
-    std::cout << "Running your tests..." << std::endl;
-
+    std::cout << "Running assembler tests..." << std::endl;
     as("lui a0, 12345", 0x37950303);
     as("lui a0, 0x12345", 0x37553412);
     as("lui a0, 0b100", 0x37450000);
@@ -51,6 +95,7 @@ int main() {
     as("jalr x0, -800(a0)", 0x670005ce);
     as("jalr x0, a0, -800", 0x670005ce);
     as("beq s1, t6, 40", 0x6384f403);
+    as("beq s1, t6, -40", 0xe38cf4fd);
     as("bne s0, a2, 36", 0x6312c402);
     as("blt t4, t5, 16", 0x6398ee01);
     as("bge t3, t2, 12", 0x63467e00);
@@ -583,6 +628,16 @@ int main() {
     as("c.sub x14, x15", 0x1d8f);
     as("c.nop", 0x0100);
     as("c.ebreak", 0x0290);
+
+    as("beq t0, t1, foolabel\nadd a0, a5, a6\nfoolabel:", {0x63, 0x84, 0x62, 0x00, 0x33, 0x85, 0x07, 0x01});
+    as("foolabel:\nadd a0, a5, a6\nbne t0, t1, foolabel", {0x33, 0x85, 0x07, 0x01, 0xe3, 0x9e, 0x62, 0xfe});
+    as("beq t0, t1, foolabel\nc.li a5, 26\nfoolabel:", {0x63, 0x83, 0x62, 0x00, 0xe9, 0x47});
+    as("foolabel:\nc.li a5, 26\nbeq t0, t1, foolabel", {0xe9, 0x47, 0xe3, 0x8f, 0x62, 0xfe});
+    as("foolabel:\nc.li a5, 26\nadd s0, s1, s2\nbeq t0, t1, foolabel", {0xe9, 0x47, 0x33, 0x84, 0x24, 0x01, 0xe3, 0x8d, 0x62, 0xfe});
+    as("dummylabel:\nc.li a5, 26\nbeq t0, t1, foolabel\nxor a0, a1, a2\nbarlabel:\nfoolabel:\nadd s0, s1, s2\nj dummylabel", {0xe9, 0x47, 0x63, 0x84, 0x62, 0x00, 0x33, 0xc5, 0xc5, 0x00, 0x33, 0x84, 0x24, 0x01, 0x6f, 0xf0, 0x3f, 0xff});
+
+
+
 
     std::cout << passed_tests << " tests passed, " << failed_tests << " tests failed, " << passed_tests + failed_tests << " tests total" << std::endl;
 

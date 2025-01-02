@@ -1,1 +1,3 @@
-lui a0, 4
+foolabel:
+add a0, a5, a6
+bne t0, t1, foolabel

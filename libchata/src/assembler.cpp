@@ -612,7 +612,9 @@ void solve_label_offsets(assembly_context& c) {
                     for (int j = i + step; j != end; j += step) {
                         if (c.nodes.at(j).imm_purpose == LABEL_NODE) {
                             if (c.nodes.at(j).imm == inst.imm) {
-                                label_offset += instructions.at(inst.inst_offset).bytes;
+                                if (step == 1) {
+                                    label_offset += instructions.at(inst.inst_offset).bytes;
+                                }
                                 DBG(std::cout << "Found offset for label " << inst.imm << ": " << label_offset << std::endl;)
                                 inst.imm = label_offset;
                                 inst.imm_purpose = INSTR_IMM;
@@ -620,7 +622,7 @@ void solve_label_offsets(assembly_context& c) {
                             }
                         }
                         if (c.nodes.at(j).imm_purpose != LABEL_NODE) {
-                            label_offset += instructions.at(c.nodes.at(j).inst_offset).bytes;
+                            label_offset += instructions.at(c.nodes.at(j).inst_offset).bytes * step;
                         }
                     }
                     return label_offset;
