@@ -12,7 +12,7 @@ using enum RVInstructionID;
 using enum RVInstructionSet;
 using std::nullopt;
 
-const std::array<rvinstruction, 420> instructions = {
+const std::array<rvinstruction, 459> instructions = {
         {{"lui", U, LUI, 0b0110111, 0b000, RV32I, 4},
          {"auipc", U, AUIPC, 0b0010111, 0b000, RV32I, 4},
          {"jal", J, JAL, 0b1101111, 0b000, RV32I, 4},
@@ -434,6 +434,43 @@ const std::array<rvinstruction, 420> instructions = {
          {"xperm.b", R, XPERMB, 0b0110011, 0b0010100100, Bit, 4},
          {"xperm.n", R, XPERMN, 0b0110011, 0b0010100010, Bit, 4},
          {"zext.h", R, ZEXTH, 0b0110011, 0b0000100100, Bit, 4, {0b00000}}, // Similar to rev8, but we make bit 4 (in the opcode) 1 instead for rv64
-         {"zip", R, ZIP, 0b0010011, 0b0000100001, Bit, 4, {0b11110}}}};
+         {"zip", R, ZIP, 0b0010011, 0b0000100001, Bit, 4, {0b11110}},
+         {"vsetvli", I, VSETVLI, 0b1010111, 0b111, V, 4, {nullopt, false, false, true}},
+         {"vsetivli", I, VSETIVLI, 0b1010111, 0b111, V, 4, {nullopt, false, true, true}},
+         {"vsetvl", R, VSETVL, 0b1010111, 0b1000000111, V, 4},
+         {"vle8.v", VL, VLE8V, 0b0000111, 0b000001000, V, 4, {0b00000}},
+         {"vle16.v", VL, VLE16V, 0b0000111, 0b000001101, V, 4, {0b00000}},
+         {"vle32.v", VL, VLE32V, 0b0000111, 0b000001110, V, 4, {0b00000}},
+         {"vle64.v", VL, VLE64V, 0b0000111, 0b000001111, V, 4, {0b00000}},
+         {"vse8.v", VS, VSE8V, 0b0100111, 0b000001000, V, 4, {0b00000}},
+         {"vse16.v", VS, VSE16V, 0b0100111, 0b000001101, V, 4, {0b00000}},
+         {"vse32.v", VS, VSE32V, 0b0100111, 0b000001110, V, 4, {0b00000}},
+         {"vse64.v", VS, VSE64V, 0b0100111, 0b000001111, V, 4, {0b00000}},
+         {"vlm.v", VL, VLMV, 0b0000111, 0b0000001000, V, 4, {0b01011}},
+         {"vsm.v", VS, VSMV, 0b0100111, 0b0000001000, V, 4, {0b01011}},
+         {"vlse8.v", VLS, VLSE8V, 0b0000111, 0b0000101000, V, 4},
+         {"vlse16.v", VLS, VLSE16V, 0b0000111, 0b0000101101, V, 4},
+         {"vlse32.v", VLS, VLSE32V, 0b0000111, 0b0000101110, V, 4},
+         {"vlse64.v", VLS, VLSE64V, 0b0000111, 0b0000101111, V, 4},
+         {"vsse8.v", VSS, VSSE8V, 0b0100111, 0b0000101000, V, 4},
+         {"vsse16.v", VSS, VSSE16V, 0b0100111, 0b0000101101, V, 4},
+         {"vsse32.v", VSS, VSSE32V, 0b0100111, 0b0000101110, V, 4},
+         {"vsse64.v", VSS, VSSE64V, 0b0100111, 0b0000101111, V, 4},
+         {"vluxei8.v", VLX, VLUXEI8V, 0b0000111, 0b0000011000, V, 4},
+         {"vluxei16.v", VLX, VLUXEI16V, 0b0000111, 0b0000011101, V, 4},
+         {"vluxei32.v", VLX, VLUXEI32V, 0b0000111, 0b0000011110, V, 4},
+         {"vluxei64.v", VLX, VLUXEI64V, 0b0000111, 0b0000011111, V, 4},
+         {"vloxei8.v", VLX, VLOXEI8V, 0b0000111, 0b0000111000, V, 4},
+         {"vloxei16.v", VLX, VLOXEI16V, 0b0000111, 0b0000111101, V, 4},
+         {"vloxei32.v", VLX, VLOXEI32V, 0b0000111, 0b0000111110, V, 4},
+         {"vloxei64.v", VLX, VLOXEI64V, 0b0000111, 0b0000111111, V, 4},
+         {"vsuxei8.v", VSX, VSUXEI8V, 0b0100111, 0b0000011000, V, 4},
+         {"vsuxei16.v", VSX, VSUXEI16V, 0b0100111, 0b0000011101, V, 4},
+         {"vsuxei32.v", VSX, VSUXEI32V, 0b0100111, 0b0000011110, V, 4},
+         {"vsuxei64.v", VSX, VSUXEI64V, 0b0100111, 0b0000011111, V, 4},
+         {"vsoxei8.v", VSX, VSOXEI8V, 0b0100111, 0b0000111000, V, 4},
+         {"vsoxei16.v", VSX, VSOXEI16V, 0b0100111, 0b0000111101, V, 4},
+         {"vsoxei32.v", VSX, VSOXEI32V, 0b0100111, 0b0000111110, V, 4},
+         {"vsoxei64.v", VSX, VSOXEI64V, 0b0100111, 0b0000111111, V, 4}}};
 
 } // namespace libchata_internal

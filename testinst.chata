@@ -1,3 +1,8 @@
 foolabel:
-add a0, a5, a6
-bne t0, t1, foolabel
+jal zero, foolabel
+c.j foolabel
+bazlabel:
+jal zero, barlabel
+c.j barlabel
+.dotlabel:
+barlabel:

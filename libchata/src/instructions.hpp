@@ -1144,6 +1144,6 @@ struct rvinstruction {
     special_snowflake_args ssargs = {};
 };
 
-extern const std::array<rvinstruction, 420> instructions;
+extern const std::array<rvinstruction, 459> instructions;
 
 } // namespace libchata_internal

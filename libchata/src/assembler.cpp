@@ -99,15 +99,6 @@ rvregister string_to_register(const chatastring& str, assembly_context& c) {
     throw ChataError(ChataErrorType::Compiler, "Invalid register " + str, c.line, c.column);
 }
 
-uint16_t get_inst_offset_by_id(const RVInstructionID& id) {
-    for (size_t i = 0; i < instructions.size(); i++) {
-        if (instructions.at(i).id == id) {
-            return i;
-        }
-    }
-    throw ChataError(ChataErrorType::Assembler, "Invalid instruction ID " + to_chatastring(std::to_underlying(id)));
-}
-
 uint8_t decode_frm(const chatastring& frm) {
     if (fast_eq(frm, "rne")) {
         return 0b000;
@@ -462,16 +453,16 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
         if (imm >= -2048 && imm <= 2047) {
-            c.inst_offset = get_inst_offset_by_id(ADDI);
+            c.inst_offset = fast_instr_search("addi");
             c.arg2 = "zero";
             c.arg3 = to_chatastring(imm);
             return {make_inst(c)};
         }
         // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-        c.inst_offset = get_inst_offset_by_id(LUI);
+        c.inst_offset = fast_instr_search("lui");
         c.arg2 = to_chatastring(imm >> 12);
         instruction i1 = make_inst(c);
-        c.inst_offset = get_inst_offset_by_id(ADDI);
+        c.inst_offset = fast_instr_search("addi");
         c.arg2 = c.arg1;
         c.arg3 = to_chatastring(imm & 0xFFF);
         instruction i2 = make_inst(c);
@@ -485,79 +476,79 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
         if (imm >= -2048 && imm <= 2047) {
-            c.inst_offset = get_inst_offset_by_id(ADDI);
+            c.inst_offset = fast_instr_search("addi");
             c.arg2 = "zero";
             c.arg3 = to_chatastring(imm);
             return {make_inst(c)};
         }
         // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-        c.inst_offset = get_inst_offset_by_id(AUIPC);
+        c.inst_offset = fast_instr_search("auipc");
         c.arg2 = to_chatastring(imm >> 12);
         instruction i1 = make_inst(c);
-        c.inst_offset = get_inst_offset_by_id(ADDI);
+        c.inst_offset = fast_instr_search("addi");
         c.arg2 = c.arg1;
         c.arg3 = to_chatastring(imm & 0xFFF);
         instruction i2 = make_inst(c);
         return {i1, i2};
 
     } else if (fast_eq(c.inst, "mv")) { // mv rd, rs -> addi rd, rs, 0
-        c.inst_offset = get_inst_offset_by_id(ADDI);
+        c.inst_offset = fast_instr_search("addi");
         c.arg3 = "0";
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "not")) { // not rd, rs -> xori rd, rs, -1
-        c.inst_offset = get_inst_offset_by_id(XORI);
+        c.inst_offset = fast_instr_search("xori");
         c.arg3 = "-1";
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "neg")) { // neg rd, rs -> sub rd, zero, rs
-        c.inst_offset = get_inst_offset_by_id(SUB);
+        c.inst_offset = fast_instr_search("sub");
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "bgt")) { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
-        c.inst_offset = get_inst_offset_by_id(BLT);
+        c.inst_offset = fast_instr_search("blt");
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "ble")) { // ble rs1, rs2, label|imm -> bge rs2, rs1, label|imm
-        c.inst_offset = get_inst_offset_by_id(BGE);
+        c.inst_offset = fast_instr_search("bge");
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "bgtu")) { // bgtu rs1, rs2, label|imm -> bltu rs2, rs1, label|imm
-        c.inst_offset = get_inst_offset_by_id(BLTU);
+        c.inst_offset = fast_instr_search("bltu");
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "bleu")) { // bleu rs1, rs2, label|imm -> bgeu rs2, rs1, label|imm
-        c.inst_offset = get_inst_offset_by_id(BGEU);
+        c.inst_offset = fast_instr_search("bgeu");
         std::swap(c.arg1, c.arg2);
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "beqz")) { // beqz rs, label|imm -> beq rs, zero, label|imm
-        c.inst_offset = get_inst_offset_by_id(BEQ);
+        c.inst_offset = fast_instr_search("beq");
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "bnez")) { // bnez rs, label|imm -> bne rs, zero, label|imm
-        c.inst_offset = get_inst_offset_by_id(BNE);
+        c.inst_offset = fast_instr_search("bne");
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "bgez")) { // bgez rs, label|imm -> bge rs, zero, label|imm
-        c.inst_offset = get_inst_offset_by_id(BGE);
+        c.inst_offset = fast_instr_search("bge");
         c.arg3 = c.arg2;
         c.arg2 = "zero";
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "blez")) { // blez rs, label|imm -> bge zero, rs, label|imm
-        c.inst_offset = get_inst_offset_by_id(BGE);
+        c.inst_offset = fast_instr_search("bge");
         c.arg3 = c.arg2;
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "bgtz")) { // bgtz rs, label|imm -> blt zero, rs, label|imm
-        c.inst_offset = get_inst_offset_by_id(BLT);
+        c.inst_offset = fast_instr_search("blt");
         c.arg3 = c.arg2;
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "j")) {
-        c.inst_offset = get_inst_offset_by_id(JAL);
+        c.inst_offset = fast_instr_search("jal");
         c.arg2 = c.arg1;
         c.arg1 = "zero";
         return {make_inst(c)};
@@ -571,7 +562,7 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg1, c.line, c.column);
         }
         if (imm >= -2048 && imm <= 2047) {
-            c.inst_offset = get_inst_offset_by_id(JALR);
+            c.inst_offset = fast_instr_search("jalr");
             c.arg3 = c.arg1;
             c.arg2 = "ra";
             c.arg1 = "ra";
@@ -580,22 +571,22 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
         // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
 
     } else if (fast_eq(c.inst, "ret")) {
-        c.inst_offset = get_inst_offset_by_id(JALR);
+        c.inst_offset = fast_instr_search("jalr");
         c.arg1 = "zero";
         c.arg2 = "ra";
         c.arg3 = "0";
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "nop")) {
-        c.inst_offset = get_inst_offset_by_id(ADDI);
+        c.inst_offset = fast_instr_search("addi");
         c.arg1 = "zero";
         c.arg2 = "zero";
         c.arg3 = "0";
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "fmv.s.x")) {
-        c.inst_offset = get_inst_offset_by_id(FMVWX);
+        c.inst_offset = fast_instr_search("fmv.w.x");
         return {make_inst(c)};
     } else if (fast_eq(c.inst, "fmv.x.s")) {
-        c.inst_offset = get_inst_offset_by_id(FMVXW);
+        c.inst_offset = fast_instr_search("fmv.x.w");
         return {make_inst(c)};
     }
     return {};
@@ -857,12 +848,12 @@ void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
         auto ch = [&]() {
             return data.at(i);
         };
-        for (; i < data.size() && is_whitespace(ch()) && ch() != '\n'; i++) {
-            c.column++;
+        while (i < data.size() && is_whitespace(ch()) && ch() != '\n') {
+            i++;
         }
-        for (; i < data.size() && !is_whitespace(ch()) && ch() != '\n'; i++) {
+        while (i < data.size() && !is_whitespace(ch()) && ch() != '\n') {
             c.inst.push_back(ch());
-            c.column++;
+            i++;
         }
         DBG(std::cout << "Instruction candidate: " << c.inst << std::endl;)
         if (c.inst.front() == '.' || c.inst.front() == '#' || c.inst.back() == ':') {
@@ -875,12 +866,12 @@ void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
         }
         auto parse_arg = [&](chatastring& arg) {
             arg.clear();
-            for (; i < data.size() && (is_whitespace(ch()) || ch() == ',') && ch() != '\n'; i++) {
-                c.column++;
+            while (i < data.size() && (is_whitespace(ch()) || ch() == ',') && ch() != '\n') {
+                i++;
             }
-            for (; i < data.size() && !(is_whitespace(ch()) || ch() == ',') && ch() != '\n'; i++) {
+            while (i < data.size() && !(is_whitespace(ch()) || ch() == ',') && ch() != '\n') {
                 arg.push_back(ch());
-                c.column++;
+                i++;
             }
         };
         parse_arg(c.arg1);
