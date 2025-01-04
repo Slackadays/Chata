@@ -871,8 +871,8 @@ enum class RVInstructionID : uint16_t {
     VMADDVX,
     VNMSUBVV,
     VNMSUBVX,
-    VMWACCUVV,
-    VMWACCUVX,
+    VWMACCUVV,
+    VWMACCUVX,
     VWMACCVV,
     VWMACCVX,
     VWMACCSUVV,
@@ -1088,6 +1088,15 @@ enum class RVInstructionFormat : uint8_t {
     VS,
     VSS,
     VSX,
+    VLR,
+    VSR,
+    IVV,
+    FVV,
+    MVV,
+    IVI,
+    IVX,
+    FVF,
+    MVX,
     CLB,
     CSBfmt,
     CLHfmt,
@@ -1127,9 +1136,10 @@ enum class RVInstructionSet : uint8_t {
 };
 
 struct special_snowflake_args {
+    std::optional<uint8_t> rs1;
     std::optional<uint8_t> rs2;
-    bool use_frm_for_funct3 = false;
     bool use_imm_for_rs2 = false;
+    bool use_frm_for_funct3 = false;
     bool super_special_snowflake = false;
 };
 
@@ -1144,6 +1154,6 @@ struct rvinstruction {
     special_snowflake_args ssargs = {};
 };
 
-extern const std::array<rvinstruction, 459> instructions;
+extern const std::array<rvinstruction, 926> instructions;
 
 } // namespace libchata_internal
