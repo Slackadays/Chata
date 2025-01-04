@@ -864,21 +864,42 @@ void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
             }
             break;
         }
+        while (i < data.size() && is_whitespace(ch()) && ch() != '\n') {
+            i++;
+        }
         auto parse_arg = [&](chatastring& arg) {
             arg.clear();
-            while (i < data.size() && (is_whitespace(ch()) || ch() == ',') && ch() != '\n') {
+            while (i < data.size() && ch() != ',' && ch() != '\n') {
+                arg.push_back(ch());
                 i++;
             }
-            while (i < data.size() && !(is_whitespace(ch()) || ch() == ',') && ch() != '\n') {
-                arg.push_back(ch());
+            if (i < data.size() && ch() != '\n') {
+                i++;
+            }
+            while (i < data.size() && is_whitespace(ch()) && ch() != '\n') {
                 i++;
             }
         };
         parse_arg(c.arg1);
+        if (c.arg1.empty()) {
+            break;
+        }
         parse_arg(c.arg2);
+        if (c.arg2.empty()) {
+            break;
+        }
         parse_arg(c.arg3);
+        if (c.arg3.empty()) {
+            break;
+        }
         parse_arg(c.arg4);
+        if (c.arg4.empty()) {
+            break;
+        }
         parse_arg(c.arg5);
+        if (c.arg5.empty()) {
+            break;
+        }
         parse_arg(c.arg6);
     }
     while (i < data.size() && data.at(i) == '\n') {
