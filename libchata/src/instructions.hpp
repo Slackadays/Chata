@@ -1031,10 +1031,6 @@ enum class RVInstructionID : uint16_t {
     VMNORMM,
     VMORNMM,
     VMXNORMM,
-    VMMVM,
-    VMCLRM,
-    VMSETM,
-    VMNOTM,
     VCPOPM,
     VFIRSTM,
     VMSBFM,
@@ -1145,8 +1141,8 @@ struct special_snowflake_args {
 
 struct rvinstruction {
     std::string_view name;
-    RVInstructionFormat type;
     RVInstructionID id;
+    RVInstructionFormat type;
     uint8_t opcode;
     uint16_t funct;
     RVInstructionSet set;
@@ -1154,6 +1150,6 @@ struct rvinstruction {
     special_snowflake_args ssargs = {};
 };
 
-extern const std::array<rvinstruction, 926> instructions;
+extern const std::array<rvinstruction, 1041> instructions;
 
 } // namespace libchata_internal
