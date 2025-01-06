@@ -166,6 +166,8 @@ enum class RVInstructionSet : uint8_t {
     Zcb,
     Zcmp,
     C,
+    Zcd,
+    Zcf,
     Zcmt,
     B,
     V
