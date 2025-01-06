@@ -1065,7 +1065,7 @@ enum class RVInstructionFormat : uint8_t {
     R,
     I,
     S,
-    B,
+    Branch,
     U,
     J,
     R4,
@@ -1103,37 +1103,8 @@ enum class RVInstructionFormat : uint8_t {
     CMPP
 };
 
-enum class RVInstructionSet : uint8_t {
-    RV32I,
-    RV64I,
-    RV32M,
-    RV64M,
-    RV32A,
-    RV64A,
-    RV32F,
-    RV64F,
-    RV32D,
-    RV64D,
-    RV32Q,
-    RV64Q,
-    RV32Zfh,
-    RV64Zfh,
-    Zifencei,
-    Zicsr,
-    Zawrs,
-    Zicond,
-    Zacas,
-    Zcb,
-    Zcmp,
-    C,
-    Zcmt,
-    Bit,
-    V
-};
-
 struct special_snowflake_args {
-    std::optional<uint8_t> rs1;
-    std::optional<uint8_t> rs2;
+    std::optional<uint8_t> custom_reg_val;
     bool use_imm_for_rs2 = false;
     bool use_frm_for_funct3 = false;
     bool super_special_snowflake = false;
@@ -1146,6 +1117,7 @@ struct rvinstruction {
     uint8_t opcode;
     uint16_t funct;
     RVInstructionSet set;
+    RVInstructionSet subset;
     uint8_t bytes;
     special_snowflake_args ssargs = {};
 };

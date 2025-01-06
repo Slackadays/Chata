@@ -299,7 +299,7 @@ instruction make_inst(assembly_context& c) {
             }
         }
         i.rs1 = string_to_register(c.arg2, c).encoding;
-        auto no_rs2 = base_i.ssargs.rs2.has_value();
+        auto no_rs2 = base_i.ssargs.custom_reg_val.has_value();
         if (!no_rs2) {
             if (base_i.ssargs.use_imm_for_rs2) {
                 i.rs2 = i.imm;
@@ -307,7 +307,7 @@ instruction make_inst(assembly_context& c) {
                 i.rs2 = string_to_register(c.arg3, c).encoding;
             }
         } else {
-            i.rs2 = base_i.ssargs.rs2.value();
+            i.rs2 = base_i.ssargs.custom_reg_val.value();
         }
         if (base_i.type == R) {
             if (!c.arg4.empty() && no_rs2) {
@@ -343,7 +343,7 @@ instruction make_inst(assembly_context& c) {
         } else if (base_i.type == S) {
             i.rs2 = string_to_register(c.arg1, c).encoding;
         }
-    } else if (base_i.type == B) {
+    } else if (base_i.type == Branch) {
         if (auto num = to_int(c.arg3); num.has_value()) {
             i.imm = num.value();
         } else {
@@ -404,8 +404,8 @@ instruction make_inst(assembly_context& c) {
         i.rs1 = string_to_register(c.arg1, c).encoding & 0b111;
     } else if (base_i.type == CR) {
         i.rd = string_to_register(c.arg1, c).encoding;
-        if (base_i.ssargs.rs2.has_value()) {
-            i.rs2 = base_i.ssargs.rs2.value();
+        if (base_i.ssargs.custom_reg_val.has_value()) {
+            i.rs2 = base_i.ssargs.custom_reg_val.value();
         } else {
             i.rs2 = string_to_register(c.arg2, c).encoding;
         }
@@ -668,8 +668,8 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= i.rs1 << 15;            // Add rs1
             inst |= i.rs2 << 20;            // Add rs2
             inst |= (i.imm >> 5) << 25;     // Add imm[11:5]
-        } else if (base_i.type == B) {
-            DBG(std::cout << "Encoding B-type instruction with name " << base_i.name << std::endl;)
+        } else if (base_i.type == Branch) {
+            DBG(std::cout << "Encoding Branch-type instruction with name " << base_i.name << std::endl;)
             inst |= ((i.imm >> 11) & 0b1) << 7;      // Add imm[11]
             inst |= ((i.imm >> 1) & 0b1111) << 8;    // Add imm[4:1]
             inst |= base_i.funct << 12;              // Add funct3
