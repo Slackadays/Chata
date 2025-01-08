@@ -39,6 +39,7 @@ add_library(objchata OBJECT
     src/if.cpp
     src/change.cpp
     src/instructions.cpp
+    src/pseudoinstructions.cpp
     src/registers.cpp
     src/csrs.cpp
     src/instruction_search.cpp

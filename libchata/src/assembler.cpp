@@ -2,8 +2,10 @@
 #include "csrs.hpp"
 #include "debug.hpp"
 #include "instructions.hpp"
+#include "pseudoinstructions.hpp"
 #include "libchata.hpp"
 #include "registers.hpp"
+#include "assembler.hpp"
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
@@ -13,40 +15,7 @@
 
 namespace libchata_internal {
 
-enum class InstrImmPurpose : uint8_t {
-    INSTR_IMM,
-    LABEL_DEST,
-    LABEL_NODE
-};
-
 using enum InstrImmPurpose;
-
-struct instruction {
-    uint16_t inst_offset = 0; // The offset from the instructions array at which our instruction is (saves memory and prevents O(n) lookups)
-    uint8_t rd = 0;
-    uint8_t rs1 = 0;
-    uint8_t rs2 = 0;
-    uint8_t rs3 = 0;
-    uint8_t frm = 0;
-    int32_t imm = 0;
-    InstrImmPurpose imm_purpose = INSTR_IMM;
-};
-
-struct assembly_context {
-    chatavector<instruction> nodes;
-    size_t instruction_bytes = 0;
-    chatavector<std::pair<chatastring, int>> labels;
-    int line = 1;
-    int column = 0;
-    uint16_t inst_offset = 0;
-    chatastring inst;
-    chatastring arg1;
-    chatastring arg2;
-    chatastring arg3;
-    chatastring arg4;
-    chatastring arg5;
-    chatastring arg6;
-};
 
 bool fast_eq(const auto& first, const std::string_view& second) {
     if (first.size() != second.size()) { // First make sure the sizes are equal because no two strings can ever be the same if they have different sizes. Also, this lets us save on future bound checks
@@ -442,155 +411,142 @@ instruction make_inst(assembly_context& c) {
     return i;
 }
 
+// The generate_pseudoinstruction_converter.py script generated the following code. DO NOT MODIFY!
+// Start make_inst_from_pseudoinst
 chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
-    using enum RVInstructionID;
-    if (fast_eq(c.inst, "li")) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
-        // Case 1: imm is a 12-bit signed integer
-        int imm;
-        if (auto num = to_int(c.arg2); num.has_value()) {
-            imm = num.value();
-        } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+    if (c.inst.size() < 1) return {};
+    if (c.inst[0] == 'b') {
+        if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 'e') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'q') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'z') {
+                    if (c.inst.size() < 5) return beqz_instr(c);
+                }
+            }
         }
-        if (imm >= -2048 && imm <= 2047) {
-            c.inst_offset = fast_instr_search("addi");
-            c.arg2 = "zero";
-            c.arg3 = to_chatastring(imm);
-            return {make_inst(c)};
+        if (c.inst[1] == 'g') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'e') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'z') {
+                    if (c.inst.size() < 5) return bgez_instr(c);
+                }
+            }
+            if (c.inst[2] == 't') {
+                if (c.inst.size() < 4) return bgt_instr(c);
+                if (c.inst[3] == 'z') {
+                    if (c.inst.size() < 5) return bgtz_instr(c);
+                }
+                if (c.inst[3] == 'u') {
+                    if (c.inst.size() < 5) return bgtu_instr(c);
+                }
+            }
         }
-        // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-        c.inst_offset = fast_instr_search("lui");
-        c.arg2 = to_chatastring(imm >> 12);
-        instruction i1 = make_inst(c);
-        c.inst_offset = fast_instr_search("addi");
-        c.arg2 = c.arg1;
-        c.arg3 = to_chatastring(imm & 0xFFF);
-        instruction i2 = make_inst(c);
-        return {i1, i2};
-    } else if (fast_eq(c.inst, "la")) { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
-        // Case 1: imm is a 12-bit signed integer
-        int imm;
-        if (auto num = to_int(c.arg2); num.has_value()) {
-            imm = num.value();
-        } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+        if (c.inst[1] == 'l') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'e') {
+                if (c.inst.size() < 4) return ble_instr(c);
+                if (c.inst[3] == 'z') {
+                    if (c.inst.size() < 5) return blez_instr(c);
+                }
+                if (c.inst[3] == 'u') {
+                    if (c.inst.size() < 5) return bleu_instr(c);
+                }
+            }
         }
-        if (imm >= -2048 && imm <= 2047) {
-            c.inst_offset = fast_instr_search("addi");
-            c.arg2 = "zero";
-            c.arg3 = to_chatastring(imm);
-            return {make_inst(c)};
+        if (c.inst[1] == 'n') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'e') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'z') {
+                    if (c.inst.size() < 5) return bnez_instr(c);
+                }
+            }
         }
-        // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-        c.inst_offset = fast_instr_search("auipc");
-        c.arg2 = to_chatastring(imm >> 12);
-        instruction i1 = make_inst(c);
-        c.inst_offset = fast_instr_search("addi");
-        c.arg2 = c.arg1;
-        c.arg3 = to_chatastring(imm & 0xFFF);
-        instruction i2 = make_inst(c);
-        return {i1, i2};
-
-    } else if (fast_eq(c.inst, "mv")) { // mv rd, rs -> addi rd, rs, 0
-        c.inst_offset = fast_instr_search("addi");
-        c.arg3 = "0";
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "not")) { // not rd, rs -> xori rd, rs, -1
-        c.inst_offset = fast_instr_search("xori");
-        c.arg3 = "-1";
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "neg")) { // neg rd, rs -> sub rd, zero, rs
-        c.inst_offset = fast_instr_search("sub");
-        c.arg3 = c.arg2;
-        c.arg2 = "zero";
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "bgt")) { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
-        c.inst_offset = fast_instr_search("blt");
-        std::swap(c.arg1, c.arg2);
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "ble")) { // ble rs1, rs2, label|imm -> bge rs2, rs1, label|imm
-        c.inst_offset = fast_instr_search("bge");
-        std::swap(c.arg1, c.arg2);
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "bgtu")) { // bgtu rs1, rs2, label|imm -> bltu rs2, rs1, label|imm
-        c.inst_offset = fast_instr_search("bltu");
-        std::swap(c.arg1, c.arg2);
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "bleu")) { // bleu rs1, rs2, label|imm -> bgeu rs2, rs1, label|imm
-        c.inst_offset = fast_instr_search("bgeu");
-        std::swap(c.arg1, c.arg2);
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "beqz")) { // beqz rs, label|imm -> beq rs, zero, label|imm
-        c.inst_offset = fast_instr_search("beq");
-        c.arg3 = c.arg2;
-        c.arg2 = "zero";
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "bnez")) { // bnez rs, label|imm -> bne rs, zero, label|imm
-        c.inst_offset = fast_instr_search("bne");
-        c.arg3 = c.arg2;
-        c.arg2 = "zero";
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "bgez")) { // bgez rs, label|imm -> bge rs, zero, label|imm
-        c.inst_offset = fast_instr_search("bge");
-        c.arg3 = c.arg2;
-        c.arg2 = "zero";
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "blez")) { // blez rs, label|imm -> bge zero, rs, label|imm
-        c.inst_offset = fast_instr_search("bge");
-        c.arg3 = c.arg2;
-        c.arg2 = c.arg1;
-        c.arg1 = "zero";
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "bgtz")) { // bgtz rs, label|imm -> blt zero, rs, label|imm
-        c.inst_offset = fast_instr_search("blt");
-        c.arg3 = c.arg2;
-        c.arg2 = c.arg1;
-        c.arg1 = "zero";
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "j")) {
-        c.inst_offset = fast_instr_search("jal");
-        c.arg2 = c.arg1;
-        c.arg1 = "zero";
-        return {make_inst(c)};
-
-    } else if (fast_eq(c.inst, "call")) {
-        // Case 1: imm is a 12-bit signed integer
-        int imm;
-        if (auto num = to_int(c.arg1); num.has_value()) {
-            imm = num.value();
-        } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg1, c.line, c.column);
+    }
+    if (c.inst[0] == 'l') {
+        if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 'a') {
+            if (c.inst.size() < 3) return la_instr(c);
         }
-        if (imm >= -2048 && imm <= 2047) {
-            c.inst_offset = fast_instr_search("jalr");
-            c.arg3 = c.arg1;
-            c.arg2 = "ra";
-            c.arg1 = "ra";
-            return {make_inst(c)};
+        if (c.inst[1] == 'i') {
+            if (c.inst.size() < 3) return li_instr(c);
         }
-        // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-
-    } else if (fast_eq(c.inst, "ret")) {
-        c.inst_offset = fast_instr_search("jalr");
-        c.arg1 = "zero";
-        c.arg2 = "ra";
-        c.arg3 = "0";
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "nop")) {
-        c.inst_offset = fast_instr_search("addi");
-        c.arg1 = "zero";
-        c.arg2 = "zero";
-        c.arg3 = "0";
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "fmv.s.x")) {
-        c.inst_offset = fast_instr_search("fmv.w.x");
-        return {make_inst(c)};
-    } else if (fast_eq(c.inst, "fmv.x.s")) {
-        c.inst_offset = fast_instr_search("fmv.x.w");
-        return {make_inst(c)};
+    }
+    if (c.inst[0] == 'n') {
+        if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 'e') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'g') {
+                if (c.inst.size() < 4) return neg_instr(c);
+            }
+        }
+        if (c.inst[1] == 'o') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 't') {
+                if (c.inst.size() < 4) return not_instr(c);
+            }
+            if (c.inst[2] == 'p') {
+                if (c.inst.size() < 4) return nop_instr(c);
+            }
+        }
+    }
+    if (c.inst[0] == 'c') {
+        if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 'a') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'l') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'l') {
+                    if (c.inst.size() < 5) return call_instr(c);
+                }
+            }
+        }
+    }
+    if (c.inst[0] == 'f') {
+        if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 'm') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'v') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 's') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == 'x') {
+                        if (c.inst.size() < 6) return fmvsx_instr(c);
+                    }
+                }
+                if (c.inst[3] == 'x') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == 's') {
+                        if (c.inst.size() < 6) return fmvxs_instr(c);
+                    }
+                }
+            }
+        }
+    }
+    if (c.inst[0] == 'm') {
+        if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 'v') {
+            if (c.inst.size() < 3) return mv_instr(c);
+        }
+    }
+    if (c.inst[0] == 'j') {
+        if (c.inst.size() < 2) return j_instr(c);
+    }
+    if (c.inst[0] == 'r') {
+        if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 'e') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 't') {
+                if (c.inst.size() < 4) return ret_instr(c);
+            }
+        }
     }
     return {};
 }
+// End make_inst_from_pseudoinst
 
 void solve_label_offsets(assembly_context& c) {
     for (size_t i = 0; i < c.nodes.size(); i++) {
@@ -907,11 +863,23 @@ void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
     }
 }
 
-chatavector<uint8_t> assemble_code(const chatastring& data) {
+chatavector<uint8_t> assemble_code(const chatastring& data, const chatavector<RVInstructionSet> supported_sets) {
+    // auto then = std::chrono::high_resolution_clock::now();
+
     chatavector<uint8_t> machine_code;
     struct assembly_context c;
 
-    // auto then = std::chrono::high_resolution_clock::now();
+    c.supported_sets = supported_sets;
+
+    using enum RVInstructionSet;
+
+    // Check if RV32I or RV64I is included if supported_sets is not empty
+    if (!c.supported_sets.empty()) {
+        if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32I) == c.supported_sets.end() &&
+            std::find(c.supported_sets.begin(), c.supported_sets.end(), RV64I) == c.supported_sets.end()) {
+            throw ChataError(ChataErrorType::Assembler, "The set of supported RISC-V instruction sets must include at least RV32I or RV64I");
+        }
+    }
 
     for (size_t i = 0; i < data.size();) {
         parse_this_line(i, data, c);

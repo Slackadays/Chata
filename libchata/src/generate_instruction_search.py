@@ -49,6 +49,8 @@ for i in range(len(instructions)):
 
 instructions.sort()
 
+print(instructions)
+
 depth = 0
 
 current_instr = ""

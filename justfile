@@ -63,6 +63,7 @@ generate:
   cd libchata/src; python3 generate_instruction_search.py
   cd libchata/src; python3 generate_register_search.py
   cd libchata/src; python3 generate_csr_search.py
+  cd libchata/src; python3 generate_pseudoinstruction_converter.py
 
 # run testsuites for everything
 test:

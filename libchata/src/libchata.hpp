@@ -13,6 +13,36 @@
 
 #pragma once
 
+enum class RVInstructionSet : uint8_t {
+    RV32I,
+    RV64I,
+    RV32M,
+    RV64M,
+    RV32A,
+    RV64A,
+    RV32F,
+    RV64F,
+    RV32D,
+    RV64D,
+    RV32Q,
+    RV64Q,
+    RV32Zfh,
+    RV64Zfh,
+    Zifencei,
+    Zicsr,
+    Zawrs,
+    Zicond,
+    Zacas,
+    Zcb,
+    Zcmp,
+    C,
+    Zcd,
+    Zcf,
+    Zcmt,
+    B,
+    V
+};
+
 namespace libchata_internal {
 
 class InternalFile;
@@ -101,7 +131,7 @@ struct compilation_context {
     int column = 0;
 };
 
-chatavector<uint8_t> assemble_code(const chatastring& data);
+chatavector<uint8_t> assemble_code(const chatastring& data, const chatavector<RVInstructionSet> sets = {});
 
 chatastring compile_code(chatavector<InternalFile>& files);
 
@@ -142,36 +172,6 @@ constexpr std::string_view placeholder_temp_integer_register = "generated_placeh
 constexpr std::string_view placeholder_temp_floating_point_register = "generated_placeholder_floating_point_register";
 
 } // namespace libchata_internal
-
-enum class RVInstructionSet : uint8_t {
-    RV32I,
-    RV64I,
-    RV32M,
-    RV64M,
-    RV32A,
-    RV64A,
-    RV32F,
-    RV64F,
-    RV32D,
-    RV64D,
-    RV32Q,
-    RV64Q,
-    RV32Zfh,
-    RV64Zfh,
-    Zifencei,
-    Zicsr,
-    Zawrs,
-    Zicond,
-    Zacas,
-    Zcb,
-    Zcmp,
-    C,
-    Zcd,
-    Zcf,
-    Zcmt,
-    B,
-    V
-};
 
 enum class ChataErrorType {
     Compiler,
