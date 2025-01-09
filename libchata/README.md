@@ -4,21 +4,21 @@
 
 # Welcome to Chatassembler!
 
-Chatassembler is a zero-bloat and fully independent assembler library for RISC-V. It's easy to use, embeddable, and _10x faster_ than GCC's `as`. 
+Chatassembler is a bloat-free assembler for RISC-V. It's easy to use, embeddable, fully independent, and _10x faster_ than GCC's `as`.
 
-Unlike other independent assemblers, Chatassembler is...
+Here's more on that. Chatassembler is...
 
 ### Complete
 
-Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zcf, Zcmt, B, and V **(WIP)** instruction sets, and code labels and directives **(WIP)**.
+Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, and code labels and directives **(WIP)**.
 
-### A library
+### Not a binary
 
-Chatassembler ships in the `libchata` library and is available in the `chatacli` tool as well. 
+Chatassembler ships in the lean and mean `libchata` library and is also available in the `chatacli` tool. Use it anywhere.
 
 ### Zero config
 
-There's only one (1) function with one (1) required parameter.
+There's only one (1) function with one (1) required parameter. Truly effortless.
 
 ### Tested
 
@@ -26,9 +26,9 @@ The Chatassembler testsuite currently has 500+ tests covering all supported inst
 
 ### Fast!
 
-Chatassembler uses a strategy similar to what `mold` also uses: more efficient data structures and algorithms. Unlike `mold`, however, Chatassembler doesn't use multithreading, but it doesn't need to. 
+Chatassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Unlike `mold`, however, Chatassembler doesn't use multithreading, but it doesn't need to. **Coming soon: How is Chatassembler so fast?**
 
-On my desktop with a Zen 3 CPU, Chatassembler is approximately 10.8x faster than `as` and 8.3x faster on my RISC-V SBC with a TH1520 SoC, both assembling the `16kinstrs.s` file, measured in number of cycles.
+On my desktop with a Zen 3 CPU, Chatassembler is approximately 10.8x faster than `as` and 8.3x faster on my RISC-V SBC with a TH1520 SoC, both assembling the `16kinstrs.s` sample file, measured in number of cycles.
 
 ## Differences to `as`
 
@@ -38,7 +38,7 @@ Chatassembler is different to `as` in these important ways:
 
 Chatassembler can only generate RISC-V machine code. It can't make ELF or other executable files. 
 
-In other words, Chatassembler replaces and _only_ replaces what you would otherwise do with `as foo.s && objcopy -O binary a.out`.
+In other words, Chatassembler replaces what you would otherwise do with `as foo.s && objcopy -O binary a.out`.
 
 ### Directive support
 
@@ -52,7 +52,9 @@ Chatassembler is available with the MPL 2.0 license. This may or may not be easi
 
 ## Why Chatassembler?
 
-I wrote Chatassembler because Chata needs to generate RISC-V machine code to execute at runtime, FAST. Until now, the only way to do this was to manually invoke `as` and `objcopy` in a really funky and inefficient way. But now, Chatassembler can do the same thing much faster, much easier, and much prettier.
+I wrote Chatassembler because Chata needs to generate RISC-V machine code to execute at runtime, FAST. Until now, the only way to do this was to manually invoke `as` and `objcopy` in a funky and inefficient way. This was because there were no good, independent RISC-V assembler libraries. But now, Chatassembler can do the same thing much faster, much easier, and much prettier.
+
+I was originally going to include Chatassembler as an entirely private part of the `libchata` library that you wouldn't be able to use on its own. However, I realized that with how useful an independent RISC-V assembler might turn out to be, you should be able to use Chatassembler independently of the rest of the Chata project. That's what you're seeing here.
 
 ## Quick Start
 
@@ -60,15 +62,17 @@ I wrote Chatassembler because Chata needs to generate RISC-V machine code to exe
 
 Start by **installing `libchata`** how you would normally with the instructions in the `libchata` section.
 
-### Execution
+### Usage
 
 The **one function** to use with Chatassembler is
 
-`std::span<uint8_t> libchata_assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {})`
+```cpp
+std::span<uint8_t> libchata_assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {})
+```
 
 where `code` is your RISC-V assembly code and `supported_sets` is optionally an array of `RVInstructionSet` enums. It returns an array of bytes of RISC-V machine code. The following is the list of supported instruction sets:
 
-```
+```cpp
 enum class RVInstructionSet : uint8_t {
     RV32I,
     RV64I,
@@ -112,6 +116,8 @@ If you include instruction sets, you must include at least either `RV32I` or `RV
 Chatassembler may throw a `ChataError` exception if it encounters incorrect code or has some other error.
 
 To catch these, just add a `try {} catch(...) {}` block like you would with other C++ code.
+
+These errors follow the same format that other parts of `libchata` use.
 
 ### Example
 
