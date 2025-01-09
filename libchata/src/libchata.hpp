@@ -310,4 +310,4 @@ public:
 
 std::string_view libchata_version();
 
-std::span<uint8_t> libchata_assemble(std::string_view code);
+std::span<uint8_t> libchata_assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {});
