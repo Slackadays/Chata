@@ -10,7 +10,7 @@ Here's more on that. Chatassembler is...
 
 ### Complete
 
-Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, and code labels and directives **(WIP)**.
+Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, and many directives **(WIP)**.
 
 ### Not a binary
 
@@ -44,7 +44,49 @@ In other words, Chatassembler replaces what you would otherwise do with `as foo.
 
 Because Chatassembler only generates RISC-V machine code, it ignores directives such as `.align` and `.globl` which only make sense with executable files.
 
-Support for relevant directives like `.option` and `.insn` is currently WIP. This is changing fast, though!
+Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc) Chatassembler supports as of the latest commit:
+
+☑️ = Supported
+
+🪛 = WIP
+
+❌ = Not Supported Yet
+
+💀 = Irrelevant to Chatassembler
+
+| Directive | Status |
+|-----------|--------|
+| `.align` | 💀 |
+| `.attribute` | 💀 |
+| `.option rvc/norvc` | 💀 |
+| `.option arch` | 🪛 |
+| `.option pic/nopic` | 💀 |
+| `.option relax/norelax` | 💀 |
+| `.option push/pop` | 🪛 |
+| `.insn` | ❌ |
+| Relocation functions | ❌ |
+| Labels | ☑️ |
+| Absolute addressing | ❌ |
+| Relative addressing | ❌ |
+| GOT-indirect addressing | 💀 |
+| Load Immediate | ☑️ |
+| Load Upper Immediate’s Immediate | ☑️ |
+| Signed Immediates for I- and S-Type Instructions | ☑️ |
+| Floating-point literals | ❌* |
+| Load Floating-point Immediate | ❌ |
+| Load Address | ❌ |
+| Load Local Address | ❌ |
+| Load Global Address | ❌ |
+| Load and Store Global | ❌ |
+| Constants | ❌ |
+| Far Branches | ❌ |
+| Function Calls | ☑️ |
+| Floating-point rounding modes | ☑️ |
+| Control and Status Registers | ☑️ |
+| Standard pseudoinstructions | ☑️ |
+| CSR pseudoinstructions | 🪛 |
+
+*Currently available if you use Chata code instead
 
 ### License
 
@@ -62,9 +104,11 @@ I was originally going to include Chatassembler as an entirely private part of t
 
 Start by **installing `libchata`** how you would normally with the instructions in the `libchata` section.
 
+Then, **include the C++ header `libchata.hpp`** where you use Chatassembler.
+
 ### Usage
 
-The **one function** to use with Chatassembler is
+The **one function** of Chatassembler is
 
 ```cpp
 std::span<uint8_t> libchata_assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {})
@@ -109,7 +153,9 @@ Include instruction sets if:
 - You're assembing code which uses the `bclri` or `rev8` instructions, which are different on 64 bit systems than 32.
 - You're assembling code which uses the `.option arch` directive, which requires knowing the target instruction sets.
 
-If you include instruction sets, you must include at least either `RV32I` or `RV64I`. 
+If you include instruction sets, you must include at least either `RV32I` or `RV64I`.
+
+By default, the `bclri` and `rev8` instructions target a 32 bit system.
 
 ### Exceptions
 

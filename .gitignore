@@ -47,3 +47,7 @@ gmon.out
 *__pycache__/
 
 credentials.sh
+
+test.cpp
+
+test

@@ -131,7 +131,7 @@ struct compilation_context {
     int column = 0;
 };
 
-chatavector<uint8_t> assemble_code(const chatastring& data, const chatavector<RVInstructionSet> sets = {});
+chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavector<RVInstructionSet> sets = {});
 
 chatastring compile_code(chatavector<InternalFile>& files);
 

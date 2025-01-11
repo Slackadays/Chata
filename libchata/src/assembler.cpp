@@ -783,7 +783,38 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
     return machine_code;
 }
 
-void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
+void handle_directives(assembly_context& c) {
+    if (c.inst.back() == ':') {
+        DBG(std::cout << "Looks like this is a label, adding it" << std::endl;)
+        c.nodes.push_back(instruction {.imm = string_to_label(c.inst, c), .imm_purpose = LABEL_NODE});
+        return;
+    }
+    if (c.inst.front() != '.') {
+        DBG(std::cout << "Not a directive, skipping" << std::endl;)
+        return;
+    }
+    DBG(std::cout << "Looks like this is a directive" << std::endl;)
+    if (fast_eq(c.inst, ".option")) {
+        DBG(std::cout << "Option directive" << std::endl;)
+        if (fast_eq(c.arg1, "arch")) {
+            if (c.arg2.front() == '+') {
+                DBG(std::cout << "Adding arches" << std::endl;)
+            } else if (c.arg2.front() == '-') {
+                DBG(std::cout << "Removing arches" << std::endl;)
+            } else {
+                DBG(std::cout << "Setting arches" << std::endl;)
+            }
+        } else if (fast_eq(c.arg1, "push")) {
+            DBG(std::cout << "Pushing options" << std::endl;)
+            c.options.push_back({});
+        } else if (fast_eq(c.arg1, "pop")) {
+            DBG(std::cout << "Popping options" << std::endl;)]
+            c.options.pop_back();
+        }
+    }
+}
+
+void parse_this_line(size_t& i, const std::string_view& data, assembly_context& c) {
     /*c.inst = "addi";
     c.arg1 = "zero";
     c.arg2 = "zero";
@@ -804,7 +835,7 @@ void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
         auto ch = [&]() {
             return data.at(i);
         };
-        while (i < data.size() && is_whitespace(ch()) && ch() != '\n') {
+        while (i < data.size() && is_whitespace(ch())) {
             i++;
         }
         while (i < data.size() && !is_whitespace(ch()) && ch() != '\n') {
@@ -812,19 +843,18 @@ void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
             i++;
         }
         DBG(std::cout << "Instruction candidate: " << c.inst << std::endl;)
-        if (c.inst.front() == '.' || c.inst.front() == '#' || c.inst.back() == ':') {
-            DBG(std::cout << "Looks like this is a label or a comment or a directive" << std::endl;)
-            if (c.inst.back() == ':') {
-                DBG(std::cout << "Looks like this is a label!" << std::endl;)
-                c.nodes.push_back(instruction {.imm = string_to_label(c.inst, c), .imm_purpose = LABEL_NODE});
-            }
+        if (c.inst.front() == '#') {
+            DBG(std::cout << "Looks like this is a comment, skipping" << std::endl;)
             break;
         }
-        while (i < data.size() && is_whitespace(ch()) && ch() != '\n') {
+        while (i < data.size() && is_whitespace(ch())) {
             i++;
         }
         auto parse_arg = [&](chatastring& arg) {
             arg.clear();
+            if (i < data.size() && ch() == '#') {
+                return;
+            }
             while (i < data.size() && ch() != ',' && ch() != '\n') {
                 arg.push_back(ch());
                 i++;
@@ -863,7 +893,7 @@ void parse_this_line(size_t& i, const chatastring& data, assembly_context& c) {
     }
 }
 
-chatavector<uint8_t> assemble_code(const chatastring& data, const chatavector<RVInstructionSet> supported_sets) {
+chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavector<RVInstructionSet> supported_sets) {
     // auto then = std::chrono::high_resolution_clock::now();
 
     chatavector<uint8_t> machine_code;
@@ -890,6 +920,8 @@ chatavector<uint8_t> assemble_code(const chatastring& data, const chatavector<RV
         } else {
             if (c.inst_offset = fast_instr_search(c.inst); c.inst_offset != instr_search_failed) {
                 c.nodes.push_back(make_inst(c));
+            } else {
+                handle_directives(c);
             }
         }
         c.inst_offset = 0;

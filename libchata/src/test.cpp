@@ -9,7 +9,7 @@ namespace libchata_internal {
 void as(std::string_view input, uint32_t expected_output) {
     chatavector<uint8_t> result;
     try {
-        result = assemble_code(chatastring(input));
+        result = assemble_code(input);
     } catch (ChataError& e) {
         std::cout << e.what() << std::endl;
         std::cout << "❌ Test FAILED for " << input << ": expected " << std::hex << expected_output << std::dec << " (" << std::bitset<32>(expected_output) << "), but got an error" << std::endl;
@@ -35,7 +35,7 @@ void as(std::string_view input, uint32_t expected_output) {
 void as(std::string_view input, std::vector<uint8_t> expected_output) {
     std::vector<uint8_t> result;
     try {
-        auto temp = assemble_code(chatastring(input));
+        auto temp = assemble_code(input);
         result = std::vector<uint8_t>(temp.begin(), temp.end());
     } catch (ChataError& e) {
         std::cout << e.what() << std::endl;

@@ -19,11 +19,16 @@ struct instruction {
     InstrImmPurpose imm_purpose = InstrImmPurpose::INSTR_IMM;
 };
 
+struct directive_option {
+    chatavector<RVInstructionSet> supported_sets; 
+};
+
 struct assembly_context {
     chatavector<instruction> nodes;
     size_t instruction_bytes = 0;
     chatavector<RVInstructionSet> supported_sets;
     chatavector<std::pair<chatastring, int>> labels;
+    chatavector<directive_option> options;
     int line = 1;
     int column = 0;
     uint16_t inst_offset = 0;

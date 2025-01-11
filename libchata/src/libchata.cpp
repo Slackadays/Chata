@@ -130,6 +130,6 @@ std::string_view libchata_version() {
 }
 
 std::span<uint8_t> libchata_assemble(std::string_view code, std::span<RVInstructionSet> supported_sets) {
-    auto assembled = assemble_code(chatastring(code), chatavector<RVInstructionSet>(supported_sets.begin(), supported_sets.end()));
+    auto assembled = assemble_code(code, chatavector<RVInstructionSet>(supported_sets.begin(), supported_sets.end()));
     return std::span<uint8_t>(assembled.data(), assembled.size());
 }
