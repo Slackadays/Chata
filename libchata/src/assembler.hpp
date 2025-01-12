@@ -27,6 +27,7 @@ struct directive_option {
 
 struct assembly_context {
     chatavector<instruction> nodes;
+    chatavector<uint8_t> machine_code;
     size_t instruction_bytes = 0;
     chatavector<RVInstructionSet> supported_sets;
     chatavector<std::pair<chatastring, int>> labels;

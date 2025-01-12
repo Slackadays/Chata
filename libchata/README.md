@@ -10,11 +10,11 @@ Here's more on that. Chatassembler is...
 
 ### Complete
 
-Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, and many directives **(WIP)**.
+Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, labels, and many directives **(WIP)**.
 
 ### Not a binary
 
-Chatassembler ships in the lean and mean `libchata` library and is also available in the `chatacli` tool. Use it anywhere.
+Chatassembler ships in the lean and mean `libchata` library and is also available in the `chatacli` tool. Use it anywhere C++23 is supported.
 
 ### Zero config
 
@@ -28,7 +28,7 @@ The Chatassembler testsuite currently has 500+ tests covering all supported inst
 
 Chatassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Unlike `mold`, however, Chatassembler doesn't use multithreading, but it doesn't need to. **Coming soon: How is Chatassembler so fast?**
 
-On my desktop with a Zen 3 CPU, Chatassembler is approximately 11.6x faster than `as` and 8.9x faster on my RISC-V SBC with a TH1520 SoC, both assembling the `16kinstrs.s` sample file, measured in number of cycles.
+On my desktop with a Zen 3 CPU, Chatassembler is approximately 12.5x faster than `as` and 9x faster on my RISC-V SBC with a TH1520 SoC, both assembling the `16kinstrs.s` sample file, measured in number of cycles.
 
 ## Differences to `as`
 

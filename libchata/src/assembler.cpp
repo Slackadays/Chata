@@ -589,9 +589,7 @@ void solve_label_offsets(assembly_context& c) {
     }
 }
 
-chatavector<uint8_t> generate_machine_code(assembly_context& c) {
-    chatavector<uint8_t> machine_code;
-    machine_code.resize(c.instruction_bytes);
+void generate_machine_code(assembly_context& c) {
     size_t offset = 0;
     for (auto& i : c.nodes) {
         if (i.imm_purpose == LABEL_NODE) {
@@ -779,10 +777,9 @@ chatavector<uint8_t> generate_machine_code(assembly_context& c) {
             inst |= ((i.imm >> 11) & 0b1) << 12; // Add offset[11]
             inst |= base_i.funct << 13;          // Add funct3
         }
-        reinterpret_cast<uint32_t&>(machine_code.data()[offset]) = inst;
+        reinterpret_cast<uint32_t&>(c.machine_code.data()[offset]) = inst;
         offset += base_i.bytes;
     }
-    return machine_code;
 }
 
 void handle_directives(assembly_context& c) {
@@ -895,8 +892,7 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
 
 chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavector<RVInstructionSet> supported_sets) {
     // auto then = std::chrono::high_resolution_clock::now();
-
-    chatavector<uint8_t> machine_code;
+    
     struct assembly_context c;
 
     c.supported_sets = supported_sets;
@@ -912,12 +908,12 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
 
     for (size_t i = 0; i < data.size();) {
         parse_this_line(i, data, c);
-        if (auto instrs = make_inst_from_pseudoinst(c); !instrs.empty()) {
+        if (c.inst_offset = fast_instr_search(c.inst); c.inst_offset != instr_search_failed) {
+            c.nodes.push_back(make_inst(c));
+        } else if (auto instrs = make_inst_from_pseudoinst(c); !instrs.empty()) {
             for (auto& inst : instrs) {
                 c.nodes.push_back(inst);
             }
-        } else if (c.inst_offset = fast_instr_search(c.inst); c.inst_offset != instr_search_failed) {
-            c.nodes.push_back(make_inst(c));
         } else {
             handle_directives(c);
         }
@@ -925,16 +921,18 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
         c.line++;
     }
 
+    c.machine_code.resize(c.instruction_bytes);
+
     solve_label_offsets(c);
 
-    machine_code = generate_machine_code(c);
+    generate_machine_code(c);
 
     // auto now = std::chrono::high_resolution_clock::now();
     // auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(now - then);
     // std::cout << "Assembling took " << duration.count() << "ms" << std::endl;
 
 #if !defined(DEBUG)
-    return machine_code;
+    return c.machine_code;
 #endif
 #if defined(DEBUG)
 
@@ -978,7 +976,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
 
     // exit(0);
 
-    return machine_code;
+    return c.machine_code;
 #endif
 }
 
