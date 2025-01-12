@@ -1120,11 +1120,37 @@ struct rvinstruction {
     RVInstructionSet subset;
     uint8_t bytes;
     special_snowflake_args ssargs = {};
-    
+
     rvinstruction(std::string_view name, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInstructionSet set, uint8_t bytes, special_snowflake_args ssargs = {})
-        : name(name), id(id), type(type), opcode(opcode), funct(funct), set(set), subset(set), bytes(bytes), ssargs(ssargs) {} // Without subset
-    rvinstruction(std::string_view name, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInstructionSet set, RVInstructionSet subset, uint8_t bytes, special_snowflake_args ssargs = {})
-        : name(name), id(id), type(type), opcode(opcode), funct(funct), set(set), subset(subset), bytes(bytes), ssargs(ssargs) {} // With subset
+            : name(name)
+            , id(id)
+            , type(type)
+            , opcode(opcode)
+            , funct(funct)
+            , set(set)
+            , subset(set)
+            , bytes(bytes)
+            , ssargs(ssargs) {} // Without subset
+    rvinstruction(
+            std::string_view name,
+            RVInstructionID id,
+            RVInstructionFormat type,
+            uint8_t opcode,
+            uint16_t funct,
+            RVInstructionSet set,
+            RVInstructionSet subset,
+            uint8_t bytes,
+            special_snowflake_args ssargs = {}
+    )
+            : name(name)
+            , id(id)
+            , type(type)
+            , opcode(opcode)
+            , funct(funct)
+            , set(set)
+            , subset(subset)
+            , bytes(bytes)
+            , ssargs(ssargs) {} // With subset
 };
 
 extern const std::array<rvinstruction, 1039> instructions;

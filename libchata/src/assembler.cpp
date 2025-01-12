@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
+#include "assembler.hpp"
 #include "csrs.hpp"
 #include "debug.hpp"
 #include "instructions.hpp"
-#include "pseudoinstructions.hpp"
 #include "libchata.hpp"
+#include "pseudoinstructions.hpp"
 #include "registers.hpp"
-#include "assembler.hpp"
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
@@ -225,6 +225,8 @@ instruction make_inst(assembly_context& c) {
     i.inst_offset = c.inst_offset;
 
     auto base_i = instructions.at(i.inst_offset);
+
+    // std::cout << "i.name = " << base_i.name << std::endl;
 
     c.instruction_bytes += base_i.bytes;
 
@@ -808,7 +810,7 @@ void handle_directives(assembly_context& c) {
             DBG(std::cout << "Pushing options" << std::endl;)
             c.options.push_back({});
         } else if (fast_eq(c.arg1, "pop")) {
-            DBG(std::cout << "Popping options" << std::endl;)]
+            DBG(std::cout << "Popping options" << std::endl;)
             c.options.pop_back();
         }
     }
@@ -831,62 +833,60 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
     auto is_whitespace = [](const char& c) {
         return c == '\t' || c == ' ';
     };
-    while (i < data.size() && data.at(i) != '\n') {
-        auto ch = [&]() {
-            return data.at(i);
-        };
-        while (i < data.size() && is_whitespace(ch())) {
+    auto ch = [&]() {
+        return data.at(i);
+    };
+    auto not_at_end = [](const char& c) {
+        return c != '\n' && c != '#';
+    };
+    while (i < data.size()) {
+        char temp = ch();
+        if (not_at_end(temp) && is_whitespace(temp)) {
             i++;
-        }
-        while (i < data.size() && !is_whitespace(ch()) && ch() != '\n') {
-            c.inst.push_back(ch());
-            i++;
-        }
-        DBG(std::cout << "Instruction candidate: " << c.inst << std::endl;)
-        if (c.inst.front() == '#') {
-            DBG(std::cout << "Looks like this is a comment, skipping" << std::endl;)
+        } else {
             break;
         }
-        while (i < data.size() && is_whitespace(ch())) {
+    }
+    while (i < data.size() && not_at_end(ch()) && !is_whitespace(ch())) {
+        c.inst.push_back(ch());
+        i++;
+    }
+    DBG(std::cout << "Instruction candidate: " << c.inst << std::endl;)
+    while (i < data.size() && not_at_end(ch()) && is_whitespace(ch())) {
+        i++;
+    }
+    auto parse_arg = [&](chatastring& arg) {
+        arg.clear();
+        while (i < data.size() && not_at_end(ch()) && ch() != ',' && !is_whitespace(ch())) {
+            arg.push_back(ch());
             i++;
         }
-        auto parse_arg = [&](chatastring& arg) {
-            arg.clear();
-            if (i < data.size() && ch() == '#') {
-                return;
-            }
-            while (i < data.size() && ch() != ',' && ch() != '\n') {
-                arg.push_back(ch());
-                i++;
-            }
-            if (i < data.size() && ch() != '\n') {
-                i++;
-            }
-            while (i < data.size() && is_whitespace(ch()) && ch() != '\n') {
-                i++;
-            }
-        };
-        parse_arg(c.arg1);
-        if (c.arg1.empty()) {
-            break;
+        if (i < data.size() && not_at_end(ch())) {
+            i++;
         }
+        while (i < data.size() && not_at_end(ch()) && is_whitespace(ch())) {
+            i++;
+        }
+    };
+    parse_arg(c.arg1);
+    if (!c.arg1.empty()) {
         parse_arg(c.arg2);
-        if (c.arg2.empty()) {
-            break;
+        if (!c.arg2.empty()) {
+            parse_arg(c.arg3);
+            if (!c.arg3.empty()) {
+                parse_arg(c.arg4);
+                if (!c.arg4.empty()) {
+                    parse_arg(c.arg5);
+                    if (!c.arg5.empty()) {
+                        parse_arg(c.arg6);
+                    }
+                }
+            }
         }
-        parse_arg(c.arg3);
-        if (c.arg3.empty()) {
-            break;
-        }
-        parse_arg(c.arg4);
-        if (c.arg4.empty()) {
-            break;
-        }
-        parse_arg(c.arg5);
-        if (c.arg5.empty()) {
-            break;
-        }
-        parse_arg(c.arg6);
+    }
+
+    while (i < data.size() && data.at(i) != '\n') {
+        i++;
     }
     while (i < data.size() && data.at(i) == '\n') {
         i++;
@@ -905,8 +905,8 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
 
     // Check if RV32I or RV64I is included if supported_sets is not empty
     if (!c.supported_sets.empty()) {
-        if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32I) == c.supported_sets.end() &&
-            std::find(c.supported_sets.begin(), c.supported_sets.end(), RV64I) == c.supported_sets.end()) {
+        if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32I) == c.supported_sets.end()
+            && std::find(c.supported_sets.begin(), c.supported_sets.end(), RV64I) == c.supported_sets.end()) {
             throw ChataError(ChataErrorType::Assembler, "The set of supported RISC-V instruction sets must include at least RV32I or RV64I");
         }
     }

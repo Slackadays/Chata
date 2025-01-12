@@ -2,64 +2,12 @@
 <html>
     <head>
         <title>Log in to ChataPanel</title>
-        <style>
-            @font-face {
-                font-family: "Fustat";
-                font-weight: bold;
-                font-style: normal;
-                src: url("fonts/Fustat-Bold.woff2") format("woff2");
-            }
-            @font-face {
-                font-family: "Source Code Pro";
-                font-weight: bold;
-                font-style: normal;
-                src: url("fonts/SourceCodePro-Bold.ttf.woff2") format("woff2");
-            }
-            html {
-                background: radial-gradient(circle at left, #000000 0%, #100c44);
-            }
-            .banner {
-                position: absolute;
-                margin-left: 30%;
-                top: 50%;
-                transform: scale(2) translate(-50%, -50%);
-            }
-            .login {
-                font-family: Fustat;
-                font-weight: bold;
-
-                position: absolute;
-                right: 10%;
-                top: 50%;
-                transform: translate(-50%, -50%);
-            }
-            .input {
-                background-color: #000122;
-                box-shadow: 0 0 2px 2px #ffffff43;
-                padding: .8em 1.1em;
-                color: #ffffff;
-                border-radius: 14px;
-                margin-bottom: 2em;
-                font-size: 1.3em;
-            }
-            .input#username::placeholder, .input#password::placeholder {
-                color: #c5c5c5;
-            }
-            .info-text {
-                font-family: "Source Code Pro";
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                text-align: center;
-                padding: 10px;
-                color: #ffffff;
-                font-size: 1.2em;
-            }
+        <link rel="stylesheet" href="fonts.css">
+        <link rel="stylesheet" href="login.css">
         </style>
     </head>
     <body>
-        <div class="banner">
+        <div class="banner"> 
             <img src="LoginBanner_safe.svg" alt="Welcome to ChataPanel">
         </div>
         <div class="text-entry">

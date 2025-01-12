@@ -1,0 +1,12 @@
+@font-face {
+    font-family: "Fustat";
+    font-weight: bold;
+    font-style: normal;
+    src: url("fonts/Fustat-Bold.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Source Code Pro";
+    font-weight: bold;
+    font-style: normal;
+    src: url("fonts/SourceCodePro-Bold.ttf.woff2") format("woff2");
+}

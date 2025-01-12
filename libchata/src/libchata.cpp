@@ -5,8 +5,11 @@
 #include <fstream>
 #include <iostream>
 #include <string.h>
-#include <sys/mman.h>
 #include <vector>
+
+#if defined(UNIX_OR_UNIX_LIKE)
+#include <sys/mman.h>
+#endif
 
 using namespace libchata_internal;
 
@@ -45,22 +48,26 @@ void ChataProcessor::process_data(chata_args& input) {
 }
 
 void ChataProcessor::save_to_memory(const chatavector<uint8_t>& data) {
+#if defined(UNIX_OR_UNIX_LIKE)
     int mpres = mprotect(executable_memory.at(!current_executable_memory).data(), executable_memory.at(!current_executable_memory).size(), PROT_READ | PROT_WRITE);
     if (mpres != 0) {
         DBG(std::cout << "mprotect failed: " << strerror(errno) << ", " << errno << std::endl;)
         exit(1);
     }
+#endif
 
     executable_memory.at(!current_executable_memory).resize(data.size());
 
     std::copy(data.begin(), data.end(), executable_memory.at(!current_executable_memory).begin());
 
+#if defined(UNIX_OR_UNIX_LIKE)
     errno = 0;
     mpres = mprotect(executable_memory.at(!current_executable_memory).data(), executable_memory.at(!current_executable_memory).size(), PROT_READ | PROT_EXEC);
     if (mpres != 0) {
         DBG(std::cout << "mprotect failed: " << strerror(errno) << ", " << errno << std::endl;)
         exit(1);
     }
+#endif
 
     DBG(std::cout << "Executable memory first address: " << reinterpret_cast<long int>(executable_memory.at(!current_executable_memory).data()) << std::endl;)
 }

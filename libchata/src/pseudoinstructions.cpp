@@ -1,58 +1,58 @@
 // SPDX-License-Identifier: MPL-2.0
-#include "libchata.hpp"
 #include "assembler.hpp"
 #include "instructions.hpp"
+#include "libchata.hpp"
 
 namespace libchata_internal {
 
 chatavector<instruction> li_instr(assembly_context& c) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
-    // Case 1: imm is a 12-bit signed integer
-        int imm;
-        if (auto num = to_int(c.arg2); num.has_value()) {
-            imm = num.value();
-        } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
-        }
-        if (imm >= -2048 && imm <= 2047) {
-            c.inst_offset = fast_instr_search("addi");
-            c.arg2 = "zero";
-            c.arg3 = to_chatastring(imm);
-            return {make_inst(c)};
-        }
-        // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-        c.inst_offset = fast_instr_search("lui");
-        c.arg2 = to_chatastring(imm >> 12);
-        instruction i1 = make_inst(c);
+                                                         // Case 1: imm is a 12-bit signed integer
+    int imm;
+    if (auto num = to_int(c.arg2); num.has_value()) {
+        imm = num.value();
+    } else {
+        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+    }
+    if (imm >= -2048 && imm <= 2047) {
         c.inst_offset = fast_instr_search("addi");
-        c.arg2 = c.arg1;
-        c.arg3 = to_chatastring(imm & 0xFFF);
-        instruction i2 = make_inst(c);
-        return {i1, i2};  
+        c.arg2 = "zero";
+        c.arg3 = to_chatastring(imm);
+        return {make_inst(c)};
+    }
+    // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
+    c.inst_offset = fast_instr_search("lui");
+    c.arg2 = to_chatastring(imm >> 12);
+    instruction i1 = make_inst(c);
+    c.inst_offset = fast_instr_search("addi");
+    c.arg2 = c.arg1;
+    c.arg3 = to_chatastring(imm & 0xFFF);
+    instruction i2 = make_inst(c);
+    return {i1, i2};
 }
 
 chatavector<instruction> la_instr(assembly_context& c) { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
-    // Case 1: imm is a 12-bit signed integer
-        int imm;
-        if (auto num = to_int(c.arg2); num.has_value()) {
-            imm = num.value();
-        } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
-        }
-        if (imm >= -2048 && imm <= 2047) {
-            c.inst_offset = fast_instr_search("addi");
-            c.arg2 = "zero";
-            c.arg3 = to_chatastring(imm);
-            return {make_inst(c)};
-        }
-        // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-        c.inst_offset = fast_instr_search("auipc");
-        c.arg2 = to_chatastring(imm >> 12);
-        instruction i1 = make_inst(c);
+                                                         // Case 1: imm is a 12-bit signed integer
+    int imm;
+    if (auto num = to_int(c.arg2); num.has_value()) {
+        imm = num.value();
+    } else {
+        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+    }
+    if (imm >= -2048 && imm <= 2047) {
         c.inst_offset = fast_instr_search("addi");
-        c.arg2 = c.arg1;
-        c.arg3 = to_chatastring(imm & 0xFFF);
-        instruction i2 = make_inst(c);
-        return {i1, i2};
+        c.arg2 = "zero";
+        c.arg3 = to_chatastring(imm);
+        return {make_inst(c)};
+    }
+    // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
+    c.inst_offset = fast_instr_search("auipc");
+    c.arg2 = to_chatastring(imm >> 12);
+    instruction i1 = make_inst(c);
+    c.inst_offset = fast_instr_search("addi");
+    c.arg2 = c.arg1;
+    c.arg3 = to_chatastring(imm & 0xFFF);
+    instruction i2 = make_inst(c);
+    return {i1, i2};
 }
 
 chatavector<instruction> mv_instr(assembly_context& c) { // mv rd, rs -> addi rd, rs, 0
@@ -69,9 +69,9 @@ chatavector<instruction> not_instr(assembly_context& c) { // not rd, rs -> xori 
 
 chatavector<instruction> neg_instr(assembly_context& c) { // neg rd, rs -> sub rd, zero, rs
     c.inst_offset = fast_instr_search("sub");
-        c.arg3 = c.arg2;
-        c.arg2 = "zero";
-        return {make_inst(c)};
+    c.arg3 = c.arg2;
+    c.arg2 = "zero";
+    return {make_inst(c)};
 }
 
 chatavector<instruction> bgt_instr(assembly_context& c) { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
@@ -144,20 +144,20 @@ chatavector<instruction> j_instr(assembly_context& c) {
 
 chatavector<instruction> call_instr(assembly_context& c) {
     // Case 1: imm is a 12-bit signed integer
-        int imm;
-        if (auto num = to_int(c.arg1); num.has_value()) {
-            imm = num.value();
-        } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg1, c.line, c.column);
-        }
-        if (imm >= -2048 && imm <= 2047) {
-            c.inst_offset = fast_instr_search("jalr");
-            c.arg3 = c.arg1;
-            c.arg2 = "ra";
-            c.arg1 = "ra";
-            return {make_inst(c)};
-        }
-        // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
+    int imm;
+    if (auto num = to_int(c.arg1); num.has_value()) {
+        imm = num.value();
+    } else {
+        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg1, c.line, c.column);
+    }
+    if (imm >= -2048 && imm <= 2047) {
+        c.inst_offset = fast_instr_search("jalr");
+        c.arg3 = c.arg1;
+        c.arg2 = "ra";
+        c.arg1 = "ra";
+        return {make_inst(c)};
+    }
+    // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
     throw ChataError(ChataErrorType::Assembler, "Not implemented yet");
 }
 

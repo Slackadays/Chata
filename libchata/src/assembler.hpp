@@ -1,3 +1,5 @@
+#include "libchata.hpp"
+
 #pragma once
 
 namespace libchata_internal {
@@ -20,7 +22,7 @@ struct instruction {
 };
 
 struct directive_option {
-    chatavector<RVInstructionSet> supported_sets; 
+    chatavector<RVInstructionSet> supported_sets;
 };
 
 struct assembly_context {
