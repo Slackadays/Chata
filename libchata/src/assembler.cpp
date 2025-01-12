@@ -61,7 +61,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
     return new_label;
 }
 
-rvregister string_to_register(const chatastring& str, assembly_context& c) {
+const rvregister& string_to_register(const chatastring& str, assembly_context& c) {
     if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
         return registers[reg];
     }
@@ -98,7 +98,7 @@ uint8_t decode_fence(const chatastring& setting) {
     }
 }
 
-uint16_t decode_csr(const chatastring& csr) {
+const uint16_t& decode_csr(const chatastring& csr) {
     if (auto res = fast_csr_search(csr); res != csr_search_failed) {
         return csrs[res].second;
     }
@@ -903,7 +903,6 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
 
     using enum RVInstructionSet;
 
-    // Check if RV32I or RV64I is included if supported_sets is not empty
     if (!c.supported_sets.empty()) {
         if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32I) == c.supported_sets.end()
             && std::find(c.supported_sets.begin(), c.supported_sets.end(), RV64I) == c.supported_sets.end()) {
@@ -917,16 +916,13 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
             for (auto& inst : instrs) {
                 c.nodes.push_back(inst);
             }
+        } else if (c.inst_offset = fast_instr_search(c.inst); c.inst_offset != instr_search_failed) {
+            c.nodes.push_back(make_inst(c));
         } else {
-            if (c.inst_offset = fast_instr_search(c.inst); c.inst_offset != instr_search_failed) {
-                c.nodes.push_back(make_inst(c));
-            } else {
-                handle_directives(c);
-            }
+            handle_directives(c);
         }
         c.inst_offset = 0;
         c.line++;
-        c.column = 0;
     }
 
     solve_label_offsets(c);

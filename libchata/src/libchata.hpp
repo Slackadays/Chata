@@ -70,7 +70,7 @@ typedef std::basic_string<char, std::char_traits<char>, MemoryBank<char>> chatas
 template <typename T>
 using chatavector = std::vector<T, MemoryBank<T>>;
 
-chatastring to_chatastring(int num);
+chatastring to_chatastring(const int& num);
 chatastring allocate_label(struct compilation_context& c);
 chatastring allocate_label(int num);
 chatastring allocate_int_register(struct compilation_context& c);
@@ -125,7 +125,7 @@ public:
 struct InternalFile {
     chatastring data;
     std::optional<std::string_view> filename;
-    InternalFile(InputFile file) : data(file.data.begin(), file.data.end()), filename(file.filename) {}
+    InternalFile(const InputFile& file) : data(file.data.begin(), file.data.end()), filename(file.filename) {}
 };
 
 struct compilation_context {
@@ -158,7 +158,7 @@ void jump_to_next_line(InternalFile& file, struct compilation_context& c, size_t
 
 chatastring read_this_line(InternalFile& file, struct compilation_context& c, size_t& i);
 
-int decimal_representation_of_float(float input);
+int decimal_representation_of_float(const float& input);
 
 void process_ifs(InternalFile& file, struct compilation_context& c);
 
@@ -315,4 +315,11 @@ public:
 
 std::string_view libchata_version();
 
+/**
+ * @brief Assemble RISC-V assembly with Chatassembler
+ *
+ * @param code The RISC-V assembly you want to assemble
+ * @param supported_sets An array or vector of supported instruction sets to be used for bit-dependent instructions and architecture options
+ * @return std::span<uint8_t>
+ */
 std::span<uint8_t> libchata_assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {});

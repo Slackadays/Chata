@@ -4,7 +4,7 @@
 
 # Welcome to Chatassembler!
 
-Chatassembler is a bloat-free assembler for RISC-V. It's easy to use, embeddable, fully independent, and _10x faster_ than GCC's `as`.
+Chatassembler is a bloat-free assembler for RISC-V. It's easy to use, embeddable, fully independent, and _over 10x faster_ than GCC's `as`.
 
 Here's more on that. Chatassembler is...
 
@@ -28,7 +28,7 @@ The Chatassembler testsuite currently has 500+ tests covering all supported inst
 
 Chatassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Unlike `mold`, however, Chatassembler doesn't use multithreading, but it doesn't need to. **Coming soon: How is Chatassembler so fast?**
 
-On my desktop with a Zen 3 CPU, Chatassembler is approximately 10.8x faster than `as` and 8.3x faster on my RISC-V SBC with a TH1520 SoC, both assembling the `16kinstrs.s` sample file, measured in number of cycles.
+On my desktop with a Zen 3 CPU, Chatassembler is approximately 11.6x faster than `as` and 8.9x faster on my RISC-V SBC with a TH1520 SoC, both assembling the `16kinstrs.s` sample file, measured in number of cycles.
 
 ## Differences to `as`
 

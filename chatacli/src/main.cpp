@@ -88,12 +88,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    std::cout << "Processing the file " << filePath.string() << std::endl;
-
     InputFile file(*contents, filePath.string());
 
     if (assemble_flag) {
-        std::cout << "Assembling" << std::endl;
+        std::cout << "Assembling the file " << filePath.string() << std::endl;
         try {
             volatile auto result = libchata_assemble(file.data);
             return 0;
@@ -102,6 +100,8 @@ int main(int argc, char* argv[]) {
             return 1;
         }
     }
+
+    std::cout << "Processing the file " << filePath.string() << std::endl;
 
     ChataProcessor processor;
 

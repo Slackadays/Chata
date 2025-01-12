@@ -36,7 +36,7 @@ bool is_number(const chatastring& str) {
     return is_integer(str) || is_float(str);
 }
 
-chatastring to_chatastring(int num) {
+chatastring to_chatastring(const int& num) {
     chatastring result;
     std::array<char, 16> temp;
     auto res = std::to_chars(temp.data(), temp.data() + temp.size(), num);
@@ -127,7 +127,7 @@ int extract_number_from_string(const chatastring& str) {
     return result;
 }
 
-int decimal_representation_of_float(float input) {
+int decimal_representation_of_float(const float& input) {
     union {
         float f;
         int i;
