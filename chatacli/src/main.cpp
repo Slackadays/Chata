@@ -11,15 +11,23 @@
 #include <thread>
 #include <unistd.h>
 #include <vector>
+#include <fstream>
 
 namespace fs = std::filesystem;
 
 bool assemble_flag = false;
+bool no_write_flag = false;
 
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__HAIKU__) || defined(__FreeBSD__) \
         || defined(__posix__)
 #define UNIX_OR_UNIX_LIKE
 #endif
+
+size_t writeToFile(const fs::path& path, const std::string& content, bool append = false) {
+    std::ofstream file(path, append ? std::ios::app : std::ios::trunc | std::ios::binary);
+    file << content;
+    return content.size();
+}
 
 std::optional<std::string> fileContents(const fs::path& path) {
 #if defined(UNIX_OR_UNIX_LIKE)
@@ -74,7 +82,10 @@ int main(int argc, char* argv[]) {
         if (args.at(i) == "-a") {
             assemble_flag = true;
             args.erase(args.begin() + i);
-            break;
+        }
+        if (args.at(i) == "--no-write") {
+            no_write_flag = true;
+            args.erase(args.begin() + i);
         }
     }
 
@@ -92,13 +103,21 @@ int main(int argc, char* argv[]) {
 
     if (assemble_flag) {
         std::cout << "Assembling the file " << filePath.string() << std::endl;
+        std::span<uint8_t> result;
         try {
-            volatile auto result = libchata_assemble(file.data);
-            return 0;
+            result = libchata_assemble(file.data);
         } catch (ChataError& e) {
             std::cout << "Error: " << e.what() << std::endl;
             return 1;
         }
+        if (!no_write_flag) {
+            std::string filename = filePath.replace_extension(".bin").string();
+            std::cout << "Writing result to " << filename << std::endl;
+            writeToFile(filename, std::string(result.begin(), result.end()));
+        } else {
+            std::cout << "Skipping writing the result to a file" << std::endl;
+        }
+        return 0;
     }
 
     std::cout << "Processing the file " << filePath.string() << std::endl;

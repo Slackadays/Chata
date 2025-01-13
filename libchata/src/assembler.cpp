@@ -782,6 +782,16 @@ void generate_machine_code(assembly_context& c) {
     }
 }
 
+chatavector<RVInstructionSet> decode_sets(const chatastring& str) {
+    // Example: For an input str that looks like "rv64ifma", this function will return a vector containing RV64I, RV64F, RV64M, and RV64A
+    chatavector<RVInstructionSet> sets;
+    chatastring search_str;
+    for (const char& c : str) {
+        search_str.push_back(c);
+        //for (const auto& name : instruction_set
+    }
+}
+
 void handle_directives(assembly_context& c) {
     if (c.inst.back() == ':') {
         DBG(std::cout << "Looks like this is a label, adding it" << std::endl;)
@@ -810,6 +820,11 @@ void handle_directives(assembly_context& c) {
             DBG(std::cout << "Popping options" << std::endl;)
             c.options.pop_back();
         }
+    } else if (fast_eq(c.inst, ".insn")) {
+        DBG(std::cout << "Instruction directive" << std::endl;)
+        // .insn <value> = make an instruction with content <value>
+        // .insn <insn_length>, <value> = make an instruction with length <insn_length> and content <value> (verify)
+        // .insn <type> <fields> = make an instruction with type <type> and fields <fields>
     }
 }
 
