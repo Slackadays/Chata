@@ -189,7 +189,10 @@ std::pair<int, chatastring> decode_offset_plus_reg(const chatastring& str) {
     if (str.front() == '-') {
         j++;
     }
-    for (; std::isdigit(str.at(j)); j++) {
+    auto is_digit = [](const char& c) {
+        return c >= '0' && c <= '9';
+    };
+    for (; is_digit(str.at(j)); j++) {
         offset = offset * 10 + (str.at(j) - '0');
     }
     if (str.front() == '-') {
@@ -224,7 +227,7 @@ instruction make_inst(assembly_context& c) {
 
     i.inst_offset = c.inst_offset;
 
-    auto base_i = instructions.at(i.inst_offset);
+    auto& base_i = instructions.at(i.inst_offset);
 
     // std::cout << "i.name = " << base_i.name << std::endl;
 
@@ -596,7 +599,7 @@ void generate_machine_code(assembly_context& c) {
             continue;
         }
         uint32_t inst = 0;
-        auto base_i = instructions.at(i.inst_offset);
+        auto base_i = instructions.at(i.inst_offset); // Don't make this one auto&, it's slower
         inst |= base_i.opcode;
         using enum RVInstructionFormat;
         using enum RVInstructionID;
@@ -896,7 +899,6 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
             }
         }
     }
-
     while (i < data.size() && data.at(i) != '\n') {
         i++;
     }
@@ -932,7 +934,6 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
         } else {
             handle_directives(c);
         }
-        c.inst_offset = 0;
         c.line++;
     }
 

@@ -1,4 +1,2 @@
-.option push
-.option arch, +v
-addi a0, zero, 0
-.option pop
+
+addi a0,    zero,   0
