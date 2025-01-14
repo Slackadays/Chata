@@ -7,11 +7,13 @@ namespace libchata_internal {
 enum class InstrImmPurpose : uint8_t {
     INSTR_IMM,
     LABEL_DEST,
-    LABEL_NODE
+    LABEL_NODE,
+    RAW_INSTR
 };
 
 struct instruction {
     uint16_t inst_offset = 0; // The offset from the instructions array at which our instruction is (saves memory and prevents O(n) lookups)
+                                // Alternatively, the size of the raw instruction
     uint8_t rd = 0;
     uint8_t rs1 = 0;
     uint8_t rs2 = 0;

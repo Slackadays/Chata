@@ -162,7 +162,7 @@ void handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i
     } else if (base_i.id == CSRRWI || base_i.id == CSRRSI || base_i.id == CSRRCI) {
         i.rd = string_to_register(c.arg1, c).encoding;
         i.imm = decode_csr(c.arg2);
-        if (auto num = to_int(c.arg3); num.has_value()) {
+        if (auto num = to_num<int>(c.arg3); num.has_value()) {
             i.rs1 = num.value();
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
@@ -240,7 +240,7 @@ instruction make_inst(assembly_context& c) {
     } else if (base_i.type == R || base_i.type == R4) {
         if (base_i.type == R) {
             if (base_i.ssargs.use_imm_for_rs2) {
-                if (auto num = to_int(c.arg3); num.has_value()) {
+                if (auto num = to_num<int>(c.arg3); num.has_value()) {
                     i.imm = num.value();
                 } else {
                     throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
@@ -304,7 +304,7 @@ instruction make_inst(assembly_context& c) {
             }
         }
     } else if (base_i.type == I || base_i.type == S) {
-        if (auto num = to_int(c.arg3); num.has_value()) {
+        if (auto num = to_num<int>(c.arg3); num.has_value()) {
             i.imm = num.value();
             i.rs1 = string_to_register(c.arg2, c).encoding;
         } else {
@@ -318,7 +318,7 @@ instruction make_inst(assembly_context& c) {
             i.rs2 = string_to_register(c.arg1, c).encoding;
         }
     } else if (base_i.type == Branch) {
-        if (auto num = to_int(c.arg3); num.has_value()) {
+        if (auto num = to_num<int>(c.arg3); num.has_value()) {
             i.imm = num.value();
         } else {
             i.imm = string_to_label(c.arg3, c);
@@ -327,14 +327,14 @@ instruction make_inst(assembly_context& c) {
         i.rs1 = string_to_register(c.arg1, c).encoding;
         i.rs2 = string_to_register(c.arg2, c).encoding;
     } else if (base_i.type == U) {
-        if (auto num = to_int(c.arg2); num.has_value()) {
+        if (auto num = to_num<int>(c.arg2); num.has_value()) {
             i.imm = num.value();
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
         i.rd = string_to_register(c.arg1, c).encoding;
     } else if (base_i.type == J) {
-        if (auto num = to_int(c.arg2); num.has_value()) {
+        if (auto num = to_num<int>(c.arg2); num.has_value()) {
             i.imm = num.value();
         } else {
             i.imm = string_to_label(c.arg2, c);
@@ -342,14 +342,14 @@ instruction make_inst(assembly_context& c) {
         }
         i.rd = string_to_register(c.arg1, c).encoding;
     } else if (base_i.type == CJ) {
-        if (auto num = to_int(c.arg1); num.has_value()) {
+        if (auto num = to_num<int>(c.arg1); num.has_value()) {
             i.imm = num.value();
         } else {
             i.imm = string_to_label(c.arg1, c);
             i.imm_purpose = LABEL_DEST;
         }
     } else if (base_i.type == CL) {
-        if (auto num = to_int(c.arg3); num.has_value()) {
+        if (auto num = to_num<int>(c.arg3); num.has_value()) {
             i.imm = num.value();
             i.rs1 = string_to_register(c.arg2, c).encoding & 0b111;
         } else {
@@ -359,7 +359,7 @@ instruction make_inst(assembly_context& c) {
         }
         i.rd = string_to_register(c.arg1, c).encoding & 0b111;
     } else if (base_i.type == CS) {
-        if (auto num = to_int(c.arg3); num.has_value()) {
+        if (auto num = to_num<int>(c.arg3); num.has_value()) {
             i.imm = num.value();
             i.rs1 = string_to_register(c.arg2, c).encoding & 0b111;
         } else {
@@ -369,7 +369,7 @@ instruction make_inst(assembly_context& c) {
         }
         i.rs2 = string_to_register(c.arg1, c).encoding & 0b111;
     } else if (base_i.type == CB) {
-        if (auto num = to_int(c.arg2); num.has_value()) {
+        if (auto num = to_num<int>(c.arg2); num.has_value()) {
             i.imm = num.value();
         } else {
             i.imm = string_to_label(c.arg2, c);
@@ -385,7 +385,7 @@ instruction make_inst(assembly_context& c) {
         }
     } else if (base_i.type == CI) {
         i.rd = string_to_register(c.arg1, c).encoding;
-        if (auto num = to_int(c.arg2); num.has_value()) {
+        if (auto num = to_num<int>(c.arg2); num.has_value()) {
             i.imm = num.value();
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2); // discard reg
@@ -393,7 +393,7 @@ instruction make_inst(assembly_context& c) {
         }
     } else if (base_i.type == CSS) {
         i.rs2 = string_to_register(c.arg1, c).encoding;
-        if (auto num = to_int(c.arg2); num.has_value()) {
+        if (auto num = to_num<int>(c.arg2); num.has_value()) {
             i.imm = num.value();
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2); // discard reg
@@ -401,7 +401,7 @@ instruction make_inst(assembly_context& c) {
         }
     } else if (base_i.type == CIW) {
         i.rd = string_to_register(c.arg1, c).encoding & 0b111; // Only use the lower 3 bits
-        if (auto num = to_int(c.arg2); num.has_value()) {
+        if (auto num = to_num<int>(c.arg2); num.has_value()) {
             i.imm = num.value();
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
@@ -596,6 +596,10 @@ void generate_machine_code(assembly_context& c) {
     size_t offset = 0;
     for (auto& i : c.nodes) {
         if (i.imm_purpose == LABEL_NODE) {
+            continue;
+        } else if (i.imm_purpose == RAW_INSTR) {
+            reinterpret_cast<uint32_t&>(c.machine_code.data()[offset]) = i.imm;
+            offset += i.inst_offset;
             continue;
         }
         uint32_t inst = 0;
@@ -826,8 +830,36 @@ void handle_directives(assembly_context& c) {
     } else if (fast_eq(c.inst, ".insn")) {
         DBG(std::cout << "Instruction directive" << std::endl;)
         // .insn <value> = make an instruction with content <value>
-        // .insn <insn_length>, <value> = make an instruction with length <insn_length> and content <value> (verify)
+        // .insn <insn_length>, <value> = make an instruction with length <insn_length> and content <value> (verify length)
         // .insn <type> <fields> = make an instruction with type <type> and fields <fields>
+        instruction i;
+        uint8_t required_length = 0;
+        if (!c.arg1.empty() && c.arg2.empty()) {
+            if (auto num = to_num<uint32_t>(c.arg1); num.has_value()) {
+                i.imm = num.value();
+                i.imm_purpose = InstrImmPurpose::RAW_INSTR;
+            }
+        } else if (!c.arg1.empty() && !c.arg2.empty()) {
+            if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {
+                i.imm = num.value();
+                i.imm_purpose = InstrImmPurpose::RAW_INSTR;
+            }
+            if (auto num = to_num<uint8_t>(c.arg1); num.has_value()) {
+                required_length = num.value();
+            }
+        }
+        if (i.imm & 0xFFFF0000) {
+            i.inst_offset = 4;
+        } else {
+            i.inst_offset = 2;
+        }
+        if (!c.arg1.empty() && !c.arg2.empty()) {
+            if (required_length != i.inst_offset) {
+                throw ChataError(ChataErrorType::Assembler, "Instruction length mismatch: expected " + to_chatastring(required_length) + ", got " + to_chatastring(i.inst_offset));
+            }
+        }
+        c.instruction_bytes += i.inst_offset;
+        c.nodes.push_back(i);
     }
 }
 
@@ -954,7 +986,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
 
     DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
-    DBG(for (auto c : machine_code) { printf("%02x ", c); })
+    DBG(for (auto c : c.machine_code) { printf("%02x ", c); })
 
     DBG(std::cout << "Let's compare this against the reference, gcc as" << std::endl;)
 

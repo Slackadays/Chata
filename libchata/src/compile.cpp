@@ -138,7 +138,7 @@ void replace_temp_registers(chatastring& input) {
                 break;
             }
         }
-        if (auto num = to_int(id_str); num.has_value()) {
+        if (auto num = to_num<int>(id_str); num.has_value()) {
             id = num.value();
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid temporary integer register ID " + id_str);
@@ -191,7 +191,7 @@ void replace_temp_registers(chatastring& input) {
                 break;
             }
         }
-        if (auto num = to_int(id_str); num.has_value()) {
+        if (auto num = to_num<int>(id_str); num.has_value()) {
             id = num.value();
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid temporary floating point register ID " + id_str);

@@ -83,6 +83,19 @@ using namespace libchata_internal;
 
 int main() {
     std::cout << "Running assembler tests..." << std::endl;
+    as(".insn 640", 0x8002);
+    as(".insn 5928400", 0xd0755a00);
+    as(".insn 0x5780", 0x8057);
+    as(".insn 0x40506070", 0x70605040);
+    as(".insn 0b1010101010101010", 0xaaaa);
+    as(".insn 0b10101010101010101010101010101010", 0xaaaaaaaa);
+    as(".insn 2, 400", 0x9001);
+    as(".insn 2, 0x4000", 0x0040);
+    as(".insn 2, 0b1000000000000000", 0x0080);
+    as(".insn 4, 1398101", 0x55551500);
+    as(".insn 4, 0x155555", 0x55551500);
+    as(".insn 4, 0b10101010101010101010101010101010", 0xaaaaaaaa);
+
     as("lui a0, 12345", 0x37950303);
     as("lui a0, 0x12345", 0x37553412);
     as("lui a0, 0b100", 0x37450000);

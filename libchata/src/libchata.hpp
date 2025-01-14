@@ -10,6 +10,7 @@
 #include <string_view>
 #include <unistd.h>
 #include <vector>
+#include <charconv>
 
 #pragma once
 
@@ -146,8 +147,6 @@ bool is_integer(const chatastring& str);
 
 bool is_number(const chatastring& str);
 
-std::optional<int> to_int(const chatastring& str);
-
 double to_float(const chatastring& str);
 
 bool is_int_register(chatastring& reg);
@@ -175,6 +174,45 @@ constexpr std::string_view generated_label_prefix = "generated_code_label";
 constexpr std::string_view placeholder_temp_integer_register = "generated_placeholder_integer_register";
 
 constexpr std::string_view placeholder_temp_floating_point_register = "generated_placeholder_floating_point_register";
+
+template <typename T>
+std::optional<T> to_num(const chatastring& str) {
+    T result = 0;
+    std::from_chars_result res;
+    if (str.size() > 2) {
+        if (str[0] == '0') {
+            if (str[1] == 'x' || str[1] == 'X') {
+                res = std::from_chars(str.data() + 2, str.data() + str.size(), result, 16);
+            } else if (str[1] == 'b' || str[1] == 'B') {
+                res = std::from_chars(str.data() + 2, str.data() + str.size(), result, 2);
+            } else {
+                res = std::from_chars(str.data(), str.data() + str.size(), result);
+            }
+        } else if (str[0] == '-' && str[1] == '0') {
+            if (str.size() > 3) {
+                if (str[2] == 'x' || str[2] == 'X') {
+                    res = std::from_chars(str.data() + 3, str.data() + str.size(), result, 16);
+                    result = -result;
+                } else if (str[2] == 'b' || str[2] == 'B') {
+                    res = std::from_chars(str.data() + 3, str.data() + str.size(), result, 2);
+                    result = -result;
+                } else {
+                    res = std::from_chars(str.data(), str.data() + str.size(), result);
+                }
+            } else {
+                res = std::from_chars(str.data(), str.data() + str.size(), result);
+            }
+        } else {
+            res = std::from_chars(str.data(), str.data() + str.size(), result);
+        }
+    } else {
+        res = std::from_chars(str.data(), str.data() + str.size(), result);
+    }
+    if (res.ec != std::errc() || res.ptr != str.data() + str.size()) {
+        return std::nullopt;
+    }
+    return result;
+}
 
 } // namespace libchata_internal
 
