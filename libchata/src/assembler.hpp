@@ -12,6 +12,7 @@ enum class InstrImmPurpose : uint8_t {
 };
 
 struct instruction {
+    int32_t imm = 0;
     uint16_t inst_offset = 0; // The offset from the instructions array at which our instruction is (saves memory and prevents O(n) lookups)
                                 // Alternatively, the size of the raw instruction
     uint8_t rd = 0;
@@ -19,7 +20,6 @@ struct instruction {
     uint8_t rs2 = 0;
     uint8_t rs3 = 0;
     uint8_t frm = 0;
-    int32_t imm = 0;
     InstrImmPurpose imm_purpose = InstrImmPurpose::INSTR_IMM;
 };
 
@@ -28,15 +28,6 @@ struct directive_option {
 };
 
 struct assembly_context {
-    chatavector<instruction> nodes;
-    chatavector<uint8_t> machine_code;
-    size_t instruction_bytes = 0;
-    chatavector<RVInstructionSet> supported_sets;
-    chatavector<std::pair<chatastring, int>> labels;
-    chatavector<directive_option> options;
-    int line = 1;
-    int column = 0;
-    uint16_t inst_offset = 0;
     chatastring inst;
     chatastring arg1;
     chatastring arg2;
@@ -44,6 +35,15 @@ struct assembly_context {
     chatastring arg4;
     chatastring arg5;
     chatastring arg6;
+    uint32_t instruction_bytes = 0;
+    uint32_t line = 1;
+    uint32_t column = 0;
+    uint16_t inst_offset = 0;
+    chatavector<instruction> nodes;
+    chatavector<uint8_t> machine_code;
+    chatavector<RVInstructionSet> supported_sets;
+    chatavector<std::pair<chatastring, int>> labels;
+    chatavector<directive_option> options;
 };
 
 instruction make_inst(assembly_context& c);

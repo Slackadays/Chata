@@ -218,7 +218,8 @@ instruction make_inst(assembly_context& c) {
 
     instruction i;
 
-    /*i.inst_offset = get_inst_offset_by_id(RVInstructionID::ADD);
+    /*i.inst_offset = fast_instr_search("add");
+    //i.inst_offset = 27;
     i.rd = 0;
     i.rs1 = 1;
     i.rs2 = 2;
@@ -238,6 +239,11 @@ instruction make_inst(assembly_context& c) {
     if (base_i.ssargs.super_special_snowflake) {
         handle_super_special_snowflakes(i, base_i, c);
     } else if (base_i.type == R || base_i.type == R4) {
+        /*i.rd = 0b00000;
+        i.rs1 = 0b00000;
+        i.rs2 = 0b00000;
+        i.imm = 0;*/
+
         if (base_i.type == R) {
             if (base_i.ssargs.use_imm_for_rs2) {
                 if (auto num = to_num<int>(c.arg3); num.has_value()) {
@@ -304,6 +310,11 @@ instruction make_inst(assembly_context& c) {
             }
         }
     } else if (base_i.type == I || base_i.type == S) {
+        /*i.rd = 0b00000;
+        i.rs1 = 0b00000;
+        i.rs2 = 0b00000;
+        i.imm = 0;*/
+
         if (auto num = to_num<int>(c.arg3); num.has_value()) {
             i.imm = num.value();
             i.rs1 = string_to_register(c.arg2, c).encoding;

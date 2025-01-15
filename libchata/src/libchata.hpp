@@ -238,8 +238,8 @@ public:
     std::optional<ChataErrorType> type;
     std::optional<std::string_view> details;
     std::optional<std::string_view> filename;
-    std::optional<int> line = 0;
-    std::optional<int> column = 0;
+    std::optional<uint32_t> line = 0;
+    std::optional<uint32_t> column = 0;
 
     char* what() {
         set_color();
@@ -283,9 +283,9 @@ public:
         return error_message.data();
     }
 
-    ChataError(ChataErrorType type, std::string_view details, int line, int column, std::string_view filename) : type(type), details(details), line(line), column(column), filename(filename) {}
+    ChataError(ChataErrorType type, std::string_view details, uint32_t line, uint32_t column, std::string_view filename) : type(type), details(details), line(line), column(column), filename(filename) {}
 
-    ChataError(ChataErrorType type, std::optional<std::string_view> details, int line, int column) : type(type), details(details), line(line), column(column) {}
+    ChataError(ChataErrorType type, std::optional<std::string_view> details, uint32_t line, uint32_t column) : type(type), details(details), line(line), column(column) {}
 
     ChataError(ChataErrorType type, std::string_view details) : type(type), details(details) {}
 };
