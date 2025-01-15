@@ -28,7 +28,7 @@ The Chatassembler testsuite currently has 500+ tests covering all supported inst
 
 Chatassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Unlike `mold`, however, Chatassembler doesn't use multithreading, but it doesn't need to. **Coming soon: How is Chatassembler so fast?**
 
-On my desktop with a Zen 3 CPU, Chatassembler is approximately 12.5x faster than `as` and 9x faster on my RISC-V SBC with a TH1520 SoC, both assembling the `16kinstrs.s` sample file, measured in number of cycles.
+On my desktop with a Zen 3 CPU, Chatassembler is approximately 13x faster than `as` and 9x faster on my RISC-V SBC with a TH1520 SoC, both assembling the `16kinstrs.s` sample file, measured in number of cycles.
 
 ## Differences to `as`
 
@@ -63,7 +63,9 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 | `.option pic/nopic` | 💀 |
 | `.option relax/norelax` | 💀 |
 | `.option push/pop` | 🪛 |
-| `.insn` | ❌ |
+| `.insn <value>` | ☑️ |
+| `.insn <insn_length>, <value>` | ☑️ |
+| `.insn <type> <fields>` | 🪛 |
 | Relocation functions | ❌ |
 | Labels | ☑️ |
 | Absolute addressing | ❌ |
