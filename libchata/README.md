@@ -152,7 +152,7 @@ enum class RVInstructionSet : uint8_t {
 
 Include instruction sets if:
 
-- You're assembing code which uses the `bclri` or `rev8` instructions, which are different on 64 bit systems than 32.
+- You're assembling code which uses the `bclri` or `rev8` instructions, which are different on 64 bit systems than 32.
 - You're assembling code which uses the `.option arch` directive, which requires knowing the target instruction sets.
 
 If you include instruction sets, you must include at least either `RV32I` or `RV64I`.
