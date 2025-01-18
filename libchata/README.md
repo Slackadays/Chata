@@ -113,6 +113,8 @@ I wrote Chatassembler because Chata needs to generate RISC-V machine code to exe
 
 I was originally going to include Chatassembler as an entirely private part of the `libchata` library that you wouldn't be able to use on its own. However, I realized that with how useful an independent RISC-V assembler might turn out to be, you should be able to use Chatassembler independently of the rest of the Chata project. That's what you're seeing here.
 
+One example of where you want to use Chatassembler is with embedded RISC-V scripts where you would also use [libriscv](https://github.com/libriscv/libriscv).
+
 ## Quick Start
 
 ### ▫️ Installation
