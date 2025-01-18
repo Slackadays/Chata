@@ -9,7 +9,7 @@
 
 # Welcome to Chatassembler!
 
-Chatassembler is a bloat-free assembler for RISC-V. It's easy to use, fully independent, and _over 10x faster_ 🏎️ than the competition.
+Chatassembler is the bloat-free assembler for RISC-V. It's easy to use, fully independent, and _over 10x faster_ 🏎️ than the competition.
 
 <p align="center">
     <img src="Figure_1.svg">
