@@ -9,7 +9,7 @@
 
 # Welcome to Chatassembler!
 
-Chatassembler is a bloat-free assembler for RISC-V. It's easy to use, embeddable, fully independent, and _over 10x faster_ than GCC's `as`.
+Chatassembler is a bloat-free assembler for RISC-V. It's easy to use, embeddable, fully independent, and _over 10x faster_ 🏎️ than GCC's `as`.
 
 Here's more on that. Chatassembler is...
 
@@ -25,11 +25,15 @@ Chatassembler ships in the lean and mean `libchata` library and is also availabl
 
 There's only one (1) function with one (1) required parameter. Truly effortless.
 
+### Unrelated to GCC or LLVM
+
+Chatassembler shares zero (0) code with GCC or LLVM, which provides a screaming opportunity to create an alternative reference implementation of RISC-V assembly.
+
 ### Tested
 
 The Chatassembler testsuite currently has 500+ tests covering all supported instructions and directives and other cases too.
 
-### Fast!
+### Fast! 🏎️
 
 Chatassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Unlike `mold`, however, Chatassembler doesn't use multithreading, but it doesn't need to. **Coming soon: How is Chatassembler so fast?**
 
@@ -166,6 +170,8 @@ Include instruction sets if:
 If you include instruction sets, you must include at least either `RV32I` or `RV64I`.
 
 By default, the `bclri` and `rev8` instructions target a 32 bit system.
+
+To preserve performance, Chatassembler doesn't check if instructions outside of `.option arch` blocks are valid for the provided instruction sets. If this is a problem for you, fix your broken software.
 
 ### Exceptions
 

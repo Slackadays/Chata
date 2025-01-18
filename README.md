@@ -6,13 +6,13 @@ Chata aims to fix problems other DSP libraries and languages have such as poor d
 
 **This project currently consists of these four parts:**
 
--> **`libchata`** The core C++ library with the Chata compiler, Chatassembler, and execution environment.
+👉 **`libchata`** The core C++ library with the Chata compiler, Chatassembler, and execution environment.
 
--> **`chatadsp`** The standard library of DSP effects.
+👉 **`chatadsp`** The standard library of DSP effects.
 
--> **`chatacli`** A convenient tool so you can use Chata in your favorite terminal.
+👉 **`chatacli`** A convenient tool so you can use Chata in your favorite terminal.
 
--> **`chatapanel`** A web management panel so you can use Chata effects with custom crafted audio hardware.
+👉 **`chatapanel`** A web management panel so you can use Chata effects with custom crafted audio hardware.
 
 Each part's documentation lives under their respective folder in this repo.
 
@@ -66,7 +66,7 @@ Available recipes:
 
 Use `copy` if you want to edit the Chata project's code but build it remotely. This runs a script to copy everything to a remote system over SSH.
 
-Use `generate` if you've moodified data that the `.py` codegen scripts use to generate code, or if you've modified the scripts themselves.
+Use `generate` if you've modified data that the `.py` codegen scripts use to generate code, or if you've modified the scripts themselves.
 
 ### Integrating `libchata` into your project
 
