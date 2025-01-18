@@ -40,6 +40,7 @@ enum class RVInstructionSet : uint8_t {
     Zicond,
     Zacas,
     Zcb,
+    Zbb,
     Zcmp,
     C,
     Zcd,

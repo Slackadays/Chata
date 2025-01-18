@@ -2,6 +2,10 @@
 
 `libchata` is the core library behind Chata. It handles compiling, assembling, and execution of Chata code. The assembler, Chatassembler, can assemble most RISC-V assembly, not just the kind generated from Chata code, so you can use `libchata` just for that if you wish!
 
+## Quick Start
+
+> [!WARNING]
+> Most of libchata is currently WORK IN PROGRESS. Anything could change right now. However, Chatassembler is ready for real world usage!
 
 # Welcome to Chatassembler!
 
@@ -11,11 +15,11 @@ Here's more on that. Chatassembler is...
 
 ### Complete
 
-Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zbb **(WIP)**, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, labels, and many directives **(WIP)**.
+Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zbb **(WIP)**, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, labels, and many other directives **(WIP)**.
 
 ### Not a binary
 
-Chatassembler ships in the lean and mean `libchata` library and is also available in the `chatacli` tool. Use it anywhere C++20 is supported.
+Chatassembler ships in the lean and mean `libchata` library and is also available in the `chatacli` tool. Use it anywhere C++20 is supported and link it dynamically or statically. It's your choice.
 
 ### Zero config
 
@@ -105,13 +109,15 @@ I was originally going to include Chatassembler as an entirely private part of t
 
 ### Installation
 
-Start by **installing `libchata`** how you would normally with the instructions in the `libchata` section.
+Start by installing `libchata` how you would normally with the instructions in the `libchata` section.
 
-Then, **include the C++ header `libchata.hpp`** where you use Chatassembler.
+Then, include the line `#include <libchata.hpp>` where you use Chatassembler.
+
+Support for other languages is planned!
 
 ### Usage
 
-The **one function** of Chatassembler is
+The one function of Chatassembler is
 
 ```cpp
 std::span<uint8_t> libchata_assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {})
