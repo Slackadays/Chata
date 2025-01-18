@@ -16,6 +16,30 @@ Chata aims to fix problems other DSP libraries and languages have such as poor d
 
 Each part's documentation lives under their respective folder in this repo.
 
+## Quick Start
+
+### Prerequisites
+
+You'll need a compiler that supports C++23, or GCC 11 and up, CMake, and Just.
+
+### Download
+
+Clone this repo from GitHub:
+
+```sh
+git clone https://github.com/Slackadays/Chata
+```
+
+### Build
+
+Use `just` to build Chata:
+
+```sh
+just build # This builds everything
+just build-lib # This builds just libchata
+just build-cli # This builds just chatacli
+```
+
 > [!TIP] 
 > Click here to go to <a href="libchata/README.md">libchata</a>, <a href="chatadsp">chatadsp</a>, <a href="chatacli/README.md">chatacli</a>, and <a href="chatapanel/README.md">chatapanel</a> directly.
 

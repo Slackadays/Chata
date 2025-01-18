@@ -1,6 +1,7 @@
 # Welcome to `libchata`!
 
-`libchata` is the core library behind Chata. It handles compiling, assembling, and execution of Chata code. The assembler, Chatassembler, can assemble all RISC-V assembly, not just the kind generated from Chata code.
+`libchata` is the core library behind Chata. It handles compiling, assembling, and execution of Chata code. The assembler, Chatassembler, can assemble most RISC-V assembly, not just the kind generated from Chata code, so you can use `libchata` just for that if you wish!
+
 
 # Welcome to Chatassembler!
 
