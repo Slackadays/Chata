@@ -9,31 +9,31 @@
 
 # Welcome to Chatassembler!
 
-Chatassembler is a bloat-free assembler for RISC-V. It's easy to use, embeddable, fully independent, and _over 10x faster_ 🏎️ than GCC's `as`.
+Chatassembler is a bloat-free assembler for RISC-V. It's easy to use, fully independent, and _over 10x faster_ 🏎️ than GCC's `as`.
 
 Here's more on that. Chatassembler is...
 
-### Complete
+### ▫️ Complete
 
 Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zbb **(WIP)**, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, labels, and many other directives **(WIP)**.
 
-### Not a binary
+### ▫️ Not a binary
 
 Chatassembler ships in the lean and mean `libchata` library and is also available in the `chatacli` tool. Use it anywhere C++20 is supported and link it dynamically or statically. It's your choice.
 
-### Zero config
+### ▫️ Zero config
 
 There's only one (1) function with one (1) required parameter. Truly effortless.
 
-### Unrelated to GCC or LLVM
+### ▫️ Unrelated to GCC or LLVM
 
 Chatassembler shares zero (0) code with GCC or LLVM, which provides a screaming opportunity to create an alternative reference implementation of RISC-V assembly.
 
-### Tested
+### ▫️ Tested
 
 The Chatassembler testsuite currently has 500+ tests covering all supported instructions and directives and other cases too.
 
-### Fast! 🏎️
+### ▫️ Fast! 🏎️
 
 Chatassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Unlike `mold`, however, Chatassembler doesn't use multithreading, but it doesn't need to. **Coming soon: How is Chatassembler so fast?**
 
@@ -43,13 +43,13 @@ On my desktop with a Zen 3 CPU and GCC 11, Chatassembler is approximately 13x fa
 
 Chatassembler is different to `as` in these important ways:
 
-### Machine code
+### ▫️ Machine code
 
 Chatassembler can only generate RISC-V machine code. It can't make ELF or other executable files. 
 
 In other words, Chatassembler replaces what you would otherwise do with `as foo.s && objcopy -O binary a.out`.
 
-### Directive support
+### ▫️ Directive support
 
 Because Chatassembler only generates RISC-V machine code, it ignores directives such as `.align` and `.globl` which only make sense with executable files.
 
@@ -99,7 +99,7 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 
 *Currently available if you use Chata code instead
 
-### License
+### ▫️ License
 
 Chatassembler is available with the MPL 2.0 license. This may or may not be easier to include in your project than the GPL, but this depends on your situation.
 
@@ -111,7 +111,7 @@ I was originally going to include Chatassembler as an entirely private part of t
 
 ## Quick Start
 
-### Installation
+### ▫️ Installation
 
 Start by installing `libchata` how you would normally with the instructions in the `libchata` section.
 
@@ -119,7 +119,7 @@ Then, include the line `#include <libchata.hpp>` where you use Chatassembler.
 
 Support for other languages is planned!
 
-### Usage
+### ▫️ Usage
 
 The one function of Chatassembler is
 
@@ -173,7 +173,7 @@ By default, the `bclri` and `rev8` instructions target a 32 bit system.
 
 To preserve performance, Chatassembler doesn't check if instructions outside of `.option arch` blocks are valid for the provided instruction sets. If this is a problem for you, fix your broken software.
 
-### Exceptions
+### ▫️ Exceptions
 
 Chatassembler may throw a `ChataError` exception if it encounters incorrect code or has some other error.
 
@@ -181,7 +181,7 @@ To catch these, just add a `try {} catch(...) {}` block like you would with othe
 
 These errors follow the same format that other parts of `libchata` use.
 
-### Example
+### ▫️ Example
 
 ```cpp
 #include <libchata.hpp>
