@@ -32,7 +32,7 @@ x86_llvm_cycles = x86_llvm_cycles / maxcycles * 100
 
 x86_chatassembler_cycles = x86_chatassembler_cycles / maxcycles * 100
 
-chart_title = "Cycles to assemble 16kinstrs.s"
+chart_title = "Cycles to assemble 16kinstrs.s (normalized per platform)"
 
 theme = "dark_background"
 
