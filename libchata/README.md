@@ -9,7 +9,11 @@
 
 # Welcome to Chatassembler!
 
-Chatassembler is a bloat-free assembler for RISC-V. It's easy to use, fully independent, and _over 10x faster_ 🏎️ than GCC's `as`.
+Chatassembler is a bloat-free assembler for RISC-V. It's easy to use, fully independent, and _over 10x faster_ 🏎️ than the competition.
+
+<p align="center">
+    <img src="Figure_1.svg">
+</p>
 
 Here's more on that. Chatassembler is...
 
@@ -39,9 +43,9 @@ Chatassembler uses a strategy similar to what the fast `mold` linker also uses: 
 
 On my desktop with a Zen 3 CPU and GCC 11, Chatassembler is approximately 13x faster than `as` and 9x faster on my RISC-V SBC with a TH1520 SoC and GCC 14, both assembling the `16kinstrs.s` sample file, measured in number of cycles.
 
-## Differences to `as`
+## Differences to `as` and `llvm-mc`
 
-Chatassembler is different to `as` in these important ways:
+Chatassembler is different to `as` and `llvm-mc` in these important ways:
 
 ### ▫️ Machine code
 
