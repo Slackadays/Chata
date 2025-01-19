@@ -62,7 +62,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
     return new_label;
 }
 
-inline __attribute__((always_inline)) const rvregister& string_to_register(const chatastring& str, assembly_context& c) {
+const rvregister& string_to_register(const chatastring& str, assembly_context& c) {
     if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
         return registers[reg];
     }
@@ -184,7 +184,7 @@ void handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i
     }
 }
 
-inline __attribute__((always_inline)) std::pair<int, chatastring> decode_offset_plus_reg(const chatastring& str) {
+std::pair<int, chatastring> decode_offset_plus_reg(const chatastring& str) {
     int offset = 0;
     int j = 0;
     if (str.front() == '-') {
@@ -875,7 +875,7 @@ void handle_directives(assembly_context& c) {
     }
 }
 
-inline __attribute__((always_inline)) void parse_this_line(size_t& i, const std::string_view& data, assembly_context& c) {
+void parse_this_line(size_t& i, const std::string_view& data, assembly_context& c) {
     /*c.inst = "addi";
     c.arg1 = "zero";
     c.arg2 = "zero";
