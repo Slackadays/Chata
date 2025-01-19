@@ -131,9 +131,29 @@ enum class RegisterID : uint8_t {
     v31
 };
 
+class regname {
+    char name[5];
+    uint8_t name_size;
+
+public:
+    constexpr regname(const char* input) {
+        name_size = 0;
+        for (size_t i = 0; i < 4 && input[i] != '\0'; i++) {
+            name[i] = input[i];
+            name_size++;
+        }
+        name[4] = '\0';
+    }
+    const uint8_t& size() const { return name_size; }
+    const bool operator == (const auto& other) const {
+        return fast_eq(*this, other);
+    }
+    operator char const*() const { return name; }
+};
+
 struct rvregister {
-    std::string_view name;
-    std::string_view alias;
+    regname name;
+    regname alias;
     RegisterType type;
     RegisterID id;
     uint8_t encoding;

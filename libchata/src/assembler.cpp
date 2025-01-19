@@ -18,21 +18,6 @@ namespace libchata_internal {
 
 using enum InstrImmPurpose;
 
-bool fast_eq(const auto& first, const std::string_view& second) {
-    if (first.size() != second.size()) { // First make sure the sizes are equal because no two strings can ever be the same if they have different sizes. Also, this lets us save on future bound checks
-                                         // because we're already checking it here.
-        return false;
-    }
-    for (size_t i = 0; i < first.size(); i++) {
-        if (first[i] != second[i]) {
-            [[likely]] return false;
-        } else {
-            [[unlikely]] continue;
-        }
-    }
-    return true;
-}
-
 int string_to_label(chatastring& str, assembly_context& c) {
     while (str.back() == ':') {
         str.pop_back();
@@ -521,9 +506,177 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
                 }
             }
         }
+        if (c.inst[1] == 's') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'r') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'c') {
+                    if (c.inst.size() < 5) return csrc_instr(c);
+                    if (c.inst[4] == 'i') {
+                        if (c.inst.size() < 6) return csrci_instr(c);
+                    }
+                }
+                if (c.inst[3] == 's') {
+                    if (c.inst.size() < 5) return csrs_instr(c);
+                    if (c.inst[4] == 'i') {
+                        if (c.inst.size() < 6) return csrsi_instr(c);
+                    }
+                }
+                if (c.inst[3] == 'r') {
+                    if (c.inst.size() < 5) return csrr_instr(c);
+                }
+                if (c.inst[3] == 'w') {
+                    if (c.inst.size() < 5) return csrw_instr(c);
+                    if (c.inst[4] == 'i') {
+                        if (c.inst.size() < 6) return csrwi_instr(c);
+                    }
+                }
+            }
+        }
+    }
+    if (c.inst[0] == 'r') {
+        if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 'e') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 't') {
+                if (c.inst.size() < 4) return ret_instr(c);
+            }
+        }
+        if (c.inst[1] == 'd') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 't') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'i') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == 'm') {
+                        if (c.inst.size() < 6) return {};
+                        if (c.inst[5] == 'e') {
+                            if (c.inst.size() < 7) return rdtime_instr(c);
+                            if (c.inst[6] == 'h') {
+                                if (c.inst.size() < 8) return rdtimeh_instr(c);
+                            }
+                        }
+                    }
+                }
+            }
+            if (c.inst[2] == 'c') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'y') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == 'c') {
+                        if (c.inst.size() < 6) return {};
+                        if (c.inst[5] == 'l') {
+                            if (c.inst.size() < 7) return {};
+                            if (c.inst[6] == 'e') {
+                                if (c.inst.size() < 8) return rdcycle_instr(c);
+                                if (c.inst[7] == 'h') {
+                                    if (c.inst.size() < 9) return rdcycleh_instr(c);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (c.inst[2] == 'i') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'n') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == 's') {
+                        if (c.inst.size() < 6) return {};
+                        if (c.inst[5] == 't') {
+                            if (c.inst.size() < 7) return {};
+                            if (c.inst[6] == 'r') {
+                                if (c.inst.size() < 8) return {};
+                                if (c.inst[7] == 'e') {
+                                    if (c.inst.size() < 9) return {};
+                                    if (c.inst[8] == 't') {
+                                        if (c.inst.size() < 10) return rdinstret_instr(c);
+                                        if (c.inst[9] == 'h') {
+                                            if (c.inst.size() < 11) return rdinstreth_instr(c);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
     if (c.inst[0] == 'f') {
         if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 's') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'c') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 's') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == 'r') {
+                        if (c.inst.size() < 6) return fscsr_instr(c);
+                    }
+                }
+            }
+            if (c.inst[2] == 'r') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'm') {
+                    if (c.inst.size() < 5) return fsrm_instr(c);
+                    if (c.inst[4] == 'i') {
+                        if (c.inst.size() < 6) return fsrmi_instr(c);
+                    }
+                }
+            }
+            if (c.inst[2] == 'f') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'l') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == 'a') {
+                        if (c.inst.size() < 6) return {};
+                        if (c.inst[5] == 'g') {
+                            if (c.inst.size() < 7) return {};
+                            if (c.inst[6] == 's') {
+                                if (c.inst.size() < 8) return fsflags_instr(c);
+                                if (c.inst[7] == 'i') {
+                                    if (c.inst.size() < 9) return fsflagsi_instr(c);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (c.inst[1] == 'r') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'c') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 's') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == 'r') {
+                        if (c.inst.size() < 6) return frcsr_instr(c);
+                    }
+                }
+            }
+            if (c.inst[2] == 'r') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'm') {
+                    if (c.inst.size() < 5) return frrm_instr(c);
+                }
+            }
+            if (c.inst[2] == 'f') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'l') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == 'a') {
+                        if (c.inst.size() < 6) return {};
+                        if (c.inst[5] == 'g') {
+                            if (c.inst.size() < 7) return {};
+                            if (c.inst[6] == 's') {
+                                if (c.inst.size() < 8) return frflags_instr(c);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         if (c.inst[1] == 'm') {
             if (c.inst.size() < 3) return {};
             if (c.inst[2] == 'v') {
@@ -551,15 +704,6 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
     }
     if (c.inst[0] == 'j') {
         if (c.inst.size() < 2) return j_instr(c);
-    }
-    if (c.inst[0] == 'r') {
-        if (c.inst.size() < 2) return {};
-        if (c.inst[1] == 'e') {
-            if (c.inst.size() < 3) return {};
-            if (c.inst[2] == 't') {
-                if (c.inst.size() < 4) return ret_instr(c);
-            }
-        }
     }
     return {};
 }
@@ -825,12 +969,63 @@ void handle_directives(assembly_context& c) {
     if (fast_eq(c.inst, ".option")) {
         DBG(std::cout << "Option directive" << std::endl;)
         if (fast_eq(c.arg1, "arch")) {
+            using enum RVInstructionSet;
+            const std::array<std::pair<std::string_view, RVInstructionSet>, 21> arch_option_names = {{
+                {"rv32i", RV32I},
+                {"rv64i", RV64I},
+                {"m", RV32M}, // Using RV32M although it means M in general
+                {"a", RV32A},
+                {"f", RV32F},
+                {"d", RV32D},
+                {"q", RV32Q},
+                {"zifencei", Zifencei},
+                {"zicsr", Zicsr},
+                {"zawrs", Zawrs},
+                {"zicond", Zicond},
+                {"zacas", Zacas},
+                {"zcb", Zcb},
+                {"zbb", Zbb},
+                {"zcmp", Zcmp},
+                {"c", C},
+                {"zcd", Zcd},
+                {"zcf", Zcf},
+                {"zcmt", Zcmt},
+                {"b", B},
+                {"v", V}
+            }};
+
+            auto get_arches_from_string = [&](const std::string_view& str) {
+                chatavector<RVInstructionSet> arches;
+                chatastring temp;
+                for (const char& c : str) {
+                    temp.push_back(c);
+                    for (const auto& [name, arch] : arch_option_names) {
+                        if (fast_eq(temp, name)) {
+                            arches.push_back(arch);
+                            DBG(std::cout << "Found arch: " << temp << std::endl;)
+                            temp.clear();
+                            break;
+                        }
+                    }
+                }
+                return arches;
+            };
+
             if (c.arg2.front() == '+') {
                 DBG(std::cout << "Adding arches" << std::endl;)
+                c.arg2.erase(0, 1);
+                auto arches = get_arches_from_string(c.arg2);
+                c.supported_sets.insert(c.supported_sets.end(), arches.begin(), arches.end());
             } else if (c.arg2.front() == '-') {
                 DBG(std::cout << "Removing arches" << std::endl;)
+                c.arg2.erase(0, 1);
+                auto arches = get_arches_from_string(c.arg2);
+                for (const auto& arch : arches) {
+                    c.supported_sets.erase(std::remove(c.supported_sets.begin(), c.supported_sets.end(), arch), c.supported_sets.end());
+                }
             } else {
                 DBG(std::cout << "Setting arches" << std::endl;)
+                c.supported_sets = get_arches_from_string(c.arg2);
             }
         } else if (fast_eq(c.arg1, "push")) {
             DBG(std::cout << "Pushing options" << std::endl;)
@@ -938,6 +1133,9 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
                     parse_arg(c.arg5);
                     if (!c.arg5.empty()) {
                         parse_arg(c.arg6);
+                        if (!c.arg6.empty()) {
+                            parse_arg(c.arg7);
+                        }
                     }
                 }
             }

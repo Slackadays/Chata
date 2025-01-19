@@ -1,1 +1,1 @@
-.insn 4, 0x155555
+.option arch, rv64imac

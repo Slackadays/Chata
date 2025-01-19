@@ -232,7 +232,7 @@ void process_ifs(InternalFile& file, struct compilation_context& c) {
                 }
             }
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid operands", 0, 0);
+            throw ChataError(ChataErrorType::Compiler, "Invalid operands");
         }
         c.generated_label_num++;
 

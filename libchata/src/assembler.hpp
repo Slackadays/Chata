@@ -35,6 +35,7 @@ struct assembly_context {
     chatastring arg4;
     chatastring arg5;
     chatastring arg6;
+    chatastring arg7;
     uint32_t instruction_bytes = 0;
     uint32_t line = 1;
     uint32_t column = 0;

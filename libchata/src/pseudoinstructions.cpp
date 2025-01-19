@@ -187,4 +187,186 @@ chatavector<instruction> fmvxs_instr(assembly_context& c) {
     return {make_inst(c)};
 }
 
+chatavector<instruction> rdinstret_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrs");
+    c.arg2 = "instret";
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> rdinstreth_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrs");
+    c.arg2 = "instreth";
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> rdcycle_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrs");
+    c.arg2 = "cycle";
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> rdcycleh_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrs");
+    c.arg2 = "cycleh";
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> rdtime_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrs");
+    c.arg2 = "time";
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> rdtimeh_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrs");
+    c.arg2 = "timeh";
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> csrr_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrs");
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> csrw_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrw");
+    c.arg3 = c.arg2;
+    c.arg2 = c.arg1;
+    c.arg1 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> csrs_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrs");
+    c.arg3 = c.arg2;
+    c.arg2 = c.arg1;
+    c.arg1 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> csrc_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrc");
+    c.arg3 = c.arg2;
+    c.arg2 = c.arg1;
+    c.arg1 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> csrwi_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrwi");
+    c.arg3 = c.arg2;
+    c.arg2 = c.arg1;
+    c.arg1 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> csrsi_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrsi");
+    c.arg3 = c.arg2;
+    c.arg2 = c.arg1;
+    c.arg1 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> csrci_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrci");
+    c.arg3 = c.arg2;
+    c.arg2 = c.arg1;
+    c.arg1 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> frcsr_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrs");
+    c.arg2 = "fcsr";
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> fscsr_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrw");
+    if (!c.arg2.empty()) {
+        c.arg3 = c.arg2;
+        c.arg2 = "fcsr";
+    } else {
+        c.arg3 = c.arg1;
+        c.arg2 = "fcsr";
+        c.arg1 = "zero";
+    }
+    return {make_inst(c)};
+}
+
+chatavector<instruction> frrm_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrs");
+    c.arg2 = "frm";
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> fsrm_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrw");
+    if (!c.arg2.empty()) {
+        c.arg3 = c.arg2;
+        c.arg2 = "frm";
+    } else {
+        c.arg3 = c.arg1;
+        c.arg2 = "frm";
+        c.arg1 = "zero";
+    }
+    return {make_inst(c)};
+}
+
+chatavector<instruction> fsrmi_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrwi");
+    if (!c.arg2.empty()) {
+        c.arg3 = c.arg2;
+        c.arg2 = "frm";
+    } else {
+        c.arg3 = c.arg1;
+        c.arg2 = "frm";
+        c.arg1 = "zero";
+    }
+    return {make_inst(c)};
+}
+
+chatavector<instruction> frflags_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrs");
+    c.arg2 = "fflags";
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> fsflags_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrw");
+    if (!c.arg2.empty()) {
+        c.arg3 = c.arg2;
+        c.arg2 = "fflags";
+    } else {
+        c.arg3 = c.arg1;
+        c.arg2 = "fflags";
+        c.arg1 = "zero";
+    }
+    return {make_inst(c)};
+}
+
+chatavector<instruction> fsflagsi_instr(assembly_context& c) {
+    c.inst_offset = fast_instr_search("csrrwi");
+    if (!c.arg2.empty()) {
+        c.arg3 = c.arg2;
+        c.arg2 = "fflags";
+    } else {
+        c.arg3 = c.arg1;
+        c.arg2 = "fflags";
+        c.arg1 = "zero";
+    }
+    return {make_inst(c)};
+}
+
 } // namespace libchata_internal

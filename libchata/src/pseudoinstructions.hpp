@@ -24,5 +24,26 @@ chatavector<instruction> ret_instr(assembly_context& c);
 chatavector<instruction> nop_instr(assembly_context& c);
 chatavector<instruction> fmvsx_instr(assembly_context& c);
 chatavector<instruction> fmvxs_instr(assembly_context& c);
+chatavector<instruction> rdinstret_instr(assembly_context& c);
+chatavector<instruction> rdinstreth_instr(assembly_context& c);
+chatavector<instruction> rdcycle_instr(assembly_context& c);
+chatavector<instruction> rdcycleh_instr(assembly_context& c);
+chatavector<instruction> rdtime_instr(assembly_context& c);
+chatavector<instruction> rdtimeh_instr(assembly_context& c);
+chatavector<instruction> csrr_instr(assembly_context& c);
+chatavector<instruction> csrw_instr(assembly_context& c);
+chatavector<instruction> csrs_instr(assembly_context& c);
+chatavector<instruction> csrc_instr(assembly_context& c);
+chatavector<instruction> csrwi_instr(assembly_context& c);
+chatavector<instruction> csrsi_instr(assembly_context& c);
+chatavector<instruction> csrci_instr(assembly_context& c);
+chatavector<instruction> frcsr_instr(assembly_context& c);
+chatavector<instruction> fscsr_instr(assembly_context& c);
+chatavector<instruction> frrm_instr(assembly_context& c);
+chatavector<instruction> fsrm_instr(assembly_context& c);
+chatavector<instruction> fsrmi_instr(assembly_context& c);
+chatavector<instruction> frflags_instr(assembly_context& c);
+chatavector<instruction> fsflags_instr(assembly_context& c);
+chatavector<instruction> fsflagsi_instr(assembly_context& c);
 
 } // namespace libchata_internal

@@ -176,6 +176,21 @@ constexpr std::string_view placeholder_temp_integer_register = "generated_placeh
 
 constexpr std::string_view placeholder_temp_floating_point_register = "generated_placeholder_floating_point_register";
 
+bool fast_eq(const auto& first, const std::string_view& second) {
+    if (first.size() != second.size()) { // First make sure the sizes are equal because no two strings can ever be the same if they have different sizes. Also, this lets us save on future bound checks
+                                         // because we're already checking it here.
+        return false;
+    }
+    for (size_t i = 0; i < first.size(); i++) {
+        if (first[i] != second[i]) {
+            [[likely]] return false;
+        } else {
+            [[unlikely]] continue;
+        }
+    }
+    return true;
+}
+
 template <typename T>
 std::optional<T> to_num(const chatastring& str) {
     T result = 0;

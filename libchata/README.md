@@ -72,34 +72,34 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 | `.align` | 💀 |
 | `.attribute` | 💀 |
 | `.option rvc/norvc` | 💀 |
-| `.option arch` | 🪛 |
+| `.option arch` | ☑️ |
 | `.option pic/nopic` | 💀 |
 | `.option relax/norelax` | 💀 |
-| `.option push/pop` | 🪛 |
+| `.option push/pop` | ☑️ |
 | `.insn <value>` | ☑️ |
 | `.insn <insn_length>, <value>` | ☑️ |
 | `.insn <type> <fields>` | 🪛 |
-| Relocation functions | ❌ |
+| Relocation functions | 🪛 |
 | Labels | ☑️ |
-| Absolute addressing | ❌ |
-| Relative addressing | ❌ |
+| Absolute addressing | 💀 |
+| Relative addressing | 💀 |
 | GOT-indirect addressing | 💀 |
 | Load Immediate | ☑️ |
 | Load Upper Immediate’s Immediate | ☑️ |
 | Signed Immediates for I- and S-Type Instructions | ☑️ |
 | Floating-point literals | ❌* |
 | Load Floating-point Immediate | ❌ |
-| Load Address | ❌ |
-| Load Local Address | ❌ |
-| Load Global Address | ❌ |
-| Load and Store Global | ❌ |
+| Load Address | 💀 |
+| Load Local Address | 💀 |
+| Load Global Address | 💀 |
+| Load and Store Global | 💀 |
 | Constants | ❌ |
 | Far Branches | ❌ |
 | Function Calls | ☑️ |
 | Floating-point rounding modes | ☑️ |
 | Control and Status Registers | ☑️ |
 | Standard pseudoinstructions | ☑️ |
-| CSR pseudoinstructions | 🪛 |
+| CSR pseudoinstructions | ☑️ |
 
 *Currently available if you use Chata code instead
 
