@@ -483,6 +483,9 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
             if (c.inst.size() < 3) return {};
             if (c.inst[2] == 'g') {
                 if (c.inst.size() < 4) return neg_instr(c);
+                if (c.inst[3] == 'w') {
+                    if (c.inst.size() < 5) return negw_instr(c);
+                }
             }
         }
         if (c.inst[1] == 'o') {
@@ -530,6 +533,45 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
                     if (c.inst[4] == 'i') {
                         if (c.inst.size() < 6) return csrwi_instr(c);
                     }
+                }
+            }
+        }
+    }
+    if (c.inst[0] == 's') {
+        if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 'e') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'q') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'z') {
+                    if (c.inst.size() < 5) return seqz_instr(c);
+                }
+            }
+        }
+        if (c.inst[1] == 'g') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 't') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'z') {
+                    if (c.inst.size() < 5) return sgtz_instr(c);
+                }
+            }
+        }
+        if (c.inst[1] == 'l') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 't') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'z') {
+                    if (c.inst.size() < 5) return sltz_instr(c);
+                }
+            }
+        }
+        if (c.inst[1] == 'n') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'e') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'z') {
+                    if (c.inst.size() < 5) return snez_instr(c);
                 }
             }
         }

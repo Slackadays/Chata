@@ -74,6 +74,38 @@ chatavector<instruction> neg_instr(assembly_context& c) { // neg rd, rs -> sub r
     return {make_inst(c)};
 }
 
+chatavector<instruction> negw_instr(assembly_context& c) { // negw rd, rs -> subw rd, zero, rs
+    c.inst_offset = fast_instr_search("subw");
+    c.arg3 = c.arg2;
+    c.arg2 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> seqz_instr(assembly_context& c) { // seqz rd, rs -> sltiu rd, rs, 1
+    c.inst_offset = fast_instr_search("sltiu");
+    c.arg3 = "1";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> snez_instr(assembly_context& c) { // snez rd, rs -> sltu rd, zero, rs
+    c.inst_offset = fast_instr_search("sltu");
+    c.arg2 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> sltz_instr(assembly_context& c) { // sltz rd, rs -> slt rd, rs, zero
+    c.inst_offset = fast_instr_search("slt");
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> sgtz_instr(assembly_context& c) { // sgtz rd, rs -> slt rd, zero, rs
+    c.inst_offset = fast_instr_search("slt");
+    c.arg3 = c.arg2;
+    c.arg2 = "zero";
+    return {make_inst(c)};
+}
+
 chatavector<instruction> bgt_instr(assembly_context& c) { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
     c.inst_offset = fast_instr_search("blt");
     std::swap(c.arg1, c.arg2);
