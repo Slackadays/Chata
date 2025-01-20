@@ -257,6 +257,158 @@ chatavector<instruction> nop_instr(assembly_context& c) {
     return {make_inst(c)};
 }
 
+chatavector<instruction> vfneg_v_instr(assembly_context& c) { // vfneg.v vd, vs -> vfsgnjn.vv vd, vs, vs
+    c.inst_offset = fast_instr_search("vfsgnjn.vv");
+    c.arg3 = c.arg2;
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vfabs_v_instr(assembly_context& c) { // vfabs.v vd, vs -> vfsgnjx.vv vd, vs, vs
+    c.inst_offset = fast_instr_search("vfsgnjx.vv");
+    c.arg3 = c.arg2;
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmclr_m_instr(assembly_context& c) { // vmclr.m vd -> vmxor.mm vd, vd, vd
+    c.inst_offset = fast_instr_search("vmxor.mm");
+    c.arg2 = c.arg1;
+    c.arg3 = c.arg2;
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmfge_vv_instr(assembly_context& c) { // vmfge.vv vd, va, vb, vm -> vmfle.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("vmfle.vv");
+    std::swap(c.arg2, c.arg3);
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmfgt_vv_instr(assembly_context& c) { // vmfgt.vv vd, va, vb, vm -> vmflt.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("vmflt.vv");
+    std::swap(c.arg2, c.arg3);
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmmv_m_instr(assembly_context& c) { // vmmv.m vd, vs -> vmand.mm vd, vd, vs
+    c.inst_offset = fast_instr_search("vmand.mm");
+    c.arg3 = c.arg2;
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmnot_m_instr(assembly_context& c) { // vmnot.m vd, vs -> vmnand.mm vd, vs, vs
+    c.inst_offset = fast_instr_search("vmnand.mm");
+    c.arg3 = c.arg2;
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmset_m_instr(assembly_context& c) { // vmset.m vd -> vmxnor.mm vd, vd, vd
+    c.inst_offset = fast_instr_search("vmxnor.mm");
+    c.arg2 = c.arg1;
+    c.arg3 = c.arg2;
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmsge_vi_instr(assembly_context& c) { // vmsge.vi vd, va, i, vm -> vmsgt.vi vd, va, i-1, vm
+    c.inst_offset = fast_instr_search("vmsgt.vi");
+    c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmsgeu_vi_instr(assembly_context& c) { // vmsgeu.vi vd, va, i, vm -> vmsgtu.vi vd, va, i-1, vm
+    c.inst_offset = fast_instr_search("vmsgtu.vi");
+    c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmsge_vv_instr(assembly_context& c) { // vmsge.vv vd, va, vb, vm -> vmsle.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("vmsle.vv");
+    std::swap(c.arg2, c.arg3);
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmsgeu_vv_instr(assembly_context& c) { // vmsgeu.vv vd, va, vb, vm -> vmsleu.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("vmsleu.vv");
+    std::swap(c.arg2, c.arg3);
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmsgt_vv_instr(assembly_context& c) { // vmsgt.vv vd, va, vb, vm -> vmslt.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("vmslt.vv");
+    std::swap(c.arg2, c.arg3);
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmsgtu_vv_instr(assembly_context& c) { // vmsgtu.vv vd, va, vb, vm -> vmsltu.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("vmsltu.vv");
+    std::swap(c.arg2, c.arg3);
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmslt_vi_instr(assembly_context& c) { // vmslt.vi vd, va, i, vm -> vmsle.vi vd, va, i-1, vm
+    c.inst_offset = fast_instr_search("vmsle.vi");
+    c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vmsltu_vi_instr(assembly_context& c) { // vmsltu.vi vd, va, i, vm -> vmsleu.vi vd, va, i-1, vm
+    c.inst_offset = fast_instr_search("vmsleu.vi");
+    c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vneg_v_instr(assembly_context& c) { // vneg.v vd, vs -> vrsub.vx vd, vs, zero
+    c.inst_offset = fast_instr_search("vrsub.vx");
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vnot_v_instr(assembly_context& c) { // vnot.v vd, vs, vm -> vxor.i vd, vs, -1, vm
+    c.inst_offset = fast_instr_search("vxor.i");
+    c.arg4 = c.arg3;
+    c.arg3 = "-1";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vncvt_x_x_w_instr(assembly_context& c) { // vncvt.x.x.w vd, vs, vm -> vnsrl.wx vd, vs, zero, vm
+    c.inst_offset = fast_instr_search("vnsrl.wx");
+    c.arg4 = c.arg3;
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vwcvt_x_x_v_instr(assembly_context& c) { // vwcvt.x.x.v vd, vs, vm -> vwadd.vx vd, vs, zero, vm
+    c.inst_offset = fast_instr_search("vwadd.vx");
+    c.arg4 = c.arg3;
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vwcvtu_x_x_v_instr(assembly_context& c) { // vwcvtu.x.x.v vd, vs, vm -> vwaddu.vx vd, vs, zero, vm
+    c.inst_offset = fast_instr_search("vwaddu.vx");
+    c.arg4 = c.arg3;
+    c.arg3 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vl1r_v_instr(assembly_context& c) { // vl1r.v v3, zero -> vl1re8.v v3, zero
+    c.inst_offset = fast_instr_search("vl1re8.v");
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vl2r_v_instr(assembly_context& c) { // vl2r.v v2, zero -> vl2re8.v v2, zero
+    c.inst_offset = fast_instr_search("vl2re8.v");
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vl4r_v_instr(assembly_context& c) { // vl4r.v v4, zero -> vl4re8.v v4, zero
+    c.inst_offset = fast_instr_search("vl4re8.v");
+    return {make_inst(c)};
+}
+
+chatavector<instruction> vl8r_v_instr(assembly_context& c) { // vl8r.v v8, zero -> vl8re8.v v8, zero
+    c.inst_offset = fast_instr_search("vl8re8.v");
+    return {make_inst(c)};
+}
+
 chatavector<instruction> fmvsx_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("fmv.w.x");
     return {make_inst(c)};
