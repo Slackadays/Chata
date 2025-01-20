@@ -81,6 +81,18 @@ chatavector<instruction> negw_instr(assembly_context& c) { // negw rd, rs -> sub
     return {make_inst(c)};
 }
 
+chatavector<instruction> sext_w_instr(assembly_context& c) { // sext.w rd, rs -> addiw rd, rs, 0
+    c.inst_offset = fast_instr_search("addiw");
+    c.arg3 = "0";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> zext_b_instr(assembly_context& c) { // zext.b rd, rs -> andi rd, rs, 255
+    c.inst_offset = fast_instr_search("andi");
+    c.arg3 = "255";
+    return {make_inst(c)};
+}
+
 chatavector<instruction> seqz_instr(assembly_context& c) { // seqz rd, rs -> sltiu rd, rs, 1
     c.inst_offset = fast_instr_search("sltiu");
     c.arg3 = "1";
@@ -103,6 +115,42 @@ chatavector<instruction> sgtz_instr(assembly_context& c) { // sgtz rd, rs -> slt
     c.inst_offset = fast_instr_search("slt");
     c.arg3 = c.arg2;
     c.arg2 = "zero";
+    return {make_inst(c)};
+}
+
+chatavector<instruction> fmv_s_instr(assembly_context& c) { // fmv.s rd, rs -> fsgnj.s rd, rs, rs
+    c.inst_offset = fast_instr_search("fsgnj.s");
+    c.arg3 = c.arg2;
+    return {make_inst(c)};
+}
+
+chatavector<instruction> fabs_s_instr(assembly_context& c) { // fabs.s rd, rs -> fsgnjx.s rd, rs, rs
+    c.inst_offset = fast_instr_search("fsgnjx.s");
+    c.arg3 = c.arg2;
+    return {make_inst(c)};
+}
+
+chatavector<instruction> fneg_s_instr(assembly_context& c) { // fneg.s rd, rs -> fsgnjn.s rd, rs, rs
+    c.inst_offset = fast_instr_search("fsgnjn.s");
+    c.arg3 = c.arg2;
+    return {make_inst(c)};
+}
+
+chatavector<instruction> fmv_d_instr(assembly_context& c) { // fmv.d rd, rs -> fsgnj.d rd, rs, rs
+    c.inst_offset = fast_instr_search("fsgnj.d");
+    c.arg3 = c.arg2;
+    return {make_inst(c)};
+}
+
+chatavector<instruction> fabs_d_instr(assembly_context& c) { // fabs.d rd, rs -> fsgnjx.d rd, rs, rs
+    c.inst_offset = fast_instr_search("fsgnjx.d");
+    c.arg3 = c.arg2;
+    return {make_inst(c)};
+}
+
+chatavector<instruction> fneg_d_instr(assembly_context& c) { // fneg.d rd, rs -> fsgnjn.d rd, rs, rs
+    c.inst_offset = fast_instr_search("fsgnjn.d");
+    c.arg3 = c.arg2;
     return {make_inst(c)};
 }
 

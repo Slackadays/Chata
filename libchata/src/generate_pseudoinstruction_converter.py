@@ -7,13 +7,15 @@ content = ""
 with open(input, "r") as file:
     content = file.read()
 
-regex = "chatavector<instruction> ([\w_]+)_instr\("
+regex = "chatavector<instruction> ([\w_-]+)_instr\("
 
 pseudoinstructions = re.findall(regex, content)
 
-# Now add each instruction's list position to itself
-#for i in range(len(pseudoinstructions)):
-#    pseudoinstructions[i] = (pseudoinstructions[i], i)
+def to_real_name(instr):
+    # Replace all "-" with "." to convert to the real instruction name
+    return instr.replace("_", ".")
+
+pseudoinstructions = [to_real_name(instr) for instr in pseudoinstructions]
 
 pseudoinstructions.sort()
 
@@ -35,6 +37,9 @@ def instr_exists(instr):
 def prefix_exists(prefix):
     return any([instr.startswith(prefix) for instr in pseudoinstructions])
 
+def to_cpp_name(instr):
+    return instr.replace(".", "_")
+
 potentialchars = ""
 
 # Get all used chars in pseudoinstructions
@@ -46,7 +51,7 @@ for instr in pseudoinstructions:
 def process_depth():
     global code, current_instr, depth
     if instr_exists(current_instr):
-        code += ind() + f"if (c.inst.size() < {depth + 1}) return {current_instr}_instr(c);\n"
+        code += ind() + f"if (c.inst.size() < {depth + 1}) return {to_cpp_name(current_instr)}_instr(c);\n"
     else:
         code += ind() + f"if (c.inst.size() < {depth + 1}) return {{}};\n"
     for letter in potentialchars:

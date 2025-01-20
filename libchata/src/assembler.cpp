@@ -468,6 +468,24 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
             }
         }
     }
+    if (c.inst[0] == 'z') {
+        if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 'e') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'x') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 't') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == '.') {
+                        if (c.inst.size() < 6) return {};
+                        if (c.inst[5] == 'b') {
+                            if (c.inst.size() < 7) return zext_b_instr(c);
+                        }
+                    }
+                }
+            }
+        }
+    }
     if (c.inst[0] == 'l') {
         if (c.inst.size() < 2) return {};
         if (c.inst[1] == 'a') {
@@ -545,6 +563,18 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
                 if (c.inst.size() < 4) return {};
                 if (c.inst[3] == 'z') {
                     if (c.inst.size() < 5) return seqz_instr(c);
+                }
+            }
+            if (c.inst[2] == 'x') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 't') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == '.') {
+                        if (c.inst.size() < 6) return {};
+                        if (c.inst[5] == 'w') {
+                            if (c.inst.size() < 7) return sext_w_instr(c);
+                        }
+                    }
                 }
             }
         }
@@ -647,6 +677,42 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
     }
     if (c.inst[0] == 'f') {
         if (c.inst.size() < 2) return {};
+        if (c.inst[1] == 'n') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'e') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 'g') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == '.') {
+                        if (c.inst.size() < 6) return {};
+                        if (c.inst[5] == 's') {
+                            if (c.inst.size() < 7) return fneg_s_instr(c);
+                        }
+                        if (c.inst[5] == 'd') {
+                            if (c.inst.size() < 7) return fneg_d_instr(c);
+                        }
+                    }
+                }
+            }
+        }
+        if (c.inst[1] == 'a') {
+            if (c.inst.size() < 3) return {};
+            if (c.inst[2] == 'b') {
+                if (c.inst.size() < 4) return {};
+                if (c.inst[3] == 's') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == '.') {
+                        if (c.inst.size() < 6) return {};
+                        if (c.inst[5] == 's') {
+                            if (c.inst.size() < 7) return fabs_s_instr(c);
+                        }
+                        if (c.inst[5] == 'd') {
+                            if (c.inst.size() < 7) return fabs_d_instr(c);
+                        }
+                    }
+                }
+            }
+        }
         if (c.inst[1] == 's') {
             if (c.inst.size() < 3) return {};
             if (c.inst[2] == 'c') {
@@ -727,6 +793,15 @@ chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {
                     if (c.inst.size() < 5) return {};
                     if (c.inst[4] == 'x') {
                         if (c.inst.size() < 6) return fmvsx_instr(c);
+                    }
+                }
+                if (c.inst[3] == '.') {
+                    if (c.inst.size() < 5) return {};
+                    if (c.inst[4] == 's') {
+                        if (c.inst.size() < 6) return fmv_s_instr(c);
+                    }
+                    if (c.inst[4] == 'd') {
+                        if (c.inst.size() < 6) return fmv_d_instr(c);
                     }
                 }
                 if (c.inst[3] == 'x') {
