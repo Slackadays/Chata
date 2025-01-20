@@ -1,5 +1,5 @@
 input = "pseudoinstructions.cpp"
-output = "assembler.cpp"
+output = "make_inst_from_pseudoinst.cpp"
 
 import re
 
@@ -25,7 +25,11 @@ depth = 0
 
 current_instr = ""
 
-code = "// Start make_inst_from_pseudoinst\n"
+code = "// SPDX-License-Identifier: MPL-2.0\n"
+code += "// The generate_pseudoinstruction_converter.py script automatically generated this code. DO NOT MODIFY!\n"
+code += "#include \"pseudoinstructions.hpp\"\n"
+code += "#include \"libchata.hpp\"\n\n"
+code += "namespace libchata_internal {\n\n"
 code += "chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {\n"
 
 def ind():
@@ -68,17 +72,10 @@ def process_depth():
 process_depth()
 
 code += ind() + "return {};\n"
-code += "}\n"
-code += "// End make_inst_from_pseudoinst"
+code += "}\n\n"
+code += "} // namespace libchata_internal"
 
 print(code)
 
-replace_regex = "\/\/ Start make_inst_from_pseudoinst(.*)\/\/ End make_inst_from_pseudoinst"
-
-output_content = ""
-
-with open(output, "r") as file:
-    output_content = file.read()
-
 with open(output, "w") as file:
-    file.write(re.sub(replace_regex, code, output_content, flags=re.DOTALL))
+    file.write(code)

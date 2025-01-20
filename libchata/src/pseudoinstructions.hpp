@@ -4,6 +4,8 @@
 
 namespace libchata_internal {
 
+extern chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c);
+
 chatavector<instruction> li_instr(assembly_context& c);
 chatavector<instruction> la_instr(assembly_context& c);
 chatavector<instruction> mv_instr(assembly_context& c);
