@@ -869,13 +869,29 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
         }
     }
 
+    auto set_supported = [&]() {
+        if (c.supported_sets.empty()) {
+            return true;
+        }
+        for (const auto& set : c.supported_sets) {
+            if (instructions.at(c.inst_offset).set == set || instructions.at(c.inst_offset).subset == set) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     for (size_t i = 0; i < data.size();) {
         parse_this_line(i, data, c);
         if (c.inst_offset = fast_instr_search(c.inst); c.inst_offset != instr_search_failed) {
-            c.nodes.push_back(make_inst(c));
+            if (set_supported()) {
+                c.nodes.push_back(make_inst(c));
+            }
         } else if (auto instrs = make_inst_from_pseudoinst(c); !instrs.empty()) {
             for (auto& inst : instrs) {
-                c.nodes.push_back(inst);
+                if (set_supported()) {
+                    c.nodes.push_back(inst);
+                }
             }
         } else {
             handle_directives(c);
