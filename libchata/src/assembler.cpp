@@ -733,7 +733,7 @@ void handle_directives(assembly_context& c) {
             }
         } else if (fast_eq(c.arg1, "push")) {
             DBG(std::cout << "Pushing options" << std::endl;)
-            c.options.push_back({});
+            c.options.push_back(c.options.back());
         } else if (fast_eq(c.arg1, "pop")) {
             DBG(std::cout << "Popping options" << std::endl;)
             c.options.pop_back();
@@ -745,6 +745,47 @@ void handle_directives(assembly_context& c) {
         // .insn <type> <fields> = make an instruction with type <type> and fields <fields>
         instruction i;
         uint8_t required_length = 0;
+        using enum RVInstructionFormat;
+        const std::array<std::pair<std::string_view, RVInstructionFormat>, 38> type_names = {{
+            {"r", R},
+            {"i", I},
+            {"s", S},
+            {"b", Branch},
+            {"u", U},
+            {"j", J},
+            {"r4", R4},
+            {"cr", CR},
+            {"ci", CI},
+            {"css", CSS},
+            {"ciw", CIW},
+            {"cl", CL},
+            {"cs", CS},
+            {"ca", CA},
+            {"cb", CB},
+            {"cj", CJ},
+            {"vl", VL},
+            {"vls", VLS},
+            {"vlx", VLX},
+            {"vs", VS},
+            {"vss", VSS},
+            {"vsx", VSX},
+            {"vlr", VLR},
+            {"ivv", IVV},
+            {"fvv", FVV},
+            {"mvv", MVV},
+            {"ivi", IVI},
+            {"ivx", IVX},
+            {"fvf", FVF},
+            {"mvx", MVX},
+            {"clb", CLB},
+            {"csb", CSBfmt},
+            {"clh", CLHfmt},
+            {"csh", CSHfmt},
+            {"cu", CU},
+            {"cmmv", CMMV},
+            {"cmjt", CMJTfmt},
+            {"cmpp", CMPP}
+        }};
         if (!c.arg1.empty() && c.arg2.empty()) {
             if (auto num = to_num<uint32_t>(c.arg1); num.has_value()) {
                 i.imm = num.value();

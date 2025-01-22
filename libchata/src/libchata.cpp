@@ -44,7 +44,11 @@ void* GlobalMemoryBank::grab_aligned_memory(size_t requested) {
 }
 
 void ChataProcessor::process_data(chata_args& input) {
+#if defined(__riscv)
     executable_function(input);
+#else
+    #warning "Disabling native code execution for this non-RISC-V platform"
+#endif
 }
 
 void ChataProcessor::save_to_memory(const chatavector<uint8_t>& data) {
