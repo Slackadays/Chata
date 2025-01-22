@@ -29,9 +29,10 @@ struct directive_option {
 };
 
 struct label_loc {
-    uint32_t loc;
-    int id;
-    bool is_dest;
+    uint32_t loc = 0;
+    int id = 0;
+    uint8_t i_bytes = 0;
+    bool is_dest = false;
 };
 
 struct assembly_context {
