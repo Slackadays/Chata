@@ -5,13 +5,14 @@
 namespace libchata_internal {
 
 enum class InstrImmPurpose : uint8_t {
-    INSTR_IMM,
-    LABEL_DEST,
-    LABEL_NODE,
-    RAW_INSTR
+    INSTR_IMM, // The regular case
+    LABEL_DEST, // The value in imm is the label id we want to go to
+    LABEL_NODE, // This instruction is the location of this label id instead
+    RAW_INSTR, // This instruction is solely what's in imm, for custom instructions
+    OPCODE_AND_IMM // This instruction uses custom fields but we need to store the opcode here to save space
 };
 
-struct instruction {
+/*struct instruction {
     int32_t imm = 0;
     uint16_t inst_offset = 0; // The offset from the instructions array at which our instruction is (saves memory and prevents O(n) lookups)
                                 // Alternatively, the size of the raw instruction
@@ -21,10 +22,16 @@ struct instruction {
     uint8_t rs3 = 0;
     uint8_t frm = 0;
     InstrImmPurpose imm_purpose = InstrImmPurpose::INSTR_IMM;
-};
+};*/
 
 struct directive_option {
     chatavector<RVInstructionSet> supported_sets;
+};
+
+struct label_loc {
+    uint32_t loc;
+    int id;
+    bool is_dest;
 };
 
 struct assembly_context {
@@ -36,7 +43,8 @@ struct assembly_context {
     chatastring arg5;
     chatastring arg6;
     chatastring arg7;
-    uint32_t instruction_bytes = 0;
+    uint32_t raw_instr;
+    RVInstructionFormat raw_format;
     uint32_t line = 1;
     uint32_t column = 0;
     uint16_t inst_offset = 0;
@@ -44,6 +52,7 @@ struct assembly_context {
     chatavector<uint8_t> machine_code;
     chatavector<RVInstructionSet> supported_sets;
     chatavector<std::pair<chatastring, int>> labels;
+    chatavector<label_loc> label_locs;
     chatavector<directive_option> options;
 };
 

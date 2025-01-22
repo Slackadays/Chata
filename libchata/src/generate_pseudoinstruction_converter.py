@@ -7,7 +7,7 @@ content = ""
 with open(input, "r") as file:
     content = file.read()
 
-regex = "chatavector<instruction> ([\w_-]+)_instr\("
+regex = "void ([\w_-]+)_instr\("
 
 pseudoinstructions = re.findall(regex, content)
 
@@ -30,7 +30,7 @@ code += "// The generate_pseudoinstruction_converter.py script automatically gen
 code += "#include \"pseudoinstructions.hpp\"\n"
 code += "#include \"libchata.hpp\"\n\n"
 code += "namespace libchata_internal {\n\n"
-code += "chatavector<instruction> make_inst_from_pseudoinst(assembly_context& c) {\n"
+code += "bool make_inst_from_pseudoinst(assembly_context& c) {\n"
 
 def ind():
     return "    " * (depth + 1)
@@ -55,9 +55,9 @@ for instr in pseudoinstructions:
 def process_depth():
     global code, current_instr, depth
     if instr_exists(current_instr):
-        code += ind() + f"if (c.inst.size() < {depth + 1}) return {to_cpp_name(current_instr)}_instr(c);\n"
+        code += ind() + f"if (c.inst.size() < {depth + 1}) {{{to_cpp_name(current_instr)}_instr(c); return true;}}\n"
     else:
-        code += ind() + f"if (c.inst.size() < {depth + 1}) return {{}};\n"
+        code += ind() + f"if (c.inst.size() < {depth + 1}) return false;\n"
     for letter in potentialchars:
         if prefix_exists(current_instr + letter):
             code += ind() + f"if (c.inst[{depth}] == '{letter}') {{\n"
@@ -71,7 +71,7 @@ def process_depth():
 
 process_depth()
 
-code += ind() + "return {};\n"
+code += ind() + "return false;\n"
 code += "}\n\n"
 code += "} // namespace libchata_internal"
 

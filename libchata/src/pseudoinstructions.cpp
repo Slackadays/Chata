@@ -5,7 +5,7 @@
 
 namespace libchata_internal {
 
-chatavector<instruction> li_instr(assembly_context& c) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
+void li_instr(assembly_context& c) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
                                                          // Case 1: imm is a 12-bit signed integer
     int imm;
     if (auto num = to_num<int>(c.arg2); num.has_value()) {
@@ -17,20 +17,20 @@ chatavector<instruction> li_instr(assembly_context& c) { // li rd, imm -> lui rd
         c.inst_offset = fast_instr_search("addi");
         c.arg2 = "zero";
         c.arg3 = to_chatastring(imm);
-        return {make_inst(c)};
+        make_inst(c);
+        return;
     }
     // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
     c.inst_offset = fast_instr_search("lui");
     c.arg2 = to_chatastring(imm >> 12);
-    instruction i1 = make_inst(c);
+    make_inst(c);
     c.inst_offset = fast_instr_search("addi");
     c.arg2 = c.arg1;
     c.arg3 = to_chatastring(imm & 0xFFF);
-    instruction i2 = make_inst(c);
-    return {i1, i2};
+    make_inst(c);
 }
 
-chatavector<instruction> la_instr(assembly_context& c) { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
+void la_instr(assembly_context& c) { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
                                                          // Case 1: imm is a 12-bit signed integer
     int imm;
     if (auto num = to_num<int>(c.arg2); num.has_value()) {
@@ -42,187 +42,187 @@ chatavector<instruction> la_instr(assembly_context& c) { // la rd, imm -> auipc 
         c.inst_offset = fast_instr_search("addi");
         c.arg2 = "zero";
         c.arg3 = to_chatastring(imm);
-        return {make_inst(c)};
+        make_inst(c);
+        return;
     }
     // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
     c.inst_offset = fast_instr_search("auipc");
     c.arg2 = to_chatastring(imm >> 12);
-    instruction i1 = make_inst(c);
+    make_inst(c);
     c.inst_offset = fast_instr_search("addi");
     c.arg2 = c.arg1;
     c.arg3 = to_chatastring(imm & 0xFFF);
-    instruction i2 = make_inst(c);
-    return {i1, i2};
+    make_inst(c);
 }
 
-chatavector<instruction> mv_instr(assembly_context& c) { // mv rd, rs -> addi rd, rs, 0
+void mv_instr(assembly_context& c) { // mv rd, rs -> addi rd, rs, 0
     c.inst_offset = fast_instr_search("addi");
     c.arg3 = "0";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> not_instr(assembly_context& c) { // not rd, rs -> xori rd, rs, -1
+void not_instr(assembly_context& c) { // not rd, rs -> xori rd, rs, -1
     c.inst_offset = fast_instr_search("xori");
     c.arg3 = "-1";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> neg_instr(assembly_context& c) { // neg rd, rs -> sub rd, zero, rs
+void neg_instr(assembly_context& c) { // neg rd, rs -> sub rd, zero, rs
     c.inst_offset = fast_instr_search("sub");
     c.arg3 = c.arg2;
     c.arg2 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> negw_instr(assembly_context& c) { // negw rd, rs -> subw rd, zero, rs
+void negw_instr(assembly_context& c) { // negw rd, rs -> subw rd, zero, rs
     c.inst_offset = fast_instr_search("subw");
     c.arg3 = c.arg2;
     c.arg2 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> sext_w_instr(assembly_context& c) { // sext.w rd, rs -> addiw rd, rs, 0
+void sext_w_instr(assembly_context& c) { // sext.w rd, rs -> addiw rd, rs, 0
     c.inst_offset = fast_instr_search("addiw");
     c.arg3 = "0";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> zext_b_instr(assembly_context& c) { // zext.b rd, rs -> andi rd, rs, 255
+void zext_b_instr(assembly_context& c) { // zext.b rd, rs -> andi rd, rs, 255
     c.inst_offset = fast_instr_search("andi");
     c.arg3 = "255";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> seqz_instr(assembly_context& c) { // seqz rd, rs -> sltiu rd, rs, 1
+void seqz_instr(assembly_context& c) { // seqz rd, rs -> sltiu rd, rs, 1
     c.inst_offset = fast_instr_search("sltiu");
     c.arg3 = "1";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> snez_instr(assembly_context& c) { // snez rd, rs -> sltu rd, zero, rs
+void snez_instr(assembly_context& c) { // snez rd, rs -> sltu rd, zero, rs
     c.inst_offset = fast_instr_search("sltu");
     c.arg2 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> sltz_instr(assembly_context& c) { // sltz rd, rs -> slt rd, rs, zero
+void sltz_instr(assembly_context& c) { // sltz rd, rs -> slt rd, rs, zero
     c.inst_offset = fast_instr_search("slt");
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> sgtz_instr(assembly_context& c) { // sgtz rd, rs -> slt rd, zero, rs
+void sgtz_instr(assembly_context& c) { // sgtz rd, rs -> slt rd, zero, rs
     c.inst_offset = fast_instr_search("slt");
     c.arg3 = c.arg2;
     c.arg2 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fmv_s_instr(assembly_context& c) { // fmv.s rd, rs -> fsgnj.s rd, rs, rs
+void fmv_s_instr(assembly_context& c) { // fmv.s rd, rs -> fsgnj.s rd, rs, rs
     c.inst_offset = fast_instr_search("fsgnj.s");
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fabs_s_instr(assembly_context& c) { // fabs.s rd, rs -> fsgnjx.s rd, rs, rs
+void fabs_s_instr(assembly_context& c) { // fabs.s rd, rs -> fsgnjx.s rd, rs, rs
     c.inst_offset = fast_instr_search("fsgnjx.s");
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fneg_s_instr(assembly_context& c) { // fneg.s rd, rs -> fsgnjn.s rd, rs, rs
+void fneg_s_instr(assembly_context& c) { // fneg.s rd, rs -> fsgnjn.s rd, rs, rs
     c.inst_offset = fast_instr_search("fsgnjn.s");
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fmv_d_instr(assembly_context& c) { // fmv.d rd, rs -> fsgnj.d rd, rs, rs
+void fmv_d_instr(assembly_context& c) { // fmv.d rd, rs -> fsgnj.d rd, rs, rs
     c.inst_offset = fast_instr_search("fsgnj.d");
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fabs_d_instr(assembly_context& c) { // fabs.d rd, rs -> fsgnjx.d rd, rs, rs
+void fabs_d_instr(assembly_context& c) { // fabs.d rd, rs -> fsgnjx.d rd, rs, rs
     c.inst_offset = fast_instr_search("fsgnjx.d");
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fneg_d_instr(assembly_context& c) { // fneg.d rd, rs -> fsgnjn.d rd, rs, rs
+void fneg_d_instr(assembly_context& c) { // fneg.d rd, rs -> fsgnjn.d rd, rs, rs
     c.inst_offset = fast_instr_search("fsgnjn.d");
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> bgt_instr(assembly_context& c) { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
+void bgt_instr(assembly_context& c) { // bgt rs1, rs2, label|imm -> blt rs2, rs1, label|imm
     c.inst_offset = fast_instr_search("blt");
     std::swap(c.arg1, c.arg2);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> ble_instr(assembly_context& c) { // ble rs1, rs2, label|imm -> bge rs2, rs1, label|imm
+void ble_instr(assembly_context& c) { // ble rs1, rs2, label|imm -> bge rs2, rs1, label|imm
     c.inst_offset = fast_instr_search("bge");
     std::swap(c.arg1, c.arg2);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> bgtu_instr(assembly_context& c) { // bgtu rs1, rs2, label|imm -> bltu rs2, rs1, label|imm
+void bgtu_instr(assembly_context& c) { // bgtu rs1, rs2, label|imm -> bltu rs2, rs1, label|imm
     c.inst_offset = fast_instr_search("bltu");
     std::swap(c.arg1, c.arg2);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> bleu_instr(assembly_context& c) { // bleu rs1, rs2, label|imm -> bgeu rs2, rs1, label|imm
+void bleu_instr(assembly_context& c) { // bleu rs1, rs2, label|imm -> bgeu rs2, rs1, label|imm
     c.inst_offset = fast_instr_search("bgeu");
     std::swap(c.arg1, c.arg2);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> beqz_instr(assembly_context& c) { // beqz rs, label|imm -> beq rs, zero, label|imm
+void beqz_instr(assembly_context& c) { // beqz rs, label|imm -> beq rs, zero, label|imm
     c.inst_offset = fast_instr_search("beq");
     c.arg3 = c.arg2;
     c.arg2 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> bnez_instr(assembly_context& c) { // bnez rs, label|imm -> bne rs, zero, label|imm
+void bnez_instr(assembly_context& c) { // bnez rs, label|imm -> bne rs, zero, label|imm
     c.inst_offset = fast_instr_search("bne");
     c.arg3 = c.arg2;
     c.arg2 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> bgez_instr(assembly_context& c) { // bgez rs, label|imm -> bge rs, zero, label|imm
+void bgez_instr(assembly_context& c) { // bgez rs, label|imm -> bge rs, zero, label|imm
     c.inst_offset = fast_instr_search("bge");
     c.arg3 = c.arg2;
     c.arg2 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> blez_instr(assembly_context& c) { // blez rs, label|imm -> bge zero, rs, label|imm
+void blez_instr(assembly_context& c) { // blez rs, label|imm -> bge zero, rs, label|imm
     c.inst_offset = fast_instr_search("bge");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
     c.arg1 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> bgtz_instr(assembly_context& c) { // bgtz rs, label|imm -> blt zero, rs, label|imm
+void bgtz_instr(assembly_context& c) { // bgtz rs, label|imm -> blt zero, rs, label|imm
     c.inst_offset = fast_instr_search("blt");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
     c.arg1 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> j_instr(assembly_context& c) {
+void j_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("jal");
     c.arg2 = c.arg1;
     c.arg1 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> call_instr(assembly_context& c) {
+void call_instr(assembly_context& c) {
     // Case 1: imm is a 12-bit signed integer
     int imm;
     if (auto num = to_num<int>(c.arg1); num.has_value()) {
@@ -235,294 +235,295 @@ chatavector<instruction> call_instr(assembly_context& c) {
         c.arg3 = c.arg1;
         c.arg2 = "ra";
         c.arg1 = "ra";
-        return {make_inst(c)};
+        make_inst(c);
+        return;
     }
     // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
     throw ChataError(ChataErrorType::Assembler, "Not implemented yet");
 }
 
-chatavector<instruction> ret_instr(assembly_context& c) {
+void ret_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("jalr");
     c.arg1 = "zero";
     c.arg2 = "ra";
     c.arg3 = "0";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> nop_instr(assembly_context& c) {
+void nop_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("addi");
     c.arg1 = "zero";
     c.arg2 = "zero";
     c.arg3 = "0";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vfneg_v_instr(assembly_context& c) { // vfneg.v vd, vs -> vfsgnjn.vv vd, vs, vs
+void vfneg_v_instr(assembly_context& c) { // vfneg.v vd, vs -> vfsgnjn.vv vd, vs, vs
     c.inst_offset = fast_instr_search("vfsgnjn.vv");
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vfabs_v_instr(assembly_context& c) { // vfabs.v vd, vs -> vfsgnjx.vv vd, vs, vs
+void vfabs_v_instr(assembly_context& c) { // vfabs.v vd, vs -> vfsgnjx.vv vd, vs, vs
     c.inst_offset = fast_instr_search("vfsgnjx.vv");
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmclr_m_instr(assembly_context& c) { // vmclr.m vd -> vmxor.mm vd, vd, vd
+void vmclr_m_instr(assembly_context& c) { // vmclr.m vd -> vmxor.mm vd, vd, vd
     c.inst_offset = fast_instr_search("vmxor.mm");
     c.arg2 = c.arg1;
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmfge_vv_instr(assembly_context& c) { // vmfge.vv vd, va, vb, vm -> vmfle.vv vd, vb, va, vm
+void vmfge_vv_instr(assembly_context& c) { // vmfge.vv vd, va, vb, vm -> vmfle.vv vd, vb, va, vm
     c.inst_offset = fast_instr_search("vmfle.vv");
     std::swap(c.arg2, c.arg3);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmfgt_vv_instr(assembly_context& c) { // vmfgt.vv vd, va, vb, vm -> vmflt.vv vd, vb, va, vm
+void vmfgt_vv_instr(assembly_context& c) { // vmfgt.vv vd, va, vb, vm -> vmflt.vv vd, vb, va, vm
     c.inst_offset = fast_instr_search("vmflt.vv");
     std::swap(c.arg2, c.arg3);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmmv_m_instr(assembly_context& c) { // vmmv.m vd, vs -> vmand.mm vd, vd, vs
+void vmmv_m_instr(assembly_context& c) { // vmmv.m vd, vs -> vmand.mm vd, vd, vs
     c.inst_offset = fast_instr_search("vmand.mm");
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmnot_m_instr(assembly_context& c) { // vmnot.m vd, vs -> vmnand.mm vd, vs, vs
+void vmnot_m_instr(assembly_context& c) { // vmnot.m vd, vs -> vmnand.mm vd, vs, vs
     c.inst_offset = fast_instr_search("vmnand.mm");
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmset_m_instr(assembly_context& c) { // vmset.m vd -> vmxnor.mm vd, vd, vd
+void vmset_m_instr(assembly_context& c) { // vmset.m vd -> vmxnor.mm vd, vd, vd
     c.inst_offset = fast_instr_search("vmxnor.mm");
     c.arg2 = c.arg1;
     c.arg3 = c.arg2;
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmsge_vi_instr(assembly_context& c) { // vmsge.vi vd, va, i, vm -> vmsgt.vi vd, va, i-1, vm
+void vmsge_vi_instr(assembly_context& c) { // vmsge.vi vd, va, i, vm -> vmsgt.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsgt.vi");
     c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmsgeu_vi_instr(assembly_context& c) { // vmsgeu.vi vd, va, i, vm -> vmsgtu.vi vd, va, i-1, vm
+void vmsgeu_vi_instr(assembly_context& c) { // vmsgeu.vi vd, va, i, vm -> vmsgtu.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsgtu.vi");
     c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmsge_vv_instr(assembly_context& c) { // vmsge.vv vd, va, vb, vm -> vmsle.vv vd, vb, va, vm
+void vmsge_vv_instr(assembly_context& c) { // vmsge.vv vd, va, vb, vm -> vmsle.vv vd, vb, va, vm
     c.inst_offset = fast_instr_search("vmsle.vv");
     std::swap(c.arg2, c.arg3);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmsgeu_vv_instr(assembly_context& c) { // vmsgeu.vv vd, va, vb, vm -> vmsleu.vv vd, vb, va, vm
+void vmsgeu_vv_instr(assembly_context& c) { // vmsgeu.vv vd, va, vb, vm -> vmsleu.vv vd, vb, va, vm
     c.inst_offset = fast_instr_search("vmsleu.vv");
     std::swap(c.arg2, c.arg3);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmsgt_vv_instr(assembly_context& c) { // vmsgt.vv vd, va, vb, vm -> vmslt.vv vd, vb, va, vm
+void vmsgt_vv_instr(assembly_context& c) { // vmsgt.vv vd, va, vb, vm -> vmslt.vv vd, vb, va, vm
     c.inst_offset = fast_instr_search("vmslt.vv");
     std::swap(c.arg2, c.arg3);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmsgtu_vv_instr(assembly_context& c) { // vmsgtu.vv vd, va, vb, vm -> vmsltu.vv vd, vb, va, vm
+void vmsgtu_vv_instr(assembly_context& c) { // vmsgtu.vv vd, va, vb, vm -> vmsltu.vv vd, vb, va, vm
     c.inst_offset = fast_instr_search("vmsltu.vv");
     std::swap(c.arg2, c.arg3);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmslt_vi_instr(assembly_context& c) { // vmslt.vi vd, va, i, vm -> vmsle.vi vd, va, i-1, vm
+void vmslt_vi_instr(assembly_context& c) { // vmslt.vi vd, va, i, vm -> vmsle.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsle.vi");
     c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vmsltu_vi_instr(assembly_context& c) { // vmsltu.vi vd, va, i, vm -> vmsleu.vi vd, va, i-1, vm
+void vmsltu_vi_instr(assembly_context& c) { // vmsltu.vi vd, va, i, vm -> vmsleu.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsleu.vi");
     c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vneg_v_instr(assembly_context& c) { // vneg.v vd, vs -> vrsub.vx vd, vs, zero
+void vneg_v_instr(assembly_context& c) { // vneg.v vd, vs -> vrsub.vx vd, vs, zero
     c.inst_offset = fast_instr_search("vrsub.vx");
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vnot_v_instr(assembly_context& c) { // vnot.v vd, vs, vm -> vxor.i vd, vs, -1, vm
+void vnot_v_instr(assembly_context& c) { // vnot.v vd, vs, vm -> vxor.i vd, vs, -1, vm
     c.inst_offset = fast_instr_search("vxor.i");
     c.arg4 = c.arg3;
     c.arg3 = "-1";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vncvt_x_x_w_instr(assembly_context& c) { // vncvt.x.x.w vd, vs, vm -> vnsrl.wx vd, vs, zero, vm
+void vncvt_x_x_w_instr(assembly_context& c) { // vncvt.x.x.w vd, vs, vm -> vnsrl.wx vd, vs, zero, vm
     c.inst_offset = fast_instr_search("vnsrl.wx");
     c.arg4 = c.arg3;
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vwcvt_x_x_v_instr(assembly_context& c) { // vwcvt.x.x.v vd, vs, vm -> vwadd.vx vd, vs, zero, vm
+void vwcvt_x_x_v_instr(assembly_context& c) { // vwcvt.x.x.v vd, vs, vm -> vwadd.vx vd, vs, zero, vm
     c.inst_offset = fast_instr_search("vwadd.vx");
     c.arg4 = c.arg3;
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vwcvtu_x_x_v_instr(assembly_context& c) { // vwcvtu.x.x.v vd, vs, vm -> vwaddu.vx vd, vs, zero, vm
+void vwcvtu_x_x_v_instr(assembly_context& c) { // vwcvtu.x.x.v vd, vs, vm -> vwaddu.vx vd, vs, zero, vm
     c.inst_offset = fast_instr_search("vwaddu.vx");
     c.arg4 = c.arg3;
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vl1r_v_instr(assembly_context& c) { // vl1r.v v3, zero -> vl1re8.v v3, zero
+void vl1r_v_instr(assembly_context& c) { // vl1r.v v3, zero -> vl1re8.v v3, zero
     c.inst_offset = fast_instr_search("vl1re8.v");
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vl2r_v_instr(assembly_context& c) { // vl2r.v v2, zero -> vl2re8.v v2, zero
+void vl2r_v_instr(assembly_context& c) { // vl2r.v v2, zero -> vl2re8.v v2, zero
     c.inst_offset = fast_instr_search("vl2re8.v");
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vl4r_v_instr(assembly_context& c) { // vl4r.v v4, zero -> vl4re8.v v4, zero
+void vl4r_v_instr(assembly_context& c) { // vl4r.v v4, zero -> vl4re8.v v4, zero
     c.inst_offset = fast_instr_search("vl4re8.v");
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> vl8r_v_instr(assembly_context& c) { // vl8r.v v8, zero -> vl8re8.v v8, zero
+void vl8r_v_instr(assembly_context& c) { // vl8r.v v8, zero -> vl8re8.v v8, zero
     c.inst_offset = fast_instr_search("vl8re8.v");
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fmvsx_instr(assembly_context& c) {
+void fmvsx_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("fmv.w.x");
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fmvxs_instr(assembly_context& c) {
+void fmvxs_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("fmv.x.w");
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> rdinstret_instr(assembly_context& c) {
+void rdinstret_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "instret";
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> rdinstreth_instr(assembly_context& c) {
+void rdinstreth_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "instreth";
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> rdcycle_instr(assembly_context& c) {
+void rdcycle_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "cycle";
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> rdcycleh_instr(assembly_context& c) {
+void rdcycleh_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "cycleh";
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> rdtime_instr(assembly_context& c) {
+void rdtime_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "time";
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> rdtimeh_instr(assembly_context& c) {
+void rdtimeh_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "timeh";
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> csrr_instr(assembly_context& c) {
+void csrr_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrs");
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> csrw_instr(assembly_context& c) {
+void csrw_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrw");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
     c.arg1 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> csrs_instr(assembly_context& c) {
+void csrs_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrs");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
     c.arg1 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> csrc_instr(assembly_context& c) {
+void csrc_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrc");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
     c.arg1 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> csrwi_instr(assembly_context& c) {
+void csrwi_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrwi");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
     c.arg1 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> csrsi_instr(assembly_context& c) {
+void csrsi_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrsi");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
     c.arg1 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> csrci_instr(assembly_context& c) {
+void csrci_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrci");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
     c.arg1 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> frcsr_instr(assembly_context& c) {
+void frcsr_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "fcsr";
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fscsr_instr(assembly_context& c) {
+void fscsr_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrw");
     if (!c.arg2.empty()) {
         c.arg3 = c.arg2;
@@ -532,17 +533,17 @@ chatavector<instruction> fscsr_instr(assembly_context& c) {
         c.arg2 = "fcsr";
         c.arg1 = "zero";
     }
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> frrm_instr(assembly_context& c) {
+void frrm_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "frm";
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fsrm_instr(assembly_context& c) {
+void fsrm_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrw");
     if (!c.arg2.empty()) {
         c.arg3 = c.arg2;
@@ -552,10 +553,10 @@ chatavector<instruction> fsrm_instr(assembly_context& c) {
         c.arg2 = "frm";
         c.arg1 = "zero";
     }
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fsrmi_instr(assembly_context& c) {
+void fsrmi_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrwi");
     if (!c.arg2.empty()) {
         c.arg3 = c.arg2;
@@ -565,17 +566,17 @@ chatavector<instruction> fsrmi_instr(assembly_context& c) {
         c.arg2 = "frm";
         c.arg1 = "zero";
     }
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> frflags_instr(assembly_context& c) {
+void frflags_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "fflags";
     c.arg3 = "zero";
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fsflags_instr(assembly_context& c) {
+void fsflags_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrw");
     if (!c.arg2.empty()) {
         c.arg3 = c.arg2;
@@ -585,10 +586,10 @@ chatavector<instruction> fsflags_instr(assembly_context& c) {
         c.arg2 = "fflags";
         c.arg1 = "zero";
     }
-    return {make_inst(c)};
+    make_inst(c);
 }
 
-chatavector<instruction> fsflagsi_instr(assembly_context& c) {
+void fsflagsi_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("csrrwi");
     if (!c.arg2.empty()) {
         c.arg3 = c.arg2;
@@ -598,7 +599,7 @@ chatavector<instruction> fsflagsi_instr(assembly_context& c) {
         c.arg2 = "fflags";
         c.arg1 = "zero";
     }
-    return {make_inst(c)};
+    make_inst(c);
 }
 
 } // namespace libchata_internal
