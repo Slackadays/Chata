@@ -6,6 +6,8 @@
 #include <optional>
 #include <string_view>
 
+#pragma once
+
 namespace libchata_internal {
 
 constexpr uint16_t instr_search_failed = (uint16_t)-1;

@@ -1,4 +1,5 @@
 #include "libchata.hpp"
+#include "instructions.hpp"
 
 #pragma once
 
@@ -13,7 +14,7 @@ enum class InstrImmPurpose : uint8_t {
 };
 
 /*struct instruction {
-    int32_t imm = 0;
+    
     uint16_t inst_offset = 0; // The offset from the instructions array at which our instruction is (saves memory and prevents O(n) lookups)
                                 // Alternatively, the size of the raw instruction
     uint8_t rd = 0;
@@ -21,7 +22,7 @@ enum class InstrImmPurpose : uint8_t {
     uint8_t rs2 = 0;
     uint8_t rs3 = 0;
     uint8_t frm = 0;
-    InstrImmPurpose imm_purpose = InstrImmPurpose::INSTR_IMM;
+    
 };*/
 
 struct directive_option {
@@ -32,7 +33,8 @@ struct label_loc {
     uint32_t loc = 0;
     int id = 0;
     uint8_t i_bytes = 0;
-    bool is_dest = false;
+    bool is_dest;
+    RVInstructionFormat format;
 };
 
 struct assembly_context {
@@ -44,12 +46,12 @@ struct assembly_context {
     chatastring arg5;
     chatastring arg6;
     chatastring arg7;
-    uint32_t raw_instr;
+    int32_t imm = 0;
+    InstrImmPurpose imm_purpose = InstrImmPurpose::INSTR_IMM;
     RVInstructionFormat raw_format;
     uint32_t line = 1;
     uint32_t column = 0;
     uint16_t inst_offset = 0;
-    chatavector<instruction> nodes;
     chatavector<uint8_t> machine_code;
     chatavector<RVInstructionSet> supported_sets;
     chatavector<std::pair<chatastring, int>> labels;
@@ -57,6 +59,6 @@ struct assembly_context {
     chatavector<directive_option> options;
 };
 
-instruction make_inst(assembly_context& c);
+void make_inst(assembly_context& c);
 
 } // namespace libchata_internal

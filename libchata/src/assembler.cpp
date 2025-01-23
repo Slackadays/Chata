@@ -117,7 +117,7 @@ std::optional<uint8_t> decode_vlmul(const chatastring& str) {
     }
 }
 
-void handle_super_special_snowflakes(instruction& i, const rvinstruction& base_i, assembly_context& c) {
+void handle_super_special_snowflakes(const rvinstruction& base_i, assembly_context& c) {
     using enum RVInstructionID;
     if (base_i.id == FENCE) {
         i.imm |= decode_fence(c.arg1) << 4; // Add pred
@@ -216,19 +216,19 @@ void make_inst(assembly_context& c) {
     uint8_t opcode;
     special_snowflake_args ssargs;
 
-    if () {
+    if (true) {
         name = "Custom Fields";
         type = 
-    } else {
-        auto base_i = instructions.at(i.inst_offset); // Don't make this one auto&, it's slower
-        name = base_i.name;
-        type = base_i.type;
-        id = base_i.id;
-        funct = base_i.funct;
-        bytes = base_i.bytes;
-        opcode = base_i.opcode;
-        ssargs = base_i.ssargs;
+        return;
     }
+    auto base_i = instructions.at(c.inst_offset); // Don't make this one auto&, it's slower
+    name = base_i.name;
+    type = base_i.type;
+    id = base_i.id;
+    funct = base_i.funct;
+    bytes = base_i.bytes;
+    opcode = base_i.opcode;
+    ssargs = base_i.ssargs;
     
     inst |= opcode;
 
@@ -248,9 +248,10 @@ void make_inst(assembly_context& c) {
 
     using enum RVInstructionFormat;
     using enum InstrImmPurpose;
+    using enum RVInstructionID;
 
     if (base_i.ssargs.super_special_snowflake) {
-        handle_super_special_snowflakes(i, base_i, c);
+        handle_super_special_snowflakes(base_i, c);
     } else if (type == R || type == R4) {
         /*rd = 0b00000;
         rs1 = 0b00000;
@@ -694,7 +695,6 @@ void handle_directives(assembly_context& c) {
     using enum InstrImmPurpose;
     if (c.inst.back() == ':') {
         DBG(std::cout << "Looks like this is a label, adding it" << std::endl;)
-        //c.nodes.push_back(instruction {.imm = string_to_label(c.inst, c), .imm_purpose = LABEL_NODE});
         c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(c.inst, c), .is_dest = true});
         return;
     }
@@ -776,7 +776,6 @@ void handle_directives(assembly_context& c) {
         // .insn <value> = make an instruction with content <value>
         // .insn <insn_length>, <value> = make an instruction with length <insn_length> and content <value> (verify length)
         // .insn <type> <fields> = make an instruction with type <type> and fields <fields>
-        instruction i;
         uint8_t required_length = 0;
         using enum RVInstructionFormat;
         const std::array<std::pair<std::string_view, RVInstructionFormat>, 38> type_names = {{
@@ -834,17 +833,16 @@ void handle_directives(assembly_context& c) {
             }
         }
         if (i.imm & 0xFFFF0000) {
-            i.inst_offset = 4;
+            c.inst_offset = 4;
         } else {
-            i.inst_offset = 2;
+            c.inst_offset = 2;
         }
         if (!c.arg1.empty() && !c.arg2.empty()) {
             if (required_length != i.inst_offset) {
                 throw ChataError(ChataErrorType::Assembler, "Instruction length mismatch: expected " + to_chatastring(required_length) + ", got " + to_chatastring(i.inst_offset));
             }
         }
-        c.instruction_bytes += i.inst_offset;
-        c.nodes.push_back(i);
+        make_inst(c);
     }
 }
 
