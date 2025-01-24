@@ -117,52 +117,52 @@ std::optional<uint8_t> decode_vlmul(const chatastring& str) {
     }
 }
 
-void handle_super_special_snowflakes(const rvinstruction& base_i, assembly_context& c) {
+void handle_super_special_snowflakes(int32_t& imm, const rvinstruction& base_i, assembly_context& c) {
     using enum RVInstructionID;
     if (base_i.id == FENCE) {
-        i.imm |= decode_fence(c.arg1) << 4; // Add pred
-        i.imm |= decode_fence(c.arg2);      // Add succ
+        imm |= decode_fence(c.arg1) << 4; // Add pred
+        imm |= decode_fence(c.arg2);      // Add succ
         DBG(std::cout << "FENCE instruction made" << std::endl;)
     } else if (base_i.id == FENCETSO) {
-        i.imm = 0b100000110011; // Set imm to the TSO fence value
+        imm = 0b100000110011; // Set imm to the TSO fence value
         DBG(std::cout << "FENCE.TSO instruction made" << std::endl;)
     } else if (base_i.id == PAUSE) {
-        i.imm = 0b000000010000; // Set imm to the PAUSE value
+        imm = 0b000000010000; // Set imm to the PAUSE value
         DBG(std::cout << "PAUSE instruction made" << std::endl;)
     } else if (base_i.id == ECALL) {
-        i.imm = 0b000000000000; // Set imm to the ECALL value
+        imm = 0b000000000000; // Set imm to the ECALL value
         DBG(std::cout << "ECALL instruction made" << std::endl;)
     } else if (base_i.id == EBREAK) {
-        i.imm = 0b000000000001; // Set imm to the EBREAK value
+        imm = 0b000000000001; // Set imm to the EBREAK value
         DBG(std::cout << "EBREAK instruction made" << std::endl;)
     } else if (base_i.id == FENCEI) {
-        i.imm = 0b000000000000; // Set imm to the FENCE.I value
+        imm = 0b000000000000; // Set imm to the FENCE.I value
         DBG(std::cout << "FENCE.I instruction made" << std::endl;)
     } else if (base_i.id == CSRRW || base_i.id == CSRRS || base_i.id == CSRRC) {
         rd = string_to_register(c.arg1, c).encoding;
-        i.imm = decode_csr(c.arg2);
-        i.rs1 = string_to_register(c.arg3, c).encoding;
+        imm = decode_csr(c.arg2);
+        rs1 = string_to_register(c.arg3, c).encoding;
         DBG(std::cout << "CSR instruction made" << std::endl;)
     } else if (base_i.id == CSRRWI || base_i.id == CSRRSI || base_i.id == CSRRCI) {
         rd = string_to_register(c.arg1, c).encoding;
-        i.imm = decode_csr(c.arg2);
+        imm = decode_csr(c.arg2);
         if (auto num = to_num<int>(c.arg3); num.has_value()) {
-            i.rs1 = num.value();
+            rs1 = num.value();
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
         }
         DBG(std::cout << "CSRI instruction made" << std::endl;)
     } else if (base_i.id == WRSNTO) {
-        i.imm = 0b000000001101; // Set imm to the WRSNTO value
+        imm = 0b000000001101; // Set imm to the WRSNTO value
         DBG(std::cout << "WRSNTO instruction made" << std::endl;)
     } else if (base_i.id == WRSSTO) {
-        i.imm = 0b000000011101; // Set imm to the WRSSTO value
+        imm = 0b000000011101; // Set imm to the WRSSTO value
         DBG(std::cout << "WRSSTO instruction made" << std::endl;)
     } else if (base_i.id == CNOP) {
-        i.imm = 0b000000000000; // Set imm to the CNOP value
+        imm = 0b000000000000; // Set imm to the CNOP value
         DBG(std::cout << "CNOP instruction made" << std::endl;)
     } else if (base_i.id == CEBREAK) {
-        i.imm = 0b000000000000;
+        imm = 0b000000000000;
         DBG(std::cout << "CEBREAK instruction made" << std::endl;)
     }
 }
@@ -216,11 +216,10 @@ void make_inst(assembly_context& c) {
     uint8_t opcode;
     special_snowflake_args ssargs;
 
-    if (true) {
-        name = "Custom Fields";
-        type = 
-        return;
-    }
+    //if (true) {
+    //    name = "Custom Fields";
+    //    return;
+    //}
     auto base_i = instructions.at(c.inst_offset); // Don't make this one auto&, it's slower
     name = base_i.name;
     type = base_i.type;
@@ -240,10 +239,6 @@ void make_inst(assembly_context& c) {
     c.instruction_bytes += 4;
     return i;*/
 
-    i.inst_offset = c.inst_offset;
-
-    auto& base_i = instructions.at(i.inst_offset);
-
     // std::cout << "i.name = " << base_i.name << std::endl;
 
     using enum RVInstructionFormat;
@@ -251,7 +246,9 @@ void make_inst(assembly_context& c) {
     using enum RVInstructionID;
 
     if (base_i.ssargs.super_special_snowflake) {
-        handle_super_special_snowflakes(base_i, c);
+        handle_super_special_snowflakes(imm, base_i, c);
+    }
+
     } else if (type == R || type == R4) {
         /*rd = 0b00000;
         rs1 = 0b00000;
@@ -386,7 +383,7 @@ void make_inst(assembly_context& c) {
         } else {
             imm = string_to_label(c.arg3, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = imm, .i_bytes = bytes, .is_dest = false});
-            i.imm_purpose = LABEL_DEST;
+            imm_purpose = LABEL_DEST;
         }
         rs1 = string_to_register(c.arg1, c).encoding;
         rs2 = string_to_register(c.arg2, c).encoding;
@@ -416,7 +413,7 @@ void make_inst(assembly_context& c) {
         } else {
             imm = string_to_label(c.arg2, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = imm, .i_bytes = bytes, .is_dest = false});
-            i.imm_purpose = LABEL_DEST;
+            imm_purpose = LABEL_DEST;
         }
         rd = string_to_register(c.arg1, c).encoding;
 
@@ -432,7 +429,7 @@ void make_inst(assembly_context& c) {
         } else {
             imm = string_to_label(c.arg1, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = imm, .i_bytes = bytes, .is_dest = false});
-            i.imm_purpose = LABEL_DEST;
+            imm_purpose = LABEL_DEST;
         }
 
         DBG(std::cout << "Encoding CJ-type instruction with name " << name << std::endl;)
@@ -494,7 +491,7 @@ void make_inst(assembly_context& c) {
             imm = num.value();
         } else {
             imm = string_to_label(c.arg2, c);
-            i.imm_purpose = LABEL_NODE;
+            imm_purpose = LABEL_NODE;
         }
         rs1 = string_to_register(c.arg1, c).encoding & 0b111;
 
@@ -672,10 +669,10 @@ void solve_label_offsets(assembly_context& c) {
 
 void generate_machine_code(assembly_context& c) {
     for (auto& i : c.nodes) {
-        if (i.imm_purpose == LABEL_NODE) {
+        if (imm_purpose == LABEL_NODE) {
             continue;
-        } else if (i.imm_purpose == RAW_INSTR) {
-            reinterpret_cast<uint32_t&>(c.machine_code.data()[offset]) = i.imm;
+        } else if (imm_purpose == RAW_INSTR) {
+            reinterpret_cast<uint32_t&>(c.machine_code.data()[offset]) = imm;
             continue;
         }
     }
@@ -820,19 +817,19 @@ void handle_directives(assembly_context& c) {
         }};
         if (!c.arg1.empty() && c.arg2.empty()) {
             if (auto num = to_num<uint32_t>(c.arg1); num.has_value()) {
-                i.imm = num.value();
-                i.imm_purpose = InstrImmPurpose::RAW_INSTR;
+                imm = num.value();
+                imm_purpose = InstrImmPurpose::RAW_INSTR;
             }
         } else if (!c.arg1.empty() && !c.arg2.empty()) {
             if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {
-                i.imm = num.value();
-                i.imm_purpose = InstrImmPurpose::RAW_INSTR;
+                imm = num.value();
+                imm_purpose = InstrImmPurpose::RAW_INSTR;
             }
             if (auto num = to_num<uint8_t>(c.arg1); num.has_value()) {
                 required_length = num.value();
             }
         }
-        if (i.imm & 0xFFFF0000) {
+        if (imm & 0xFFFF0000) {
             c.inst_offset = 4;
         } else {
             c.inst_offset = 2;
