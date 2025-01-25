@@ -48,7 +48,7 @@ add_library(objchata OBJECT
     src/csr_search.cpp
 )
 
-target_compile_options(objchata PRIVATE -fno-rtti -fno-stack-protector)
+target_compile_options(objchata PRIVATE -fno-rtti -fno-stack-protector -fomit-frame-pointer)
 
 set_property(TARGET objchata PROPERTY POSITION_INDEPENDENT_CODE ON)
 
