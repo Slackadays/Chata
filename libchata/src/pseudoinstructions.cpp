@@ -6,7 +6,7 @@
 namespace libchata_internal {
 
 void li_instr(assembly_context& c) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
-                                                         // Case 1: imm is a 12-bit signed integer
+                                     // Case 1: imm is a 12-bit signed integer
     int imm;
     if (auto num = to_num<int>(c.arg2); num.has_value()) {
         imm = num.value();
@@ -31,7 +31,7 @@ void li_instr(assembly_context& c) { // li rd, imm -> lui rd, imm[31:12]; addi r
 }
 
 void la_instr(assembly_context& c) { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
-                                                         // Case 1: imm is a 12-bit signed integer
+                                     // Case 1: imm is a 12-bit signed integer
     int imm;
     if (auto num = to_num<int>(c.arg2); num.has_value()) {
         imm = num.value();

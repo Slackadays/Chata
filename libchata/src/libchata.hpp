@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 #include <array>
+#include <charconv>
 #include <cstdint>
 #include <cstring>
 #include <iostream>
@@ -10,7 +11,6 @@
 #include <string_view>
 #include <unistd.h>
 #include <vector>
-#include <charconv>
 
 #pragma once
 
@@ -299,7 +299,12 @@ public:
         return error_message.data();
     }
 
-    ChataError(ChataErrorType type, std::string_view details, uint32_t line, uint32_t column, std::string_view filename) : type(type), details(details), line(line), column(column), filename(filename) {}
+    ChataError(ChataErrorType type, std::string_view details, uint32_t line, uint32_t column, std::string_view filename)
+            : type(type)
+            , details(details)
+            , line(line)
+            , column(column)
+            , filename(filename) {}
 
     ChataError(ChataErrorType type, std::optional<std::string_view> details, uint32_t line, uint32_t column) : type(type), details(details), line(line), column(column) {}
 

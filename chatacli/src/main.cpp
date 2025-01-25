@@ -4,6 +4,7 @@
 #include <cstring>
 #include <fcntl.h>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <libchata.hpp>
 #include <optional>
@@ -11,7 +12,6 @@
 #include <thread>
 #include <unistd.h>
 #include <vector>
-#include <fstream>
 
 namespace fs = std::filesystem;
 

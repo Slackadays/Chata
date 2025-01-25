@@ -145,10 +145,8 @@ public:
         name[4] = '\0';
     }
     const uint8_t& size() const { return name_size; }
-    const bool operator == (const auto& other) const {
-        return fast_eq(*this, other);
-    }
-    operator char const*() const { return name; }
+    const bool operator==(const auto& other) const { return fast_eq(*this, other); }
+    operator const char*() const { return name; }
 };
 
 struct rvregister {

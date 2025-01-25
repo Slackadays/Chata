@@ -1,17 +1,9 @@
-#include "libchata.hpp"
 #include "instructions.hpp"
+#include "libchata.hpp"
 
 #pragma once
 
 namespace libchata_internal {
-
-enum class InstrImmPurpose : uint8_t {
-    INSTR_IMM, // The regular case
-    LABEL_DEST, // The value in imm is the label id we want to go to
-    LABEL_NODE, // This instruction is the location of this label id instead
-    RAW_INSTR, // This instruction is solely what's in imm, for custom instructions
-    OPCODE_AND_IMM // This instruction uses custom fields but we need to store the opcode here to save space
-};
 
 struct directive_option {
     chatavector<RVInstructionSet> supported_sets;
@@ -43,7 +35,6 @@ struct assembly_context {
     uint32_t line = 1;
     uint32_t column = 0;
     uint16_t inst_offset = 0;
-    InstrImmPurpose imm_purpose = InstrImmPurpose::INSTR_IMM;
     RVInstructionFormat raw_format;
 };
 

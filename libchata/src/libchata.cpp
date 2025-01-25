@@ -47,7 +47,7 @@ void ChataProcessor::process_data(chata_args& input) {
 #if defined(__riscv)
     executable_function(input);
 #else
-    #warning "Disabling native code execution for this non-RISC-V platform"
+#warning "Disabling native code execution for this non-RISC-V platform"
 #endif
 }
 
