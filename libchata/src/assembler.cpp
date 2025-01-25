@@ -916,6 +916,16 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
         return false;
     };
 
+    c.inst.reserve(32);
+    c.arg1.reserve(32);
+    c.arg2.reserve(32);
+    c.arg3.reserve(32);
+    c.arg4.reserve(32);
+    c.arg5.reserve(32);
+    c.arg6.reserve(32);
+    c.arg7.reserve(32);
+    c.machine_code.reserve(128000);
+
     for (size_t i = 0; i < data.size();) {
         parse_this_line(i, data, c);
         if (c.inst_offset = fast_instr_search(c.inst); c.inst_offset != instr_search_failed) {
