@@ -6,15 +6,15 @@ x86_platform = "AMD 5900x"
 
 as_name = "as 2.43.1/2.28"
 llvm_name = "llvm-mc 17/20"
-chatassembler_name = "Chatassembler 333ea2e"
+chatassembler_name = "Chatassembler 06d5281"
 
 riscv_as_cycles = 222987317
 riscv_llvm_cycles = 442515070
-riscv_chatassembler_cycles = 26274392
+riscv_chatassembler_cycles = 25441650
 
 x86_as_cycles = 53377222
 x86_llvm_cycles = 88401270
-x86_chatassembler_cycles = 4138586
+x86_chatassembler_cycles = 4010538
 
 maxcycles = max(riscv_as_cycles, riscv_llvm_cycles, riscv_chatassembler_cycles)
 
