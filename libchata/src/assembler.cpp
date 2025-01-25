@@ -46,6 +46,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
 }
 
 const rvregister& string_to_register(const chatastring& str, assembly_context& c) {
+    //return registers[4];
     if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
         return registers[reg];
     }
@@ -207,8 +208,6 @@ void make_inst(assembly_context& c) {
     uint8_t rs3 = 0;
     uint8_t frm = 0;
 
-    uint32_t inst = 0;
-
     auto base_i = instructions.at(c.inst_offset); // Don't make this one auto&, it's slower
     auto& name = base_i.name;
     auto& type = base_i.type;
@@ -219,9 +218,13 @@ void make_inst(assembly_context& c) {
     auto& opcode = base_i.opcode;
     auto& ssargs = base_i.ssargs;
 
-    inst |= opcode;
+    for (uint8_t i = 0; i < bytes; i++) {
+        c.machine_code.push_back(0);
+    }
 
-    c.machine_code.resize(c.machine_code.size() + bytes);
+    uint32_t inst = 0;
+
+    inst |= opcode;
 
     /*i.inst_offset = fast_instr_search("add");
     //i.inst_offset = 27;
@@ -823,7 +826,8 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
         return c == '\t' || c == ' ';
     };
     auto ch = [&]() {
-        return data.at(i);
+        DBG(return data.at(i);)
+        return data[i];
     };
     auto not_at_end = [](const char& c) {
         return c != '\n' && c != '#';
@@ -876,10 +880,10 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
             }
         }
     }
-    while (i < data.size() && data.at(i) != '\n') {
+    while (i < data.size() && ch() != '\n') {
         i++;
     }
-    while (i < data.size() && data.at(i) == '\n') {
+    while (i < data.size() && ch() == '\n') {
         i++;
     }
 }
