@@ -14,6 +14,8 @@ Chata aims to fix problems other DSP libraries and languages have such as poor d
 
 👉 **`chatapanel`** A web management panel so you can use Chata effects with custom crafted audio hardware. [`Click here to see chatapanel.`](chatapanel)
 
+👉 **`hardware`** The hardware that `chatapanel` powers. [`Click here to see the Chata hardware.`](hardware)
+
 Each part's documentation lives under their respective folder in this repo.
 
 ## Quick Start

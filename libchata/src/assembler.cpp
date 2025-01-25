@@ -188,6 +188,7 @@ std::pair<int, chatastring> decode_offset_plus_reg(const chatastring& str) {
     }
     j++;
     chatastring reg;
+    reg.reserve(32);
     for (; str.at(j) != ')'; j++) {
         reg.push_back(str.at(j));
     }
@@ -195,11 +196,21 @@ std::pair<int, chatastring> decode_offset_plus_reg(const chatastring& str) {
 }
 
 void make_inst(assembly_context& c) {
-    DBG(std::cout << "Making instruction" << std::endl;)
     DBG(std::cout << "Instruction: " << c.inst << std::endl;)
     DBG(std::cout << "arg1: " << c.arg1 << std::endl;)
     DBG(std::cout << "arg2: " << c.arg2 << std::endl;)
     DBG(std::cout << "arg3: " << c.arg3 << std::endl;)
+
+    if (!c.supported_sets.empty()) {
+        for (const auto& set : c.supported_sets) {
+            if (instructions.at(c.inst_offset).set != set && instructions.at(c.inst_offset).subset != set) {
+                DBG(std::cout << "Skipping instruction " << c.inst << " because it's not in the supported sets" << std::endl;)
+                return;
+            }
+        }
+    }
+
+    DBG(std::cout << "Making instruction" << std::endl;)
 
     int32_t imm = 0;
     uint8_t rd = 0;
@@ -903,18 +914,6 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
             throw ChataError(ChataErrorType::Assembler, "The set of supported RISC-V instruction sets must include at least RV32I or RV64I");
         }
     }
-
-    auto set_supported = [&]() {
-        if (c.supported_sets.empty()) {
-            return true;
-        }
-        for (const auto& set : c.supported_sets) {
-            if (instructions.at(c.inst_offset).set == set || instructions.at(c.inst_offset).subset == set) {
-                return true;
-            }
-        }
-        return false;
-    };
 
     c.inst.reserve(32);
     c.arg1.reserve(32);

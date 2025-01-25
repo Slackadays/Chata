@@ -38,6 +38,7 @@ bool is_number(const chatastring& str) {
 
 chatastring to_chatastring(const int& num) {
     chatastring result;
+    result.reserve(32);
     std::array<char, 16> temp;
     auto res = std::to_chars(temp.data(), temp.data() + temp.size(), num);
     if (res.ec != std::errc()) {
