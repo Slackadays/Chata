@@ -773,24 +773,65 @@ void handle_directives(assembly_context& c) {
         // .insn <value> = make an instruction with content <value>
         // .insn <insn_length>, <value> = make an instruction with length <insn_length> and content <value> (verify length)
         // .insn <type> <fields> = make an instruction with type <type> and fields <fields>
-        uint8_t required_length = 0;
+        
+        uint32_t custom_inst;
         using enum RVInstructionFormat;
         const std::array<std::pair<std::string_view, RVInstructionFormat>, 38> type_names = {
                 {{"r", R},     {"i", I},        {"s", S},        {"b", Branch},   {"u", U},     {"j", J},       {"r4", R4},        {"cr", CR},    {"ci", CI},   {"css", CSS},
                  {"ciw", CIW}, {"cl", CL},      {"cs", CS},      {"ca", CA},      {"cb", CB},   {"cj", CJ},     {"vl", VL},        {"vls", VLS},  {"vlx", VLX}, {"vs", VS},
                  {"vss", VSS}, {"vsx", VSX},    {"vlr", VLR},    {"ivv", IVV},    {"fvv", FVV}, {"mvv", MVV},   {"ivi", IVI},      {"ivx", IVX},  {"fvf", FVF}, {"mvx", MVX},
                  {"clb", CLB}, {"csb", CSBfmt}, {"clh", CLHfmt}, {"csh", CSHfmt}, {"cu", CU},   {"cmmv", CMMV}, {"cmjt", CMJTfmt}, {"cmpp", CMPP}}};
-        uint32_t custom_inst;
+        uint8_t required_length = 0;
         if (!c.arg1.empty() && c.arg2.empty()) {
             if (auto num = to_num<uint32_t>(c.arg1); num.has_value()) {
                 custom_inst = num.value();
             }
         } else if (!c.arg1.empty() && !c.arg2.empty()) {
-            if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {
-                custom_inst = num.value();
+            RVInstructionFormat this_type;
+            bool is_type = false;
+            for (const auto& [name, type] : type_names) {
+                if (fast_eq(c.arg1, name)) {
+                    is_type = true;
+                    this_type = type;
+                    break;
+                }
             }
-            if (auto num = to_num<uint8_t>(c.arg1); num.has_value()) {
-                required_length = num.value();
+            if (is_type) {
+                auto get_extra_args = [&] -> chatavector<chatastring> {
+                    // Parse all the extra args from c.arg_extra, which are separated by commas and whitespace
+                    chatavector<chatastring> args;
+                    chatastring temp;
+                    auto is_whitespace = [](const char& c) {
+                        return c == ' ' || c == '\t';
+                    };
+                    for (const char& c : c.arg_extra) {
+                        if (c == ',') {
+                            args.push_back(temp);
+                            temp.clear();
+                        } else if (is_whitespace(c)) {
+                            continue;
+                        } else {
+                            temp.push_back(c);
+                        }
+                    }
+                    if (!temp.empty()) {
+                        args.push_back(temp);
+                    }
+                    return args;
+                };
+
+                uint8_t opcode = to_num<uint8_t>(c.arg2).value();
+                if (this_type == R) {
+                    
+
+                }
+            } else {
+                if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {
+                    custom_inst = num.value();
+                }
+                if (auto num = to_num<uint8_t>(c.arg1); num.has_value()) {
+                    required_length = num.value();
+                }
             }
         }
 
@@ -882,9 +923,10 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
                 if (!c.arg4.empty()) {
                     parse_arg(c.arg5);
                     if (!c.arg5.empty()) {
-                        parse_arg(c.arg6);
-                        if (!c.arg6.empty()) {
-                            parse_arg(c.arg7);
+                        c.arg_extra.clear();
+                        while (i < data.size() && ch() != '\n') {
+                            c.arg_extra.push_back(ch());
+                            i++;
                         }
                     }
                 }
@@ -921,8 +963,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
     c.arg3.reserve(32);
     c.arg4.reserve(32);
     c.arg5.reserve(32);
-    c.arg6.reserve(32);
-    c.arg7.reserve(32);
+    c.arg_extra.reserve(32);
     c.machine_code.reserve(128000);
 
     for (size_t i = 0; i < data.size();) {

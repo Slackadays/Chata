@@ -66,7 +66,7 @@ std::optional<std::string> fileContents(const fs::path& path) {
 
 int main(int argc, char* argv[]) {
     std::cout << "Welcome to ChataCLI " << PROJECT_VERSION << " (commit " << GIT_COMMIT_HASH << " on branch " << GIT_BRANCH << ")" << std::endl;
-    std::cout << "libchata version: " << libchata_version() << std::endl;
+    std::cout << "libchata version: " << libchata::version() << std::endl;
     if (argc < 2) {
         std::cout << "You must provide one or more files" << std::endl;
         return 1;
@@ -105,7 +105,7 @@ int main(int argc, char* argv[]) {
         std::cout << "Assembling the file " << filePath.string() << std::endl;
         std::span<uint8_t> result;
         try {
-            result = libchata_assemble(file.data);
+            result = libchata::assemble(file.data);
         } catch (ChataError& e) {
             std::cout << "Error: " << e.what() << std::endl;
             return 1;

@@ -7,6 +7,7 @@ int failed_tests = 0;
 namespace libchata_internal {
 
 void as(std::string_view input, uint32_t expected_output) {
+    libchata::reset_memory_bank();
     chatavector<uint8_t> result;
     try {
         result = assemble_code(input);
@@ -33,6 +34,7 @@ void as(std::string_view input, uint32_t expected_output) {
 }
 
 void as(std::string_view input, std::vector<uint8_t> expected_output) {
+    libchata::reset_memory_bank();
     std::vector<uint8_t> result;
     try {
         auto temp = assemble_code(input);

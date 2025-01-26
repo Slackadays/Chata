@@ -15,6 +15,8 @@ using namespace libchata_internal;
 
 constexpr std::string_view libchata_version_str = PROJECT_VERSION;
 
+GlobalMemoryBank libchata_internal::memory_bank;
+
 void* GlobalMemoryBank::grab_some_memory(size_t requested) {
     DBG(std::cout << "Allocating " << requested << " bytes, " << used << " used" << std::endl;)
     if (requested + used > pool.size()) {
@@ -41,6 +43,11 @@ void* GlobalMemoryBank::grab_aligned_memory(size_t requested) {
     void* ptr = reinterpret_cast<void*>(pool.data() + used);
     used += requested;
     return ptr;
+}
+
+void GlobalMemoryBank::reset() {
+    DBG(std::cout << "Resetting memory bank, used " << used << " bytes" << std::endl;)
+    used = 0;
 }
 
 void ChataProcessor::process_data(chata_args& input) {
@@ -136,11 +143,19 @@ void ChataProcessor::compile_and_commit(const std::string_view& code) {
     compile_and_commit(InputFile(code, std::nullopt));
 }
 
-std::string_view libchata_version() {
+namespace libchata {
+
+void reset_memory_bank() {
+    libchata_internal::memory_bank.reset();
+}
+
+std::string_view version() {
     return libchata_version_str;
 }
 
-std::span<uint8_t> libchata_assemble(std::string_view code, std::span<RVInstructionSet> supported_sets) {
+std::span<uint8_t> assemble(std::string_view code, std::span<RVInstructionSet> supported_sets) {
     auto assembled = assemble_code(code, chatavector<RVInstructionSet>(supported_sets.begin(), supported_sets.end()));
     return std::span<uint8_t>(assembled.data(), assembled.size());
 }
+
+} // namespace libchata

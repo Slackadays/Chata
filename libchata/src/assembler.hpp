@@ -24,8 +24,7 @@ struct assembly_context {
     chatastring arg3;
     chatastring arg4;
     chatastring arg5;
-    chatastring arg6;
-    chatastring arg7;
+    chatastring arg_extra;
     chatavector<uint8_t> machine_code;
     chatavector<RVInstructionSet> supported_sets;
     chatavector<std::pair<chatastring, int>> labels;

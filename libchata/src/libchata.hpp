@@ -80,17 +80,20 @@ chatastring allocate_int_register(int num);
 chatastring allocate_float_register(struct compilation_context& c);
 chatastring allocate_float_register(int num);
 
-static class GlobalMemoryBank {
-    std::array<std::byte, memory_pool_size> pool;
-    size_t used = 0;
-    long pagesize = sysconf(_SC_PAGE_SIZE);
+class GlobalMemoryBank {
+    inline static std::array<std::byte, memory_pool_size> pool;
+    inline static size_t used = 0;
+    inline static long pagesize = sysconf(_SC_PAGE_SIZE);
 
 public:
     void* grab_some_memory(size_t requested);
 
     void* grab_aligned_memory(size_t requested);
 
-} memory_bank;
+    void reset();
+};
+
+extern GlobalMemoryBank memory_bank;
 
 template <class T>
 class MemoryBank {
@@ -372,7 +375,11 @@ public:
     ChataProcessor() = default;
 };
 
-std::string_view libchata_version();
+namespace libchata {
+
+void reset_memory_bank();
+
+std::string_view version();
 
 /**
  * @brief Assemble RISC-V assembly with Chatassembler
@@ -381,4 +388,6 @@ std::string_view libchata_version();
  * @param supported_sets An array or vector of supported instruction sets to be used for bit-dependent instructions and architecture options
  * @return std::span<uint8_t>
  */
-std::span<uint8_t> libchata_assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {});
+std::span<uint8_t> assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {});
+
+} // namespace libchata
