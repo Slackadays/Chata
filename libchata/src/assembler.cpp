@@ -698,9 +698,9 @@ void solve_label_offsets(assembly_context& c) {
                     }
                     int32_t offset = c.label_locs.at(j).loc - c.label_locs.at(i).loc;
 
-                    std::cout << "Loc for i: " << c.label_locs.at(i).loc << ", loc for j: " << c.label_locs.at(j).loc << std::endl;
+                    //std::cout << "Loc for i: " << c.label_locs.at(i).loc << ", loc for j: " << c.label_locs.at(j).loc << std::endl;
 
-                    std::cout << "Offset for label " << c.label_locs.at(i).id << ": " << offset << std::endl;
+                    //std::cout << "Offset for label " << c.label_locs.at(i).id << ": " << offset << std::endl;
 
                     if (c.label_locs.at(i).format == Branch) {
                         inst &= 0b00000001111111111111000001111111;
