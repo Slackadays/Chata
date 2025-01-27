@@ -936,6 +936,7 @@ void handle_directives(assembly_context& c) {
                 };
 
                 uint8_t opcode = to_num<uint8_t>(c.arg2).value();
+                custom_inst |= opcode;
                 if (this_type == R && get_extra_args().size() == 1) {
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func7 = to_num<uint8_t>(c.arg4).value();
@@ -943,7 +944,7 @@ void handle_directives(assembly_context& c) {
                     uint8_t rs1 = to_num<uint8_t>(c.arg6).value();
                     uint8_t rs2 = to_num<uint8_t>(get_extra_args().at(0)).value();
 
-                    custom_inst = opcode | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func7 << 25);
+                    custom_inst = (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func7 << 25);
                 } else if (this_type == R && get_extra_args().size() == 2) { // R with 4 args
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func2 = to_num<uint8_t>(c.arg4).value();
@@ -952,7 +953,16 @@ void handle_directives(assembly_context& c) {
                     uint8_t rs2 = to_num<uint8_t>(get_extra_args().at(0)).value();
                     uint8_t rs3 = to_num<uint8_t>(get_extra_args().at(1)).value();
 
-                    custom_inst = opcode | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
+                    custom_inst = (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
+                } else if (this_type == R4) {
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t func2 = to_num<uint8_t>(c.arg4).value();
+                    uint8_t rd = to_num<uint8_t>(c.arg5).value();
+                    uint8_t rs1 = to_num<uint8_t>(c.arg6).value();
+                    uint8_t rs2 = to_num<uint8_t>(get_extra_args().at(0)).value();
+                    uint8_t rs3 = to_num<uint8_t>(get_extra_args().at(1)).value();
+
+                    custom_inst = (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
                 }
             } else {
                 if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {
@@ -985,6 +995,19 @@ void handle_directives(assembly_context& c) {
         } else {
             c.machine_code.push_back(custom_inst & 0xFF);
             c.machine_code.push_back((custom_inst >> 8) & 0xFF);
+        }
+    } else if (fast_eq(c.inst, ".equ")) {
+        DBG(std::cout << "Constant directive" << std::endl;)
+        // .equ <name>, <value> = define a constant with name <name> and value <value>
+
+        if (c.arg1.empty() || c.arg2.empty()) {
+            throw ChataError(ChataErrorType::Assembler, "Invalid .equ directive", c.line, c.column);
+        }
+
+        if (auto num = to_num<int32_t>(c.arg2); num.has_value()) {
+            c.constants.push_back({c.arg1, num.value()});
+        } else {
+            throw ChataError(ChataErrorType::Assembler, "Invalid constant value " + c.arg2, c.line, c.column);
         }
     }
 }

@@ -9,7 +9,7 @@
 
 # Welcome to Chatassembler!
 
-Chatassembler is the bloat-free assembler for RISC-V. It's easy to use, fully independent, and _over 10x faster_ 🏎️ than the competition.
+Chatassembler is the bloat-free assembler library for RISC-V. It's easy to use, fully independent, and _over 10x faster_ 🏎️ than the competition.
 
 <p align="center">
     <img src="Figure_1.svg">
@@ -19,7 +19,7 @@ Here's more on that. Chatassembler is...
 
 ### ▫️ Complete
 
-Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zbb **(WIP)**, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, pseudoinstructions, labels, and many other directives **(WIP)**.
+Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zbb **(WIP)**, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, pseudoinstructions, custom instructions, labels, and many other directives **(WIP)**. The endgame is full compatibility with GCC's `as` excluding certain features (more below).
 
 ### ▫️ Not a binary
 
@@ -93,7 +93,7 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 | Load Local Address | 💀 |
 | Load Global Address | 💀 |
 | Load and Store Global | 💀 |
-| Constants | ❌ |
+| Constants | 🪛 |
 | Far Branches | ❌ |
 | Function Calls | ☑️ |
 | Floating-point rounding modes | ☑️ |
