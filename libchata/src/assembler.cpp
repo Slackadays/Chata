@@ -631,6 +631,52 @@ void make_inst(assembly_context& c) {
         inst |= (funct & 0b11) << 5; // Add funct2
         inst |= rd << 7;             // Add rd' (just 3 bits)
         inst |= (funct >> 2) << 10;  // Add funct6
+    } else if (type == VL) {
+
+    } else if (type == VLS) {
+
+    } else if (type == VLX) {
+
+    } else if (type == VS) {
+
+    } else if (type == VSS) {
+
+    } else if (type == VSX) {
+
+    } else if (type == VLR) {
+
+    } else if (type == VSR) {
+
+    } else if (type == IVV) {
+
+    } else if (type == FVV) {
+
+    } else if (type == MVV) {
+
+    } else if (type == IVI) {
+
+    } else if (type == IVX) {
+
+    } else if (type == FVF) {
+
+    } else if (type == MVX) {
+
+    } else if (type == CLB) {
+
+    } else if (type == CSBfmt) {
+
+    } else if (type == CLHfmt) {
+
+    } else if (type == CSHfmt) {
+
+    } else if (type == CU) {
+
+    } else if (type == CMMV) {
+         
+    } else if (type == CMJTfmt) {
+        
+    } else if (type == CMPP) {
+
     }
 
     DBG(std::cout << "Instruction made" << std::endl;)
@@ -824,6 +870,7 @@ void handle_directives(assembly_context& c) {
                 if (this_type == R) {
                     
 
+
                 }
             } else {
                 if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {
@@ -923,10 +970,13 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
                 if (!c.arg4.empty()) {
                     parse_arg(c.arg5);
                     if (!c.arg5.empty()) {
-                        c.arg_extra.clear();
-                        while (i < data.size() && ch() != '\n') {
-                            c.arg_extra.push_back(ch());
-                            i++;
+                        parse_arg(c.arg6);
+                        if (!c.arg6.empty()) {
+                            c.arg_extra.clear();
+                            while (i < data.size() && ch() != '\n') {
+                                c.arg_extra.push_back(ch());
+                                i++;
+                            }
                         }
                     }
                 }
@@ -963,6 +1013,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
     c.arg3.reserve(32);
     c.arg4.reserve(32);
     c.arg5.reserve(32);
+    c.arg6.reserve(32);
     c.arg_extra.reserve(32);
     c.machine_code.reserve(128000);
 
