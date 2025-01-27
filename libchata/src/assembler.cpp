@@ -754,6 +754,75 @@ chatavector<RVInstructionSet> decode_sets(const chatastring& str) {
     }
 }
 
+uint8_t decode_opcode(const chatastring& str) {
+    using namespace opcode;
+    if (fast_eq(str, "LOAD")) {
+        return OP_LOAD;
+    } else if (fast_eq(str, "STORE")) {
+        return OP_STORE;
+    } else if (fast_eq(str, "MADD")) {
+        return OP_MADD;
+    } else if (fast_eq(str, "BRANCH")) {
+        return OP_BRANCH;
+    } else if (fast_eq(str, "LOAD_FP")) {
+        return OP_LOAD_FP;
+    } else if (fast_eq(str, "STORE_FP")) {
+        return OP_STORE_FP;
+    } else if (fast_eq(str, "MSUB")) {
+        return OP_MSUB;
+    } else if (fast_eq(str, "JALR")) {
+        return OP_JALR;
+    } else if (fast_eq(str, "CUSTOM_0")) {
+        return OP_CUSTOM_0;
+    } else if (fast_eq(str, "CUSTOM_1")) {
+        return OP_CUSTOM_1;
+    } else if (fast_eq(str, "NMSUB")) {
+        return OP_NMSUB;
+    } else if (fast_eq(str, "RESERVED")) {
+        return OP_RESERVED;
+    } else if (fast_eq(str, "MISC_MEM")) {
+        return OP_MISC_MEM;
+    } else if (fast_eq(str, "AMO")) {
+        return OP_AMO;
+    } else if (fast_eq(str, "NMADD")) {
+        return OP_NMADD;
+    } else if (fast_eq(str, "JAL")) {
+        return OP_JAL;
+    } else if (fast_eq(str, "IMM")) {
+        return OP_IMM;
+    } else if (fast_eq(str, "OP")) {
+        return OP_OP;
+    } else if (fast_eq(str, "FP")) {
+        return OP_FP;
+    } else if (fast_eq(str, "SYSTEM")) {
+        return OP_SYSTEM;
+    } else if (fast_eq(str, "AUIPC")) {
+        return OP_AUIPC;
+    } else if (fast_eq(str, "LUI")) {
+        return OP_LUI;
+    } else if (fast_eq(str, "V")) {
+        return OP_V;
+    } else if (fast_eq(str, "VE")) {
+        return OP_VE;
+    } else if (fast_eq(str, "IMM_32")) {
+        return OP_IMM_32;
+    } else if (fast_eq(str, "OP_32")) {
+        return OP_32;
+    } else if (fast_eq(str, "CUSTOM_2")) {
+        return OP_CUSTOM_2;
+    } else if (fast_eq(str, "CUSTOM_3")) {
+        return OP_CUSTOM_3;
+    } else if (fast_eq(str, "C0")) {
+        return OP_C0;
+    } else if (fast_eq(str, "C1")) {
+        return OP_C1;
+    } else if (fast_eq(str, "C2")) {
+        return OP_C2;
+    } else {
+        throw ChataError(ChataErrorType::Compiler, "Invalid opcode " + str);
+    }
+}
+
 void handle_directives(assembly_context& c) {
     if (c.inst.back() == ':') {
         DBG(std::cout << "Looks like this is a label, adding it" << std::endl;)
@@ -843,7 +912,7 @@ void handle_directives(assembly_context& c) {
                 }
             }
             if (is_type) {
-                auto get_extra_args = [&] -> chatavector<chatastring> {
+                auto get_extra_args = [&]() -> chatavector<chatastring> {
                     // Parse all the extra args from c.arg_extra, which are separated by commas and whitespace
                     chatavector<chatastring> args;
                     chatastring temp;
@@ -867,10 +936,23 @@ void handle_directives(assembly_context& c) {
                 };
 
                 uint8_t opcode = to_num<uint8_t>(c.arg2).value();
-                if (this_type == R) {
-                    
+                if (this_type == R && get_extra_args().size() == 1) {
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t func7 = to_num<uint8_t>(c.arg4).value();
+                    uint8_t rd = to_num<uint8_t>(c.arg5).value();
+                    uint8_t rs1 = to_num<uint8_t>(c.arg6).value();
+                    uint8_t rs2 = to_num<uint8_t>(get_extra_args().at(0)).value();
 
+                    custom_inst = opcode | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func7 << 25);
+                } else if (this_type == R && get_extra_args().size() == 2) { // R with 4 args
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t func2 = to_num<uint8_t>(c.arg4).value();
+                    uint8_t rd = to_num<uint8_t>(c.arg5).value();
+                    uint8_t rs1 = to_num<uint8_t>(c.arg6).value();
+                    uint8_t rs2 = to_num<uint8_t>(get_extra_args().at(0)).value();
+                    uint8_t rs3 = to_num<uint8_t>(get_extra_args().at(1)).value();
 
+                    custom_inst = opcode | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
                 }
             } else {
                 if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {
