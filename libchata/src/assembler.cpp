@@ -946,7 +946,7 @@ void handle_directives(assembly_context& c) {
                     uint8_t rs1 = string_to_register(c.arg6, c).encoding;
                     uint8_t rs2 = string_to_register(get_extra_args().at(0), c).encoding;
 
-                    custom_inst = (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func7 << 25);
+                    custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func7 << 25);
                 } else if (this_type == R && get_extra_args().size() == 2) { // R with 4 args
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func2 = to_num<uint8_t>(c.arg4).value();
@@ -955,7 +955,7 @@ void handle_directives(assembly_context& c) {
                     uint8_t rs2 = string_to_register(get_extra_args().at(0), c).encoding;
                     uint8_t rs3 = string_to_register(get_extra_args().at(1), c).encoding;
 
-                    custom_inst = (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
+                    custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
                 } else if (this_type == R4) {
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func2 = to_num<uint8_t>(c.arg4).value();
@@ -964,20 +964,77 @@ void handle_directives(assembly_context& c) {
                     uint8_t rs2 = string_to_register(get_extra_args().at(0), c).encoding;
                     uint8_t rs3 = string_to_register(get_extra_args().at(1), c).encoding;
 
-                    custom_inst = (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
+                    custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
                 } else if (this_type == I && !c.arg6.empty()) {
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rd = string_to_register(c.arg4, c).encoding;
                     uint8_t rs1 = string_to_register(c.arg5, c).encoding;
                     int32_t simm12 = to_num<int32_t>(c.arg6).value();
 
-                    custom_inst = (rd << 7) | (func3 << 12) | (rs1 << 15) | ((simm12 & 0xFFF) << 20);
+                    custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | ((simm12 & 0xFFF) << 20);
                 } else if (this_type == S) {
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rs2 = string_to_register(c.arg4, c).encoding;
-                    int32_t simm12 = to_num<int32_t>(c.arg5).value();
+                    auto [simm12, rs1] = decode_offset_plus_reg(c.arg5);
+
+                    //custom_inst = 
+                } else if (this_type == B) { // B type: .insn s opcode7, func3, rs1, rs2, symbol
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t rs1 = string_to_register(c.arg4, c).encoding;
+                    uint8_t rs2 = string_to_register(c.arg5, c).encoding;
+                    chatastring symbol = c.arg6;
 
                     
+                } else if (this_type == U) { // U type: .insn u opcode7, rd, simm20
+                    uint8_t rd = string_to_register(c.arg3, c).encoding;
+                    int32_t simm20 = to_num<int32_t>(c.arg4).value();
+
+                    custom_inst = (rd << 7) | ((simm20 & 0xFFFFF) << 12);
+                } else if (this_type == J) { // J type: .insn j opcode7, rd, symbol
+                    uint8_t rd = string_to_register(c.arg3, c).encoding;
+                    chatastring symbol = c.arg4;
+
+                    //custom_inst = custom_inst | 
+
+                } else if (this_type == CR) { // CR type: .insn cr opcode2, func4, rd, rs2
+                    uint8_t func4 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t rd = string_to_register(c.arg4, c).encoding;
+                    uint8_t rs2 = string_to_register(c.arg5, c).encoding;
+
+                    custom_inst = custom_inst | (rs2 << 2) | (rd << 7) | (func4 << 12);
+                } else if (this_type == CI) { // CI type: .insn ci opcode2, func3, rd, simm6
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t rd = string_to_register(c.arg4, c).encoding;
+                    int32_t simm6 = to_num<int32_t>(c.arg5).value();
+
+                    custom_inst = ((simm6 & 0b111111) << 2) | (rd << 7) | ((simm6 >> 5) << 12) | (func3 << 13);
+                } else if (this_type == CIW) { // CIW type: .insn ciw opcode2, func3, rd', uimm8
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t rd = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
+                    int32_t uimm8 = to_num<int32_t>(c.arg5).value();
+
+                    custom_inst = custom_inst | (rd << 2) | ((uimm8 & 0xFF) << 5) | (func3 << 13);
+                } else if (this_type == CSS) { // CSS type: .insn css opcode2, func3, rd, uimm6
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t rd = string_to_register(c.arg4, c).encoding;
+                    int32_t uimm6 = to_num<int32_t>(c.arg5).value();
+
+                    custom_inst = custom_inst | (rd << 2) | ((uimm6 & 0b111111) << 7) | (func3 << 13);
+                } else if (this_type == CL) { // CL type: .insn cl opcode2, func3, rd', uimm5(rs1')
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t rd = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
+                    auto [uimm5, rs1] = decode_offset_plus_reg(c.arg5); // discard rs1
+                    rs1 = rs1 & 0b111; // Only use the lower 3 bits
+
+                    custom_inst = custom_inst | (rd << 2) | ((uimm5 & 0b11) << 5) | (rs1 << 7) | (((uimm5 >> 2) & 0b111) << 10) | (func3 << 13);
+                } else if (this_type == CS) {
+                    
+                } else if (this_type == CA) {
+
+                } else if (this_type == CB) {
+
+                } else if (this_type == CJ) {
+
                 }
             } else {
                 if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {

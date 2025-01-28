@@ -107,6 +107,10 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 
 Chatassembler is available with the MPL 2.0 license. This may or may not be easier to include in your project than the GPL, but this depends on your situation.
 
+### Other subtle differences
+
+For some instructions, `as` only supports `(reg)` as a way to represent the address stored in register `reg`. However, `reg` and `0(reg)` have the same effect, and so Chatassembler supports those in addition to `(reg)`. For example, `as` will reject `lr.w a0, a1` and `lr.w a0, 0(a1)`, but Chatassembler won't. 
+
 ## Why Chatassembler?
 
 I wrote Chatassembler because Chata needs to generate RISC-V machine code to execute at runtime, FAST. Until now, the only way to do this was to manually invoke `as` and `objcopy` in a funky and inefficient way. This was because there were no good, independent RISC-V assembler libraries. But now, Chatassembler can do the same thing much faster, much easier, and much prettier.
