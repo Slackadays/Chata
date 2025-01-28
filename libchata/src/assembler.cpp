@@ -978,7 +978,7 @@ void handle_directives(assembly_context& c) {
                     auto [simm12, rs1] = decode_offset_plus_reg(c.arg5);
 
                     //custom_inst = 
-                } else if (this_type == B) { // B type: .insn s opcode7, func3, rs1, rs2, symbol
+                } else if (this_type == Branch) { // B type: .insn s opcode7, func3, rs1, rs2, symbol
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rs1 = string_to_register(c.arg4, c).encoding;
                     uint8_t rs2 = string_to_register(c.arg5, c).encoding;
@@ -1023,18 +1023,46 @@ void handle_directives(assembly_context& c) {
                 } else if (this_type == CL) { // CL type: .insn cl opcode2, func3, rd', uimm5(rs1')
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rd = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
-                    auto [uimm5, rs1] = decode_offset_plus_reg(c.arg5); // discard rs1
+                    auto [uimm5, rs1temp] = decode_offset_plus_reg(c.arg5);
+                    uint8_t rs1 = string_to_register(rs1temp, c).encoding;
                     rs1 = rs1 & 0b111; // Only use the lower 3 bits
 
                     custom_inst = custom_inst | (rd << 2) | ((uimm5 & 0b11) << 5) | (rs1 << 7) | (((uimm5 >> 2) & 0b111) << 10) | (func3 << 13);
-                } else if (this_type == CS) {
+                } else if (this_type == CS) { //CS type: .insn cs opcode2, func3, rs2', uimm5(rs1')
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t rs2 = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
+                    auto [uimm5, rs1temp] = decode_offset_plus_reg(c.arg5);
+                    uint8_t rs1 = string_to_register(rs1temp, c).encoding;
+                    rs1 = rs1 & 0b111; // Only use the lower 3 bits
+
+                    custom_inst = custom_inst | (rs2 << 2) | ((uimm5 & 0b11) << 5) | (rs1 << 7) | (((uimm5 >> 2) & 0b111) << 10) | (func3 << 13);
+                
                     
-                } else if (this_type == CA) {
+                } else if (this_type == CA) { // CA type: .insn ca opcode2, func6, func2, rd', rs2'
+                    uint8_t func6 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t func2 = to_num<uint8_t>(c.arg4).value();
+                    uint8_t rd = string_to_register(c.arg5, c).encoding & 0b111; // Only use the lower 3 bits
+                    uint8_t rs2 = string_to_register(c.arg6, c).encoding & 0b111; // Only use the lower 3 bits
 
-                } else if (this_type == CB) {
+                    custom_inst = custom_inst | (rs2 << 2) | (func2 << 5) | (rd << 7) | (func6 << 10);
+                
 
-                } else if (this_type == CJ) {
+                } else if (this_type == CB) { // CB type: .insn cb opcode2, func3, rs1', symbol
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t rs1 = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
+                    chatastring symbol = c.arg5;
 
+                    //custom_inst = custom_inst | 
+                } else if (this_type == CJ) { // CJ type: .insn cj opcode2, func3, symbol
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    chatastring symbol = c.arg4;
+
+                    // custom_inst =
+                } else if (this_type == CJ) { //CJ type: .insn cj opcode2, func3, symbol
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    chatastring symbol = c.arg4;
+
+                    // custom_inst = 
                 }
             } else {
                 if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {
