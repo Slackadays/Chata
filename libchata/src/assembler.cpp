@@ -942,29 +942,42 @@ void handle_directives(assembly_context& c) {
                 if (this_type == R && get_extra_args().size() == 1) {
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func7 = to_num<uint8_t>(c.arg4).value();
-                    uint8_t rd = to_num<uint8_t>(c.arg5).value();
-                    uint8_t rs1 = to_num<uint8_t>(c.arg6).value();
-                    uint8_t rs2 = to_num<uint8_t>(get_extra_args().at(0)).value();
+                    uint8_t rd = string_to_register(c.arg5, c).encoding;
+                    uint8_t rs1 = string_to_register(c.arg6, c).encoding;
+                    uint8_t rs2 = string_to_register(get_extra_args().at(0), c).encoding;
 
                     custom_inst = (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func7 << 25);
                 } else if (this_type == R && get_extra_args().size() == 2) { // R with 4 args
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func2 = to_num<uint8_t>(c.arg4).value();
-                    uint8_t rd = to_num<uint8_t>(c.arg5).value();
-                    uint8_t rs1 = to_num<uint8_t>(c.arg6).value();
-                    uint8_t rs2 = to_num<uint8_t>(get_extra_args().at(0)).value();
-                    uint8_t rs3 = to_num<uint8_t>(get_extra_args().at(1)).value();
+                    uint8_t rd = string_to_register(c.arg5, c).encoding;
+                    uint8_t rs1 = string_to_register(c.arg6, c).encoding;
+                    uint8_t rs2 = string_to_register(get_extra_args().at(0), c).encoding;
+                    uint8_t rs3 = string_to_register(get_extra_args().at(1), c).encoding;
 
                     custom_inst = (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
                 } else if (this_type == R4) {
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func2 = to_num<uint8_t>(c.arg4).value();
-                    uint8_t rd = to_num<uint8_t>(c.arg5).value();
-                    uint8_t rs1 = to_num<uint8_t>(c.arg6).value();
-                    uint8_t rs2 = to_num<uint8_t>(get_extra_args().at(0)).value();
-                    uint8_t rs3 = to_num<uint8_t>(get_extra_args().at(1)).value();
+                    uint8_t rd = string_to_register(c.arg5, c).encoding;
+                    uint8_t rs1 = string_to_register(c.arg6, c).encoding;
+                    uint8_t rs2 = string_to_register(get_extra_args().at(0), c).encoding;
+                    uint8_t rs3 = string_to_register(get_extra_args().at(1), c).encoding;
 
                     custom_inst = (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
+                } else if (this_type == I && !c.arg6.empty()) {
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t rd = string_to_register(c.arg4, c).encoding;
+                    uint8_t rs1 = string_to_register(c.arg5, c).encoding;
+                    int32_t simm12 = to_num<int32_t>(c.arg6).value();
+
+                    custom_inst = (rd << 7) | (func3 << 12) | (rs1 << 15) | ((simm12 & 0xFFF) << 20);
+                } else if (this_type == S) {
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t rs2 = string_to_register(c.arg4, c).encoding;
+                    int32_t simm12 = to_num<int32_t>(c.arg5).value();
+
+                    
                 }
             } else {
                 if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {
