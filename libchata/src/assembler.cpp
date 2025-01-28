@@ -229,8 +229,10 @@ void make_inst(assembly_context& c) {
     auto& opcode = base_i.opcode;
     auto& ssargs = base_i.ssargs;
 
-    for (uint8_t i = 0; i < bytes; i++) {
-        c.machine_code.push_back(0);
+    if (bytes == 4) {
+        c.machine_code.insert(c.machine_code.end(), {0, 0, 0, 0});
+    } else if (bytes == 2) {
+        c.machine_code.insert(c.machine_code.end(), {0, 0});
     }
 
     uint32_t inst = 0;

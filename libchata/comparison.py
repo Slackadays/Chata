@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from matplotlib import font_manager
+import os.path
 import numpy as np
 
 riscv_platform = "TH1520"
@@ -44,6 +46,13 @@ multiplier = 0
 
 plt.style.use(theme)
 
+fontloc = "/home/jackson/.local/share/fonts/Unbounded-VariableFont_wght.ttf"
+
+if os.path.isfile(fontloc):
+    font_manager.fontManager.addfont(fontloc)
+    plt.rcParams.update({'font.family': 'Unbounded'})
+
+
 plt.bar(np.arange(2), [riscv_llvm_cycles, x86_llvm_cycles], color='r', width=barwidth, edgecolor='grey', label=llvm_name)
 plt.bar_label(plt.bar(np.arange(2), [riscv_llvm_cycles, x86_llvm_cycles], color='r', width=barwidth, edgecolor='grey'), fmt='%.2f%%')
 plt.bar(np.arange(2) + barwidth, [riscv_as_cycles, x86_as_cycles], color='b', width=barwidth, edgecolor='grey', label=as_name)
@@ -51,7 +60,7 @@ plt.bar_label(plt.bar(np.arange(2) + barwidth, [riscv_as_cycles, x86_as_cycles],
 plt.bar(np.arange(2) + barwidth * 2, [riscv_chatassembler_cycles, x86_chatassembler_cycles], color='g', width=barwidth, edgecolor='grey', label=chatassembler_name)
 plt.bar_label(plt.bar(np.arange(2) + barwidth * 2, [riscv_chatassembler_cycles, x86_chatassembler_cycles], color='g', width=barwidth, edgecolor='grey'), fmt='%.2f%%')
 
-plt.xlabel("Platform")
+plt.xlabel("Host Platform CPU")
 
 plt.ylabel("Cycles (%)")
 
