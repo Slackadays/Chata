@@ -3,7 +3,7 @@ from matplotlib import font_manager
 import os.path
 import numpy as np
 
-riscv_platform = "TH1520"
+riscv_platform = "T-Head TH1520"
 x86_platform = "AMD 5900x"
 
 as_name = "as 2.43.1/2.28"
