@@ -9,5 +9,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build Chata
         run: |
-          cd Chata
+          #cd Chata
           just build
