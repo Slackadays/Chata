@@ -78,7 +78,7 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 | `.option push/pop` | ☑️ |
 | `.insn <value>` | ☑️ |
 | `.insn <insn_length>, <value>` | ☑️ |
-| `.insn <type> <fields>` | 🪛 |
+| `.insn <type> <fields>` | ☑️ |
 | Relocation functions | 🪛 |
 | Labels | ☑️ |
 | Absolute addressing | 💀 |
@@ -107,7 +107,7 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 
 Chatassembler is available with the MPL 2.0 license. This may or may not be easier to include in your project than the GPL, but this depends on your situation.
 
-### Other subtle differences
+### ▫️ Other subtle differences
 
 For some instructions, `as` only supports `(reg)` as a way to represent the address stored in register `reg`. However, `reg` and `0(reg)` have the same effect, and so Chatassembler supports those in addition to `(reg)`. For example, `as` will reject `lr.w a0, a1` and `lr.w a0, 0(a1)`, but Chatassembler won't. 
 

@@ -984,7 +984,12 @@ void handle_directives(assembly_context& c) {
                     uint8_t rs2 = string_to_register(c.arg5, c).encoding;
                     chatastring symbol = c.arg6;
 
-                    
+                    if (auto num = to_num<int32_t>(symbol); num.has_value()) {
+                        custom_inst = custom_inst | ((num.value() & 0b1) << 7) | (((num.value() >> 1) & 0b1111) << 8) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (((num.value() >> 5) & 0b111111) << 25) | ((num.value() >> 11) & 0b1) << 31;
+                    } else {
+                        c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = Branch});
+                        custom_inst = custom_inst | (func3 << 12) | (rs1 << 15) | (rs2 << 20);
+                    }
                 } else if (this_type == U) { // U type: .insn u opcode7, rd, simm20
                     uint8_t rd = string_to_register(c.arg3, c).encoding;
                     int32_t simm20 = to_num<int32_t>(c.arg4).value();
@@ -994,8 +999,12 @@ void handle_directives(assembly_context& c) {
                     uint8_t rd = string_to_register(c.arg3, c).encoding;
                     chatastring symbol = c.arg4;
 
-                    //custom_inst = custom_inst | 
-
+                    if (auto num = to_num<int32_t>(symbol); num.has_value()) {
+                        custom_inst = custom_inst | (rd << 7) | (((num.value() >> 12) & 0b11111111) << 12) | (((num.value() >> 11) & 0b1) << 20) | (((num.value() >> 1) & 0b1111111111) << 21) | (((num.value() >> 20) & 0b1) << 31);
+                    } else {
+                        c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = J});
+                        custom_inst = custom_inst | (rd << 7);
+                    }
                 } else if (this_type == CR) { // CR type: .insn cr opcode2, func4, rd, rs2
                     uint8_t func4 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rd = string_to_register(c.arg4, c).encoding;
@@ -1036,8 +1045,6 @@ void handle_directives(assembly_context& c) {
                     rs1 = rs1 & 0b111; // Only use the lower 3 bits
 
                     custom_inst = custom_inst | (rs2 << 2) | ((uimm5 & 0b11) << 5) | (rs1 << 7) | (((uimm5 >> 2) & 0b111) << 10) | (func3 << 13);
-                
-                    
                 } else if (this_type == CA) { // CA type: .insn ca opcode2, func6, func2, rd', rs2'
                     uint8_t func6 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func2 = to_num<uint8_t>(c.arg4).value();
@@ -1045,24 +1052,27 @@ void handle_directives(assembly_context& c) {
                     uint8_t rs2 = string_to_register(c.arg6, c).encoding & 0b111; // Only use the lower 3 bits
 
                     custom_inst = custom_inst | (rs2 << 2) | (func2 << 5) | (rd << 7) | (func6 << 10);
-                
-
                 } else if (this_type == CB) { // CB type: .insn cb opcode2, func3, rs1', symbol
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rs1 = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
                     chatastring symbol = c.arg5;
 
-                    //custom_inst = custom_inst | 
+                    if (auto num = to_num<int32_t>(symbol); num.has_value()) {
+                        custom_inst = custom_inst | (((num.value() >> 5) & 0b1) << 2) | (((num.value() >> 1) & 0b11) << 3) | (((num.value() >> 6) & 0b11) << 5) | (rs1 << 7) | (((num.value() >> 3) & 0b11) << 10) | (((num.value() >> 8) & 0b1) << 12) | (func3 << 13);
+                    } else {
+                        c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = CB});
+                        custom_inst = custom_inst | (rs1 << 7) | (func3 << 13);
+                    }
                 } else if (this_type == CJ) { // CJ type: .insn cj opcode2, func3, symbol
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     chatastring symbol = c.arg4;
 
-                    // custom_inst =
-                } else if (this_type == CJ) { //CJ type: .insn cj opcode2, func3, symbol
-                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
-                    chatastring symbol = c.arg4;
-
-                    // custom_inst = 
+                    if (auto num = to_num<int32_t>(symbol); num.has_value()) {
+                        custom_inst = custom_inst | (((num.value() >> 5) & 0b1) << 2) | (((num.value() >> 1) & 0b111) << 3) | (((num.value() >> 7) & 0b1) << 6) | (((num.value() >> 6) & 0b1) << 7) | (((num.value() >> 10) & 0b1) << 8) | (((num.value() >> 8) & 0b11) << 9) | (((num.value() >> 4) & 0b1) << 11) | (((num.value() >> 11) & 0b1) << 12) | (func3 << 13);
+                    } else {
+                        c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = CJ});
+                        custom_inst = custom_inst | (func3 << 13);
+                    }
                 }
             } else {
                 if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {
