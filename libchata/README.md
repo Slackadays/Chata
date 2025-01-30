@@ -109,7 +109,7 @@ Chatassembler is available with the MPL 2.0 license. This may or may not be easi
 
 ### ▫️ Other subtle differences
 
-For some instructions, `as` only supports `(reg)` as a way to represent the address stored in register `reg`. However, `reg` and `0(reg)` have the same effect, and so Chatassembler supports those in addition to `(reg)`. For example, `as` will reject `lr.w a0, a1` and `lr.w a0, 0(a1)`, but Chatassembler won't. 
+For some instructions, `as` only supports `(reg)` as a way to represent the value at the address stored in register `reg`. However, `reg` and `0(reg)` have the same effect, so Chatassembler supports those in addition to `(reg)`. For example, `as` will reject `lr.w a0, a1` and `lr.w a0, 0(a1)`, but Chatassembler won't. 
 
 ## Why Chatassembler?
 

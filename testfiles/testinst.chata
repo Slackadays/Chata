@@ -1,1 +1,1 @@
-.option arch, rv64imac
+.insn r 0b1111111, 0b111, 0b1111111, x0, x1, x2

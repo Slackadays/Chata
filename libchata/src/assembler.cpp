@@ -910,10 +910,12 @@ void handle_directives(assembly_context& c) {
                 if (fast_eq(c.arg1, name)) {
                     is_type = true;
                     this_type = type;
+                    DBG(std::cout << "Found type: " << name << std::endl;)
                     break;
                 }
             }
             if (is_type) {
+                DBG(std::cout << "Making a custom type instruction" << std::endl;)
                 auto get_extra_args = [&]() -> chatavector<chatastring> {
                     // Parse all the extra args from c.arg_extra, which are separated by commas and whitespace
                     chatavector<chatastring> args;
