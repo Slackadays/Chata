@@ -891,17 +891,19 @@ void handle_directives(assembly_context& c) {
         // .insn <insn_length>, <value> = make an instruction with length <insn_length> and content <value> (verify length)
         // .insn <type> <fields> = make an instruction with type <type> and fields <fields>
         
-        uint32_t custom_inst;
+        uint32_t custom_inst = 0;
+        uint8_t inst_len = 0;
+
         using enum RVInstructionFormat;
         const std::array<std::pair<std::string_view, RVInstructionFormat>, 38> type_names = {
                 {{"r", R},     {"i", I},        {"s", S},        {"b", Branch},   {"u", U},     {"j", J},       {"r4", R4},        {"cr", CR},    {"ci", CI},   {"css", CSS},
                  {"ciw", CIW}, {"cl", CL},      {"cs", CS},      {"ca", CA},      {"cb", CB},   {"cj", CJ},     {"vl", VL},        {"vls", VLS},  {"vlx", VLX}, {"vs", VS},
                  {"vss", VSS}, {"vsx", VSX},    {"vlr", VLR},    {"ivv", IVV},    {"fvv", FVV}, {"mvv", MVV},   {"ivi", IVI},      {"ivx", IVX},  {"fvf", FVF}, {"mvx", MVX},
                  {"clb", CLB}, {"csb", CSBfmt}, {"clh", CLHfmt}, {"csh", CSHfmt}, {"cu", CU},   {"cmmv", CMMV}, {"cmjt", CMJTfmt}, {"cmpp", CMPP}}};
-        uint8_t required_length = 0;
         if (!c.arg1.empty() && c.arg2.empty()) {
             if (auto num = to_num<uint32_t>(c.arg1); num.has_value()) {
                 custom_inst = num.value();
+                inst_len = (custom_inst & 0xffff0000) ? 4 : 2;
             }
         } else if (!c.arg1.empty() && !c.arg2.empty()) {
             RVInstructionFormat this_type;
@@ -949,6 +951,7 @@ void handle_directives(assembly_context& c) {
                     uint8_t rs2 = string_to_register(get_extra_args().at(0), c).encoding;
 
                     custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func7 << 25);
+                    inst_len = 4;
                 } else if (this_type == R && get_extra_args().size() == 2) { // R with 4 args
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func2 = to_num<uint8_t>(c.arg4).value();
@@ -958,6 +961,7 @@ void handle_directives(assembly_context& c) {
                     uint8_t rs3 = string_to_register(get_extra_args().at(1), c).encoding;
 
                     custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
+                    inst_len = 4;
                 } else if (this_type == R4) {
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func2 = to_num<uint8_t>(c.arg4).value();
@@ -967,19 +971,31 @@ void handle_directives(assembly_context& c) {
                     uint8_t rs3 = string_to_register(get_extra_args().at(1), c).encoding;
 
                     custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
-                } else if (this_type == I && !c.arg6.empty()) {
+                    inst_len = 4;
+                } else if (this_type == I && !c.arg6.empty()) { // I type: .insn i opcode7, func3, rd, rs1, simm12
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rd = string_to_register(c.arg4, c).encoding;
                     uint8_t rs1 = string_to_register(c.arg5, c).encoding;
                     int32_t simm12 = to_num<int32_t>(c.arg6).value();
 
                     custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | ((simm12 & 0xFFF) << 20);
-                } else if (this_type == S) {
+                    inst_len = 4;
+                } else if (this_type == I && c.arg6.empty()) { // I type: .insn i opcode7, func3, rd, simm12(rs1)
+                    uint8_t func3 = to_num<uint8_t>(c.arg3).value();
+                    uint8_t rd = string_to_register(c.arg4, c).encoding;
+                    auto [simm12, temp] = decode_offset_plus_reg(c.arg5);
+                    uint8_t rs1 = string_to_register(temp, c).encoding;
+
+                    custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | ((simm12 & 0xFFF) << 20);
+                    inst_len = 4;
+                } else if (this_type == S) { // S type: .insn s opcode7, func3, rs2, simm12(rs1)
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rs2 = string_to_register(c.arg4, c).encoding;
-                    auto [simm12, rs1] = decode_offset_plus_reg(c.arg5);
+                    auto [simm12, temp] = decode_offset_plus_reg(c.arg5);
+                    uint8_t rs1 = string_to_register(temp, c).encoding;
 
-                    //custom_inst = 
+                    custom_inst = custom_inst | ((simm12 & 0b11111) << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | ((simm12 >> 5) << 25); 
+                    inst_len = 4;
                 } else if (this_type == Branch) { // B type: .insn s opcode7, func3, rs1, rs2, symbol
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rs1 = string_to_register(c.arg4, c).encoding;
@@ -992,11 +1008,14 @@ void handle_directives(assembly_context& c) {
                         c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = Branch});
                         custom_inst = custom_inst | (func3 << 12) | (rs1 << 15) | (rs2 << 20);
                     }
+
+                    inst_len = 4;
                 } else if (this_type == U) { // U type: .insn u opcode7, rd, simm20
                     uint8_t rd = string_to_register(c.arg3, c).encoding;
                     int32_t simm20 = to_num<int32_t>(c.arg4).value();
 
                     custom_inst = (rd << 7) | ((simm20 & 0xFFFFF) << 12);
+                    inst_len = 4;
                 } else if (this_type == J) { // J type: .insn j opcode7, rd, symbol
                     uint8_t rd = string_to_register(c.arg3, c).encoding;
                     chatastring symbol = c.arg4;
@@ -1007,30 +1026,35 @@ void handle_directives(assembly_context& c) {
                         c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = J});
                         custom_inst = custom_inst | (rd << 7);
                     }
+                    inst_len = 4;
                 } else if (this_type == CR) { // CR type: .insn cr opcode2, func4, rd, rs2
                     uint8_t func4 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rd = string_to_register(c.arg4, c).encoding;
                     uint8_t rs2 = string_to_register(c.arg5, c).encoding;
 
                     custom_inst = custom_inst | (rs2 << 2) | (rd << 7) | (func4 << 12);
+                    inst_len = 2;
                 } else if (this_type == CI) { // CI type: .insn ci opcode2, func3, rd, simm6
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rd = string_to_register(c.arg4, c).encoding;
                     int32_t simm6 = to_num<int32_t>(c.arg5).value();
 
                     custom_inst = ((simm6 & 0b111111) << 2) | (rd << 7) | ((simm6 >> 5) << 12) | (func3 << 13);
+                    inst_len = 2;
                 } else if (this_type == CIW) { // CIW type: .insn ciw opcode2, func3, rd', uimm8
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rd = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
                     int32_t uimm8 = to_num<int32_t>(c.arg5).value();
 
                     custom_inst = custom_inst | (rd << 2) | ((uimm8 & 0xFF) << 5) | (func3 << 13);
+                    inst_len = 2;
                 } else if (this_type == CSS) { // CSS type: .insn css opcode2, func3, rd, uimm6
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rd = string_to_register(c.arg4, c).encoding;
                     int32_t uimm6 = to_num<int32_t>(c.arg5).value();
 
                     custom_inst = custom_inst | (rd << 2) | ((uimm6 & 0b111111) << 7) | (func3 << 13);
+                    inst_len = 2;
                 } else if (this_type == CL) { // CL type: .insn cl opcode2, func3, rd', uimm5(rs1')
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rd = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
@@ -1039,6 +1063,7 @@ void handle_directives(assembly_context& c) {
                     rs1 = rs1 & 0b111; // Only use the lower 3 bits
 
                     custom_inst = custom_inst | (rd << 2) | ((uimm5 & 0b11) << 5) | (rs1 << 7) | (((uimm5 >> 2) & 0b111) << 10) | (func3 << 13);
+                    inst_len = 2;
                 } else if (this_type == CS) { //CS type: .insn cs opcode2, func3, rs2', uimm5(rs1')
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rs2 = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
@@ -1047,6 +1072,7 @@ void handle_directives(assembly_context& c) {
                     rs1 = rs1 & 0b111; // Only use the lower 3 bits
 
                     custom_inst = custom_inst | (rs2 << 2) | ((uimm5 & 0b11) << 5) | (rs1 << 7) | (((uimm5 >> 2) & 0b111) << 10) | (func3 << 13);
+                    inst_len = 2;
                 } else if (this_type == CA) { // CA type: .insn ca opcode2, func6, func2, rd', rs2'
                     uint8_t func6 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func2 = to_num<uint8_t>(c.arg4).value();
@@ -1054,6 +1080,7 @@ void handle_directives(assembly_context& c) {
                     uint8_t rs2 = string_to_register(c.arg6, c).encoding & 0b111; // Only use the lower 3 bits
 
                     custom_inst = custom_inst | (rs2 << 2) | (func2 << 5) | (rd << 7) | (func6 << 10);
+                    inst_len = 2;
                 } else if (this_type == CB) { // CB type: .insn cb opcode2, func3, rs1', symbol
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rs1 = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
@@ -1065,6 +1092,7 @@ void handle_directives(assembly_context& c) {
                         c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = CB});
                         custom_inst = custom_inst | (rs1 << 7) | (func3 << 13);
                     }
+                    inst_len = 2;
                 } else if (this_type == CJ) { // CJ type: .insn cj opcode2, func3, symbol
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     chatastring symbol = c.arg4;
@@ -1075,36 +1103,28 @@ void handle_directives(assembly_context& c) {
                         c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = CJ});
                         custom_inst = custom_inst | (func3 << 13);
                     }
+                    inst_len = 2;
                 }
             } else {
                 if (auto num = to_num<uint32_t>(c.arg2); num.has_value()) {
                     custom_inst = num.value();
+                    inst_len = (custom_inst & 0xffff0000) ? 4 : 2;
                 }
                 if (auto num = to_num<uint8_t>(c.arg1); num.has_value()) {
-                    required_length = num.value();
+                    if (num.value() != inst_len) {
+                        throw ChataError(ChataErrorType::Assembler, "Instruction length mismatch: expected " + to_chatastring(num.value()) + ", got " + to_chatastring  (inst_len), c.line, c.column);
+                    }
                 }
+                
             }
         }
 
-        auto inst_len = [&] {
-            if (custom_inst & 0xFFFF0000) {
-                return 4;
-            } else {
-                return 2;
-            }
-        };
-
-        if (!c.arg1.empty() && !c.arg2.empty()) {
-            if (required_length != inst_len()) {
-                throw ChataError(ChataErrorType::Assembler, "Instruction length mismatch: expected " + to_chatastring(required_length) + ", got " + to_chatastring(inst_len()), c.line, c.column);
-            }
-        }
-        if (inst_len() == 4) {
+        if (inst_len == 4) {
             c.machine_code.push_back(custom_inst & 0xFF);
             c.machine_code.push_back((custom_inst >> 8) & 0xFF);
             c.machine_code.push_back((custom_inst >> 16) & 0xFF);
             c.machine_code.push_back((custom_inst >> 24) & 0xFF);
-        } else {
+        } else if (inst_len == 2) {
             c.machine_code.push_back(custom_inst & 0xFF);
             c.machine_code.push_back((custom_inst >> 8) & 0xFF);
         }
@@ -1257,7 +1277,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
 
     DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
-    DBG(for (auto c : c.machine_code) { printf("%02x ", c); })
+    DBG(for (const auto& c : c.machine_code) { printf("%02x ", c); })
 
     DBG(std::cout << "Let's compare this against the reference, gcc as" << std::endl;)
 

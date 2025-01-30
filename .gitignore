@@ -51,3 +51,5 @@ credentials.sh
 test.cpp
 
 test
+
+*.bin

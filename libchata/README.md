@@ -107,9 +107,11 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 
 Chatassembler is available with the MPL 2.0 license. This may or may not be easier to include in your project than the GPL, but this depends on your situation.
 
-### ▫️ Other subtle differences
+### ▫️ More flexible
 
 For some instructions, `as` only supports `(reg)` as a way to represent the value at the address stored in register `reg`. However, `reg` and `0(reg)` have the same effect, so Chatassembler supports those in addition to `(reg)`. For example, `as` will reject `lr.w a0, a1` and `lr.w a0, 0(a1)`, but Chatassembler won't. 
+
+In general, Chatassembler accepts other instructions that `as` would reject because the RISC-V standard doesn't forbid them. Another example is with `.insn`, where `as` places constraints on the opcode field, but such constraints on custom instructions do not exist in the standard.
 
 ## Why Chatassembler?
 

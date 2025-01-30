@@ -18,7 +18,7 @@ constexpr std::string_view libchata_version_str = PROJECT_VERSION;
 GlobalMemoryBank libchata_internal::memory_bank;
 
 void* GlobalMemoryBank::grab_some_memory(size_t requested) {
-    DBG(std::cout << "Allocating " << requested << " bytes, " << used << " used" << std::endl;)
+    //DBG(std::cout << "Allocating " << requested << " bytes, " << used << " used" << std::endl;)
     if (requested + used > pool.size()) {
         throw ChataError(ChataErrorType::Other, "Out of memory!");
     }
@@ -28,7 +28,7 @@ void* GlobalMemoryBank::grab_some_memory(size_t requested) {
 }
 
 void* GlobalMemoryBank::grab_aligned_memory(size_t requested) {
-    DBG(std::cout << "Allocating " << requested << " aligned bytes" << std::endl;)
+    //DBG(std::cout << "Allocating " << requested << " aligned bytes" << std::endl;)
     size_t current_offset = reinterpret_cast<size_t>(pool.data() + used);
     size_t aligned_offset = (current_offset + pagesize - 1) & ~(pagesize - 1);
     size_t padding = aligned_offset - current_offset;
