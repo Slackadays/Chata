@@ -1014,7 +1014,7 @@ void handle_directives(assembly_context& c) {
                     uint8_t rd = string_to_register(c.arg3, c).encoding;
                     int32_t simm20 = to_num<int32_t>(c.arg4).value();
 
-                    custom_inst = (rd << 7) | ((simm20 & 0xFFFFF) << 12);
+                    custom_inst = custom_inst | (rd << 7) | ((simm20 & 0xFFFFF) << 12);
                     inst_len = 4;
                 } else if (this_type == J) { // J type: .insn j opcode7, rd, symbol
                     uint8_t rd = string_to_register(c.arg3, c).encoding;
@@ -1039,7 +1039,7 @@ void handle_directives(assembly_context& c) {
                     uint8_t rd = string_to_register(c.arg4, c).encoding;
                     int32_t simm6 = to_num<int32_t>(c.arg5).value();
 
-                    custom_inst = ((simm6 & 0b111111) << 2) | (rd << 7) | ((simm6 >> 5) << 12) | (func3 << 13);
+                    custom_inst = custom_inst | ((simm6 & 0b111111) << 2) | (rd << 7) | ((simm6 >> 5) << 12) | (func3 << 13);
                     inst_len = 2;
                 } else if (this_type == CIW) { // CIW type: .insn ciw opcode2, func3, rd', uimm8
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();

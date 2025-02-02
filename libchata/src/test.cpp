@@ -102,8 +102,18 @@ int main() {
     as(".insn i 0b1010111, 0b000, x15, x6, 20", 0xd7074301);
     as(".insn i 0b1010111, 0b000, x15, 20(x6)", 0xd7074301);
     as(".insn s 0b1010111, 0b000, x15, 20(x6)", 0x570af300);
-    //as("")
-
+    as(".insn b 0b1001011, 0b111, a2, a3, 64", 0x4b70d604);
+    as(".insn u 0b000011, x10, 98", 0x03250600);
+    as(".insn j 0b1011111, x20, 10", 0x5f0aa000);
+    as(".insn cr 0b10, 0b1111, x8, x18", 0x4af4);
+    as(".insn ci 0b01, 0b101, t0, 16", 0xc1a2);
+    as(".insn ciw 0b10, 0b000, x8, 4", 0x8200);
+    as(".insn css 0b10, 0b101, x27, 14", 0x6ea7);
+    as(".insn cl 0b10, 0b011, x9, 4(x10)", 0x0665);
+    as(".insn cs 0b00, 0b100, x11, 8(x12)", 0x0c8a);
+    as(".insn ca 0b10, 0b101010, 0b11, x13, x14", 0xfaaa);
+    as(".insn cb 0b00, 0b011, x15, 40", 0x8467);
+    as(".insn cj 0b10, 0b000, 40", 0x2600);
     as("lui a0, 12345", 0x37950303);
     as("lui a0, 0x12345", 0x37553412);
     as("lui a0, 0b100", 0x37450000);
