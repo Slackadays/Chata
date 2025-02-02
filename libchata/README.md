@@ -19,7 +19,9 @@ Here's more on that. Chatassembler is...
 
 ### ▫️ Complete
 
-Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zbb **(WIP)**, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, pseudoinstructions, custom instructions, labels, and many other directives **(WIP)**. The endgame is full compatibility with GCC's `as` excluding certain features (more below).
+Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zbb **(WIP)**, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, pseudoinstructions, custom instructions, labels, and many other directives **(WIP)**. 
+
+The endgame is full compatibility with GCC's `as` excluding certain features (more below).
 
 ### ▫️ Not a binary
 
@@ -31,11 +33,13 @@ There's only one (1) function with one (1) required parameter. Truly effortless.
 
 ### ▫️ Unrelated to GCC or LLVM
 
-Chatassembler shares zero (0) code with GCC or LLVM, which provides a screaming opportunity to create an alternative reference implementation of RISC-V assembly.
+Chatassembler shares zero (0) code with GCC or LLVM. That means we can make it a third reference implementation of RISC-V assembly!
 
 ### ▫️ Tested
 
-The Chatassembler testsuite currently has 500+ tests covering all supported instructions and directives and other cases too.
+The Chatassembler testsuite currently has 580+ tests covering all supported instructions and directives and other cases too.
+
+Interestingly, this has led to Chatassembler revealing lots of bugs in `as` including ones causing internal errors!
 
 ### ▫️ Fast! 🏎️
 
