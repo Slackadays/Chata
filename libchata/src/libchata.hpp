@@ -52,6 +52,12 @@ enum class RVInstructionSet : uint8_t {
 
 namespace libchata_internal {
 
+#if defined(DEBUG)
+#define DBG(x) x
+#else
+#define DBG(x)
+#endif
+
 class InternalFile;
 }
 
@@ -198,38 +204,71 @@ template <typename T>
 std::optional<T> to_num(const chatastring& str) {
     T result = 0;
     std::from_chars_result res;
-    if (str.size() > 2) {
-        if (str[0] == '0') {
-            if (str[1] == 'x' || str[1] == 'X') {
-                res = std::from_chars(str.data() + 2, str.data() + str.size(), result, 16);
-            } else if (str[1] == 'b' || str[1] == 'B') {
-                res = std::from_chars(str.data() + 2, str.data() + str.size(), result, 2);
-            } else {
-                res = std::from_chars(str.data(), str.data() + str.size(), result);
+    int relocation_mode = 0; // 0 = normal, -1 = %lo(symbol), 1 = %hi(symbol)
+    size_t relocation_offset = 0;
+    // Check if we follow the format %lo(symbol) or %hi(symbol)
+    if (str.size() > 5) {
+        DBG(std::cout << "Checking for relocation mode" << std::endl;)
+        if (str[0] == '%') {
+            if (str[1] == 'l' && str[2] == 'o' && str[3] == '(' && str[str.size() - 1] == ')') {
+                DBG(std::cout << "Found %lo relocation mode" << std::endl;)
+                relocation_mode = -1;
+                relocation_offset = 4;
+            } else if (str[1] == 'h' && str[2] == 'i' && str[3] == '(' && str[str.size() - 1] == ')') {
+                DBG(std::cout << "Found %hi relocation mode" << std::endl;)
+                relocation_mode = 1;
+                relocation_offset = 4;
             }
-        } else if (str[0] == '-' && str[1] == '0') {
+        }
+    }
+
+    if (str.size() > 2) {
+        if (str[0 + relocation_offset] == '0') {
+            if (str[1 + relocation_offset] == 'x' || str[1 + relocation_offset] == 'X') {
+                res = std::from_chars(str.data() + 2 + relocation_offset, str.data() + str.size(), result, 16);
+            } else if (str[1 + relocation_offset] == 'b' || str[1 + relocation_offset] == 'B') {
+                res = std::from_chars(str.data() + 2 + relocation_offset, str.data() + str.size(), result, 2);
+            } else {
+                res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
+            }
+        } else if (str[0 + relocation_offset] == '-' && str[1 + relocation_offset] == '0') {
             if (str.size() > 3) {
-                if (str[2] == 'x' || str[2] == 'X') {
-                    res = std::from_chars(str.data() + 3, str.data() + str.size(), result, 16);
+                if (str[2 + relocation_offset] == 'x' || str[2 + relocation_offset] == 'X') {
+                    res = std::from_chars(str.data() + 3 + relocation_offset, str.data() + str.size(), result, 16);
                     result = -result;
-                } else if (str[2] == 'b' || str[2] == 'B') {
-                    res = std::from_chars(str.data() + 3, str.data() + str.size(), result, 2);
+                } else if (str[2 + relocation_offset] == 'b' || str[2 + relocation_offset] == 'B') {
+                    res = std::from_chars(str.data() + 3 + relocation_offset, str.data() + str.size(), result, 2);
                     result = -result;
                 } else {
-                    res = std::from_chars(str.data(), str.data() + str.size(), result);
+                    res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
                 }
             } else {
-                res = std::from_chars(str.data(), str.data() + str.size(), result);
+                res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
             }
         } else {
-            res = std::from_chars(str.data(), str.data() + str.size(), result);
+            res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
         }
     } else {
-        res = std::from_chars(str.data(), str.data() + str.size(), result);
+        res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
     }
-    if (res.ec != std::errc() || res.ptr != str.data() + str.size()) {
+
+    DBG(std::cout << "result = " << result << std::endl;)
+
+    if (relocation_offset != 0) {
+        relocation_offset = -1;
+    }
+
+    if (res.ec != std::errc() || res.ptr != str.data() + str.size() + relocation_offset) {
+        DBG(std::cout << "Conversion failed" << std::endl;)
         return std::nullopt;
     }
+
+    if (relocation_mode == -1) {
+        result = result & 0xFFF;
+    } else if (relocation_mode == 1) {
+        result = (result >> 12) & 0xFFFFF;
+    }
+
     return result;
 }
 

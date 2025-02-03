@@ -184,7 +184,7 @@ std::pair<int, chatastring> decode_offset_plus_reg(const chatastring& str) {
         offset = -offset;
     }
     if (str.at(j) != '(') {
-        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + str);
+        throw ChataError(ChataErrorType::Compiler, "Invalid register immediate " + str);
     }
     j++;
     chatastring reg;

@@ -83,7 +83,7 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 | `.insn <value>` | ☑️ |
 | `.insn <insn_length>, <value>` | ☑️ |
 | `.insn <type> <fields>` | ☑️ |
-| Relocation functions | 🪛 |
+| Relocation functions | `%hi(symbol)`: ☑️ <br> `%lo(symbol)`: ☑️ <br> Others: 💀 |
 | Labels | ☑️ |
 | Absolute addressing | 💀 |
 | Relative addressing | 💀 |
