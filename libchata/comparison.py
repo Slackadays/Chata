@@ -69,6 +69,6 @@ plt.xticks(np.arange(2) + barwidth, [riscv_platform, x86_platform])
 plt.title(chart_title)
 
 # Move the legend a little down
-plt.legend(bbox_to_anchor=(.5, .65), shadow=True)
+plt.legend(bbox_to_anchor=(.58, .87), shadow=True)
 
 plt.show()
