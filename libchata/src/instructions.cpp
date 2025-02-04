@@ -14,7 +14,7 @@ using enum RVInstructionID;
 using enum RVInstructionSet;
 using std::nullopt;
 
-const std::array<rvinstruction, 1039> instructions = {
+const std::array<rvinstruction, 1072> instructions = {
         {{"lui", LUI, U, OP_LUI, 0b000, RV32I, 4},
          {"auipc", AUIPC, U, OP_AUIPC, 0b000, RV32I, 4},
          {"jal", JAL, J, OP_JAL, 0b000, RV32I, 4},
@@ -384,12 +384,46 @@ const std::array<rvinstruction, 1039> instructions = {
          {"cm.mva01s", CMMVA01S, CMMV, OP_C2, 0b10101111, Zcmp, 2},
          {"cm.jt", CMJT, CMJTfmt, OP_C2, 0b101000, Zcmt, 2},
          {"cm.jalt", CMJALT, CMJTfmt, OP_C2, 0b101000, Zcmt, 2},
+         {"fli.s", FLIS, R, OP_FP, 0b1111000000, RV32F, Zfa, 4, {.custom_reg_val = 0b00001}},
+         {"fli.d", FLID, R, OP_FP, 0b1111001000, RV32D, Zfa, 4, {.custom_reg_val = 0b00001}},
+         {"fli.q", FLIQ, R, OP_FP, 0b1111011000, RV32Q, Zfa, 4, {.custom_reg_val = 0b00001}},
+         {"fli.h", FLIH, R, OP_FP, 0b1111010000, RV32Zfh, Zfa, 4, {.custom_reg_val = 0b00001}},
+         {"fminm.s", FMINMS, R, OP_FP, 0b0010100010, RV32F, Zfa, 4},
+         {"fmaxm.s", FMAXMS, R, OP_FP, 0b0010100011, RV32F, Zfa, 4},
+         {"fminm.d", FMINMD, R, OP_FP, 0b0010101010, RV32D, Zfa, 4},
+         {"fmaxm.d", FMAXMD, R, OP_FP, 0b0010101011, RV32D, Zfa, 4},
+         {"fminm.q", FMINMQ, R, OP_FP, 0b0010111010, RV32Q, Zfa, 4},
+         {"fmaxm.q", FMAXMQ, R, OP_FP, 0b0010111011, RV32Q, Zfa, 4},
+         {"fminm.h", FMINMH, R, OP_FP, 0b0010110010, RV32Zfh, Zfa, 4},
+         {"fmaxm.h", FMAXMH, R, OP_FP, 0b0010110011, RV32Zfh, Zfa, 4},
+         {"fround.s", FROUNDS, R, OP_FP, 0b0100000000, RV32F, Zfa, 4, {.custom_reg_val = 0b00100, .use_frm_for_funct3 = true}},
+         {"froundnx.s", FROUNDNXS, R, OP_FP, 0b0100000000, RV32F, Zfa, 4, {.custom_reg_val = 0b00101, .use_frm_for_funct3 = true}},
+         {"fround.d", FROUNDD, R, OP_FP, 0b0100001000, RV32D, Zfa, 4, {.custom_reg_val = 0b00100, .use_frm_for_funct3 = true}},
+         {"froundnx.d", FROUNDNXD, R, OP_FP, 0b0100001000, RV32D, Zfa, 4, {.custom_reg_val = 0b00101, .use_frm_for_funct3 = true}},
+         {"fround.h", FROUNDH, R, OP_FP, 0b0100010000, RV32Zfh, Zfa, 4, {.custom_reg_val = 0b00100, .use_frm_for_funct3 = true}},
+         {"froundnx.h", FROUNDNXH, R, OP_FP, 0b0100010000, RV32Zfh, Zfa, 4, {.custom_reg_val = 0b00101, .use_frm_for_funct3 = true}},
+         {"fround.q", FROUNDQ, R, OP_FP, 0b0100011000, RV32Q, Zfa, 4, {.custom_reg_val = 0b00100, .use_frm_for_funct3 = true}},
+         {"froundnx.q", FROUNDQ, R, OP_FP, 0b0100011000, RV32Q, Zfa, 4, {.custom_reg_val = 0b00101, .use_frm_for_funct3 = true}},
+         {"fcvtmod.w.d", FCVTMODWD, R, OP_FP, 0b1100001000, RV32D, Zfa, 4, {.custom_reg_val = 0b01000, .use_frm_for_funct3 = true}}, // This one needs 0b001 for frm (RTZ), and that "rtz" is explicitly
+                                                                                                                                     // included in the assembly, like fcvtmod.w.d rd, rs1, rtz
+         {"fmvh.x.d", FMVHXD, R, OP_FP, 0b1110001000, RV32D, Zfa, 4, {.custom_reg_val = 0b00001}},
+         {"fmvp.d.x", FMVPDX, R, OP_FP, 0b1011001000, RV32D, Zfa, 4},
+         {"fmvh.x.q", FMVHXQ, R, OP_FP, 0b1110011000, RV32Q, Zfa, 4, {.custom_reg_val = 0b00001}},
+         {"fmvp.q.x", FMVPQX, R, OP_FP, 0b1011011000, RV32Q, Zfa, 4},
+         {"fleq.s", FLEQS, R, OP_FP, 0b1010000100, RV32F, Zfa, 4},
+         {"fltq.s", FLTQS, R, OP_FP, 0b1010000101, RV32F, Zfa, 4},
+         {"fleq.d", FLEQD, R, OP_FP, 0b1010001100, RV32D, Zfa, 4},
+         {"fltq.d", FLTQD, R, OP_FP, 0b1010001101, RV32D, Zfa, 4},
+         {"fleq.h", FLEQH, R, OP_FP, 0b1010010100, RV32Zfh, Zfa, 4},
+         {"fltq.h", FLTQH, R, OP_FP, 0b1010010101, RV32Zfh, Zfa, 4},
+         {"fleq.q", FLEQQ, R, OP_FP, 0b1010011100, RV32Q, Zfa, 4},
+         {"fltq.q", FLTQQ, R, OP_FP, 0b1010011101, RV32Q, Zfa, 4},
          {"add.uw", ADDUW, R, OP_32, 0b0000100000, B, 4},
          {"andn", ANDN, R, OP_OP, 0b0100000111, B, 4},
          {"bclr", BCLR, R, OP_OP, 0b0100100001, B, 4},
          {"bclri", BCLRI, R, OP_IMM, 0b0100100001, B, 4, {.use_imm_for_rs2 = true}}, // This one "requires" an extra bit in shamt for RV64, but in reality it's a special case where shamt is big
-                                                                                        // enough to clear a 64 bit register, so we just add the extra bit to rs2 and let the extra available space
-                                                                                        // handle it transparently
+                                                                                     // enough to clear a 64 bit register, so we just add the extra bit to rs2 and let the extra available space
+                                                                                     // handle it transparently
          {"bext", BEXT, R, OP_OP, 0b0100100101, B, 4},
          {"bexti", BEXTI, R, OP_IMM, 0b0100100101, B, 4, {.use_imm_for_rs2 = true}}, // Same idea as bclri
          {"binv", BINV, R, OP_OP, 0b0110100001, B, 4},

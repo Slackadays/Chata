@@ -47,7 +47,7 @@ chatastring to_chatastring(const int& num) {
     for (auto i = temp.data(); i < res.ptr; i++) {
         result.push_back(*i);
     }
-    //DBG(std::cout << "result: " << result << std::endl;)
+    // DBG(std::cout << "result: " << result << std::endl;)
     return result;
 }
 

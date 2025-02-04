@@ -383,6 +383,39 @@ enum class RVInstructionID : uint16_t {
     CMMVA01S,
     CMJT, // Zcmt
     CMJALT,
+    FLIS, // Zfa
+    FLID,
+    FLIQ,
+    FLIH,
+    FMINMS,
+    FMAXMS,
+    FMINMD,
+    FMAXMD,
+    FMINMH,
+    FMAXMH,
+    FMINMQ,
+    FMAXMQ,
+    FROUNDS,
+    FROUNDNXS,
+    FROUNDD,
+    FROUNDNXD,
+    FROUNDH,
+    FROUNDNXH,
+    FROUNDQ,
+    FROUNDNXQ,
+    FCVTMODWD,
+    FMVHXD,
+    FMVPDX,
+    FMVHXQ,
+    FMVPQX,
+    FLEQS,
+    FLTQS,
+    FLEQD,
+    FLTQD,
+    FLEQH,
+    FLTQH,
+    FLEQQ,
+    FLTQQ,
     ADDUW, // B
     ANDN,
     CLMUL,
@@ -1192,6 +1225,6 @@ struct rvinstruction {
             , ssargs(ssargs) {} // With subset
 };
 
-extern const std::array<rvinstruction, 1039> instructions;
+extern const std::array<rvinstruction, 1072> instructions;
 
 } // namespace libchata_internal

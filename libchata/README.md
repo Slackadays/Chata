@@ -19,7 +19,7 @@ Here's more on that. Chatassembler is...
 
 ### ▫️ Complete
 
-Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zbb **(WIP)**, Zcf, Zcmt, B **(WIP)**, and V **(WIP)** instruction sets, pseudoinstructions, custom instructions, labels, and many other directives **(WIP)**. 
+Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zbb **(WIP)**, Zcf, Zcmt, Zfa, B **(WIP)**, and V **(WIP)** instruction sets, pseudoinstructions, custom instructions, labels, and many other directives **(WIP)**. 
 
 The endgame is full compatibility with GCC's `as` excluding certain features (more below).
 
@@ -91,8 +91,8 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 | Load Immediate | ☑️ |
 | Load Upper Immediate’s Immediate | ☑️ |
 | Signed Immediates for I- and S-Type Instructions | ☑️ |
-| Floating-point literals | ❌* |
-| Load Floating-point Immediate | ❌ |
+| Floating-point literals | ☑️ |
+| Load Floating-point Immediate | `fli`: 🪛 <br> `.float`: 💀 <br> `.double`: 💀 |
 | Load Address | 💀 |
 | Load Local Address | 💀 |
 | Load Global Address | 💀 |
@@ -173,6 +173,7 @@ enum class RVInstructionSet : uint8_t {
     Zcd,
     Zcf,
     Zcmt,
+    Zfa,
     B,
     V
 };

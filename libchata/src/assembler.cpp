@@ -46,7 +46,7 @@ int string_to_label(chatastring& str, assembly_context& c) {
 }
 
 const rvregister& string_to_register(const chatastring& str, assembly_context& c) {
-    //return registers[4];
+    // return registers[4];
     if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
         return registers[reg];
     }
@@ -674,11 +674,10 @@ void make_inst(assembly_context& c) {
     } else if (type == CU) {
 
     } else if (type == CMMV) {
-         
-    } else if (type == CMJTfmt) {
-        
-    } else if (type == CMPP) {
 
+    } else if (type == CMJTfmt) {
+
+    } else if (type == CMPP) {
     }
 
     DBG(std::cout << "Instruction made" << std::endl;)
@@ -700,9 +699,9 @@ void solve_label_offsets(assembly_context& c) {
                     }
                     int32_t offset = c.label_locs.at(j).loc - c.label_locs.at(i).loc;
 
-                    //std::cout << "Loc for i: " << c.label_locs.at(i).loc << ", loc for j: " << c.label_locs.at(j).loc << std::endl;
+                    // std::cout << "Loc for i: " << c.label_locs.at(i).loc << ", loc for j: " << c.label_locs.at(j).loc << std::endl;
 
-                    //std::cout << "Offset for label " << c.label_locs.at(i).id << ": " << offset << std::endl;
+                    // std::cout << "Offset for label " << c.label_locs.at(i).id << ": " << offset << std::endl;
 
                     if (c.label_locs.at(i).format == Branch) {
                         inst &= 0b00000001111111111111000001111111;
@@ -890,7 +889,7 @@ void handle_directives(assembly_context& c) {
         // .insn <value> = make an instruction with content <value>
         // .insn <insn_length>, <value> = make an instruction with length <insn_length> and content <value> (verify length)
         // .insn <type> <fields> = make an instruction with type <type> and fields <fields>
-        
+
         uint32_t custom_inst = 0;
         uint8_t inst_len = 0;
 
@@ -994,7 +993,7 @@ void handle_directives(assembly_context& c) {
                     auto [simm12, temp] = decode_offset_plus_reg(c.arg5);
                     uint8_t rs1 = string_to_register(temp, c).encoding;
 
-                    custom_inst = custom_inst | ((simm12 & 0b11111) << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | ((simm12 >> 5) << 25); 
+                    custom_inst = custom_inst | ((simm12 & 0b11111) << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | ((simm12 >> 5) << 25);
                     inst_len = 4;
                 } else if (this_type == Branch) { // B type: .insn s opcode7, func3, rs1, rs2, symbol
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
@@ -1003,7 +1002,8 @@ void handle_directives(assembly_context& c) {
                     chatastring symbol = c.arg6;
 
                     if (auto num = to_num<int32_t>(symbol); num.has_value()) {
-                        custom_inst = custom_inst | ((num.value() & 0b1) << 7) | (((num.value() >> 1) & 0b1111) << 8) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (((num.value() >> 5) & 0b111111) << 25) | ((num.value() >> 11) & 0b1) << 31;
+                        custom_inst = custom_inst | ((num.value() & 0b1) << 7) | (((num.value() >> 1) & 0b1111) << 8) | (func3 << 12) | (rs1 << 15) | (rs2 << 20)
+                                      | (((num.value() >> 5) & 0b111111) << 25) | ((num.value() >> 11) & 0b1) << 31;
                     } else {
                         c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = Branch});
                         custom_inst = custom_inst | (func3 << 12) | (rs1 << 15) | (rs2 << 20);
@@ -1021,7 +1021,8 @@ void handle_directives(assembly_context& c) {
                     chatastring symbol = c.arg4;
 
                     if (auto num = to_num<int32_t>(symbol); num.has_value()) {
-                        custom_inst = custom_inst | (rd << 7) | (((num.value() >> 12) & 0b11111111) << 12) | (((num.value() >> 11) & 0b1) << 20) | (((num.value() >> 1) & 0b1111111111) << 21) | (((num.value() >> 20) & 0b1) << 31);
+                        custom_inst = custom_inst | (rd << 7) | (((num.value() >> 12) & 0b11111111) << 12) | (((num.value() >> 11) & 0b1) << 20) | (((num.value() >> 1) & 0b1111111111) << 21)
+                                      | (((num.value() >> 20) & 0b1) << 31);
                     } else {
                         c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = J});
                         custom_inst = custom_inst | (rd << 7);
@@ -1064,7 +1065,7 @@ void handle_directives(assembly_context& c) {
 
                     custom_inst = custom_inst | (rd << 2) | ((uimm5 & 0b11) << 5) | (rs1 << 7) | (((uimm5 >> 2) & 0b111) << 10) | (func3 << 13);
                     inst_len = 2;
-                } else if (this_type == CS) { //CS type: .insn cs opcode2, func3, rs2', uimm5(rs1')
+                } else if (this_type == CS) { // CS type: .insn cs opcode2, func3, rs2', uimm5(rs1')
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t rs2 = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
                     auto [uimm5, rs1temp] = decode_offset_plus_reg(c.arg5);
@@ -1076,7 +1077,7 @@ void handle_directives(assembly_context& c) {
                 } else if (this_type == CA) { // CA type: .insn ca opcode2, func6, func2, rd', rs2'
                     uint8_t func6 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func2 = to_num<uint8_t>(c.arg4).value();
-                    uint8_t rd = string_to_register(c.arg5, c).encoding & 0b111; // Only use the lower 3 bits
+                    uint8_t rd = string_to_register(c.arg5, c).encoding & 0b111;  // Only use the lower 3 bits
                     uint8_t rs2 = string_to_register(c.arg6, c).encoding & 0b111; // Only use the lower 3 bits
 
                     custom_inst = custom_inst | (rs2 << 2) | (func2 << 5) | (rd << 7) | (func6 << 10);
@@ -1087,7 +1088,8 @@ void handle_directives(assembly_context& c) {
                     chatastring symbol = c.arg5;
 
                     if (auto num = to_num<int32_t>(symbol); num.has_value()) {
-                        custom_inst = custom_inst | (((num.value() >> 5) & 0b1) << 2) | (((num.value() >> 1) & 0b11) << 3) | (((num.value() >> 6) & 0b11) << 5) | (rs1 << 7) | (((num.value() >> 3) & 0b11) << 10) | (((num.value() >> 8) & 0b1) << 12) | (func3 << 13);
+                        custom_inst = custom_inst | (((num.value() >> 5) & 0b1) << 2) | (((num.value() >> 1) & 0b11) << 3) | (((num.value() >> 6) & 0b11) << 5) | (rs1 << 7)
+                                      | (((num.value() >> 3) & 0b11) << 10) | (((num.value() >> 8) & 0b1) << 12) | (func3 << 13);
                     } else {
                         c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = CB});
                         custom_inst = custom_inst | (rs1 << 7) | (func3 << 13);
@@ -1098,7 +1100,9 @@ void handle_directives(assembly_context& c) {
                     chatastring symbol = c.arg4;
 
                     if (auto num = to_num<int32_t>(symbol); num.has_value()) {
-                        custom_inst = custom_inst | (((num.value() >> 5) & 0b1) << 2) | (((num.value() >> 1) & 0b111) << 3) | (((num.value() >> 7) & 0b1) << 6) | (((num.value() >> 6) & 0b1) << 7) | (((num.value() >> 10) & 0b1) << 8) | (((num.value() >> 8) & 0b11) << 9) | (((num.value() >> 4) & 0b1) << 11) | (((num.value() >> 11) & 0b1) << 12) | (func3 << 13);
+                        custom_inst = custom_inst | (((num.value() >> 5) & 0b1) << 2) | (((num.value() >> 1) & 0b111) << 3) | (((num.value() >> 7) & 0b1) << 6) | (((num.value() >> 6) & 0b1) << 7)
+                                      | (((num.value() >> 10) & 0b1) << 8) | (((num.value() >> 8) & 0b11) << 9) | (((num.value() >> 4) & 0b1) << 11) | (((num.value() >> 11) & 0b1) << 12)
+                                      | (func3 << 13);
                     } else {
                         c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(symbol, c), .is_dest = false, .format = CJ});
                         custom_inst = custom_inst | (func3 << 13);
@@ -1112,10 +1116,9 @@ void handle_directives(assembly_context& c) {
                 }
                 if (auto num = to_num<uint8_t>(c.arg1); num.has_value()) {
                     if (num.value() != inst_len) {
-                        throw ChataError(ChataErrorType::Assembler, "Instruction length mismatch: expected " + to_chatastring(num.value()) + ", got " + to_chatastring  (inst_len), c.line, c.column);
+                        throw ChataError(ChataErrorType::Assembler, "Instruction length mismatch: expected " + to_chatastring(num.value()) + ", got " + to_chatastring(inst_len), c.line, c.column);
                     }
                 }
-                
             }
         }
 

@@ -46,6 +46,7 @@ enum class RVInstructionSet : uint8_t {
     Zcd,
     Zcf,
     Zcmt,
+    Zfa,
     B,
     V
 };
@@ -59,7 +60,7 @@ namespace libchata_internal {
 #endif
 
 class InternalFile;
-}
+} // namespace libchata_internal
 
 struct InputFile {
     std::string_view data;
