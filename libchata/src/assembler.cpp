@@ -7,10 +7,12 @@
 #include "pseudoinstructions.hpp"
 #include "registers.hpp"
 #include <algorithm>
+#include <cmath>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <string>
 #include <utility>
 
@@ -115,6 +117,76 @@ std::optional<uint8_t> decode_vlmul(const chatastring& str) {
         return 0b011;
     } else {
         return std::nullopt;
+    }
+}
+
+uint8_t decode_fli_imm(const float& value) {
+    if (value == -1.0) {
+        return 0;
+    } else if (value == std::numeric_limits<float>::min()) {
+        return 1;
+    } else if (value == 1.0 * std::pow(2, -16)) {
+        return 2;
+    } else if (value == 1.0 * std::pow(2, -15)) {
+        return 3;
+    } else if (value == 1.0 * std::pow(2, -8)) {
+        return 4;
+    } else if (value == 1.0 * std::pow(2, -7)) {
+        return 5;
+    } else if (value == 0.0625) {
+        return 6;
+    } else if (value == 0.125) {
+        return 7;
+    } else if (value == 0.25) {
+        return 8;
+    } else if (value == 0.3125) {
+        return 9;
+    } else if (value == 0.375) {
+        return 10;
+    } else if (value == 0.4375) {
+        return 11;
+    } else if (value == 0.5) {
+        return 12;
+    } else if (value == 0.625) {
+        return 13;
+    } else if (value == 0.75) {
+        return 14;
+    } else if (value == 0.875) {
+        return 15;
+    } else if (value == 1.0) {
+        return 16;
+    } else if (value == 1.25) {
+        return 17;
+    } else if (value == 1.5) {
+        return 18;
+    } else if (value == 1.75) {
+        return 19;
+    } else if (value == 2.0) {
+        return 20;
+    } else if (value == 2.5) {
+        return 21;
+    } else if (value == 3.0) {
+        return 22;
+    } else if (value == 4.0) {
+        return 23;
+    } else if (value == 8.0) {
+        return 24;
+    } else if (value == 16.0) {
+        return 25;
+    } else if (value == 128.0) {
+        return 26;
+    } else if (value == 256.0) {
+        return 27;
+    } else if (value == std::pow(2, 15)) {
+        return 28;
+    } else if (value == std::pow(2, 16)) {
+        return 29;
+    } else if (std::isinf(value) && value > 0) {
+        return 30;
+    } else if (std::isnan(value)) {
+        return 31;
+    } else {
+        throw ChataError(ChataErrorType::Compiler, "Invalid fli floating-point immediate " + to_chatastring(value));
     }
 }
 
@@ -316,7 +388,11 @@ void make_inst(assembly_context& c) {
                 std::swap(c.arg2, c.arg3); // For the case of instr rd, rs2, (rs1)
             }
         }
-        rs1 = string_to_register(c.arg2, c).encoding;
+        if (id == FLIS || id == FLID || id == FLIQ || id == FLIH) {
+            rs1 = decode_fli_imm(to_num<float>(c.arg3).value());
+        } else {
+            rs1 = string_to_register(c.arg2, c).encoding;
+        }
         auto no_rs2 = ssargs.custom_reg_val.has_value();
         if (!no_rs2) {
             if (ssargs.use_imm_for_rs2) {

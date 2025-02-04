@@ -92,7 +92,7 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 | Load Upper Immediate’s Immediate | ☑️ |
 | Signed Immediates for I- and S-Type Instructions | ☑️ |
 | Floating-point literals | ☑️ |
-| Load Floating-point Immediate | `fli`: 🪛 <br> `.float`: 💀 <br> `.double`: 💀 |
+| Load Floating-point Immediate | `fli`: ☑️ <br> `.float`: 💀 <br> `.double`: 💀 |
 | Load Address | 💀 |
 | Load Local Address | 💀 |
 | Load Global Address | 💀 |

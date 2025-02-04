@@ -224,31 +224,36 @@ std::optional<T> to_num(const chatastring& str) {
     }
 
     if (str.size() > 2) {
-        if (str[0 + relocation_offset] == '0') {
-            if (str[1 + relocation_offset] == 'x' || str[1 + relocation_offset] == 'X') {
-                res = std::from_chars(str.data() + 2 + relocation_offset, str.data() + str.size(), result, 16);
-            } else if (str[1 + relocation_offset] == 'b' || str[1 + relocation_offset] == 'B') {
-                res = std::from_chars(str.data() + 2 + relocation_offset, str.data() + str.size(), result, 2);
-            } else {
-                res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
-            }
-        } else if (str[0 + relocation_offset] == '-' && str[1 + relocation_offset] == '0') {
-            if (str.size() > 3) {
-                if (str[2 + relocation_offset] == 'x' || str[2 + relocation_offset] == 'X') {
-                    res = std::from_chars(str.data() + 3 + relocation_offset, str.data() + str.size(), result, 16);
-                    result = -result;
-                } else if (str[2 + relocation_offset] == 'b' || str[2 + relocation_offset] == 'B') {
-                    res = std::from_chars(str.data() + 3 + relocation_offset, str.data() + str.size(), result, 2);
-                    result = -result;
+        if constexpr (std::is_same<T, float>::value) {
+            res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
+        } else {
+            if (str[0 + relocation_offset] == '0') {
+                if (str[1 + relocation_offset] == 'x' || str[1 + relocation_offset] == 'X') {
+                    res = std::from_chars(str.data() + 2 + relocation_offset, str.data() + str.size(), result, 16);
+                } else if (str[1 + relocation_offset] == 'b' || str[1 + relocation_offset] == 'B') {
+                    res = std::from_chars(str.data() + 2 + relocation_offset, str.data() + str.size(), result, 2);
+                } else {
+                    res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
+                }
+            } else if (str[0 + relocation_offset] == '-' && str[1 + relocation_offset] == '0') {
+                if (str.size() > 3) {
+                    if (str[2 + relocation_offset] == 'x' || str[2 + relocation_offset] == 'X') {
+                        res = std::from_chars(str.data() + 3 + relocation_offset, str.data() + str.size(), result, 16);
+                        result = -result;
+                    } else if (str[2 + relocation_offset] == 'b' || str[2 + relocation_offset] == 'B') {
+                        res = std::from_chars(str.data() + 3 + relocation_offset, str.data() + str.size(), result, 2);
+                        result = -result;
+                    } else {
+                        res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
+                    }
                 } else {
                     res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
                 }
             } else {
                 res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
             }
-        } else {
-            res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
         }
+
     } else {
         res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
     }
@@ -264,10 +269,12 @@ std::optional<T> to_num(const chatastring& str) {
         return std::nullopt;
     }
 
-    if (relocation_mode == -1) {
-        result = result & 0xFFF;
-    } else if (relocation_mode == 1) {
-        result = (result >> 12) & 0xFFFFF;
+    if constexpr (!std::is_same<T, float>::value) {
+        if (relocation_mode == -1) {
+            result = result & 0xFFF;
+        } else if (relocation_mode == 1) {
+            result = (result >> 12) & 0xFFFFF;
+        }
     }
 
     return result;
