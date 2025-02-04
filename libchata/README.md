@@ -105,8 +105,6 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 | Standard pseudoinstructions | ☑️ |
 | CSR pseudoinstructions | ☑️ |
 
-*Currently available if you use Chata code instead
-
 ### ▫️ License
 
 Chatassembler is available with the MPL 2.0 license. This may or may not be easier to include in your project than the GPL, but this depends on your situation.
