@@ -114,6 +114,8 @@ int main() {
     as(".insn ca 0b10, 0b101010, 0b11, x13, x14", 0xfaaa);
     as(".insn cb 0b00, 0b011, x15, 40", 0x8467);
     as(".insn cj 0b10, 0b000, 40", 0x2600);
+    as(".insn r MSUB, 0b111, 0b1111111, x8, x1, x2", 0x47f420fe);
+    as(".insn cr C0, 0b1111, x8, x18", 0x48f4);
     as("lui a0, 12345", 0x37950303);
     as("lui a0, 0x12345", 0x37553412);
     as("lui a0, 0b100", 0x37450000);

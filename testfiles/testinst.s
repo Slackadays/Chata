@@ -1,1 +1,1 @@
-addi a0, zero, %lo(0b1111)
+.insn cr C0, 0b1111, x8, x18

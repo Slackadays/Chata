@@ -1016,8 +1016,11 @@ void handle_directives(assembly_context& c) {
                     return args;
                 };
 
-                uint8_t opcode = to_num<uint8_t>(c.arg2).value();
-                custom_inst |= opcode;
+                if (auto num = to_num<uint8_t>(c.arg2); num.has_value()) {
+                    custom_inst = num.value();
+                } else {
+                    custom_inst = decode_opcode(c.arg2);
+                }
                 if (this_type == R && get_extra_args().size() == 1) {
                     uint8_t func3 = to_num<uint8_t>(c.arg3).value();
                     uint8_t func7 = to_num<uint8_t>(c.arg4).value();
