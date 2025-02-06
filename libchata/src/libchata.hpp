@@ -258,8 +258,6 @@ std::optional<T> to_num(const chatastring& str) {
         res = std::from_chars(str.data() + relocation_offset, str.data() + str.size(), result);
     }
 
-    DBG(std::cout << "result = " << result << std::endl;)
-
     if (relocation_offset != 0) {
         relocation_offset = -1;
     }
@@ -276,6 +274,8 @@ std::optional<T> to_num(const chatastring& str) {
             result = (result >> 12) & 0xFFFFF;
         }
     }
+
+    DBG(std::cout << "result = " << result << std::endl;)
 
     return result;
 }

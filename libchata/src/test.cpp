@@ -144,6 +144,9 @@ int main() {
     as(".insn cr C0, 0b1111, x8, x18", 0x48f4);
     as(".insn cr C1, 0b1111, x8, x18", 0x49f4);
     as(".insn cr C2, 0b1111, x8, x18", 0x4af4);
+    as("addi x5, zero, %lo(0xFFFFF)", 0x9302f0ff);
+    as("addi x10, x4, %lo(2370)", 0x13052294);
+    as("addi x11, x5, %lo(0b1010101010101010101)", 0x93855255);
     as("lui a0, 12345", 0x37950303);
     as("lui a0, 0x12345", 0x37553412);
     as("lui a0, 0b100", 0x37450000);
