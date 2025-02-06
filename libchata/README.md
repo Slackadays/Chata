@@ -35,7 +35,7 @@ There's only one (1) function with one (1) required parameter. Truly effortless.
 
 Chatassembler shares zero (0) code with GCC or LLVM. That means we can make it a third reference implementation of RISC-V assembly!
 
-### ▫️ Tested
+### ▫️ Verified quality
 
 The Chatassembler testsuite currently has 610+ tests covering all supported instructions and directives and other cases too.
 
