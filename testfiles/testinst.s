@@ -1,1 +1,1 @@
-.insn cr C0, 0b1111, x8, x18
+.insn cr C2, 0b1111, x8, x18

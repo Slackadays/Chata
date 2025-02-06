@@ -37,7 +37,7 @@ Chatassembler shares zero (0) code with GCC or LLVM. That means we can make it a
 
 ### ▫️ Tested
 
-The Chatassembler testsuite currently has 580+ tests covering all supported instructions and directives and other cases too.
+The Chatassembler testsuite currently has 610+ tests covering all supported instructions and directives and other cases too.
 
 Interestingly, this has led to Chatassembler revealing lots of bugs in `as` including ones causing internal errors!
 
