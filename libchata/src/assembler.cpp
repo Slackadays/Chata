@@ -96,7 +96,7 @@ std::optional<T> decode_imm(const chatastring& imm, assembly_context& c) {
     }
 }
 
-const rvregister& string_to_register(const chatastring& str, assembly_context& c) {
+const rvregister& decode_register(const chatastring& str, assembly_context& c) {
     // return registers[4];
     if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
         return registers[reg];
@@ -262,12 +262,12 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
         imm = 0b000000000000; // Set imm to the FENCE.I value
         DBG(std::cout << "FENCE.I instruction made" << std::endl;)
     } else if (id == CSRRW || id == CSRRS || id == CSRRC) {
-        rd = string_to_register(c.arg1, c).encoding;
+        rd = decode_register(c.arg1, c).encoding;
         imm = decode_csr(c.arg2);
-        rs1 = string_to_register(c.arg3, c).encoding;
+        rs1 = decode_register(c.arg3, c).encoding;
         DBG(std::cout << "CSR instruction made" << std::endl;)
     } else if (id == CSRRWI || id == CSRRSI || id == CSRRCI) {
-        rd = string_to_register(c.arg1, c).encoding;
+        rd = decode_register(c.arg1, c).encoding;
         imm = decode_csr(c.arg2);
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             rs1 = num.value();
@@ -405,7 +405,7 @@ void make_inst(assembly_context& c) {
                 }
             }
         }
-        rd = string_to_register(c.arg1, c).encoding;
+        rd = decode_register(c.arg1, c).encoding;
         if (set == RVInstructionSet::RV32A || set == RVInstructionSet::RV64A) { // The RV32A and RV64A sets sometimes use registers that look like (a0)
             if (c.arg2.front() == '0') {
                 c.arg2.erase(0, 1);
@@ -433,14 +433,14 @@ void make_inst(assembly_context& c) {
         if (id == FLIS || id == FLID || id == FLIQ || id == FLIH) {
             rs1 = decode_fli_imm(to_num<float>(c.arg3).value());
         } else {
-            rs1 = string_to_register(c.arg2, c).encoding;
+            rs1 = decode_register(c.arg2, c).encoding;
         }
         auto no_rs2 = ssargs.custom_reg_val.has_value();
         if (!no_rs2) {
             if (ssargs.use_imm_for_rs2) {
                 rs2 = imm;
             } else {
-                rs2 = string_to_register(c.arg3, c).encoding;
+                rs2 = decode_register(c.arg3, c).encoding;
             }
         } else {
             rs2 = ssargs.custom_reg_val.value();
@@ -467,7 +467,7 @@ void make_inst(assembly_context& c) {
             inst |= rs2 << 20;          // Add rs2
             inst |= (funct >> 3) << 25; // Add funct7
         } else if (type == R4) {
-            rs3 = string_to_register(c.arg4, c).encoding;
+            rs3 = decode_register(c.arg4, c).encoding;
             if (!c.arg5.empty()) {
                 frm = decode_frm(c.arg5);
             } else {
@@ -496,16 +496,16 @@ void make_inst(assembly_context& c) {
 
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
-            rs1 = string_to_register(c.arg2, c).encoding;
+            rs1 = decode_register(c.arg2, c).encoding;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
-            rs1 = string_to_register(reg, c).encoding;
+            rs1 = decode_register(reg, c).encoding;
         }
         if (type == I) {
-            rd = string_to_register(c.arg1, c).encoding;
+            rd = decode_register(c.arg1, c).encoding;
         } else if (type == S) {
-            rs2 = string_to_register(c.arg1, c).encoding;
+            rs2 = decode_register(c.arg1, c).encoding;
         }
 
         if (type == I) {
@@ -529,8 +529,8 @@ void make_inst(assembly_context& c) {
             imm = string_to_label(c.arg3, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = Branch});
         }
-        rs1 = string_to_register(c.arg1, c).encoding;
-        rs2 = string_to_register(c.arg2, c).encoding;
+        rs1 = decode_register(c.arg1, c).encoding;
+        rs2 = decode_register(c.arg2, c).encoding;
 
         DBG(std::cout << "Encoding Branch-type instruction with name " << name << std::endl;)
         inst |= ((imm >> 11) & 0b1) << 7;      // Add imm[11]
@@ -546,7 +546,7 @@ void make_inst(assembly_context& c) {
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
-        rd = string_to_register(c.arg1, c).encoding;
+        rd = decode_register(c.arg1, c).encoding;
 
         DBG(std::cout << "Encoding U-type instruction with name " << name << std::endl;)
         inst |= rd << 7;   // Add rd
@@ -558,7 +558,7 @@ void make_inst(assembly_context& c) {
             imm = string_to_label(c.arg2, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = J});
         }
-        rd = string_to_register(c.arg1, c).encoding;
+        rd = decode_register(c.arg1, c).encoding;
 
         DBG(std::cout << "Encoding J-type instruction with name " << name << std::endl;)
         inst |= rd << 7;                           // Add rd
@@ -587,13 +587,13 @@ void make_inst(assembly_context& c) {
     } else if (type == CL) {
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
-            rs1 = string_to_register(c.arg2, c).encoding & 0b111;
+            rs1 = decode_register(c.arg2, c).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
-            rs1 = string_to_register(reg, c).encoding & 0b111;
+            rs1 = decode_register(reg, c).encoding & 0b111;
         }
-        rd = string_to_register(c.arg1, c).encoding & 0b111;
+        rd = decode_register(c.arg1, c).encoding & 0b111;
 
         DBG(std::cout << "Encoding CL-type instruction with name " << name << std::endl;)
         inst |= rd << 2;                      // Add rd' (just 3 bits)
@@ -609,13 +609,13 @@ void make_inst(assembly_context& c) {
     } else if (type == CS) {
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
-            rs1 = string_to_register(c.arg2, c).encoding & 0b111;
+            rs1 = decode_register(c.arg2, c).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
-            rs1 = string_to_register(reg, c).encoding & 0b111;
+            rs1 = decode_register(reg, c).encoding & 0b111;
         }
-        rs2 = string_to_register(c.arg1, c).encoding & 0b111;
+        rs2 = decode_register(c.arg1, c).encoding & 0b111;
 
         DBG(std::cout << "Encoding CS-type instruction with name " << name << std::endl;)
         inst |= rs2 << 2;                     // Add rs2' (just 3 bits)
@@ -635,7 +635,7 @@ void make_inst(assembly_context& c) {
             imm = string_to_label(c.arg2, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = CB});
         }
-        rs1 = string_to_register(c.arg1, c).encoding & 0b111;
+        rs1 = decode_register(c.arg1, c).encoding & 0b111;
 
         DBG(std::cout << "Encoding CB-type instruction with name " << name << std::endl;)
         if (id == CSRLI || id == CSRAI || id == CANDI) { // shamt[5], shamt[4:0]
@@ -656,11 +656,11 @@ void make_inst(assembly_context& c) {
             inst |= funct << 13; // Add funct3
         }
     } else if (type == CR) {
-        rd = string_to_register(c.arg1, c).encoding;
+        rd = decode_register(c.arg1, c).encoding;
         if (ssargs.custom_reg_val.has_value()) {
             rs2 = ssargs.custom_reg_val.value();
         } else {
-            rs2 = string_to_register(c.arg2, c).encoding;
+            rs2 = decode_register(c.arg2, c).encoding;
         }
 
         DBG(std::cout << "Encoding CR-type instruction with name " << name << std::endl;)
@@ -669,7 +669,7 @@ void make_inst(assembly_context& c) {
         inst |= funct << 12; // Add funct4
     } else if (type == CI) {
 
-        rd = string_to_register(c.arg1, c).encoding;
+        rd = decode_register(c.arg1, c).encoding;
         if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
             imm = num.value();
         } else {
@@ -706,7 +706,7 @@ void make_inst(assembly_context& c) {
         inst |= rd << 7;     // Add rd
         inst |= funct << 13; // Add funct3
     } else if (type == CSS) {
-        rs2 = string_to_register(c.arg1, c).encoding;
+        rs2 = decode_register(c.arg1, c).encoding;
         if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
             imm = num.value();
         } else {
@@ -728,7 +728,7 @@ void make_inst(assembly_context& c) {
         }
         inst |= funct << 13; // Add funct3
     } else if (type == CIW) {
-        rd = string_to_register(c.arg1, c).encoding & 0b111; // Only use the lower 3 bits
+        rd = decode_register(c.arg1, c).encoding & 0b111; // Only use the lower 3 bits
         if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
             imm = num.value();
         } else {
@@ -743,8 +743,8 @@ void make_inst(assembly_context& c) {
         inst |= ((imm >> 4) & 0b11) << 11;  // Add nzuimm[5:4]
         inst |= funct << 13;                // Add funct3
     } else if (type == CA) {
-        rd = string_to_register(c.arg1, c).encoding & 0b111; // Only use the lower 3 bits
-        rs2 = string_to_register(c.arg2, c).encoding & 0b111;
+        rd = decode_register(c.arg1, c).encoding & 0b111; // Only use the lower 3 bits
+        rs2 = decode_register(c.arg2, c).encoding & 0b111;
 
         DBG(std::cout << "Encoding CA-type instruction with name " << name << std::endl;)
         inst |= rs2 << 2;            // Add rs2' (just 3 bits)
@@ -1066,60 +1066,60 @@ void handle_directives(assembly_context& c) {
                 if (this_type == R && get_extra_args().size() == 1) {
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
                     uint8_t func7 = decode_imm<uint8_t>(c.arg4, c).value();
-                    uint8_t rd = string_to_register(c.arg5, c).encoding;
-                    uint8_t rs1 = string_to_register(c.arg6, c).encoding;
-                    uint8_t rs2 = string_to_register(get_extra_args().at(0), c).encoding;
+                    uint8_t rd = decode_register(c.arg5, c).encoding;
+                    uint8_t rs1 = decode_register(c.arg6, c).encoding;
+                    uint8_t rs2 = decode_register(get_extra_args().at(0), c).encoding;
 
                     custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func7 << 25);
                     inst_len = 4;
                 } else if (this_type == R && get_extra_args().size() == 2) { // R with 4 args
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
                     uint8_t func2 = decode_imm<uint8_t>(c.arg4, c).value();
-                    uint8_t rd = string_to_register(c.arg5, c).encoding;
-                    uint8_t rs1 = string_to_register(c.arg6, c).encoding;
-                    uint8_t rs2 = string_to_register(get_extra_args().at(0), c).encoding;
-                    uint8_t rs3 = string_to_register(get_extra_args().at(1), c).encoding;
+                    uint8_t rd = decode_register(c.arg5, c).encoding;
+                    uint8_t rs1 = decode_register(c.arg6, c).encoding;
+                    uint8_t rs2 = decode_register(get_extra_args().at(0), c).encoding;
+                    uint8_t rs3 = decode_register(get_extra_args().at(1), c).encoding;
 
                     custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
                     inst_len = 4;
                 } else if (this_type == R4) {
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
                     uint8_t func2 = decode_imm<uint8_t>(c.arg4, c).value();
-                    uint8_t rd = string_to_register(c.arg5, c).encoding;
-                    uint8_t rs1 = string_to_register(c.arg6, c).encoding;
-                    uint8_t rs2 = string_to_register(get_extra_args().at(0), c).encoding;
-                    uint8_t rs3 = string_to_register(get_extra_args().at(1), c).encoding;
+                    uint8_t rd = decode_register(c.arg5, c).encoding;
+                    uint8_t rs1 = decode_register(c.arg6, c).encoding;
+                    uint8_t rs2 = decode_register(get_extra_args().at(0), c).encoding;
+                    uint8_t rs3 = decode_register(get_extra_args().at(1), c).encoding;
 
                     custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | (func2 << 25) | (rs3 << 27);
                     inst_len = 4;
                 } else if (this_type == I && !c.arg6.empty()) { // I type: .insn i opcode7, func3, rd, rs1, simm12
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
-                    uint8_t rd = string_to_register(c.arg4, c).encoding;
-                    uint8_t rs1 = string_to_register(c.arg5, c).encoding;
+                    uint8_t rd = decode_register(c.arg4, c).encoding;
+                    uint8_t rs1 = decode_register(c.arg5, c).encoding;
                     int32_t simm12 = decode_imm<int32_t>(c.arg6, c).value();
 
                     custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | ((simm12 & 0xFFF) << 20);
                     inst_len = 4;
                 } else if (this_type == I && c.arg6.empty()) { // I type: .insn i opcode7, func3, rd, simm12(rs1)
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
-                    uint8_t rd = string_to_register(c.arg4, c).encoding;
+                    uint8_t rd = decode_register(c.arg4, c).encoding;
                     auto [simm12, temp] = decode_offset_plus_reg(c.arg5, c);
-                    uint8_t rs1 = string_to_register(temp, c).encoding;
+                    uint8_t rs1 = decode_register(temp, c).encoding;
 
                     custom_inst = custom_inst | (rd << 7) | (func3 << 12) | (rs1 << 15) | ((simm12 & 0xFFF) << 20);
                     inst_len = 4;
                 } else if (this_type == S) { // S type: .insn s opcode7, func3, rs2, simm12(rs1)
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
-                    uint8_t rs2 = string_to_register(c.arg4, c).encoding;
+                    uint8_t rs2 = decode_register(c.arg4, c).encoding;
                     auto [simm12, temp] = decode_offset_plus_reg(c.arg5, c);
-                    uint8_t rs1 = string_to_register(temp, c).encoding;
+                    uint8_t rs1 = decode_register(temp, c).encoding;
 
                     custom_inst = custom_inst | ((simm12 & 0b11111) << 7) | (func3 << 12) | (rs1 << 15) | (rs2 << 20) | ((simm12 >> 5) << 25);
                     inst_len = 4;
                 } else if (this_type == Branch) { // B type: .insn s opcode7, func3, rs1, rs2, symbol
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
-                    uint8_t rs1 = string_to_register(c.arg4, c).encoding;
-                    uint8_t rs2 = string_to_register(c.arg5, c).encoding;
+                    uint8_t rs1 = decode_register(c.arg4, c).encoding;
+                    uint8_t rs2 = decode_register(c.arg5, c).encoding;
                     chatastring symbol = c.arg6;
 
                     if (auto num = to_num<int32_t>(symbol); num.has_value()) {
@@ -1132,13 +1132,13 @@ void handle_directives(assembly_context& c) {
 
                     inst_len = 4;
                 } else if (this_type == U) { // U type: .insn u opcode7, rd, simm20
-                    uint8_t rd = string_to_register(c.arg3, c).encoding;
+                    uint8_t rd = decode_register(c.arg3, c).encoding;
                     int32_t simm20 = decode_imm<int32_t>(c.arg4, c).value();
 
                     custom_inst = custom_inst | (rd << 7) | ((simm20 & 0xFFFFF) << 12);
                     inst_len = 4;
                 } else if (this_type == J) { // J type: .insn j opcode7, rd, symbol
-                    uint8_t rd = string_to_register(c.arg3, c).encoding;
+                    uint8_t rd = decode_register(c.arg3, c).encoding;
                     chatastring symbol = c.arg4;
 
                     if (auto num = to_num<int32_t>(symbol); num.has_value()) {
@@ -1151,46 +1151,46 @@ void handle_directives(assembly_context& c) {
                     inst_len = 4;
                 } else if (this_type == CR) { // CR type: .insn cr opcode2, func4, rd, rs2
                     uint8_t func4 = decode_imm<uint8_t>(c.arg3, c).value();
-                    uint8_t rd = string_to_register(c.arg4, c).encoding;
-                    uint8_t rs2 = string_to_register(c.arg5, c).encoding;
+                    uint8_t rd = decode_register(c.arg4, c).encoding;
+                    uint8_t rs2 = decode_register(c.arg5, c).encoding;
 
                     custom_inst = custom_inst | (rs2 << 2) | (rd << 7) | (func4 << 12);
                     inst_len = 2;
                 } else if (this_type == CI) { // CI type: .insn ci opcode2, func3, rd, simm6
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
-                    uint8_t rd = string_to_register(c.arg4, c).encoding;
+                    uint8_t rd = decode_register(c.arg4, c).encoding;
                     int32_t simm6 = decode_imm<int32_t>(c.arg5, c).value();
 
                     custom_inst = custom_inst | ((simm6 & 0b111111) << 2) | (rd << 7) | ((simm6 >> 5) << 12) | (func3 << 13);
                     inst_len = 2;
                 } else if (this_type == CIW) { // CIW type: .insn ciw opcode2, func3, rd', uimm8
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
-                    uint8_t rd = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
+                    uint8_t rd = decode_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
                     int32_t uimm8 = decode_imm<int32_t>(c.arg5, c).value();
 
                     custom_inst = custom_inst | (rd << 2) | ((uimm8 & 0xFF) << 5) | (func3 << 13);
                     inst_len = 2;
                 } else if (this_type == CSS) { // CSS type: .insn css opcode2, func3, rd, uimm6
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
-                    uint8_t rd = string_to_register(c.arg4, c).encoding;
+                    uint8_t rd = decode_register(c.arg4, c).encoding;
                     int32_t uimm6 = decode_imm<int32_t>(c.arg5, c).value();
 
                     custom_inst = custom_inst | (rd << 2) | ((uimm6 & 0b111111) << 7) | (func3 << 13);
                     inst_len = 2;
                 } else if (this_type == CL) { // CL type: .insn cl opcode2, func3, rd', uimm5(rs1')
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
-                    uint8_t rd = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
+                    uint8_t rd = decode_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
                     auto [uimm5, rs1temp] = decode_offset_plus_reg(c.arg5, c);
-                    uint8_t rs1 = string_to_register(rs1temp, c).encoding;
+                    uint8_t rs1 = decode_register(rs1temp, c).encoding;
                     rs1 = rs1 & 0b111; // Only use the lower 3 bits
 
                     custom_inst = custom_inst | (rd << 2) | ((uimm5 & 0b11) << 5) | (rs1 << 7) | (((uimm5 >> 2) & 0b111) << 10) | (func3 << 13);
                     inst_len = 2;
                 } else if (this_type == CS) { // CS type: .insn cs opcode2, func3, rs2', uimm5(rs1')
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
-                    uint8_t rs2 = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
+                    uint8_t rs2 = decode_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
                     auto [uimm5, rs1temp] = decode_offset_plus_reg(c.arg5, c);
-                    uint8_t rs1 = string_to_register(rs1temp, c).encoding;
+                    uint8_t rs1 = decode_register(rs1temp, c).encoding;
                     rs1 = rs1 & 0b111; // Only use the lower 3 bits
 
                     custom_inst = custom_inst | (rs2 << 2) | ((uimm5 & 0b11) << 5) | (rs1 << 7) | (((uimm5 >> 2) & 0b111) << 10) | (func3 << 13);
@@ -1198,14 +1198,14 @@ void handle_directives(assembly_context& c) {
                 } else if (this_type == CA) { // CA type: .insn ca opcode2, func6, func2, rd', rs2'
                     uint8_t func6 = decode_imm<uint8_t>(c.arg3, c).value();
                     uint8_t func2 = decode_imm<uint8_t>(c.arg4, c).value();
-                    uint8_t rd = string_to_register(c.arg5, c).encoding & 0b111;  // Only use the lower 3 bits
-                    uint8_t rs2 = string_to_register(c.arg6, c).encoding & 0b111; // Only use the lower 3 bits
+                    uint8_t rd = decode_register(c.arg5, c).encoding & 0b111;  // Only use the lower 3 bits
+                    uint8_t rs2 = decode_register(c.arg6, c).encoding & 0b111; // Only use the lower 3 bits
 
                     custom_inst = custom_inst | (rs2 << 2) | (func2 << 5) | (rd << 7) | (func6 << 10);
                     inst_len = 2;
                 } else if (this_type == CB) { // CB type: .insn cb opcode2, func3, rs1', symbol
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
-                    uint8_t rs1 = string_to_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
+                    uint8_t rs1 = decode_register(c.arg4, c).encoding & 0b111; // Only use the lower 3 bits
                     chatastring symbol = c.arg5;
 
                     if (auto num = to_num<int32_t>(symbol); num.has_value()) {
