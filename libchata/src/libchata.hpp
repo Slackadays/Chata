@@ -51,6 +51,15 @@ enum class RVInstructionSet : uint8_t {
     V
 };
 
+enum class ChataErrorType {
+    Compiler,
+    Assembler,
+    Execution,
+    Other
+};
+
+class ChataError;
+
 namespace libchata_internal {
 
 #if defined(DEBUG)
@@ -219,6 +228,8 @@ std::optional<T> to_num(const chatastring& str) {
                 DBG(std::cout << "Found %hi relocation mode" << std::endl;)
                 relocation_mode = 1;
                 relocation_offset = 4;
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid relocation mode " + str);
             }
         }
     }
@@ -281,13 +292,6 @@ std::optional<T> to_num(const chatastring& str) {
 }
 
 } // namespace libchata_internal
-
-enum class ChataErrorType {
-    Compiler,
-    Assembler,
-    Execution,
-    Other
-};
 
 class ChataError : public std::exception {
     std::string_view color_start = "\033[1;31m";

@@ -30,7 +30,7 @@ struct assembly_context {
     chatavector<RVInstructionSet> supported_sets;
     chatavector<std::pair<chatastring, int>> labels;
     chatavector<label_loc> label_locs;
-    chatavector<std::pair<chatastring, int32_t>> constants;
+    chatavector<std::pair<chatastring, chatastring>> constants;
     chatavector<directive_option> options;
     int32_t custom_inst = 0;
     uint32_t line = 1;

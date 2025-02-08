@@ -37,7 +37,7 @@ Chatassembler shares zero (0) code with GCC or LLVM. That means we can make it a
 
 ### ▫️ Verified quality
 
-The Chatassembler testsuite currently has 610+ tests covering all supported instructions and directives and other cases too.
+The Chatassembler testsuite currently has 650+ tests covering all supported instructions and directives and other cases too.
 
 Interestingly, this has led to Chatassembler revealing lots of bugs in `as` including ones causing internal errors!
 
@@ -97,7 +97,7 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 | Load Local Address | 💀 |
 | Load Global Address | 💀 |
 | Load and Store Global | 💀 |
-| Constants | 🪛 |
+| Constants | ☑️ |
 | Far Branches | ❌ |
 | Function Calls | ☑️ |
 | Floating-point rounding modes | ☑️ |
