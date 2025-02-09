@@ -431,7 +431,17 @@ void make_inst(assembly_context& c) {
             }
         }
         if (id == FLIS || id == FLID || id == FLIQ || id == FLIH) {
-            rs1 = decode_fli_imm(to_num<float>(c.arg3).value());
+            if (auto num = to_num<float>(c.arg2); num.has_value()) {
+                rs1 = decode_fli_imm(num.value());
+            } else if (fast_eq(c.arg2, "min")) {
+                rs1 = decode_fli_imm(std::numeric_limits<float>::min());
+            } else if (fast_eq(c.arg2, "inf")) {
+                rs1 = decode_fli_imm(std::numeric_limits<float>::infinity());
+            } else if (fast_eq(c.arg2, "nan")) {
+                rs1 = decode_fli_imm(std::numeric_limits<float>::quiet_NaN());
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+            }
         } else {
             rs1 = decode_register(c.arg2, c).encoding;
         }
@@ -450,6 +460,8 @@ void make_inst(assembly_context& c) {
                 frm = decode_frm(c.arg4);
             } else if (!c.arg5.empty() && !no_rs2) {
                 frm = decode_frm(c.arg5);
+            } else if (!c.arg3.empty() && no_rs2) {
+                frm = decode_frm(c.arg3);
             } else {
                 if (ssargs.use_frm_for_funct3) {
                     frm = 0b111;
@@ -1405,7 +1417,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as -march=rv64gdc temp.s -o temp.o");
+    int res = std::system("riscv64-linux-gnu-as -march=rv64gfdqc_zfh_zfa temp.s -o temp.o");
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)
