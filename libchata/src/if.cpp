@@ -18,7 +18,7 @@ chatastring condition_to_int_instruction(chatastring& condition) {
     } else if (condition == "=>") {
         return "bge";
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid condition " + condition);
+        throw ChataError(ChataErrorType::Compiler, "Invalid condition " + errorDetailOrUnknown(condition));
     }
 }
 
@@ -36,7 +36,7 @@ chatastring condition_to_float_instruction(chatastring& condition, chatastring& 
     } else if (condition == "=>") {
         return "fle.d " + result + ", " + operand_two + ", " + operand_one;
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid condition " + condition);
+        throw ChataError(ChataErrorType::Compiler, "Invalid condition " + errorDetailOrUnknown(condition));
     }
 }
 

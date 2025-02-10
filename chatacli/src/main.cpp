@@ -107,7 +107,7 @@ int main(int argc, char* argv[]) {
         try {
             result = libchata::assemble(file.data);
         } catch (ChataError& e) {
-            std::cout << "Error: " << e.what() << std::endl;
+            std::cout << e.what() << std::endl;
             return 1;
         }
         if (!no_write_flag) {

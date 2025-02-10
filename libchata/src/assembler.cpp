@@ -74,7 +74,7 @@ std::optional<T> decode_constant(const chatastring& constant, assembly_context& 
                     }
                 }
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid relocation mode " + constant);
+                throw ChataError(ChataErrorType::Compiler, "Invalid relocation mode " + errorDetailOrUnknown(constant));
             }
         }
     } else {
@@ -101,7 +101,7 @@ const rvregister& decode_register(const chatastring& str, assembly_context& c) {
     if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
         return registers[reg];
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid register " + str, c.line, c.column);
+        throw ChataError(ChataErrorType::Compiler, "Invalid register " + errorDetailOrUnknown(str), c.line, c.column);
     }
 }
 
@@ -119,7 +119,7 @@ uint8_t decode_frm(const chatastring& frm) {
     } else if (fast_eq(frm, "dyn")) {
         return 0b111;
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid rounding mode " + frm);
+        throw ChataError(ChataErrorType::Compiler, "Invalid rounding mode " + errorDetailOrUnknown(frm));
     }
 }
 
@@ -131,7 +131,7 @@ uint8_t decode_fence(const chatastring& setting) {
     } else if (fast_eq(setting, "rw")) {
         return 0b0011;
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid fence setting " + setting);
+        throw ChataError(ChataErrorType::Compiler, "Invalid fence setting " + errorDetailOrUnknown(setting));
     }
 }
 
@@ -139,7 +139,7 @@ const uint16_t& decode_csr(const chatastring& csr) {
     if (auto res = fast_csr_search(csr); res != csr_search_failed) {
         return csrs[res].second;
     }
-    throw ChataError(ChataErrorType::Compiler, "Invalid CSR " + csr);
+    throw ChataError(ChataErrorType::Compiler, "Invalid CSR " + errorDetailOrUnknown(csr));
 }
 
 uint8_t decode_vsew(const chatastring& str) {
@@ -152,7 +152,7 @@ uint8_t decode_vsew(const chatastring& str) {
     } else if (fast_eq(str, "e64")) {
         return 0b011;
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid VSEW " + str);
+        throw ChataError(ChataErrorType::Compiler, "Invalid VSEW " + errorDetailOrUnknown(str));
     }
 }
 
@@ -272,7 +272,7 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             rs1 = num.value();
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + errorDetailOrUnknown(c.arg3), c.line, c.column);
         }
         DBG(std::cout << "CSRI instruction made" << std::endl;)
     } else if (id == WRSNTO) {
@@ -401,7 +401,7 @@ void make_inst(assembly_context& c) {
                 if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
                     imm = num.value();
                 } else {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+                    throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + errorDetailOrUnknown(c.arg3), c.line, c.column);
                 }
             }
         }
@@ -440,7 +440,7 @@ void make_inst(assembly_context& c) {
             } else if (fast_eq(c.arg2, "nan")) {
                 rs1 = decode_fli_imm(std::numeric_limits<float>::quiet_NaN());
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + errorDetailOrUnknown(c.arg2), c.line, c.column);
             }
         } else {
             rs1 = decode_register(c.arg2, c).encoding;
@@ -556,7 +556,7 @@ void make_inst(assembly_context& c) {
         if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
             imm = num.value();
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + errorDetailOrUnknown(c.arg2), c.line, c.column);
         }
         rd = decode_register(c.arg1, c).encoding;
 
@@ -744,7 +744,7 @@ void make_inst(assembly_context& c) {
         if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
             imm = num.value();
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + errorDetailOrUnknown(c.arg2), c.line, c.column);
         }
 
         DBG(std::cout << "Encoding CIW-type instruction with name " << name << std::endl;)
@@ -950,7 +950,7 @@ uint8_t decode_opcode(const chatastring& str) {
     } else if (fast_eq(str, "C2")) {
         return OP_C2;
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid opcode " + str);
+        throw ChataError(ChataErrorType::Compiler, "Invalid opcode " + errorDetailOrUnknown(str));
     }
 }
 

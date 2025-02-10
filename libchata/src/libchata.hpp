@@ -189,6 +189,8 @@ chatastring make_base_register(const chatastring& reg);
 
 int extract_number_from_string(const chatastring& str);
 
+chatastring errorDetailOrUnknown(const chatastring& detail);
+
 constexpr std::string_view generated_label_prefix = "generated_code_label";
 
 constexpr std::string_view placeholder_temp_integer_register = "generated_placeholder_integer_register";
@@ -229,7 +231,7 @@ std::optional<T> to_num(const chatastring& str) {
                 relocation_mode = 1;
                 relocation_offset = 4;
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid relocation mode " + str);
+                throw ChataError(ChataErrorType::Compiler, "Invalid relocation mode " + errorDetailOrUnknown(str));
             }
         }
     }
@@ -291,6 +293,19 @@ std::optional<T> to_num(const chatastring& str) {
     return result;
 }
 
+chatastring this_line(const auto& data, const uint32_t& current_i) {
+    chatastring result;
+    size_t i = current_i;
+    while (i > 0 && data[i] != '\n') {
+        i--;
+    }
+    while (i < data.size() && data[i] != '\n') {
+        result.push_back(data[i]);
+        i++;
+    }
+    return result;
+}
+
 } // namespace libchata_internal
 
 class ChataError : public std::exception {
@@ -310,6 +325,7 @@ public:
     std::optional<std::string_view> filename;
     std::optional<uint32_t> line = 0;
     std::optional<uint32_t> column = 0;
+    std::optional<libchata_internal::chatastring> line_content;
 
     char* what() {
         set_color();
@@ -350,6 +366,22 @@ public:
         if (details.has_value()) {
             error_message += *details;
         }
+        if (line_content.has_value()) {
+            error_message += "\n| ";
+            if (line.has_value()) {
+                error_message += libchata_internal::to_chatastring(line.value());
+            } else {
+                error_message += "(unknown)";
+            }
+            error_message += ":";
+            if (column.has_value()) {
+                error_message += libchata_internal::to_chatastring(column.value());
+            } else {
+                error_message += "(unknown)";
+            }
+            error_message += " | ";
+            error_message += line_content.value();
+        }
         return error_message.data();
     }
 
@@ -360,9 +392,26 @@ public:
             , column(column)
             , filename(filename) {}
 
+    ChataError(ChataErrorType type, std::string_view details, uint32_t line, uint32_t column, std::string_view filename, libchata_internal::chatastring line_content)
+            : type(type)
+            , details(details)
+            , line(line)
+            , column(column)
+            , filename(filename)
+            , line_content(line_content) {}
+
     ChataError(ChataErrorType type, std::optional<std::string_view> details, uint32_t line, uint32_t column) : type(type), details(details), line(line), column(column) {}
 
+    ChataError(ChataErrorType type, std::optional<std::string_view> details, uint32_t line, uint32_t column, libchata_internal::chatastring line_content)
+            : type(type)
+            , details(details)
+            , line(line)
+            , column(column)
+            , line_content(line_content) {}
+
     ChataError(ChataErrorType type, std::string_view details) : type(type), details(details) {}
+
+    ChataError(ChataErrorType type, std::string_view details, libchata_internal::chatastring line_content) : type(type), details(details), line_content(line_content) {}
 };
 
 struct chata_args {

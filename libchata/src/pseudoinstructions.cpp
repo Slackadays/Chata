@@ -36,7 +36,7 @@ void la_instr(assembly_context& c) { // la rd, imm -> auipc rd, imm[31:12]; addi
     if (auto num = to_num<int>(c.arg2); num.has_value()) {
         imm = num.value();
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + errorDetailOrUnknown(c.arg2), c.line, c.column);
     }
     if (imm >= -2048 && imm <= 2047) {
         c.inst_offset = fast_instr_search("addi");
@@ -228,7 +228,7 @@ void call_instr(assembly_context& c) {
     if (auto num = to_num<int>(c.arg1); num.has_value()) {
         imm = num.value();
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg1, c.line, c.column);
+        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + errorDetailOrUnknown(c.arg1), c.line, c.column);
     }
     if (imm >= -2048 && imm <= 2047) {
         c.inst_offset = fast_instr_search("jalr");
