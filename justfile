@@ -50,13 +50,13 @@ clean-cli:
 
 # format all code
 format:
-  cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose '{}' +
-  cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose '{}' +
+  cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose '{}' +
+  cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose '{}' +
 
 # check if all code is formatted
 check-format:
-  cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose --dry-run '{}' +
-  cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format-15 --Werror -i --verbose --dry-run '{}' +
+  cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose --dry-run '{}' +
+  cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose --dry-run '{}' +
 
 # run codegen scripts
 generate:
