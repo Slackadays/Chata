@@ -19,7 +19,7 @@ Here's more on that. Chatassembler is...
 
 ### ▫️ Complete
 
-Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zbb **(WIP)**, Zcf, Zcmt, Zfa, B **(WIP)**, and V **(WIP)** instruction sets, pseudoinstructions, custom instructions, labels, and many other directives. 
+Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zifencei, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zfinx, Zdinx, Zhinx, Zbb **(WIP)**, Zcf, Zcmt, Zfa, B **(WIP)**, and V **(WIP)** instruction sets, pseudoinstructions, custom instructions, labels, and many other directives. 
 
 The endgame is full compatibility with GCC's `as` excluding certain features (more below).
 
@@ -37,7 +37,7 @@ Chatassembler shares zero (0) code with GCC or LLVM. That means we can make it a
 
 ### ▫️ Verified quality
 
-The Chatassembler testsuite currently has 710+ tests covering all supported instructions and directives and other cases too.
+The Chatassembler testsuite currently has 830+ tests covering all supported instructions and directives and other cases too.
 
 Interestingly, this has led to Chatassembler revealing lots of bugs in `as` including ones causing internal errors!
 
