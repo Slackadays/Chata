@@ -322,6 +322,8 @@ public:
         error_message += color_start;
         if (!type.has_value()) {
             error_message += "Unspecified error";
+        } else if (*type == ChataErrorType::Unspecified) {
+            error_message += "Unspecified error";
         } else if (*type == ChataErrorType::Compiler) {
             error_message += "Compiler error";
         } else if (*type == ChataErrorType::Assembler) {
