@@ -1,5 +1,5 @@
 #include "csrs.hpp"
-#include "libchata.hpp"
+#include "../libchata.hpp"
 
 namespace libchata_internal {
 

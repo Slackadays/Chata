@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
+#include "../libchata.hpp"
 #include "assembler.hpp"
 #include "instructions.hpp"
-#include "libchata.hpp"
 
 namespace libchata_internal {
 

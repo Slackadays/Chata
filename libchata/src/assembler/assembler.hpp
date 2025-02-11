@@ -1,5 +1,5 @@
+#include "../libchata.hpp"
 #include "instructions.hpp"
-#include "libchata.hpp"
 
 #pragma once
 

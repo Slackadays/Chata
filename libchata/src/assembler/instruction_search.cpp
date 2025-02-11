@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 // The generate_instruction_search.py script automatically generated this code. DO NOT MODIFY!
+#include "../libchata.hpp"
 #include "instructions.hpp"
-#include "libchata.hpp"
 
 namespace libchata_internal {
 

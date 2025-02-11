@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 // The generate_pseudoinstruction_converter.py script automatically generated this code. DO NOT MODIFY!
-#include "libchata.hpp"
+#include "../libchata.hpp"
 #include "pseudoinstructions.hpp"
 
 namespace libchata_internal {
