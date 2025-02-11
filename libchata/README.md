@@ -66,7 +66,7 @@ If you're not using C++, bindings for other languages are planned!
 Chatassembler is the bloat-free assembler library for RISC-V. It's easy to use, fully independent of GCC and LLVM, and _over 10x faster_ 🏎️ than them.
 
 <p align="center">
-    <img src="Figure_1.svg">
+    <img src="assets/Figure_1.svg">
 </p>
 
 Here's more on that. Chatassembler is...
@@ -252,6 +252,8 @@ These errors follow the same format that other parts of `libchata` use.
 
 ### ▫️ Example
 
+Check out this example of how to use Chatassembler for yourself.
+
 ```cpp
 #include <libchata.hpp>
 #include <string_view>
@@ -262,22 +264,29 @@ int main() {
 
     std::vector<RVInstructionSet> my_enums = {RV32I, C};
 
-    std::string_view my_code = "addi a0, a0, 10\n"
+    std::string_view my_code = 
+    "addi a0, a0, 10\n"
     "sub a0, a0, a1\n"
     "ret";
 
-    auto machine_code1 = libchata_assemble(riscv_code);
+    auto machine_code1 = libchata::assemble(my_code);
 
-    auto machine_code2 = libchata_assemble(riscv_code, {RV32I});
-
-    auto machine_code3 = libchata_assemble(riscv_code, my_enums);
+    std::span<uint8_t> machine_code2 = libchata::assemble(my_code, my_enums);
 
     try {
-        auto caught_code = libchata_assemble(riscv_code);
+        auto caught_code = libchata::assemble(my_code);
     } catch (ChataError& e) {
         // Handle your error!
     }
 }
 ```
 
+You can build this example by copying [the code file](chatassembler_example.cpp) and then running
+
+```sh
+g++ -std=c++20 chatassembler_example.cpp -lchata
+```
+
 This concludes all of the public functionality of Chatassembler.
+
+
