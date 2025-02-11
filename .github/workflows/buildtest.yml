@@ -24,4 +24,5 @@ jobs:
           export PATH=$HOME/.local/bin:$PATH
       - name: Test Chata
         run: |
+          just build
           just test
