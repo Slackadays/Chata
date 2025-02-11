@@ -33,19 +33,19 @@ endif()
 
 add_library(objchata OBJECT
     src/libchata.cpp
-    src/assembler.cpp
+    src/assembler/assembler.cpp
     src/compile.cpp
     src/utils.cpp
     src/if.cpp
     src/change.cpp
-    src/instructions.cpp
-    src/pseudoinstructions.cpp
-    src/make_inst_from_pseudoinst.cpp
+    src/assembler/instructions.cpp
+    src/assembler/pseudoinstructions.cpp
+    src/assembler/make_inst_from_pseudoinst.cpp
     src/registers.cpp
-    src/csrs.cpp
-    src/instruction_search.cpp
+    src/assembler/csrs.cpp
+    src/assembler/instruction_search.cpp
     src/register_search.cpp
-    src/csr_search.cpp
+    src/assembler/csr_search.cpp
 )
 
 target_compile_options(objchata PRIVATE -fno-rtti -fno-stack-protector -fomit-frame-pointer)

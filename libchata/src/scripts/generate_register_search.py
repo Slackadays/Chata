@@ -1,5 +1,5 @@
-input = "registers.cpp"
-output = "register_search.cpp"
+input = "assembler/registers.cpp"
+output = "assembler/register_search.cpp"
 
 import re
 

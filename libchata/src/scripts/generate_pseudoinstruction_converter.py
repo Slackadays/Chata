@@ -1,5 +1,5 @@
-input = "pseudoinstructions.cpp"
-output = "make_inst_from_pseudoinst.cpp"
+input = "assembler/pseudoinstructions.cpp"
+output = "assembler/make_inst_from_pseudoinst.cpp"
 
 import re
 

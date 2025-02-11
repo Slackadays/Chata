@@ -1,5 +1,5 @@
-input = "csrs.cpp"
-output = "csr_search.cpp"
+input = "assembler/csrs.cpp"
+output = "assembler/csr_search.cpp"
 
 import re
 
