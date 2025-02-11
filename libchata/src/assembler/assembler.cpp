@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "assembler.hpp"
-#include "csrs.hpp"
 #include "../debug.hpp"
-#include "instructions.hpp"
 #include "../libchata.hpp"
-#include "pseudoinstructions.hpp"
 #include "../registers.hpp"
+#include "csrs.hpp"
+#include "instructions.hpp"
+#include "pseudoinstructions.hpp"
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
