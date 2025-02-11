@@ -883,6 +883,7 @@ chatavector<RVInstructionSet> decode_sets(const chatastring& str) {
         search_str.push_back(c);
         // for (const auto& name : instruction_set
     }
+    return sets;
 }
 
 uint8_t decode_opcode(const chatastring& str) {

@@ -1,4 +1,4 @@
-name: Build
+name: Build & Test
 
 on: [push, pull_request]
 
@@ -13,5 +13,15 @@ jobs:
           export PATH=$HOME/.local/bin:$PATH
       - name: Build Chata
         run: |
-          #cd Chata
           just build
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Just
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/.local/bin
+          export PATH=$HOME/.local/bin:$PATH
+      - name: Test Chata
+        run: |
+          just test

@@ -52,6 +52,7 @@ enum class RVInstructionSet : uint8_t {
 };
 
 enum class ChataErrorType {
+    Unspecified,
     Compiler,
     Assembler,
     Execution,
@@ -290,19 +291,6 @@ std::optional<T> to_num(const chatastring& str) {
 
     DBG(std::cout << "result = " << result << std::endl;)
 
-    return result;
-}
-
-chatastring this_line(const auto& data, const uint32_t& current_i) {
-    chatastring result;
-    size_t i = current_i;
-    while (i > 0 && data[i] != '\n') {
-        i--;
-    }
-    while (i < data.size() && data[i] != '\n') {
-        result.push_back(data[i]);
-        i++;
-    }
     return result;
 }
 
