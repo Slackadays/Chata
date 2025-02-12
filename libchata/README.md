@@ -130,7 +130,7 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 | `.align` | 💀 |
 | `.attribute` | 💀 |
 | `.option rvc/norvc` | 💀 |
-| `.option arch` | ☑️ |
+| `.option arch` | 🪛 |
 | `.option pic/nopic` | 💀 |
 | `.option relax/norelax` | 💀 |
 | `.option push/pop` | ☑️ |
