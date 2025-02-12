@@ -1367,8 +1367,7 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
 chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavector<RVInstructionSet> supported_sets) {
     // auto then = std::chrono::high_resolution_clock::now();
 
-    auto con = std::make_unique<assembly_context>();
-    auto& c = *con; // This improves memory locality
+    assembly_context c;
 
     c.supported_sets = supported_sets;
 
