@@ -28,7 +28,7 @@ current_instr = ""
 code = "// SPDX-License-Identifier: MPL-2.0\n"
 code += "// The generate_pseudoinstruction_converter.py script automatically generated this code. DO NOT MODIFY!\n"
 code += "#include \"pseudoinstructions.hpp\"\n"
-code += "#include \"libchata.hpp\"\n\n"
+code += "#include \"../libchata.hpp\"\n\n"
 code += "namespace libchata_internal {\n\n"
 code += "bool make_inst_from_pseudoinst(assembly_context& c) {\n"
 

@@ -190,8 +190,6 @@ chatastring make_base_register(const chatastring& reg);
 
 int extract_number_from_string(const chatastring& str);
 
-chatastring errorDetailOrUnknown(const chatastring& detail);
-
 constexpr std::string_view generated_label_prefix = "generated_code_label";
 
 constexpr std::string_view placeholder_temp_integer_register = "generated_placeholder_integer_register";
@@ -232,7 +230,7 @@ std::optional<T> to_num(const chatastring& str) {
                 relocation_mode = 1;
                 relocation_offset = 4;
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid relocation mode " + errorDetailOrUnknown(str));
+                throw ChataError(ChataErrorType::Compiler, "Invalid relocation mode " + str);
             }
         }
     }

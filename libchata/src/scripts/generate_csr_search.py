@@ -26,7 +26,7 @@ current_csr = ""
 code = "// SPDX-License-Identifier: MPL-2.0\n"
 code += "// The generate_csrister_search.py script automatically generated this code. DO NOT MODIFY!\n"
 code += "#include \"csrs.hpp\"\n"
-code += "#include \"libchata.hpp\"\n\n"
+code += "#include \"../libchata.hpp\"\n\n"
 code += "namespace libchata_internal {\n\n"
 code += "const uint16_t fast_csr_search(const chatastring& csr) {\n"
 

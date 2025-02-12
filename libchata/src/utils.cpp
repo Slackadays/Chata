@@ -55,7 +55,7 @@ double to_float(const chatastring& str) {
     double result = 0;
     auto res = std::from_chars(str.data(), str.data() + str.size(), result);
     if (res.ec != std::errc()) {
-        throw ChataError(ChataErrorType::Other, "Invalid float " + errorDetailOrUnknown(str));
+        throw ChataError(ChataErrorType::Other, "Invalid float " + str);
     }
     return result;
 }
@@ -97,13 +97,6 @@ int decimal_representation_of_float(const float& input) {
     } u;
     u.f = input;
     return u.i;
-}
-
-chatastring errorDetailOrUnknown(const chatastring& detail) {
-    if (detail.empty()) {
-        return "(unknown)";
-    }
-    return detail;
 }
 
 } // namespace libchata_internal
