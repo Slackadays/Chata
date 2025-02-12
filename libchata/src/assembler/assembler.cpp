@@ -1381,7 +1381,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
         }
     }
 
-    c.inst.reserve(32);
+    c.inst.reserve(32); // This adds memory padding
     c.arg1.reserve(32);
     c.arg2.reserve(32);
     c.arg3.reserve(32);
