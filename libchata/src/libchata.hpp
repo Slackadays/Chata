@@ -47,6 +47,7 @@ enum class RVInstructionSet : uint8_t {
     Zcf,
     Zcmt,
     Zfa,
+    Zimop,
     B,
     V
 };

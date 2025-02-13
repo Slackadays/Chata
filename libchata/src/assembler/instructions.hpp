@@ -416,6 +416,54 @@ enum class RVInstructionID : uint16_t {
     FLTQH,
     FLEQQ,
     FLTQQ,
+    MOPR0, // Zimop
+    MOPR1,
+    MOPR2,
+    MOPR3,
+    MOPR4,
+    MOPR5,
+    MOPR6,
+    MOPR7,
+    MOPR8,
+    MOPR9,
+    MOPR10,
+    MOPR11,
+    MOPR12,
+    MOPR13,
+    MOPR14,
+    MOPR15,
+    MOPR16,
+    MOPR17,
+    MOPR18,
+    MOPR19,
+    MOPR20,
+    MOPR21,
+    MOPR22,
+    MOPR23,
+    MOPR24,
+    MOPR25,
+    MOPR26,
+    MOPR27,
+    MOPR28,
+    MOPR29,
+    MOPR30,
+    MOPR31,
+    MOPRR0,
+    MOPRR1,
+    MOPRR2,
+    MOPRR3,
+    MOPRR4,
+    MOPRR5,
+    MOPRR6,
+    MOPRR7,
+    CMOP1, // Zcmop
+    CMOP3,
+    CMOP5,
+    CMOP7,
+    CMOP9,
+    CMOP11,
+    CMOP13,
+    CMOP15,
     ADDUW, // B
     ANDN,
     CLMUL,
@@ -1225,6 +1273,6 @@ struct rvinstruction {
             , ssargs(ssargs) {} // With subset
 };
 
-extern const std::array<rvinstruction, 1072> instructions;
+extern const std::array<rvinstruction, 1112> instructions;
 
 } // namespace libchata_internal

@@ -63,7 +63,7 @@ If you're not using C++, bindings for other languages are planned!
 
 # Welcome to Chatassembler!
 
-Chatassembler is the world's #1 (and only) assembler library for RISC-V. It's easy to use, fully independent of GCC and LLVM, and _over 10x faster_ 🏎️ than them.
+Chatassembler is the world's #1 (and only) complete assembler library for RISC-V. It's easy to use, fully independent of GCC and LLVM, and _over 10x faster_ 🏎️ than them.
 
 <p align="center">
     <img src="assets/Figure_1.svg">
@@ -73,7 +73,7 @@ Here's more on that. Chatassembler is...
 
 ### ▫️ Complete
 
-Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zihintntl, Zihintpause, Zifencei, Zicntr, Zihpm, Zicsr, Zawrs, Zicond, Zacas, Zcb, Zcmp, Zcd, Zfinx, Zdinx, Zhinx, Zbb **(WIP)**, Zcf, Zcmt, Zfa, B **(WIP)**, and V **(WIP)** instruction sets, pseudoinstructions, custom instructions, labels, and many other directives. 
+Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zihintntl, Zihintpause, Zifencei, Zicntr, Zihpm, Zicsr, Zawrs, Zicond, Zimop, Zacas, Zcb, Zcmp, Zcd, Zfinx, Zdinx, Zhinx, Zbb **(WIP)**, Zcf, Zcmt, Zfa, B **(WIP)**, and V **(WIP)** instruction sets, pseudoinstructions, custom instructions, labels, and many other directives. 
 
 The endgame is full compatibility with GCC's `as` excluding certain features (more below).
 
