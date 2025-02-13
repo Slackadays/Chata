@@ -138,6 +138,57 @@ bool make_inst_from_pseudoinst(assembly_context& c) {
                 }
             }
         }
+        if (c.inst[1] == 't') {
+            if (c.inst.size() < 3) return false;
+            if (c.inst[2] == 'l') {
+                if (c.inst.size() < 4) return false;
+                if (c.inst[3] == '.') {
+                    if (c.inst.size() < 5) return false;
+                    if (c.inst[4] == 'a') {
+                        if (c.inst.size() < 6) return false;
+                        if (c.inst[5] == 'l') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'l') {
+                                if (c.inst.size() < 8) {
+                                    ntl_all_instr(c);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    if (c.inst[4] == 's') {
+                        if (c.inst.size() < 6) return false;
+                        if (c.inst[5] == '1') {
+                            if (c.inst.size() < 7) {
+                                ntl_s1_instr(c);
+                                return true;
+                            }
+                        }
+                    }
+                    if (c.inst[4] == 'p') {
+                        if (c.inst.size() < 6) return false;
+                        if (c.inst[5] == 'a') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'l') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 'l') {
+                                    if (c.inst.size() < 9) {
+                                        ntl_pall_instr(c);
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                        if (c.inst[5] == '1') {
+                            if (c.inst.size() < 7) {
+                                ntl_p1_instr(c);
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
         if (c.inst[1] == 'o') {
             if (c.inst.size() < 3) return false;
             if (c.inst[2] == 't') {

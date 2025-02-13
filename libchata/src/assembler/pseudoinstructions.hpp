@@ -85,5 +85,9 @@ void fsrmi_instr(assembly_context& c);
 void frflags_instr(assembly_context& c);
 void fsflags_instr(assembly_context& c);
 void fsflagsi_instr(assembly_context& c);
+void ntl_p1_instr(assembly_context& c);
+void ntl_pall_instr(assembly_context& c);
+void ntl_s1_instr(assembly_context& c);
+void ntl_all_instr(assembly_context& c);
 
 } // namespace libchata_internal

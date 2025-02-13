@@ -1089,7 +1089,6 @@ const std::array<rvinstruction, 1072> instructions = {
          {"vmv1r.v", VMV1RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00000}}, // Actually IVI, but we just need a custom rs1 value
          {"vmv2r.v", VMV2RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00001}},
          {"vmv4r.v", VMV4RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00011}},
-         {"vmv8r.v", VMV8RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00111}}}
-};
+         {"vmv8r.v", VMV8RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00111}}}};
 
 } // namespace libchata_internal

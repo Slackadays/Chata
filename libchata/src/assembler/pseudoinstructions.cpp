@@ -602,4 +602,36 @@ void fsflagsi_instr(assembly_context& c) {
     make_inst(c);
 }
 
+void ntl_p1_instr(assembly_context& c) { // ntl.p1 -> add x0, x0, x2
+    c.inst_offset = fast_instr_search("add");
+    c.arg1 = "zero";
+    c.arg2 = "zero";
+    c.arg3 = "x2";
+    make_inst(c);
+}
+
+void ntl_pall_instr(assembly_context& c) { // ntl.pall -> add x0, x0, x3
+    c.inst_offset = fast_instr_search("add");
+    c.arg1 = "zero";
+    c.arg2 = "zero";
+    c.arg3 = "x3";
+    make_inst(c);
+}
+
+void ntl_s1_instr(assembly_context& c) { // ntl.s1 -> add x0, x0, x4
+    c.inst_offset = fast_instr_search("add");
+    c.arg1 = "zero";
+    c.arg2 = "zero";
+    c.arg3 = "x4";
+    make_inst(c);
+}
+
+void ntl_all_instr(assembly_context& c) { // ntl.all -> add x0, x0, x5
+    c.inst_offset = fast_instr_search("add");
+    c.arg1 = "zero";
+    c.arg2 = "zero";
+    c.arg3 = "x5";
+    make_inst(c);
+}
+
 } // namespace libchata_internal
