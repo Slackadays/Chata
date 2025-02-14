@@ -1,1 +1,1 @@
-fltq.q t6, f20, f212
+mop.r.7 x14, x15
