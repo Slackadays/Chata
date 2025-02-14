@@ -391,19 +391,17 @@ void make_inst(assembly_context& c) {
         return;
     }
 
-    if (type == R || type == R4) {
+    if (type == R) {
         /*rd = 0b00000;
         rs1 = 0b00000;
         rs2 = 0b00000;
         imm = 0;*/
 
-        if (type == R) {
-            if (ssargs.use_imm_for_rs2) {
-                if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
-                    imm = num.value();
-                } else {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
-                }
+        if (ssargs.use_imm_for_rs2) {
+            if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                imm = num.value();
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         }
         rd = decode_register(c.arg1).encoding;
@@ -456,52 +454,62 @@ void make_inst(assembly_context& c) {
         } else {
             rs2 = ssargs.custom_reg_val.value();
         }
-        if (type == R) {
-            if (!c.arg4.empty() && no_rs2) {
-                frm = decode_frm(c.arg4);
-            } else if (!c.arg5.empty() && !no_rs2) {
-                frm = decode_frm(c.arg5);
-            } else if (!c.arg3.empty() && no_rs2) {
-                frm = decode_frm(c.arg3);
-            } else {
-                if (ssargs.use_frm_for_funct3) {
-                    frm = 0b111;
-                }
-            }
-
-            DBG(std::cout << "Encoding R-type instruction with name " << name << std::endl;)
-            inst |= rd << 7; // Add rd
+        if (!c.arg4.empty() && no_rs2) {
+            frm = decode_frm(c.arg4);
+        } else if (!c.arg5.empty() && !no_rs2) {
+            frm = decode_frm(c.arg5);
+        } else if (!c.arg3.empty() && no_rs2) {
+            frm = decode_frm(c.arg3);
+        } else {
             if (ssargs.use_frm_for_funct3) {
-                inst |= frm << 12; // Add frm
-            } else {
-                inst |= (funct & 0b111) << 12; // Add funct3
+                frm = 0b111;
             }
-            inst |= rs1 << 15;          // Add rs1
-            inst |= rs2 << 20;          // Add rs2
-            inst |= (funct >> 3) << 25; // Add funct7
-        } else if (type == R4) {
-            rs3 = decode_register(c.arg4).encoding;
-            if (!c.arg5.empty()) {
-                frm = decode_frm(c.arg5);
-            } else {
-                if (ssargs.use_frm_for_funct3) {
-                    frm = 0b111;
-                }
-            }
-
-            DBG(std::cout << "Encoding R4-type instruction with name " << name << std::endl;)
-            inst |= rd << 7; // Add rd
-            if (ssargs.use_frm_for_funct3) {
-                inst |= frm << 12; // Add frm
-            } else {
-                inst |= (funct & 0b111) << 12; // Add funct3
-            }
-            inst |= rs1 << 15;          // Add rs1
-            inst |= rs2 << 20;          // Add rs2
-            inst |= (funct >> 3) << 25; // Add funct2
-            inst |= rs3 << 27;          // Add rs3
         }
-    } else if (type == I || type == S) {
+
+        DBG(std::cout << "Encoding R-type instruction with name " << name << std::endl;)
+        inst |= rd << 7; // Add rd
+        if (ssargs.use_frm_for_funct3) {
+            inst |= frm << 12; // Add frm
+        } else {
+            inst |= (funct & 0b111) << 12; // Add funct3
+        }
+        inst |= rs1 << 15;          // Add rs1
+        inst |= rs2 << 20;          // Add rs2
+        inst |= (funct >> 3) << 25; // Add funct7
+    } else if (type == R4) {
+        rd = decode_register(c.arg1).encoding;
+        rs1 = decode_register(c.arg2).encoding;
+        auto no_rs2 = ssargs.custom_reg_val.has_value();
+        if (!no_rs2) {
+            if (ssargs.use_imm_for_rs2) {
+                rs2 = imm;
+            } else {
+                rs2 = decode_register(c.arg3).encoding;
+            }
+        } else {
+            rs2 = ssargs.custom_reg_val.value();
+        }
+        rs3 = decode_register(c.arg4).encoding;
+        if (!c.arg5.empty()) {
+            frm = decode_frm(c.arg5);
+        } else {
+            if (ssargs.use_frm_for_funct3) {
+                frm = 0b111;
+            }
+        }
+
+        DBG(std::cout << "Encoding R4-type instruction with name " << name << std::endl;)
+        inst |= rd << 7; // Add rd
+        if (ssargs.use_frm_for_funct3) {
+            inst |= frm << 12; // Add frm
+        } else {
+            inst |= (funct & 0b111) << 12; // Add funct3
+        }
+        inst |= rs1 << 15;          // Add rs1
+        inst |= rs2 << 20;          // Add rs2
+        inst |= (funct >> 3) << 25; // Add funct2
+        inst |= rs3 << 27;          // Add rs3
+    } else if (type == I) {
         /*rd = 0b00000;
         rs1 = 0b00000;
         rs2 = 0b00000;
@@ -515,26 +523,30 @@ void make_inst(assembly_context& c) {
             imm = offset;
             rs1 = decode_register(reg).encoding;
         }
-        if (type == I) {
-            rd = decode_register(c.arg1).encoding;
-        } else if (type == S) {
-            rs2 = decode_register(c.arg1).encoding;
-        }
+        rd = decode_register(c.arg1).encoding;
 
-        if (type == I) {
-            DBG(std::cout << "Encoding I-type instruction with name " << name << std::endl;)
-            inst |= rd << 7;     // Add rd
-            inst |= funct << 12; // Add funct3
-            inst |= rs1 << 15;   // Add rs1
-            inst |= imm << 20;   // Add imm
-        } else if (type == S) {
-            DBG(std::cout << "Encoding S-type instruction with name " << name << std::endl;)
-            inst |= (imm & 0b11111) << 7; // Add imm[4:0]
-            inst |= funct << 12;          // Add funct3
-            inst |= rs1 << 15;            // Add rs1
-            inst |= rs2 << 20;            // Add rs2
-            inst |= (imm >> 5) << 25;     // Add imm[11:5]
+        DBG(std::cout << "Encoding I-type instruction with name " << name << std::endl;)
+        inst |= rd << 7;     // Add rd
+        inst |= funct << 12; // Add funct3
+        inst |= rs1 << 15;   // Add rs1
+        inst |= imm << 20;   // Add imm
+    } else if (type == S) {
+        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+            imm = num.value();
+            rs1 = decode_register(c.arg2).encoding;
+        } else {
+            auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
+            imm = offset;
+            rs1 = decode_register(reg).encoding;
         }
+        rs2 = decode_register(c.arg1).encoding;
+
+        DBG(std::cout << "Encoding S-type instruction with name " << name << std::endl;)
+        inst |= (imm & 0b11111) << 7; // Add imm[4:0]
+        inst |= funct << 12;          // Add funct3
+        inst |= rs1 << 15;            // Add rs1
+        inst |= rs2 << 20;            // Add rs2
+        inst |= (imm >> 5) << 25;     // Add imm[11:5]
     } else if (type == Branch) {
         if (auto num = to_num<int>(c.arg3); num.has_value()) {
             imm = num.value();
