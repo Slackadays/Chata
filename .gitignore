@@ -53,3 +53,5 @@ test.cpp
 test
 
 *.bin
+
+temp.s

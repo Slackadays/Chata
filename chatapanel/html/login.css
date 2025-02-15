@@ -61,6 +61,6 @@ input[type=submit] {
     font-family: Fustat;
     border: none;
     box-shadow: 0 0 2px 2px #ffffff20;
-    font-size: 1em;
+    font-size: 1.1em;
     transition: all 0.2s cubic-bezier(0.33, 0.53, 0.12, 1);
 }

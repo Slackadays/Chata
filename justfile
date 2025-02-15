@@ -4,7 +4,7 @@ default:
 
 # copy all files to a remote system
 copy:
-  python setup-credentials.py
+  python misc/setup-credentials.py
   . ./credentials.sh; \
   rsync -rRv -e ssh ./ $CHATA_CROSS_USERNAME@$CHATA_CROSS_IP:$CHATA_CROSS_PATH --exclude="*/build" --exclude=".git/*" --exclude="*a.out" --exclude="*.png" 
 
