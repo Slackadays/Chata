@@ -574,21 +574,21 @@ bool make_inst_from_pseudoinst(assembly_context& c) {
             if (c.inst.size() < 3) return false;
             if (c.inst[2] == 'v') {
                 if (c.inst.size() < 4) return false;
-                if (c.inst[3] == 's') {
-                    if (c.inst.size() < 5) return false;
-                    if (c.inst[4] == 'x') {
-                        if (c.inst.size() < 6) {
-                            fmvsx_instr(c);
-                            return true;
-                        }
-                    }
-                }
                 if (c.inst[3] == '.') {
                     if (c.inst.size() < 5) return false;
                     if (c.inst[4] == 's') {
                         if (c.inst.size() < 6) {
                             fmv_s_instr(c);
                             return true;
+                        }
+                        if (c.inst[5] == '.') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'x') {
+                                if (c.inst.size() < 8) {
+                                    fmv_s_x_instr(c);
+                                    return true;
+                                }
+                            }
                         }
                     }
                     if (c.inst[4] == 'd') {
@@ -597,13 +597,16 @@ bool make_inst_from_pseudoinst(assembly_context& c) {
                             return true;
                         }
                     }
-                }
-                if (c.inst[3] == 'x') {
-                    if (c.inst.size() < 5) return false;
-                    if (c.inst[4] == 's') {
-                        if (c.inst.size() < 6) {
-                            fmvxs_instr(c);
-                            return true;
+                    if (c.inst[4] == 'x') {
+                        if (c.inst.size() < 6) return false;
+                        if (c.inst[5] == '.') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 's') {
+                                if (c.inst.size() < 8) {
+                                    fmv_x_s_instr(c);
+                                    return true;
+                                }
+                            }
                         }
                     }
                 }

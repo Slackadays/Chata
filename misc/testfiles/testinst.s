@@ -1,1 +1,1 @@
-mop.r.7 x14, x15
+fneg.s f4, f5

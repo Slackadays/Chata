@@ -101,6 +101,7 @@ void seqz_instr(assembly_context& c) { // seqz rd, rs -> sltiu rd, rs, 1
 
 void snez_instr(assembly_context& c) { // snez rd, rs -> sltu rd, zero, rs
     c.inst_offset = fast_instr_search("sltu");
+    c.arg3 = c.arg2;
     c.arg2 = "zero";
     make_inst(c);
 }
@@ -410,65 +411,65 @@ void vl8r_v_instr(assembly_context& c) { // vl8r.v v8, zero -> vl8re8.v v8, zero
     make_inst(c);
 }
 
-void fmvsx_instr(assembly_context& c) {
+void fmv_s_x_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("fmv.w.x");
     make_inst(c);
 }
 
-void fmvxs_instr(assembly_context& c) {
+void fmv_x_s_instr(assembly_context& c) {
     c.inst_offset = fast_instr_search("fmv.x.w");
     make_inst(c);
 }
 
-void rdinstret_instr(assembly_context& c) {
+void rdinstret_instr(assembly_context& c) { // rdinstret rd -> csrrs rd, instret, zero
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "instret";
     c.arg3 = "zero";
     make_inst(c);
 }
 
-void rdinstreth_instr(assembly_context& c) {
+void rdinstreth_instr(assembly_context& c) { // rdinstreth rd -> csrrs rd, instreth, zero
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "instreth";
     c.arg3 = "zero";
     make_inst(c);
 }
 
-void rdcycle_instr(assembly_context& c) {
+void rdcycle_instr(assembly_context& c) { // rdcycle rd -> csrrs rd, cycle, zero
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "cycle";
     c.arg3 = "zero";
     make_inst(c);
 }
 
-void rdcycleh_instr(assembly_context& c) {
+void rdcycleh_instr(assembly_context& c) { // rdcycleh rd -> csrrs rd, cycleh, zero
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "cycleh";
     c.arg3 = "zero";
     make_inst(c);
 }
 
-void rdtime_instr(assembly_context& c) {
+void rdtime_instr(assembly_context& c) { // rdtime rd -> csrrs rd, time, zero
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "time";
     c.arg3 = "zero";
     make_inst(c);
 }
 
-void rdtimeh_instr(assembly_context& c) {
+void rdtimeh_instr(assembly_context& c) { // rdtimeh rd -> csrrs rd, timeh, zero
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "timeh";
     c.arg3 = "zero";
     make_inst(c);
 }
 
-void csrr_instr(assembly_context& c) {
+void csrr_instr(assembly_context& c) { // csrr rd, csr -> csrrs rd, csr, zero
     c.inst_offset = fast_instr_search("csrrs");
     c.arg3 = "zero";
     make_inst(c);
 }
 
-void csrw_instr(assembly_context& c) {
+void csrw_instr(assembly_context& c) { // csrw csr, rs -> csrrw zero, csr, rs
     c.inst_offset = fast_instr_search("csrrw");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
@@ -476,7 +477,7 @@ void csrw_instr(assembly_context& c) {
     make_inst(c);
 }
 
-void csrs_instr(assembly_context& c) {
+void csrs_instr(assembly_context& c) { // csrs csr, rs -> csrrs zero, csr, rs
     c.inst_offset = fast_instr_search("csrrs");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
@@ -484,7 +485,7 @@ void csrs_instr(assembly_context& c) {
     make_inst(c);
 }
 
-void csrc_instr(assembly_context& c) {
+void csrc_instr(assembly_context& c) { // csrc csr, rs -> csrrc zero, csr, rs
     c.inst_offset = fast_instr_search("csrrc");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
@@ -492,7 +493,7 @@ void csrc_instr(assembly_context& c) {
     make_inst(c);
 }
 
-void csrwi_instr(assembly_context& c) {
+void csrwi_instr(assembly_context& c) { // csrwi csr, imm -> csrrwi zero, csr, imm
     c.inst_offset = fast_instr_search("csrrwi");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
@@ -500,7 +501,7 @@ void csrwi_instr(assembly_context& c) {
     make_inst(c);
 }
 
-void csrsi_instr(assembly_context& c) {
+void csrsi_instr(assembly_context& c) { // csrsi csr, imm -> csrrsi zero, csr, imm
     c.inst_offset = fast_instr_search("csrrsi");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
@@ -508,7 +509,7 @@ void csrsi_instr(assembly_context& c) {
     make_inst(c);
 }
 
-void csrci_instr(assembly_context& c) {
+void csrci_instr(assembly_context& c) { // csrci csr, imm -> csrrci zero, csr, imm
     c.inst_offset = fast_instr_search("csrrci");
     c.arg3 = c.arg2;
     c.arg2 = c.arg1;
@@ -516,14 +517,14 @@ void csrci_instr(assembly_context& c) {
     make_inst(c);
 }
 
-void frcsr_instr(assembly_context& c) {
+void frcsr_instr(assembly_context& c) { // frcsr rd -> csrrs rd, fcsr, zero
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "fcsr";
     c.arg3 = "zero";
     make_inst(c);
 }
 
-void fscsr_instr(assembly_context& c) {
+void fscsr_instr(assembly_context& c) { // fscsr rd, rs -> csrrw rd, fcsr, rs or fscsr rs -> csrrw zero, fcsr, rs
     c.inst_offset = fast_instr_search("csrrw");
     if (!c.arg2.empty()) {
         c.arg3 = c.arg2;
@@ -536,14 +537,14 @@ void fscsr_instr(assembly_context& c) {
     make_inst(c);
 }
 
-void frrm_instr(assembly_context& c) {
+void frrm_instr(assembly_context& c) { // frrm rd -> csrrs rd, frm, zero
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "frm";
     c.arg3 = "zero";
     make_inst(c);
 }
 
-void fsrm_instr(assembly_context& c) {
+void fsrm_instr(assembly_context& c) { // fsrm rd, rs -> csrrw rd, frm, rs or fsrm rs -> csrrw zero, frm, rs
     c.inst_offset = fast_instr_search("csrrw");
     if (!c.arg2.empty()) {
         c.arg3 = c.arg2;
@@ -556,7 +557,7 @@ void fsrm_instr(assembly_context& c) {
     make_inst(c);
 }
 
-void fsrmi_instr(assembly_context& c) {
+void fsrmi_instr(assembly_context& c) { // fsrmi imm -> csrrwi zero, frm, imm or fsrmi rd, imm -> csrrwi rd, frm, imm
     c.inst_offset = fast_instr_search("csrrwi");
     if (!c.arg2.empty()) {
         c.arg3 = c.arg2;
@@ -569,14 +570,14 @@ void fsrmi_instr(assembly_context& c) {
     make_inst(c);
 }
 
-void frflags_instr(assembly_context& c) {
+void frflags_instr(assembly_context& c) { // frflags rd -> csrrs rd, fflags, zero
     c.inst_offset = fast_instr_search("csrrs");
     c.arg2 = "fflags";
     c.arg3 = "zero";
     make_inst(c);
 }
 
-void fsflags_instr(assembly_context& c) {
+void fsflags_instr(assembly_context& c) { // fsflags rd, rs -> csrrw rd, fflags, rs or fsflags rs -> csrrw zero, fflags, rs
     c.inst_offset = fast_instr_search("csrrw");
     if (!c.arg2.empty()) {
         c.arg3 = c.arg2;
@@ -589,7 +590,7 @@ void fsflags_instr(assembly_context& c) {
     make_inst(c);
 }
 
-void fsflagsi_instr(assembly_context& c) {
+void fsflagsi_instr(assembly_context& c) { // fsflagsi imm -> csrrwi zero, fflags, imm or fsflagsi rd, imm -> csrrwi rd, fflags, imm
     c.inst_offset = fast_instr_search("csrrwi");
     if (!c.arg2.empty()) {
         c.arg3 = c.arg2;

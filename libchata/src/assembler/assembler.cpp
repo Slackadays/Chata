@@ -1431,7 +1431,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as -march=rv64gfdqc_zfh_zfa_zimop temp.s -o temp.o");
+    int res = std::system("riscv64-linux-gnu-as -march=rv32gfdc temp.s -o temp.o");
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)
