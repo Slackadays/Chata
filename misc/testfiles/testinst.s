@@ -1,1 +1,1 @@
-fneg.s f4, f5
+amocas.q.aqrl x8, x9, (x10)

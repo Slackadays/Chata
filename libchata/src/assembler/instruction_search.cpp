@@ -1750,6 +1750,15 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                         if (inst.size() < 6) return instr_search_failed;
                         if (inst[5] == 'd') {
                             if (inst.size() < 7) return 480;
+                            if (inst[6] == '.') {
+                                if (inst.size() < 8) return instr_search_failed;
+                                if (inst[7] == 'u') {
+                                    if (inst.size() < 9) return instr_search_failed;
+                                    if (inst[8] == 'w') {
+                                        if (inst.size() < 10) return 481;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -1767,7 +1776,7 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                                 if (inst[7] == 'u') {
                                     if (inst.size() < 9) return instr_search_failed;
                                     if (inst[8] == 'w') {
-                                        if (inst.size() < 10) return 481;
+                                        if (inst.size() < 10) return 483;
                                     }
                                 }
                             }

@@ -499,12 +499,12 @@ const std::array<rvinstruction, 1112> instructions = {
          {"sext.b", SEXTB, R, OP_IMM, 0b0110000001, B, 4, {.custom_reg_val = 0b00100}},
          {"sext.h", SEXTH, R, OP_IMM, 0b0110000001, B, 4, {.custom_reg_val = 0b00101}},
          {"sh1add", SH1ADD, R, OP_OP, 0b0010000010, B, 4},
-         {"sh2add.uw", SH1ADDUW, R, OP_32, 0b0010000010, B, 4},
+         {"sh1add.uw", SH1ADDUW, R, OP_32, 0b0010000010, B, 4},
          {"sh2add", SH2ADD, R, OP_OP, 0b0010000100, B, 4},
          {"sh2add.uw", SH2ADDUW, R, OP_32, 0b0010000100, B, 4},
          {"sh3add", SH3ADD, R, OP_OP, 0b0010000110, B, 4},
          {"sh3add.uw", SH3ADDUW, R, OP_32, 0b0010000110, B, 4},
-         {"slli.uw", SLLIUW, R, OP_IMM_32, 0b000010001, B, 4, {.use_imm_for_rs2 = true}},
+         {"slli.uw", SLLIUW, R, OP_IMM_32, 0b0000100001, B, 4, {.use_imm_for_rs2 = true}},
          {"unzip", UNZIP, R, OP_IMM, 0b0000100101, B, 4, {.custom_reg_val = 0b11111}},
          {"xnor", XNOR, R, OP_OP, 0b0100000100, B, 4},
          {"xperm.b", XPERMB, R, OP_OP, 0b0010100100, B, 4},
@@ -1129,6 +1129,7 @@ const std::array<rvinstruction, 1112> instructions = {
          {"vmv1r.v", VMV1RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00000}}, // Actually IVI, but we just need a custom rs1 value
          {"vmv2r.v", VMV2RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00001}},
          {"vmv4r.v", VMV4RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00011}},
-         {"vmv8r.v", VMV8RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00111}}}};
+         {"vmv8r.v", VMV8RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00111}}}
+};
 
 } // namespace libchata_internal
