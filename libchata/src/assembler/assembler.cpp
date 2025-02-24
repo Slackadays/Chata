@@ -808,20 +808,107 @@ void make_inst(assembly_context& c) {
     } else if (type == MVX) {
 
     } else if (type == CLB) {
+        rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
+        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+            imm = num.value() & 0b11;
+            rs1 = decode_register(c.arg2).encoding & 0b111;
+        } else {
+            auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
+            imm = offset & 0b11;
+            rs1 = decode_register(reg).encoding & 0b111;
+        }
 
+        DBG(std::cout << "Encoding CLB-type instruction with name " << name << std::endl;)
+
+        inst |= rd << 2;                      // Add rd' (just 3 bits)
+        inst |= imm << 5;                     // Add uimm[1:0]
+        inst |= rs1 << 7;                     // Add rs1' (just 3 bits)
+        inst |= funct << 10;                  // Add funct6
     } else if (type == CSBfmt) {
+        rs2 = decode_register(c.arg1).encoding & 0b111;
+        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+            imm = num.value() & 0b11;
+            rs1 = decode_register(c.arg2).encoding & 0b111;
+        } else {
+            auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
+            imm = offset & 0b11;
+            rs1 = decode_register(reg).encoding & 0b111;
+        }
 
+        DBG(std::cout << "Encoding CSB-type instruction with name " << name << std::endl;)
+
+        inst |= rs2 << 2;                     // Add rs2' (just 3 bits)
+        inst |= imm << 5;                     // Add uimm[1:0]
+        inst |= rs1 << 7;                     // Add rs1' (just 3 bits)
+        inst |= funct << 10;                  // Add funct6
     } else if (type == CLHfmt) {
+        rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
+        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+            imm = num.value() & 0b1;    
+            rs1 = decode_register(c.arg2).encoding & 0b111;
+        } else {
+            auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
+            imm = offset & 0b1;
+            rs1 = decode_register(reg).encoding & 0b111;
+        }
 
+        DBG(std::cout << "Encoding CLH-type instruction with name " << name << std::endl;)
+
+        inst |= rd << 2;                      // Add rd' (just 3 bits)
+        inst |= imm << 5;                     // Add uimm[0]
+        inst |= (funct & 0b1) << 6;           // Add funct1
+        inst |= rs1 << 7;                     // Add rs1' (just 3 bits)
+        inst |= (funct >> 1) << 10;           // Add funct6
     } else if (type == CSHfmt) {
+        rs2 = decode_register(c.arg1).encoding & 0b111;
+        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+            imm = num.value() & 0b1;
+            rs1 = decode_register(c.arg2).encoding & 0b111;
+        } else {
+            auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
+            imm = offset & 0b1;
+            rs1 = decode_register(reg).encoding & 0b111;
+        }
 
+        DBG(std::cout << "Encoding CSH-type instruction with name " << name << std::endl;)
+
+        inst |= rs2 << 2;                     // Add rs2' (just 3 bits)
+        inst |= imm << 5;                     // Add uimm[0]
+        inst |= (funct & 0b1) << 6;           // Add funct1
+        inst |= rs1 << 7;                     // Add rs1' (just 3 bits)
+        inst |= (funct >> 1) << 10;           // Add funct6
     } else if (type == CU) {
+        rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
 
+        DBG(std::cout << "Encoding CU-type instruction with name " << name << std::endl;)
+
+        inst |= (funct & 0b11111) << 2; // Add funct5
+        inst |= rd << 7;                 // Add rd' (just 3 bits)
+        inst |= (funct >> 5) << 10;      // Add funct6
     } else if (type == CMMV) {
+        rs1 = decode_register(c.arg1).encoding & 0b111;
+        rs2 = decode_register(c.arg2).encoding & 0b111;
 
+        DBG(std::cout << "Encoding CMMV-type instruction with name " << name << std::endl;)
+
+        inst |= rs1 << 2;                     // Add rs1' (just 3 bits)
+        inst |= (funct & 0b11) << 5;         // Add funct2
+        inst |= rs1 << 7;                    // Add rs1' (just 3 bits)
+        inst |= (funct >> 2) << 10;         // Add funct6
     } else if (type == CMJTfmt) {
+        if (auto num = decode_imm<int>(c.arg1, c); num.has_value()) {
+            imm = num.value();
+        } else {
+            throw ChataError(ChataErrorType::Compiler, "Invalid index " + c.arg1, c.line, c.column);
+        }
+
+        DBG(std::cout << "Encoding CMJT-type instruction with name " << name << std::endl;)
+
+        inst |= (imm & 0b11111111) << 2; // Add imm[7:0]
+        inst |= funct << 10;             // Add funct6
 
     } else if (type == CMPP) {
+
     }
 
     DBG(std::cout << "Instruction made" << std::endl;)
