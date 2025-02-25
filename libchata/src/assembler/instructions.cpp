@@ -367,7 +367,7 @@ const std::array<rvinstruction, 1112> instructions = {
          {"c.lbu", CLBU, CLB, OP_C0, 0b100000, Zcb, 2},
          {"c.lhu", CLHU, CLHfmt, OP_C0, 0b1000010, Zcb, 2},
          {"c.lh", CLH, CLHfmt, OP_C0, OP_MADD, Zcb, 2},
-         {"c.sb", CSB, CSHfmt, OP_C0, 0b100010, Zcb, 2},
+         {"c.sb", CSB, CSBfmt, OP_C0, 0b100010, Zcb, 2},
          {"c.sh", CSH, CSHfmt, OP_C0, 0b1000110, Zcb, 2},
          {"c.zext.b", CZEXTB, CU, OP_C1, 0b10011111000, Zcb, 2},
          {"c.sext.b", CSEXTB, CU, OP_C1, 0b10011111001, Zcb, 2},

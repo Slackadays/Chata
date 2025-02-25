@@ -1,1 +1,1 @@
-amocas.q.aqrl x8, x9, (x10)
+c.sb x14, 2(x15)

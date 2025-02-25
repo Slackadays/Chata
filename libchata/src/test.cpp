@@ -881,6 +881,14 @@ int main() {
     as("amocas.q.aqrl x8, x9, x10", 0x2f44952e);
     as("amocas.q.aqrl x8, x9, (x10)", 0x2f44952e);
     as("amocas.q.aqrl x8, x9, 0(x10)", 0x2f44952e);
+    as("c.lbu x8, x9, 2", 0xa080);
+    as("c.lbu x8, 2(x9)", 0xa080);
+    as("c.lhu x10, x11, 2", 0xa885);
+    as("c.lhu x10, 2(x11)", 0xa885);
+    as("c.lh x12, x13, 2", 0xf086);
+    as("c.lh x12, 2(x13)", 0xf086);
+    as("c.sb x14, x15, 2", 0xb88b);
+    as("c.sb x14, 2(x15)", 0xb88b);
     as("fli.s f0, -1.0", 0x530010f0);
     as("fli.s f1, min", 0xd38010f0);
     as("fli.s f2, 0.000015258789", 0x530111f0);
