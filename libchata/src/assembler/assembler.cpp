@@ -864,11 +864,11 @@ void make_inst(assembly_context& c) {
     } else if (type == CSHfmt) {
         rs2 = decode_register(c.arg1).encoding & 0b111;
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
-            imm = num.value() & 0b1;
+            imm = (num.value() >> 1) & 0b1;
             rs1 = decode_register(c.arg2).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
-            imm = offset & 0b1;
+            imm = (offset >> 1) & 0b1;
             rs1 = decode_register(reg).encoding & 0b111;
         }
 
@@ -893,7 +893,7 @@ void make_inst(assembly_context& c) {
 
         DBG(std::cout << "Encoding CMMV-type instruction with name " << name << std::endl;)
 
-        inst |= rs1 << 2;                     // Add rs1' (just 3 bits)
+        inst |= rs2 << 2;                     // Add rs2' (just 3 bits)
         inst |= (funct & 0b11) << 5;         // Add funct2
         inst |= rs1 << 7;                    // Add rs1' (just 3 bits)
         inst |= (funct >> 2) << 10;         // Add funct6
