@@ -1,1 +1,1 @@
-cm.jalt 64
+cm.push {ra}, -64

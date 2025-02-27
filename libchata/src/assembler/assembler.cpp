@@ -909,8 +909,122 @@ void make_inst(assembly_context& c) {
         inst |= (imm & 0b11111111) << 2; // Add imm[7:0]
         inst |= funct << 10;             // Add funct6
 
-    } else if (type == CMPP) {
+    } else if (type == CMPP) { // This one's weird. These instructions look like "inst {ra, s0-s11}, offset", where the part in brackets is a register list. To Chatassembler, this looks like "inst" "{ra" "s0-s11}" "offset" so we need to just look at the components instead. Here's all the potential cases for the range:
+    /*
+case 4: {reg_list="ra"; xreg_list="x1";}
+case 5: {reg_list="ra, s0"; xreg_list="x1, x8";}
+case 6: {reg_list="ra, s0-s1"; xreg_list="x1, x8-x9";}
+case 7: {reg_list="ra, s0-s2"; xreg_list="x1, x8-x9, x18";}
+case 8: {reg_list="ra, s0-s3"; xreg_list="x1, x8-x9, x18-x19";}
+case 9: {reg_list="ra, s0-s4"; xreg_list="x1, x8-x9, x18-x20";}
+case 10: {reg_list="ra, s0-s5"; xreg_list="x1, x8-x9, x18-x21";}
+case 11: {reg_list="ra, s0-s6"; xreg_list="x1, x8-x9, x18-x22";}
+case 12: {reg_list="ra, s0-s7"; xreg_list="x1, x8-x9, x18-x23";}
+case 13: {reg_list="ra, s0-s8"; xreg_list="x1, x8-x9, x18-x24";}
+case 14: {reg_list="ra, s0-s9"; xreg_list="x1, x8-x9, x18-x25";}
+case 15: {reg_list="ra, s0-s11"; xreg_list="x1, x8-x9, x18-x27";}
+    */
+        uint8_t rlist = 0;
 
+        if (c.arg1.front() == '{') {
+            c.arg1.erase(0, 1);
+        }
+
+        if (c.arg1.back() == '}') {
+            c.arg1.pop_back();
+        }
+
+        if (c.arg2.back() == '}') {
+            c.arg2.pop_back();
+        }
+
+        if (c.arg3.back() == '}') {
+            c.arg3.pop_back();
+        }
+
+        if (fast_eq(c.arg1, "ra")) {
+            if (c.arg3.empty()) {
+                rlist = 4;
+            } else if (fast_eq(c.arg2, "s0")) {
+                rlist = 5;
+            } else if (fast_eq(c.arg2, "s0-s1")) {
+                rlist = 6;
+            } else if (fast_eq(c.arg2, "s0-s2")) {
+                rlist = 7;
+            } else if (fast_eq(c.arg2, "s0-s3")) {
+                rlist = 8;
+            } else if (fast_eq(c.arg2, "s0-s4")) {
+                rlist = 9;
+            } else if (fast_eq(c.arg2, "s0-s5")) {
+                rlist = 10;
+            } else if (fast_eq(c.arg2, "s0-s6")) {
+                rlist = 11;
+            } else if (fast_eq(c.arg2, "s0-s7")) {
+                rlist = 12;
+            } else if (fast_eq(c.arg2, "s0-s8")) {
+                rlist = 13;
+            } else if (fast_eq(c.arg2, "s0-s9")) {
+                rlist = 14;
+            } else if (fast_eq(c.arg2, "s0-s11")) {
+                rlist = 15;
+            }
+        } else if (fast_eq(c.arg1, "x1")) {
+            if (c.arg3.empty()) {
+                rlist = 4;
+            } else if (fast_eq(c.arg2, "x8")) {
+                rlist = 5;
+            } else if (fast_eq(c.arg2, "x8-x9")) {
+                if (c.arg4.empty()) {
+                    rlist = 6;
+                } else if (fast_eq(c.arg3, "x18")) {
+                    rlist = 7;
+                } else if (fast_eq(c.arg3, "x18-x19")) {
+                    rlist = 8;
+                } else if (fast_eq(c.arg3, "x18-x20")) {
+                    rlist = 9;
+                } else if (fast_eq(c.arg3, "x18-x21")) {
+                    rlist = 10;
+                } else if (fast_eq(c.arg3, "x18-x22")) {
+                    rlist = 11;
+                } else if (fast_eq(c.arg3, "x18-x23")) {
+                    rlist = 12;
+                } else if (fast_eq(c.arg3, "x18-x24")) {
+                    rlist = 13;
+                } else if (fast_eq(c.arg3, "x18-x25")) {
+                    rlist = 14;
+                } else if (fast_eq(c.arg3, "x18-x27")) {
+                    rlist = 15;
+                }
+            }
+        }
+
+        if (c.arg3.empty()) {
+            if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
+                imm = num.value();
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+            }
+        } else if (c.arg4.empty()) {
+            if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                imm = num.value();
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+            }
+        } else {
+            if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
+                imm = num.value();
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
+            }
+        }
+
+        uint8_t stack_adj_base = 0;
+
+        //if (rlist == 
+
+        inst |= ((imm >> 4) & 0b11) << 2; // Add spimm[5:4]
+        inst |= (rlist & 0b1111) << 4;    // Add rlist[3:0]
+        inst |= funct << 8;                // Add funct8
     }
 
     DBG(std::cout << "Instruction made" << std::endl;)
@@ -1523,7 +1637,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as -march=rv64gfdcqb_zbc_zba_zicond_zacas_zcb temp.s -o temp.o");
+    int res = std::system("riscv64-linux-gnu-as -march=rv64gfdcqb_zbc_zba_zicond_zacas_zcb_zcmp temp.s -o temp.o");
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)
