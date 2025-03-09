@@ -233,12 +233,12 @@ enum class RVInstructionSet : uint8_t {
 
 Include instruction sets if:
 
-- You're assembling code which uses the `bclri` or `rev8` instructions, which are different on 64 bit systems than 32.
+- You're assembling code which uses the `bclri`, `rev8`, `cm.push*`, or `cm.pop*` instructions, which are different on 32 bit systems than 64, and you're targeting a 32 bit system.
 - You're assembling code which uses the `.option arch` directive, which requires knowing the target instruction sets.
+  
+By default, Chatassembler targets a 64 bit system.
 
 If you include instruction sets, you must include at least either `RV32I` or `RV64I`.
-
-By default, the `bclri` and `rev8` instructions target a 32 bit system.
 
 To preserve performance, Chatassembler doesn't check if instructions outside of `.option arch` blocks are valid for the provided instruction sets. If this is a problem for you, fix your broken software.
 
