@@ -898,7 +898,7 @@ int main() {
     as("c.zext.w x12", 0x719e);
     as("c.not x13", 0xf59e);
     as("c.mul x14, x15", 0x5d9f);
-    
+
     as("cm.mvsa01 s0, s1", 0x26ac);
     as("cm.mva01s s0, s1", 0x66ac);
     as("cm.jt 16", 0x42a0);

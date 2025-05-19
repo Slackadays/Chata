@@ -20,6 +20,7 @@
 #endif
 
 enum class RVInstructionSet : uint8_t {
+    RV32E,
     RV32I,
     RV64I,
     RV32M,

@@ -820,11 +820,11 @@ void make_inst(assembly_context& c) {
 
         DBG(std::cout << "Encoding CLB-type instruction with name " << name << std::endl;)
 
-        inst |= rd << 2;                      // Add rd' (just 3 bits)
-        inst |= (imm >> 1) << 5;              // Add uimm[1]
-        inst |= (imm & 0b1) << 6;             // Add uimm[0]
-        inst |= rs1 << 7;                     // Add rs1' (just 3 bits)
-        inst |= funct << 10;                  // Add funct6
+        inst |= rd << 2;          // Add rd' (just 3 bits)
+        inst |= (imm >> 1) << 5;  // Add uimm[1]
+        inst |= (imm & 0b1) << 6; // Add uimm[0]
+        inst |= rs1 << 7;         // Add rs1' (just 3 bits)
+        inst |= funct << 10;      // Add funct6
     } else if (type == CSBfmt) {
         rs2 = decode_register(c.arg1).encoding & 0b111;
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
@@ -838,15 +838,15 @@ void make_inst(assembly_context& c) {
 
         DBG(std::cout << "Encoding CSB-type instruction with name " << name << std::endl;)
 
-        inst |= rs2 << 2;                     // Add rs2' (just 3 bits)
-        inst |= (imm >> 1) << 5;              // Add uimm[1]
-        inst |= (imm & 0b1) << 6;             // Add uimm[0]
-        inst |= rs1 << 7;                     // Add rs1' (just 3 bits)
-        inst |= funct << 10;                  // Add funct6
+        inst |= rs2 << 2;         // Add rs2' (just 3 bits)
+        inst |= (imm >> 1) << 5;  // Add uimm[1]
+        inst |= (imm & 0b1) << 6; // Add uimm[0]
+        inst |= rs1 << 7;         // Add rs1' (just 3 bits)
+        inst |= funct << 10;      // Add funct6
     } else if (type == CLHfmt) {
         rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
-            imm = num.value() & 0b11;    
+            imm = num.value() & 0b11;
             rs1 = decode_register(c.arg2).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
@@ -856,11 +856,11 @@ void make_inst(assembly_context& c) {
 
         DBG(std::cout << "Encoding CLH-type instruction with name " << name << std::endl;)
 
-        inst |= rd << 2;                      // Add rd' (just 3 bits)
-        inst |= (imm >> 1) << 5;                     // Add uimm[1]
-        inst |= (funct & 0b1) << 6;           // Add funct1
-        inst |= rs1 << 7;                     // Add rs1' (just 3 bits)
-        inst |= (funct >> 1) << 10;           // Add funct6
+        inst |= rd << 2;            // Add rd' (just 3 bits)
+        inst |= (imm >> 1) << 5;    // Add uimm[1]
+        inst |= (funct & 0b1) << 6; // Add funct1
+        inst |= rs1 << 7;           // Add rs1' (just 3 bits)
+        inst |= (funct >> 1) << 10; // Add funct6
     } else if (type == CSHfmt) {
         rs2 = decode_register(c.arg1).encoding & 0b111;
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
@@ -874,29 +874,29 @@ void make_inst(assembly_context& c) {
 
         DBG(std::cout << "Encoding CSH-type instruction with name " << name << std::endl;)
 
-        inst |= rs2 << 2;                     // Add rs2' (just 3 bits)
-        inst |= imm << 5;                     // Add uimm[0]
-        inst |= (funct & 0b1) << 6;           // Add funct1
-        inst |= rs1 << 7;                     // Add rs1' (just 3 bits)
-        inst |= (funct >> 1) << 10;           // Add funct6
+        inst |= rs2 << 2;           // Add rs2' (just 3 bits)
+        inst |= imm << 5;           // Add uimm[0]
+        inst |= (funct & 0b1) << 6; // Add funct1
+        inst |= rs1 << 7;           // Add rs1' (just 3 bits)
+        inst |= (funct >> 1) << 10; // Add funct6
     } else if (type == CU) {
         rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
 
         DBG(std::cout << "Encoding CU-type instruction with name " << name << std::endl;)
 
         inst |= (funct & 0b11111) << 2; // Add funct5
-        inst |= rd << 7;                 // Add rd' (just 3 bits)
-        inst |= (funct >> 5) << 10;      // Add funct6
+        inst |= rd << 7;                // Add rd' (just 3 bits)
+        inst |= (funct >> 5) << 10;     // Add funct6
     } else if (type == CMMV) {
         rs1 = decode_register(c.arg1).encoding & 0b111;
         rs2 = decode_register(c.arg2).encoding & 0b111;
 
         DBG(std::cout << "Encoding CMMV-type instruction with name " << name << std::endl;)
 
-        inst |= rs2 << 2;                     // Add rs2' (just 3 bits)
-        inst |= (funct & 0b11) << 5;         // Add funct2
-        inst |= rs1 << 7;                    // Add rs1' (just 3 bits)
-        inst |= (funct >> 2) << 10;         // Add funct6
+        inst |= rs2 << 2;            // Add rs2' (just 3 bits)
+        inst |= (funct & 0b11) << 5; // Add funct2
+        inst |= rs1 << 7;            // Add rs1' (just 3 bits)
+        inst |= (funct >> 2) << 10;  // Add funct6
     } else if (type == CMJTfmt) {
         if (auto num = decode_imm<int>(c.arg1, c); num.has_value()) {
             imm = num.value();
@@ -909,21 +909,23 @@ void make_inst(assembly_context& c) {
         inst |= (imm & 0b11111111) << 2; // Add imm[7:0]
         inst |= funct << 10;             // Add funct6
 
-    } else if (type == CMPP) { // This one's weird. These instructions look like "inst {ra, s0-s11}, offset", where the part in brackets is a register list. To Chatassembler, this looks like "inst" "{ra" "s0-s11}" "offset" so we need to just look at the components instead. Here's all the potential cases for the range:
-    /*
-case 4: {reg_list="ra"; xreg_list="x1";}
-case 5: {reg_list="ra, s0"; xreg_list="x1, x8";}
-case 6: {reg_list="ra, s0-s1"; xreg_list="x1, x8-x9";}
-case 7: {reg_list="ra, s0-s2"; xreg_list="x1, x8-x9, x18";}
-case 8: {reg_list="ra, s0-s3"; xreg_list="x1, x8-x9, x18-x19";}
-case 9: {reg_list="ra, s0-s4"; xreg_list="x1, x8-x9, x18-x20";}
-case 10: {reg_list="ra, s0-s5"; xreg_list="x1, x8-x9, x18-x21";}
-case 11: {reg_list="ra, s0-s6"; xreg_list="x1, x8-x9, x18-x22";}
-case 12: {reg_list="ra, s0-s7"; xreg_list="x1, x8-x9, x18-x23";}
-case 13: {reg_list="ra, s0-s8"; xreg_list="x1, x8-x9, x18-x24";}
-case 14: {reg_list="ra, s0-s9"; xreg_list="x1, x8-x9, x18-x25";}
-case 15: {reg_list="ra, s0-s11"; xreg_list="x1, x8-x9, x18-x27";}
-    */
+    } else if (type == CMPP) { // This one's weird. These instructions look like "inst {ra, s0-s11}, offset", where the part in brackets is a register list. To Chatassembler, this looks like "inst"
+                               // "{ra" "s0-s11}" "offset" so we need to just look at the components instead. Here's all the potential cases for the range:
+                               /*
+                           case 4: {reg_list="ra"; xreg_list="x1";}
+                           case 5: {reg_list="ra, s0"; xreg_list="x1, x8";}
+                           case 6: {reg_list="ra, s0-s1"; xreg_list="x1, x8-x9";}
+                           case 7: {reg_list="ra, s0-s2"; xreg_list="x1, x8-x9, x18";}
+                           case 8: {reg_list="ra, s0-s3"; xreg_list="x1, x8-x9, x18-x19";}
+                           case 9: {reg_list="ra, s0-s4"; xreg_list="x1, x8-x9, x18-x20";}
+                           case 10: {reg_list="ra, s0-s5"; xreg_list="x1, x8-x9, x18-x21";}
+                           case 11: {reg_list="ra, s0-s6"; xreg_list="x1, x8-x9, x18-x22";}
+                           case 12: {reg_list="ra, s0-s7"; xreg_list="x1, x8-x9, x18-x23";}
+                           case 13: {reg_list="ra, s0-s8"; xreg_list="x1, x8-x9, x18-x24";}
+                           case 14: {reg_list="ra, s0-s9"; xreg_list="x1, x8-x9, x18-x25";}
+                           case 15: {reg_list="ra, s0-s11"; xreg_list="x1, x8-x9, x18-x27";}
+                               */
+        DBG(std::cout << "Encoding CMPP-type instruction with name " << name << std::endl;)
         uint8_t rlist = 0;
 
         if (c.arg1.front() == '{') {
@@ -998,6 +1000,7 @@ case 15: {reg_list="ra, s0-s11"; xreg_list="x1, x8-x9, x18-x27";}
             }
         }
 
+        // imm = stack_adj
         if (c.arg3.empty()) {
             if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
                 imm = num.value();
@@ -1018,13 +1021,137 @@ case 15: {reg_list="ra, s0-s11"; xreg_list="x1, x8-x9, x18-x27";}
             }
         }
 
-        uint8_t stack_adj_base = 0;
+        if (id == CMPUSH) {
+            if (imm > 0) {
+                throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+            } else {
+                imm = -imm;
+            }
+        } else if (id == CMPOP) {
+            if (imm < 0) {
+                throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+            }
+        }
 
-        //if (rlist == 
+        uint8_t spimm = 0;
 
-        inst |= ((imm >> 4) & 0b11) << 2; // Add spimm[5:4]
-        inst |= (rlist & 0b1111) << 4;    // Add rlist[3:0]
-        inst |= funct << 8;                // Add funct8
+        using enum RVInstructionSet;
+
+        if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32E) != c.supported_sets.end()) {
+            // stack_adj = stack_adj_base + spimm[5:4] * 16;
+            // spimm[5:4] = (stack_adj - stack_adj_base) / 16
+            // stack_adj_base = 16;
+            // stack_adj = [16|32|48|64]
+            if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
+                throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+            }
+            spimm = (imm - 16) / 16;
+        } else if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32I) != c.supported_sets.end()) {
+            // stack_adj = stack_adj_base + spimm[5:4] * 16;
+            // spimm[5:4] = (stack_adj - stack_adj_base) / 16
+            /* switch (rlist) {
+case 4.. 7: stack_adj_base = 16;
+case 8..11: stack_adj_base = 32;
+case 12..14: stack_adj_base = 48;
+case 15: stack_adj_base = 64;
+}
+Valid values:
+switch (rlist) {
+case 4.. 7: stack_adj = [16|32|48| 64];
+case 8..11: stack_adj = [32|48|64| 80];
+case 12..14: stack_adj = [48|64|80| 96];
+case 15: stack_adj = [64|80|96|112];
+} */
+            if (rlist >= 4 && rlist <= 7) {
+                if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                }
+                spimm = (imm - 16) / 16;
+            } else if (rlist >= 8 && rlist <= 11) {
+                if (imm != 32 && imm != 48 && imm != 64 && imm != 80) {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                }
+                spimm = (imm - 32) / 16;
+            } else if (rlist >= 12 && rlist <= 14) {
+                if (imm != 48 && imm != 64 && imm != 80 && imm != 96) {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                }
+                spimm = (imm - 48) / 16;
+            } else if (rlist == 15) {
+                if (imm != 64 && imm != 80 && imm != 96 && imm != 112) {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                }
+                spimm = (imm - 64) / 16;
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid register list " + c.arg1, c.line, c.column);
+            }
+        } else { // RV64I is the default case
+            // stack_adj = stack_adj_base + spimm[5:4] * 16;
+            // spimm[5:4] = (stack_adj - stack_adj_base) / 16
+            /* switch (rlist) {
+case 4.. 5: stack_adj_base = 16;
+case 6.. 7: stack_adj_base = 32;
+case 8.. 9: stack_adj_base = 48;
+case 10..11: stack_adj_base = 64;
+case 12..13: stack_adj_base = 80;
+case 14: stack_adj_base = 96;
+case 15: stack_adj_base = 112;
+}
+Valid values:
+switch (rlist) {
+case 4.. 5: stack_adj = [ 16| 32| 48| 64];
+case 6.. 7: stack_adj = [ 32| 48| 64| 80];
+case 8.. 9: stack_adj = [ 48| 64| 80| 96];
+case 10..11: stack_adj = [ 64| 80| 96|112];
+case 12..13: stack_adj = [ 80| 96|112|128];
+case 14: stack_adj = [ 96|112|128|144];
+case 15: stack_adj = [112|128|144|160];
+}*/
+            if (rlist >= 4 && rlist <= 5) {
+                if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                }
+                spimm = (imm - 16) / 16;
+            } else if (rlist >= 6 && rlist <= 7) {
+                if (imm != 32 && imm != 48 && imm != 64 && imm != 80) {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                }
+                spimm = (imm - 32) / 16;
+            } else if (rlist >= 8 && rlist <= 9) {
+                if (imm != 48 && imm != 64 && imm != 80 && imm != 96) {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                }
+                spimm = (imm - 48) / 16;
+            } else if (rlist >= 10 && rlist <= 11) {
+                if (imm != 64 && imm != 80 && imm != 96 && imm != 112) {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                }
+                spimm = (imm - 64) / 16;
+            } else if (rlist >= 12 && rlist <= 13) {
+                if (imm != 80 && imm != 96 && imm != 112 && imm != 128) {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                }
+                spimm = (imm - 80) / 16;
+            } else if (rlist == 14) {
+                if (imm != 96 && imm != 112 && imm != 128 && imm != 144) {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                }
+                spimm = (imm - 96) / 16;
+            } else if (rlist == 15) {
+                if (imm != 112 && imm != 128 && imm != 144 && imm != 160) {
+                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                }
+                spimm = (imm - 112) / 16;
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid register list " + c.arg1, c.line, c.column);
+            }
+        }
+
+        DBG(std::cout << "spimm: " << (int)spimm << std::endl;)
+
+        inst |= (spimm & 0b11) << 2;   // Add spimm[5:4]
+        inst |= (rlist & 0b1111) << 4; // Add rlist[3:0]
+        inst |= funct << 8;            // Add funct8
     }
 
     DBG(std::cout << "Instruction made" << std::endl;)
