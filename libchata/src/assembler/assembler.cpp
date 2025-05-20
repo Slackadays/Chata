@@ -1027,7 +1027,7 @@ void make_inst(assembly_context& c) {
             } else {
                 imm = -imm;
             }
-        } else if (id == CMPOP) {
+        } else if (id == CMPOP || id == CMPOPRET || id == CMPOPRETZ) {
             if (imm < 0) {
                 throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
             }
@@ -1040,6 +1040,7 @@ void make_inst(assembly_context& c) {
         if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32E) != c.supported_sets.end()) {
             // stack_adj = stack_adj_base + spimm[5:4] * 16;
             // spimm[5:4] = (stack_adj - stack_adj_base) / 16
+            // From RISC-V docs:
             // stack_adj_base = 16;
             // stack_adj = [16|32|48|64]
             if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
@@ -1049,19 +1050,20 @@ void make_inst(assembly_context& c) {
         } else if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32I) != c.supported_sets.end()) {
             // stack_adj = stack_adj_base + spimm[5:4] * 16;
             // spimm[5:4] = (stack_adj - stack_adj_base) / 16
+            // From RISC-V docs:
             /* switch (rlist) {
-case 4.. 7: stack_adj_base = 16;
-case 8..11: stack_adj_base = 32;
-case 12..14: stack_adj_base = 48;
-case 15: stack_adj_base = 64;
-}
-Valid values:
-switch (rlist) {
-case 4.. 7: stack_adj = [16|32|48| 64];
-case 8..11: stack_adj = [32|48|64| 80];
-case 12..14: stack_adj = [48|64|80| 96];
-case 15: stack_adj = [64|80|96|112];
-} */
+                case 4.. 7: stack_adj_base = 16;
+                case 8..11: stack_adj_base = 32;
+                case 12..14: stack_adj_base = 48;
+                case 15: stack_adj_base = 64;
+                }
+                Valid values:
+                switch (rlist) {
+                case 4.. 7: stack_adj = [16|32|48| 64];
+                case 8..11: stack_adj = [32|48|64| 80];
+                case 12..14: stack_adj = [48|64|80| 96];
+                case 15: stack_adj = [64|80|96|112];
+                } */
             if (rlist >= 4 && rlist <= 7) {
                 if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
                     throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
@@ -1088,25 +1090,26 @@ case 15: stack_adj = [64|80|96|112];
         } else { // RV64I is the default case
             // stack_adj = stack_adj_base + spimm[5:4] * 16;
             // spimm[5:4] = (stack_adj - stack_adj_base) / 16
+            // From RISC-V docs:
             /* switch (rlist) {
-case 4.. 5: stack_adj_base = 16;
-case 6.. 7: stack_adj_base = 32;
-case 8.. 9: stack_adj_base = 48;
-case 10..11: stack_adj_base = 64;
-case 12..13: stack_adj_base = 80;
-case 14: stack_adj_base = 96;
-case 15: stack_adj_base = 112;
-}
-Valid values:
-switch (rlist) {
-case 4.. 5: stack_adj = [ 16| 32| 48| 64];
-case 6.. 7: stack_adj = [ 32| 48| 64| 80];
-case 8.. 9: stack_adj = [ 48| 64| 80| 96];
-case 10..11: stack_adj = [ 64| 80| 96|112];
-case 12..13: stack_adj = [ 80| 96|112|128];
-case 14: stack_adj = [ 96|112|128|144];
-case 15: stack_adj = [112|128|144|160];
-}*/
+                case 4.. 5: stack_adj_base = 16;
+                case 6.. 7: stack_adj_base = 32;
+                case 8.. 9: stack_adj_base = 48;
+                case 10..11: stack_adj_base = 64;
+                case 12..13: stack_adj_base = 80;
+                case 14: stack_adj_base = 96;
+                case 15: stack_adj_base = 112;
+                }
+                Valid values:
+                switch (rlist) {
+                case 4.. 5: stack_adj = [ 16| 32| 48| 64];
+                case 6.. 7: stack_adj = [ 32| 48| 64| 80];
+                case 8.. 9: stack_adj = [ 48| 64| 80| 96];
+                case 10..11: stack_adj = [ 64| 80| 96|112];
+                case 12..13: stack_adj = [ 80| 96|112|128];
+                case 14: stack_adj = [ 96|112|128|144];
+                case 15: stack_adj = [112|128|144|160];
+                }*/
             if (rlist >= 4 && rlist <= 5) {
                 if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
                     throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);

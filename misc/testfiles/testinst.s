@@ -1,1 +1,1 @@
-cm.push {ra}, -16
+cm.popret {ra}, 16
