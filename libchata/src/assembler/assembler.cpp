@@ -778,7 +778,32 @@ void make_inst(assembly_context& c) {
         inst |= rd << 7;             // Add rd' (just 3 bits)
         inst |= (funct >> 2) << 10;  // Add funct6
     } else if (type == VL) {
+        rd = decode_register(c.arg1).encoding;
+        if (c.arg2.front() == '0') {
+            c.arg2.erase(0, 1);
+        }
+        if (c.arg2.front() == '(') {
+            c.arg2.erase(0, 1);
+        }
+        if (c.arg2.back() == ')') {
+            c.arg2.pop_back();
+        }
+        rs1 = decode_register(c.arg2).encoding;
 
+        DBG(std::cout << "Encoding VL-type instruction with name " << name << std::endl;)
+
+        inst |= rd << 7;     // Add rd
+        inst |= (funct & 0b111) << 12; // Add width
+        inst |= rs1 << 15;   // Add rs1
+        inst |= ssargs.custom_reg_val.value() << 20; // Add lumop
+        
+        if (c.arg3.empty()) {
+            inst |= (0b1 << 25); // Add vm
+        } else if (!fast_eq(c.arg3, "v0.t")) {
+            throw ChataError(ChataErrorType::Compiler, "Invalid mask " + c.arg3, c.line, c.column);
+        }
+
+        inst |= (funct >> 3) << 26; // Add mop, mew, nf
     } else if (type == VLS) {
 
     } else if (type == VLX) {
