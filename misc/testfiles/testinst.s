@@ -1,1 +1,1 @@
-cm.popret {ra}, 16
+vsetvl t0, a0, a1

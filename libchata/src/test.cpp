@@ -1112,6 +1112,9 @@ int main() {
     as("ntl.pall", 0x33003000);
     as("ntl.s1", 0x33004000);
     as("ntl.all", 0x33005000);
+    as("vsetvli t0, a0, e32, m4, ta, ma", 0xd772250d);
+    as("vsetivli t0, 9, e8, m1, ta, ma", 0xd7f204cc);
+    as("vsetvl t0, a0, a1", 0xd772b580);
 
     as("beq t0, t1, foolabel\n#blahblah comment\nadd a0, a5, a6\nfoolabel:", {0x63, 0x84, 0x62, 0x00, 0x33, 0x85, 0x07, 0x01});
     as("foolabel:\nadd a0, a5, a6\nbne t0, t1, foolabel\n#ignore this", {0x33, 0x85, 0x07, 0x01, 0xe3, 0x9e, 0x62, 0xfe});

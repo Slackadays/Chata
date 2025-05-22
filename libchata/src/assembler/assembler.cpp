@@ -143,7 +143,7 @@ const uint16_t& decode_csr(const chatastring& csr) {
     throw ChataError(ChataErrorType::Compiler, "Invalid CSR " + csr);
 }
 
-uint8_t decode_vsew(const chatastring& str) {
+std::optional<uint8_t> decode_vsew(const chatastring& str) {
     if (fast_eq(str, "e8")) {
         return 0b000;
     } else if (fast_eq(str, "e16")) {
@@ -153,7 +153,7 @@ uint8_t decode_vsew(const chatastring& str) {
     } else if (fast_eq(str, "e64")) {
         return 0b011;
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid VSEW " + str);
+        return std::nullopt;
     }
 }
 
@@ -288,10 +288,64 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
     } else if (id == CEBREAK) {
         imm = 0b000000000000;
         DBG(std::cout << "CEBREAK instruction made" << std::endl;)
-    } else if (id = VSETVLI) {
+    } else if (id == VSETVLI || id == VSETIVLI) {
         rd = decode_register(c.arg1).encoding;
-        rs1 = decode_register(c.arg2).encoding;
-        
+
+        if (id == VSETVLI) {
+            rs1 = decode_register(c.arg2).encoding;
+        } else {
+            auto res = decode_imm<int>(c.arg2, c);
+            if (res.has_value()) {
+                rs1 = res.value();
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+            }
+
+            imm |= 0b11 << 10;
+        }
+
+        auto sew = decode_vsew(c.arg3);
+        if (sew.has_value()) {
+            imm |= sew.value() << 3;
+        } else {
+            throw ChataError(ChataErrorType::Compiler, "Invalid VSEW " + c.arg3, c.line, c.column);
+        }
+        if (c.arg4.empty()) {
+            return;
+        } else if (c.arg4 == "ta") {
+            imm |= 0b1 << 6;
+            if (c.arg5 == "ma") {
+                imm |= 0b1 << 7;
+            }
+        } else if (c.arg4 == "ma") {
+            imm |= 0b1 << 7;
+            if (c.arg5 == "ta") {
+                imm |= 0b1 << 6;
+            }
+        } else if (c.arg4 == "tu") {
+            if (c.arg5 == "ma") {
+                imm |= 0b1 << 7;
+            }
+        } else if (auto lmul = decode_vlmul(c.arg4); lmul.has_value()) {
+            imm |= lmul.value();
+            if (c.arg5 == "ta") {
+                imm |= 0b1 << 6;
+                if (c.arg6 == "ma") {
+                    imm |= 0b1 << 7;
+                }
+            } else if (c.arg5 == "ma") {
+                imm |= 0b1 << 7;
+                if (c.arg6 == "ta") {
+                    imm |= 0b1 << 6;
+                }
+            } else if (c.arg5 == "tu") {
+                if (c.arg6 == "ma") {
+                    imm |= 0b1 << 7;
+                }
+            }
+        } else {
+            throw ChataError(ChataErrorType::Compiler, "Invalid vtypei " + c.arg4, c.line, c.column);
+        }
     }
 }
 
@@ -1802,7 +1856,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as -march=rv64gfdcqb_zbc_zba_zicond_zacas_zcb_zcmp temp.s -o temp.o");
+    int res = std::system("riscv64-linux-gnu-as -march=rv64gvfdcqb_zbc_zba_zicond_zacas_zcb_zcmp temp.s -o temp.o");
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)
