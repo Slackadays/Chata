@@ -288,6 +288,10 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
     } else if (id == CEBREAK) {
         imm = 0b000000000000;
         DBG(std::cout << "CEBREAK instruction made" << std::endl;)
+    } else if (id = VSETVLI) {
+        rd = decode_register(c.arg1).encoding;
+        rs1 = decode_register(c.arg2).encoding;
+        
     }
 }
 
@@ -308,6 +312,18 @@ std::pair<int32_t, chatastring> decode_offset_plus_reg(const chatastring& str, a
         temp.push_back(str.at(j));
     }
     return {offset, temp};
+}
+
+void remove_extraneous_parentheses(chatastring& str) {
+    if (str.front() == '0') {
+        str.erase(0, 1);
+    }
+    if (str.front() == '(') {
+        str.erase(0, 1);
+    }
+    if (str.back() == ')') {
+        str.pop_back();
+    }
 }
 
 void make_inst(assembly_context& c) {
@@ -371,12 +387,13 @@ void make_inst(assembly_context& c) {
     if (ssargs.super_special_snowflake) {
         handle_super_special_snowflakes(imm, rd, rs1, id, c);
         if (type == I) {
-            DBG(std::cout << "Encoding I-type instruction with name " << name << std::endl;)
+            DBG(std::cout << "Encoding I-type special snowflake instruction with name " << name << std::endl;)
             inst |= rd << 7;     // Add rd
             inst |= funct << 12; // Add funct3
             inst |= rs1 << 15;   // Add rs1
             inst |= imm << 20;   // Add imm
         } else if (type == CI) {
+            DBG(std::cout << "Encoding CI-type special snowflake instruction with name " << name << std::endl;)
             inst |= ((imm >> 6) & 0b1111) << 2; // Add offset[9:6]
             inst |= ((imm >> 4) & 0b1) << 6;    // Add offset[4]
             inst |= ((imm >> 5) & 0b1) << 12;   // Add offset[5]
@@ -407,24 +424,8 @@ void make_inst(assembly_context& c) {
         }
         rd = decode_register(c.arg1).encoding;
         if (set == RVInstructionSet::RV32A || set == RVInstructionSet::RV64A || subset == RVInstructionSet::Zacas) { // The RV32A and RV64A sets sometimes use registers that look like (a0)
-            if (c.arg2.front() == '0') {
-                c.arg2.erase(0, 1);
-            }
-            if (c.arg2.front() == '(') {
-                c.arg2.erase(0, 1);
-            }
-            if (c.arg2.back() == ')') {
-                c.arg2.pop_back();
-            }
-            if (c.arg3.front() == '0') {
-                c.arg3.erase(0, 1);
-            }
-            if (c.arg3.front() == '(') {
-                c.arg3.erase(0, 1);
-            }
-            if (c.arg3.back() == ')') {
-                c.arg3.pop_back();
-            }
+            remove_extraneous_parentheses(c.arg2);
+            remove_extraneous_parentheses(c.arg3);
             using enum RVInstructionID;
             if (id != LRW && id != LRWAQ && id != LRWRL && id != LRWAQRL && id != LRD && id != LRDAQ && id != LRDRL && id != LRDAQRL) {
                 std::swap(c.arg2, c.arg3); // For the case of instr rd, rs2, (rs1)
@@ -777,61 +778,70 @@ void make_inst(assembly_context& c) {
         inst |= (funct & 0b11) << 5; // Add funct2
         inst |= rd << 7;             // Add rd' (just 3 bits)
         inst |= (funct >> 2) << 10;  // Add funct6
-    } else if (type == VL) {
+    } else if (type == VL || type == VS || type == VLR || type == VSR) {
         rd = decode_register(c.arg1).encoding;
-        if (c.arg2.front() == '0') {
-            c.arg2.erase(0, 1);
-        }
-        if (c.arg2.front() == '(') {
-            c.arg2.erase(0, 1);
-        }
-        if (c.arg2.back() == ')') {
-            c.arg2.pop_back();
-        }
+        remove_extraneous_parentheses(c.arg2);
         rs1 = decode_register(c.arg2).encoding;
 
-        DBG(std::cout << "Encoding VL-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding VL or VS or VLR or VSR-type instruction with name " << name << std::endl;)
 
         inst |= rd << 7;     // Add rd
         inst |= (funct & 0b111) << 12; // Add width
         inst |= rs1 << 15;   // Add rs1
-        inst |= ssargs.custom_reg_val.value() << 20; // Add lumop
+        inst |= (funct >> 3) << 20; // Add lumop, vm, mop, mew, nf
         
-        if (c.arg3.empty()) {
-            inst |= (0b1 << 25); // Add vm
-        } else if (!fast_eq(c.arg3, "v0.t")) {
-            throw ChataError(ChataErrorType::Compiler, "Invalid mask " + c.arg3, c.line, c.column);
+        if (fast_eq(c.arg3, "v0.t")) {
+            inst &= ~(1 << 25); // Clear the 25th bit
+        }
+    } else if (type == VLS || type == VLX || type == VSS || type == VSX) {
+        rd = decode_register(c.arg1).encoding;
+        remove_extraneous_parentheses(c.arg2);
+        rs1 = decode_register(c.arg2).encoding;
+        rs2 = decode_register(c.arg3).encoding;
+
+        DBG(std::cout << "Encoding VLS or VLX or VSS or VSX-type instruction with name " << name << std::endl;)
+
+        inst |= rd << 7;     // Add rd
+        inst |= (funct & 0b111) << 12; // Add width
+        inst |= rs1 << 15;   // Add rs1
+        inst |= rs2 << 20;   // Add rs2
+        inst |= (funct >> 3) << 25; // Add vm, mop, mew, nf
+
+        if (fast_eq(c.arg4, "v0.t")) {
+            inst &= ~(1 << 25); // Clear the 25th bit
+        }
+    } else if (type == IVV || type == FVV || type == MVV || type == IVX || type == FVF || type == MVX) {
+        rd = decode_register(c.arg1).encoding;
+        rs2 = decode_register(c.arg2).encoding;
+        rs1 = decode_register(c.arg3).encoding;
+
+        DBG(std::cout << "Encoding IVV or FVV or MVV or IVX or FVF or MVX-type instruction with name " << name << std::endl;)
+
+        inst |= rd << 7;     // Add rd
+        inst |= (funct & 0b111) << 12; // Add width
+        inst |= rs1 << 15;   // Add vs1
+        inst |= rs2 << 20;   // Add vs2
+        inst |= (funct >> 3) << 25; // Add vm, funct6
+
+        if (fast_eq(c.arg4, "v0.t")) {
+            inst &= ~(1 << 25); // Clear the 25th bit
+        }
+    } else if (type == IVI) {
+        rd = decode_register(c.arg1).encoding;
+        rs2 = decode_register(c.arg2).encoding;
+        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+            imm = num.value();
+        } else {
+            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
         }
 
-        inst |= (funct >> 3) << 26; // Add mop, mew, nf
-    } else if (type == VLS) {
+        DBG(std::cout << "Encoding IVI-type instruction with name " << name << std::endl;)
 
-    } else if (type == VLX) {
-
-    } else if (type == VS) {
-
-    } else if (type == VSS) {
-
-    } else if (type == VSX) {
-
-    } else if (type == VLR) {
-
-    } else if (type == VSR) {
-
-    } else if (type == IVV) {
-
-    } else if (type == FVV) {
-
-    } else if (type == MVV) {
-
-    } else if (type == IVI) {
-
-    } else if (type == IVX) {
-
-    } else if (type == FVF) {
-
-    } else if (type == MVX) {
-
+        inst |= rd << 7;     // Add rd
+        inst |= (funct & 0b111) << 12; // Add width
+        inst |= (imm & 0b11111) << 15; // Add imm[4:0]
+        inst |= rs2 << 20;   // Add vs2
+        inst |= (funct >> 3) << 25; // Add vm, funct6
     } else if (type == CLB) {
         rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
