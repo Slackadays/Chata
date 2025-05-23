@@ -166,6 +166,12 @@ std::optional<uint8_t> decode_vlmul(const chatastring& str) {
         return 0b010;
     } else if (fast_eq(str, "m8")) {
         return 0b011;
+    } else if (fast_eq(str, "mf8")) {
+        return 0b101;
+    } else if (fast_eq(str, "mf4")) {
+        return 0b110;
+    } else if (fast_eq(str, "mf2")) {
+        return 0b111;
     } else {
         return std::nullopt;
     }
@@ -839,11 +845,11 @@ void make_inst(assembly_context& c) {
 
         DBG(std::cout << "Encoding VL or VS or VLR or VSR-type instruction with name " << name << std::endl;)
 
-        inst |= rd << 7;     // Add rd
+        inst |= rd << 7;               // Add rd
         inst |= (funct & 0b111) << 12; // Add width
-        inst |= rs1 << 15;   // Add rs1
-        inst |= (funct >> 3) << 20; // Add lumop, vm, mop, mew, nf
-        
+        inst |= rs1 << 15;             // Add rs1
+        inst |= (funct >> 3) << 20;    // Add lumop, vm, mop, mew, nf
+
         if (fast_eq(c.arg3, "v0.t")) {
             inst &= ~(1 << 25); // Clear the 25th bit
         }
@@ -855,11 +861,11 @@ void make_inst(assembly_context& c) {
 
         DBG(std::cout << "Encoding VLS or VLX or VSS or VSX-type instruction with name " << name << std::endl;)
 
-        inst |= rd << 7;     // Add rd
+        inst |= rd << 7;               // Add rd
         inst |= (funct & 0b111) << 12; // Add width
-        inst |= rs1 << 15;   // Add rs1
-        inst |= rs2 << 20;   // Add rs2
-        inst |= (funct >> 3) << 25; // Add vm, mop, mew, nf
+        inst |= rs1 << 15;             // Add rs1
+        inst |= rs2 << 20;             // Add rs2
+        inst |= (funct >> 3) << 25;    // Add vm, mop, mew, nf
 
         if (fast_eq(c.arg4, "v0.t")) {
             inst &= ~(1 << 25); // Clear the 25th bit
@@ -871,11 +877,11 @@ void make_inst(assembly_context& c) {
 
         DBG(std::cout << "Encoding IVV or FVV or MVV or IVX or FVF or MVX-type instruction with name " << name << std::endl;)
 
-        inst |= rd << 7;     // Add rd
+        inst |= rd << 7;               // Add rd
         inst |= (funct & 0b111) << 12; // Add width
-        inst |= rs1 << 15;   // Add vs1
-        inst |= rs2 << 20;   // Add vs2
-        inst |= (funct >> 3) << 25; // Add vm, funct6
+        inst |= rs1 << 15;             // Add vs1
+        inst |= rs2 << 20;             // Add vs2
+        inst |= (funct >> 3) << 25;    // Add vm, funct6
 
         if (fast_eq(c.arg4, "v0.t")) {
             inst &= ~(1 << 25); // Clear the 25th bit
@@ -891,11 +897,11 @@ void make_inst(assembly_context& c) {
 
         DBG(std::cout << "Encoding IVI-type instruction with name " << name << std::endl;)
 
-        inst |= rd << 7;     // Add rd
+        inst |= rd << 7;               // Add rd
         inst |= (funct & 0b111) << 12; // Add width
         inst |= (imm & 0b11111) << 15; // Add imm[4:0]
-        inst |= rs2 << 20;   // Add vs2
-        inst |= (funct >> 3) << 25; // Add vm, funct6
+        inst |= rs2 << 20;             // Add vs2
+        inst |= (funct >> 3) << 25;    // Add vm, funct6
     } else if (type == CLB) {
         rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
