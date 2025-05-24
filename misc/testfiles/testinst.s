@@ -1,1 +1,1 @@
-vsseg8e64.v v13, (a3)
+vsoxseg8ei64.v v30, (a7), v31

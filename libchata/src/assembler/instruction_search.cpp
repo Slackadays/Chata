@@ -4589,10 +4589,16 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                                 if (inst.size() < 8) return instr_search_failed;
                                 if (inst[7] == 'e') {
                                     if (inst.size() < 9) return instr_search_failed;
-                                    if (inst[8] == '.') {
+                                    if (inst[8] == '1') {
                                         if (inst.size() < 10) return instr_search_failed;
-                                        if (inst[9] == 'v') {
-                                            if (inst.size() < 11) return 644;
+                                        if (inst[9] == '6') {
+                                            if (inst.size() < 11) return instr_search_failed;
+                                            if (inst[10] == '.') {
+                                                if (inst.size() < 12) return instr_search_failed;
+                                                if (inst[11] == 'v') {
+                                                    if (inst.size() < 13) return 644;
+                                                }
+                                            }
                                         }
                                     }
                                     if (inst[8] == '6') {
