@@ -873,7 +873,16 @@ void make_inst(assembly_context& c) {
     } else if (type == IVV || type == FVV || type == MVV || type == IVX || type == FVF || type == MVX) {
         rd = decode_register(c.arg1).encoding;
         rs2 = decode_register(c.arg2).encoding;
-        rs1 = decode_register(c.arg3).encoding;
+
+        if (ssargs.custom_reg_val.has_value()) {
+            rs1 = ssargs.custom_reg_val.value();
+        } else {
+            rs1 = decode_register(c.arg3).encoding;
+        }
+        
+        if (ssargs.swap_rs1_rs2) {
+            std::swap(rs1, rs2);
+        }
 
         DBG(std::cout << "Encoding IVV or FVV or MVV or IVX or FVF or MVX-type instruction with name " << name << std::endl;)
 
@@ -888,11 +897,23 @@ void make_inst(assembly_context& c) {
         }
     } else if (type == IVI) {
         rd = decode_register(c.arg1).encoding;
-        rs2 = decode_register(c.arg2).encoding;
-        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
-            imm = num.value();
+
+        if (ssargs.custom_reg_val.has_value()) {
+            rs2 = ssargs.custom_reg_val.value();
+
+            if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
+                imm = num.value();
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+            }
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+            rs2 = decode_register(c.arg2).encoding;
+
+            if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                imm = num.value();
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+            }
         }
 
         DBG(std::cout << "Encoding IVI-type instruction with name " << name << std::endl;)

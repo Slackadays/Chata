@@ -1,1 +1,1 @@
-vsoxseg8ei64.v v30, (a7), v31
+vmfge.vf v1, v2, f24

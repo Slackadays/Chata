@@ -1228,6 +1228,7 @@ struct special_snowflake_args {
     bool use_imm_for_rs2 = false;
     bool use_frm_for_funct3 = false;
     bool super_special_snowflake = false;
+    bool swap_rs1_rs2 = false;
 };
 
 struct rvinstruction {
@@ -1273,6 +1274,6 @@ struct rvinstruction {
             , ssargs(ssargs) {} // With subset
 };
 
-extern const std::array<rvinstruction, 1112> instructions;
+extern const std::array<rvinstruction, 1120> instructions;
 
 } // namespace libchata_internal
