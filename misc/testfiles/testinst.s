@@ -1,1 +1,1 @@
-vmfge.vf v1, v2, f24
+vmv.s.x v13, a1

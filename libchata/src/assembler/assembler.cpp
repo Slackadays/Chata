@@ -872,7 +872,12 @@ void make_inst(assembly_context& c) {
         }
     } else if (type == IVV || type == FVV || type == MVV || type == IVX || type == FVF || type == MVX) {
         rd = decode_register(c.arg1).encoding;
-        rs2 = decode_register(c.arg2).encoding;
+
+        if (id == VIDV) {
+            rs2 = 0;
+        } else {
+            rs2 = decode_register(c.arg2).encoding;
+        }
 
         if (ssargs.custom_reg_val.has_value()) {
             rs1 = ssargs.custom_reg_val.value();
