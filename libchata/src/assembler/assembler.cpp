@@ -528,6 +528,11 @@ void make_inst(assembly_context& c) {
             }
         }
 
+        if (id == AES32DSI || id == AES32DSMI || id == AES32ESI || id == AES32ESMI || id == SM4ED || id == SM4KS) {
+            uint8_t bs = decode_imm<int>(c.arg4, c).value();
+            inst |= (bs & 0b11) << 30; // Add bs[1:0]
+        }
+
         DBG(std::cout << "Encoding R-type instruction with name " << name << std::endl;)
         inst |= rd << 7; // Add rd
         if (ssargs.use_frm_for_funct3) {
@@ -884,7 +889,7 @@ void make_inst(assembly_context& c) {
         } else {
             rs1 = decode_register(c.arg3).encoding;
         }
-        
+
         if (ssargs.swap_rs1_rs2) {
             std::swap(rs1, rs2);
         }
@@ -1888,7 +1893,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as -march=rv64gvfdcqb_zbc_zba_zicond_zacas_zcb_zcmp temp.s -o temp.o");
+    int res = std::system("riscv64-linux-gnu-as -march=rv64gvfdcqb_zknd_zbc_zba_zicond_zacas_zcb_zcmp temp.s -o temp.o");
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)

@@ -50,7 +50,20 @@ enum class RVInstructionSet : uint8_t {
     Zfa,
     Zimop,
     B,
-    V
+    V,
+    Zbkb,
+    Zbkc,
+    Zbkx,
+    Zknd,
+    Zkne,
+    Zknh,
+    Zksed,
+    Zksh,
+    Zkr,
+    Zkn,
+    Zks,
+    Zk,
+    Zkt
 };
 
 enum class ChataErrorType {

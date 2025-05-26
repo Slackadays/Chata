@@ -1749,6 +1749,8 @@ int main() {
     as("vmv2r.v v15, v16", 0xd7b7009f);
     as("vmv4r.v v17, v18", 0xd7b8219f);
     as("vmv8r.v v19, v20", 0xd7b9439f);
+    as("aes32dsi a0, a1, a2, 2", 0x3385c5aa);
+    as("aes32dsmi a3, a4, a5, 3", 0xb306f7ee);
 
 
 

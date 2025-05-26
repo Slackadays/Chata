@@ -1,1 +1,1 @@
-vmv.s.x v13, a1
+aes32dsmi a3, a4, a5, 3

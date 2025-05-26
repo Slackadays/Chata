@@ -1142,6 +1142,38 @@ enum class RVInstructionID : uint16_t {
     VMV2RV,
     VMV4RV,
     VMV8RV,
+    AES32DSI,
+    AES32DSMI,
+    AES32ESI,
+    AES32ESMI,
+    AES64DS,
+    AES64DSM,
+    AES64ES,
+    AES64ESM,
+    AES64IM,
+    AES64KS1I,
+    AES64KS2,
+    BREV8,
+    SHA256SIG0,
+    SHA256SIG1,
+    SHA256SUM0,
+    SHA256SUM1,
+    SHA512SIG0H,
+    SHA512SIG0I,
+    SHA512SIG1H,
+    SHA512SIG1I,
+    SHA512SUM0R,
+    SHA512SUM1R,
+    SHA512SIG0,
+    SHA512SIG1,
+    SHA512SUM0,
+    SHA512SUM1,
+    SM3P0,
+    SM3P1,
+    SM4ED,
+    SM4KS,
+    XPERM8,
+    XPERM4
 };
 
 enum class RVInstructionFormat : uint8_t {
@@ -1274,6 +1306,6 @@ struct rvinstruction {
             , ssargs(ssargs) {} // With subset
 };
 
-extern const std::array<rvinstruction, 1120> instructions;
+extern const std::array<rvinstruction, 1152> instructions;
 
 } // namespace libchata_internal

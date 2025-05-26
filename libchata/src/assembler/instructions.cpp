@@ -14,7 +14,7 @@ using enum RVInstructionID;
 using enum RVInstructionSet;
 using std::nullopt;
 
-const std::array<rvinstruction, 1120> instructions = {
+const std::array<rvinstruction, 1152> instructions = {
         {{"lui", LUI, U, OP_LUI, 0b000, RV32I, 4},
          {"auipc", AUIPC, U, OP_AUIPC, 0b000, RV32I, 4},
          {"jal", JAL, J, OP_JAL, 0b000, RV32I, 4},
@@ -1137,7 +1137,39 @@ const std::array<rvinstruction, 1120> instructions = {
          {"vmv1r.v", VMV1RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00000}}, // Actually IVI, but we just need a custom rs1 value
          {"vmv2r.v", VMV2RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00001}},
          {"vmv4r.v", VMV4RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00011}},
-         {"vmv8r.v", VMV8RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00111}}}
+         {"vmv8r.v", VMV8RV, IVV, OP_V, 0b1001111011, V, 4, {.custom_reg_val = 0b00111}},
+         {"aes32dsi", AES32DSI, R, OP_OP, 0b0010101000, Zk, Zkn, 4},
+         {"aes32dsmi", AES32DSMI, R, OP_OP, 0b0010111000, Zk, Zkn, 4},
+         {"aes32esi", AES32ESI, R, OP_OP, 0b0010001000, Zk, Zkn, 4},
+         {"aes32esmi", AES32ESMI, R, OP_OP, 0b0010011000, Zk, Zkn, 4},
+         {"aes64ds", AES64DS, R, OP_OP, 0b0011101000, Zk, Zkn, 4},
+         {"aes64dsm", AES64DSM, R, OP_OP, 0b0011111000, Zk, Zkn, 4},
+         {"aes64es", AES64ES, R, OP_OP, 0b0011001000, Zk, Zkn, 4},
+         {"aes64esm", AES64ESM, R, OP_OP, 0b0011011000, Zk, Zkn, 4},
+         {"aes64im", AES64IM, R, OP_IMM, 0b0011000001, Zk, Zkn, 4, {.custom_reg_val = 0b00000}},
+         {"aes64ks1i", AES64KS1I, R, OP_IMM, 0b0011000001, Zk, Zkn, 4, {.custom_reg_val = 0b10000, .use_imm_for_rs2 = true}},
+         {"aes64ks2", AES64KS2, R, OP_OP, 0b0111111000, Zk, Zkn, 4},
+         {"brev8", BREV8, R, OP_IMM, 0b0110100101, Zbkb, 4, {.custom_reg_val = 0b00111}},
+         {"sha256sig0", SHA256SIG0, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00010}},
+         {"sha256sig1", SHA256SIG1, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00011}},
+         {"sha256sum0", SHA256SUM0, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00000}},
+         {"sha256sum1", SHA256SUM1, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00001}},
+         {"sha512sig0h", SHA512SIG0H, R, OP_OP, 0b0101110000, Zk, Zkn, 4},
+         {"sha512sig0i", SHA512SIG0I, R, OP_OP, 0b0101010000, Zk, Zkn, 4},
+         {"sha512sig1h", SHA512SIG1H, R, OP_OP, 0b0101111000, Zk, Zkn, 4},
+         {"sha512sig1i", SHA512SIG1I, R, OP_OP, 0b0101011000, Zk, Zkn, 4},
+         {"sha512sum0r", SHA512SUM0R, R, OP_OP, 0b0101000000, Zk, Zkn, 4},
+         {"sha512sum1r", SHA512SUM1R, R, OP_OP, 0b0101001000, Zk, Zkn, 4},
+         {"sha512sig0", SHA512SIG0, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00110}},
+         {"sha512sig1", SHA512SIG1, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00111}},
+         {"sha512sum0", SHA512SUM0, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00100}},
+         {"sha512sum1", SHA512SUM1, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00101}},
+         {"sm3p0", SM3P0, R, OP_IMM, 0b0001000001, Zks, Zksh, 4, {.custom_reg_val = 0b01000}},
+         {"sm3p1", SM3P1, R, OP_IMM, 0b0001000001, Zks, Zksh, 4, {.custom_reg_val = 0b01001}},
+         {"sm4ed", SM4ED, R, OP_OP, 0b0011000000, Zks, Zksed, 4},
+         {"sm4ks", SM4KS, R, OP_OP, 0b0011010000, Zks, Zksed, 4},
+         {"xperm8", XPERM8, R, OP_OP, 0b0010100100, Zbkx, 4},
+         {"xperm4", XPERM4, R, OP_OP, 0b0010100010, Zbkx, 4}}
 };
 
 } // namespace libchata_internal
