@@ -1155,9 +1155,9 @@ const std::array<rvinstruction, 1152> instructions = {
          {"sha256sum0", SHA256SUM0, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00000}},
          {"sha256sum1", SHA256SUM1, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00001}},
          {"sha512sig0h", SHA512SIG0H, R, OP_OP, 0b0101110000, Zk, Zkn, 4},
-         {"sha512sig0i", SHA512SIG0I, R, OP_OP, 0b0101010000, Zk, Zkn, 4},
+         {"sha512sig0l", SHA512SIG0L, R, OP_OP, 0b0101010000, Zk, Zkn, 4},
          {"sha512sig1h", SHA512SIG1H, R, OP_OP, 0b0101111000, Zk, Zkn, 4},
-         {"sha512sig1i", SHA512SIG1I, R, OP_OP, 0b0101011000, Zk, Zkn, 4},
+         {"sha512sig1l", SHA512SIG1L, R, OP_OP, 0b0101011000, Zk, Zkn, 4},
          {"sha512sum0r", SHA512SUM0R, R, OP_OP, 0b0101000000, Zk, Zkn, 4},
          {"sha512sum1r", SHA512SUM1R, R, OP_OP, 0b0101001000, Zk, Zkn, 4},
          {"sha512sig0", SHA512SIG0, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00110}},
@@ -1169,7 +1169,6 @@ const std::array<rvinstruction, 1152> instructions = {
          {"sm4ed", SM4ED, R, OP_OP, 0b0011000000, Zks, Zksed, 4},
          {"sm4ks", SM4KS, R, OP_OP, 0b0011010000, Zks, Zksed, 4},
          {"xperm8", XPERM8, R, OP_OP, 0b0010100100, Zbkx, 4},
-         {"xperm4", XPERM4, R, OP_OP, 0b0010100010, Zbkx, 4}}
-};
+         {"xperm4", XPERM4, R, OP_OP, 0b0010100010, Zbkx, 4}}};
 
 } // namespace libchata_internal

@@ -1,1 +1,1 @@
-aes32dsmi a3, a4, a5, 3
+xperm4 x1, x2, x3

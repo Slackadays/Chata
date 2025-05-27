@@ -1107,7 +1107,7 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                                         if (inst.size() < 10) return instr_search_failed;
                                         if (inst[9] == '1') {
                                             if (inst.size() < 11) return 1143;
-                                            if (inst[10] == 'i') {
+                                            if (inst[10] == 'l') {
                                                 if (inst.size() < 12) return 1139;
                                             }
                                             if (inst[10] == 'h') {
@@ -1116,7 +1116,7 @@ const uint16_t fast_instr_search(const chatastring& inst) {
                                         }
                                         if (inst[9] == '0') {
                                             if (inst.size() < 11) return 1142;
-                                            if (inst[10] == 'i') {
+                                            if (inst[10] == 'l') {
                                                 if (inst.size() < 12) return 1137;
                                             }
                                             if (inst[10] == 'h') {

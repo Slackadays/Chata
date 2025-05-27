@@ -1751,7 +1751,36 @@ int main() {
     as("vmv8r.v v19, v20", 0xd7b9439f);
     as("aes32dsi a0, a1, a2, 2", 0x3385c5aa);
     as("aes32dsmi a3, a4, a5, 3", 0xb306f7ee);
-
+    as("aes32esi a6, a7, a0, 2", 0x3388a8a2);
+    as("aes32esmi x0, x1, x2, 3", 0x338020e6);
+    as("aes64ds x3, x4, x5, 2", 0xb301523a);
+    as("aes64dsm x6, x7, x0, 3", 0x3383033e);
+    as("aes64es x8, x9, x10, 2", 0x3384a432);
+    as("aes64esm x11, x12, x13, 3", 0xb305d636);
+    as("aes64im x14, x15, x16, 2", 0x13970730);
+    as("aes64ks1i x17, x18, 3", 0x93183931);
+    as("aes64ks2 x19, x20, x21", 0xb3095a7f);
+    as("brev8 a0, a1", 0x13d57568);
+    as("sha256sig0 a2, a3", 0x13962610);
+    as("sha256sig1 a4, a5", 0x13973710);
+    as("sha256sum0 a6, a7", 0x13980810);
+    as("sha256sum1 s0, s1", 0x13941410);
+    as("sha512sig0h x22, x23, x24", 0x338b8b5d);
+    as("sha512sig0l x25, x26, x27", 0xb30cbd55);
+    as("sha512sig1h x28, x29, x30", 0x338eee5f);
+    as("sha512sig1l x31, x0, x1", 0xb30f1056);
+    as("sha512sum0r x2, x3, x4", 0x33814150);
+    as("sha512sum1r x5, x6, x7", 0xb3027352);
+    as("sha512sig0 x8, x9", 0x13946410);
+    as("sha512sig1 x10, x11", 0x13957510);
+    as("sha512sum0 x12, x13", 0x13964610);
+    as("sha512sum1 x14, x15", 0x13975710);
+    as("sm3p0 s0, s1", 0x13948410);
+    as("sm3p1 s2, s3", 0x13999910);
+    as("sm4ed a0, a1, a2, 1", 0x3385c570);
+    as("sm4ks a3, a4, a5, 2", 0xb306f7b4);
+    as("xperm8 x6, x7, x0", 0x33c30328);
+    as("xperm4 x1, x2, x3", 0xb3203128);
 
 
     as("beq t0, t1, foolabel\n#blahblah comment\nadd a0, a5, a6\nfoolabel:", {0x63, 0x84, 0x62, 0x00, 0x33, 0x85, 0x07, 0x01});
