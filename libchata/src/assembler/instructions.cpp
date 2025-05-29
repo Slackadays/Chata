@@ -1169,6 +1169,27 @@ const std::array<rvinstruction, 1152> instructions = {
          {"sm4ed", SM4ED, R, OP_OP, 0b0011000000, Zks, Zksed, 4},
          {"sm4ks", SM4KS, R, OP_OP, 0b0011010000, Zks, Zksed, 4},
          {"xperm8", XPERM8, R, OP_OP, 0b0010100100, Zbkx, 4},
-         {"xperm4", XPERM4, R, OP_OP, 0b0010100010, Zbkx, 4}}};
+         {"xperm4", XPERM4, R, OP_OP, 0b0010100010, Zbkx, 4},
+         {"vaesdf.vv", VAESDFVV, MVV, OP_VE, 0b1010001010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00001}}, //has custom val in vs1 spot
+         {"vaesdf.vs", VAESDFVS, MVV, OP_VE, 0b1010011010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00001}},
+         {"vaesdm.vv", VAESDMVV, MVV, OP_VE, 0b1010001010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00000}},
+         {"vaesdm.vs", VAESDMVS, MVV, OP_VE, 0b1010011010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00000}},
+         {"vaesef.vv", VAESEFVV, MVV, OP_VE, 0b1010001010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00011}},
+         {"vaesef.vs", VAESEFVS, MVV, OP_VE, 0b1010011010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00011}},
+         {"vaesem.vv", VAESEMVV, MVV, OP_VE, 0b1010001010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00010}},
+         {"vaesem.vs", VAESEMVS, MVV, OP_VE, 0b1010011010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00010}},
+         {"vaeskf1.vi", VAESKF1VI, MVV, OP_VE, 0b1000101010, Zvkn, Zvknc, 4}, //has uimm in vs1 spot
+         {"vaeskf2.vi", VAESKF2VI, MVV, OP_VE, 0b1010101010, Zvkn, Zvknc, 4}, 
+         {"vaesz.vs", VAESZVS, MVV, OP_VE, 0b1010011010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00111}},
+         {"vandn.vv", VANDNVV, IVV, OP_V, 0b00000011000, Zvbb, Zvkb, 4},
+         {"vandn.vx", VANDNVX, IVX, OP_V, 0b0000011100, Zvbb, Zvkb, 4},
+         {"vbrev.v", VBREVV, MVV, OP_V, 0b0100101010, Zvbb, 4, {.custom_reg_val = 0b01010}},
+         {"vbrev8.v", VBREV8V, MVV, OP_V, 0b010010010, Zvbb, Zvkb, 4, {.custom_reg_val = 0b01000}},
+         {"vclmul.vv", VCLMULVV, MVV, OP_V, 0b0011001010, Zvbc, Zvknc, 4},
+         {"vclmul.vx", VCLMULVX, MVX, OP_V, 0b0011001110, Zvbc, Zvknc, 4},
+         {"vclmulh.vv", VCLMULHVV, MVV, OP_V, 0b0011011010, Zvbc, Zvknc, 4},
+         {"vclmulh.vx", VCLMULHVX, MVX, OP_V, 0b0011011110, Zvbc, Zvknc, 4},
+         {"vclz.v", VCLZV, MVV, OP_V, 0b0100101010, Zvbb, 4, {.custom_reg_val = 0b01100}},
+        }};
 
 } // namespace libchata_internal
