@@ -63,7 +63,26 @@ enum class RVInstructionSet : uint8_t {
     Zkn,
     Zks,
     Zk,
-    Zkt
+    Zkt,
+    Zvbb,
+    Zvbc,
+    Zvkb,
+    Zvkg,
+    Zvkned,
+    Zvknh,
+    Zvknhab,
+    Zvknhb,
+    Zvksed,
+    Zvkn,
+    Zvknc,
+    Zvkng,
+    Zvks,
+    Zvksc,
+    Zvksg,
+    Zvkt,
+    Zvkg,
+    Zvksed,
+    Zvksh
 };
 
 enum class ChataErrorType {
