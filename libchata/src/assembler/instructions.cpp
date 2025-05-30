@@ -14,7 +14,7 @@ using enum RVInstructionID;
 using enum RVInstructionSet;
 using std::nullopt;
 
-const std::array<rvinstruction, 1152> instructions = {
+const std::array<rvinstruction, 1192> instructions = {
         {{"lui", LUI, U, OP_LUI, 0b000, RV32I, 4},
          {"auipc", AUIPC, U, OP_AUIPC, 0b000, RV32I, 4},
          {"jal", JAL, J, OP_JAL, 0b000, RV32I, 4},
@@ -39,9 +39,9 @@ const std::array<rvinstruction, 1152> instructions = {
          {"xori", XORI, I, OP_IMM, 0b100, RV32I, 4},
          {"ori", ORI, I, OP_IMM, 0b110, RV32I, 4},
          {"andi", ANDI, I, OP_IMM, 0b111, RV32I, 4},
-         {"slli", SLLI, R, OP_IMM, 0b0000000001, RV32I, 4, {.use_imm_for_rs2 = true}},
-         {"srli", SRLI, R, OP_IMM, 0b0000000101, RV32I, 4, {.use_imm_for_rs2 = true}},
-         {"srai", SRAI, R, OP_IMM, 0b0100000101, RV32I, 4, {.use_imm_for_rs2 = true}},
+         {"slli", SLLI, R, OP_IMM, 0b0000000001, RV32I, 4, {.use_imm_for_rs = true}},
+         {"srli", SRLI, R, OP_IMM, 0b0000000101, RV32I, 4, {.use_imm_for_rs = true}},
+         {"srai", SRAI, R, OP_IMM, 0b0100000101, RV32I, 4, {.use_imm_for_rs = true}},
          {"add", ADD, R, OP_OP, 0b0000000000, RV32I, 4},
          {"sub", SUB, R, OP_OP, 0b0100000000, RV32I, 4},
          {"sll", SLL, R, OP_OP, 0b0000000001, RV32I, 4},
@@ -61,9 +61,9 @@ const std::array<rvinstruction, 1152> instructions = {
          {"ld", LD, I, OP_LOAD, 0b011, RV64I, 4},
          {"sd", SD, S, OP_STORE, 0b011, RV64I, 4},
          {"addiw", ADDIW, I, OP_IMM_32, 0b0000000000, RV64I, 4},
-         {"slliw", SLLIW, R, OP_IMM_32, 0b0000000001, RV64I, 4, {.use_imm_for_rs2 = true}},
-         {"srliw", SRLIW, R, OP_IMM_32, 0b0000000101, RV64I, 4, {.use_imm_for_rs2 = true}},
-         {"sraiw", SRAIW, R, OP_IMM_32, 0b0100000101, RV64I, 4, {.use_imm_for_rs2 = true}},
+         {"slliw", SLLIW, R, OP_IMM_32, 0b0000000001, RV64I, 4, {.use_imm_for_rs = true}},
+         {"srliw", SRLIW, R, OP_IMM_32, 0b0000000101, RV64I, 4, {.use_imm_for_rs = true}},
+         {"sraiw", SRAIW, R, OP_IMM_32, 0b0100000101, RV64I, 4, {.use_imm_for_rs = true}},
          {"addw", ADDW, R, OP_32, 0b0000000000, RV64I, 4},
          {"subw", SUBW, R, OP_32, 0b0100000000, RV64I, 4},
          {"sllw", SLLW, R, OP_32, 0b0000000001, RV64I, 4},
@@ -461,15 +461,15 @@ const std::array<rvinstruction, 1152> instructions = {
          {"add.uw", ADDUW, R, OP_32, 0b0000100000, B, 4},
          {"andn", ANDN, R, OP_OP, 0b0100000111, B, 4},
          {"bclr", BCLR, R, OP_OP, 0b0100100001, B, 4},
-         {"bclri", BCLRI, R, OP_IMM, 0b0100100001, B, 4, {.use_imm_for_rs2 = true}}, // This one "requires" an extra bit in shamt for RV64, but in reality it's a special case where shamt is big
+         {"bclri", BCLRI, R, OP_IMM, 0b0100100001, B, 4, {.use_imm_for_rs = true}}, // This one "requires" an extra bit in shamt for RV64, but in reality it's a special case where shamt is big
                                                                                      // enough to clear a 64 bit register, so we just add the extra bit to rs2 and let the extra available space
                                                                                      // handle it transparently
          {"bext", BEXT, R, OP_OP, 0b0100100101, B, 4},
-         {"bexti", BEXTI, R, OP_IMM, 0b0100100101, B, 4, {.use_imm_for_rs2 = true}}, // Same idea as bclri
+         {"bexti", BEXTI, R, OP_IMM, 0b0100100101, B, 4, {.use_imm_for_rs = true}}, // Same idea as bclri
          {"binv", BINV, R, OP_OP, 0b0110100001, B, 4},
-         {"binvi", BINVI, R, OP_IMM, 0b0110100001, B, 4, {.use_imm_for_rs2 = true}}, // Same idea as bclri
+         {"binvi", BINVI, R, OP_IMM, 0b0110100001, B, 4, {.use_imm_for_rs = true}}, // Same idea as bclri
          {"bset", BSET, R, OP_OP, 0b0010100001, B, 4},
-         {"bseti", BSETI, R, OP_IMM, 0b0010100001, B, 4, {.use_imm_for_rs2 = true}}, // Same idea as bclri
+         {"bseti", BSETI, R, OP_IMM, 0b0010100001, B, 4, {.use_imm_for_rs = true}}, // Same idea as bclri
          {"clmul", CLMUL, R, OP_OP, 0b0000101001, B, 4},
          {"clmulh", CLMULH, R, OP_OP, 0b0000101011, B, 4},
          {"clmulr", CLMULR, R, OP_OP, 0b0000101010, B, 4},
@@ -493,8 +493,8 @@ const std::array<rvinstruction, 1152> instructions = {
          {"rol", ROL, R, OP_OP, 0b0110000001, B, 4},
          {"rolw", ROLW, R, OP_32, 0b0110000001, B, 4},
          {"ror", ROR, R, OP_OP, 0b0110000101, B, 4},
-         {"rori", RORI, R, OP_IMM, 0b0110000101, B, 4, {.use_imm_for_rs2 = true}}, // Same idea as bclri
-         {"roriw", RORIW, R, OP_IMM_32, 0b0110000101, B, 4, {.use_imm_for_rs2 = true}},
+         {"rori", RORI, R, OP_IMM, 0b0110000101, B, 4, {.use_imm_for_rs = true}}, // Same idea as bclri
+         {"roriw", RORIW, R, OP_IMM_32, 0b0110000101, B, 4, {.use_imm_for_rs = true}},
          {"rorw", RORW, R, OP_32, 0b0110000101, B, 4},
          {"sext.b", SEXTB, R, OP_IMM, 0b0110000001, B, 4, {.custom_reg_val = 0b00100}},
          {"sext.h", SEXTH, R, OP_IMM, 0b0110000001, B, 4, {.custom_reg_val = 0b00101}},
@@ -504,7 +504,7 @@ const std::array<rvinstruction, 1152> instructions = {
          {"sh2add.uw", SH2ADDUW, R, OP_32, 0b0010000100, B, 4},
          {"sh3add", SH3ADD, R, OP_OP, 0b0010000110, B, 4},
          {"sh3add.uw", SH3ADDUW, R, OP_32, 0b0010000110, B, 4},
-         {"slli.uw", SLLIUW, R, OP_IMM_32, 0b0000100001, B, 4, {.use_imm_for_rs2 = true}},
+         {"slli.uw", SLLIUW, R, OP_IMM_32, 0b0000100001, B, 4, {.use_imm_for_rs = true}},
          {"unzip", UNZIP, R, OP_IMM, 0b0000100101, B, 4, {.custom_reg_val = 0b11111}},
          {"xnor", XNOR, R, OP_OP, 0b0100000100, B, 4},
          {"xperm.b", XPERMB, R, OP_OP, 0b0010100100, B, 4},
@@ -512,7 +512,7 @@ const std::array<rvinstruction, 1152> instructions = {
          {"zext.h", ZEXTH, R, OP_OP, 0b0000100100, B, 4, {.custom_reg_val = 0b00000}}, // Similar to rev8, but we make bit 4 (in the opcode) 1 instead for rv64
          {"zip", ZIP, R, OP_IMM, 0b0000100001, B, 4, {.custom_reg_val = 0b11110}},
          {"vsetvli", VSETVLI, I, OP_V, 0b111, V, 4, {.super_special_snowflake = true}},
-         {"vsetivli", VSETIVLI, I, OP_V, 0b111, V, 4, {.use_imm_for_rs2 = true, .super_special_snowflake = true}},
+         {"vsetivli", VSETIVLI, I, OP_V, 0b111, V, 4, {.use_imm_for_rs = true, .super_special_snowflake = true}},
          {"vsetvl", VSETVL, R, OP_V, 0b1000000111, V, 4},
          {"vle8.v", VLE8V, VL, OP_LOAD_FP, 0b000000100000000, V, 4},
          {"vle16.v", VLE16V, VL, OP_LOAD_FP, 0b000000100000101, V, 4},
@@ -1147,7 +1147,7 @@ const std::array<rvinstruction, 1152> instructions = {
          {"aes64es", AES64ES, R, OP_OP, 0b0011001000, Zk, Zkn, 4},
          {"aes64esm", AES64ESM, R, OP_OP, 0b0011011000, Zk, Zkn, 4},
          {"aes64im", AES64IM, R, OP_IMM, 0b0011000001, Zk, Zkn, 4, {.custom_reg_val = 0b00000}},
-         {"aes64ks1i", AES64KS1I, R, OP_IMM, 0b0011000001, Zk, Zkn, 4, {.custom_reg_val = 0b10000, .use_imm_for_rs2 = true}},
+         {"aes64ks1i", AES64KS1I, R, OP_IMM, 0b0011000001, Zk, Zkn, 4, {.custom_reg_val = 0b10000, .use_imm_for_rs = true}},
          {"aes64ks2", AES64KS2, R, OP_OP, 0b0111111000, Zk, Zkn, 4},
          {"brev8", BREV8, R, OP_IMM, 0b0110100101, Zbkb, 4, {.custom_reg_val = 0b00111}},
          {"sha256sig0", SHA256SIG0, R, OP_IMM, 0b0001000001, Zk, Zkn, 4, {.custom_reg_val = 0b00010}},
@@ -1170,7 +1170,7 @@ const std::array<rvinstruction, 1152> instructions = {
          {"sm4ks", SM4KS, R, OP_OP, 0b0011010000, Zks, Zksed, 4},
          {"xperm8", XPERM8, R, OP_OP, 0b0010100100, Zbkx, 4},
          {"xperm4", XPERM4, R, OP_OP, 0b0010100010, Zbkx, 4},
-         {"vaesdf.vv", VAESDFVV, MVV, OP_VE, 0b1010001010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00001}}, //has custom val in vs1 spot
+         {"vaesdf.vv", VAESDFVV, MVV, OP_VE, 0b1010001010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00001}},
          {"vaesdf.vs", VAESDFVS, MVV, OP_VE, 0b1010011010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00001}},
          {"vaesdm.vv", VAESDMVV, MVV, OP_VE, 0b1010001010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00000}},
          {"vaesdm.vs", VAESDMVS, MVV, OP_VE, 0b1010011010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00000}},
@@ -1178,18 +1178,38 @@ const std::array<rvinstruction, 1152> instructions = {
          {"vaesef.vs", VAESEFVS, MVV, OP_VE, 0b1010011010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00011}},
          {"vaesem.vv", VAESEMVV, MVV, OP_VE, 0b1010001010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00010}},
          {"vaesem.vs", VAESEMVS, MVV, OP_VE, 0b1010011010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00010}},
-         {"vaeskf1.vi", VAESKF1VI, MVV, OP_VE, 0b1000101010, Zvkn, Zvknc, 4}, //has uimm in vs1 spot
-         {"vaeskf2.vi", VAESKF2VI, MVV, OP_VE, 0b1010101010, Zvkn, Zvknc, 4}, 
+         {"vaeskf1.vi", VAESKF1VI, MVV, OP_VE, 0b1000101010, Zvkn, Zvknc, 4, {.use_imm_for_rs = true}},
+         {"vaeskf2.vi", VAESKF2VI, MVV, OP_VE, 0b1010101010, Zvkn, Zvknc, 4, {.use_imm_for_rs = true}},
          {"vaesz.vs", VAESZVS, MVV, OP_VE, 0b1010011010, Zvkn, Zvknc, 4, {.custom_reg_val = 0b00111}},
          {"vandn.vv", VANDNVV, IVV, OP_V, 0b00000011000, Zvbb, Zvkb, 4},
          {"vandn.vx", VANDNVX, IVX, OP_V, 0b0000011100, Zvbb, Zvkb, 4},
          {"vbrev.v", VBREVV, MVV, OP_V, 0b0100101010, Zvbb, 4, {.custom_reg_val = 0b01010}},
-         {"vbrev8.v", VBREV8V, MVV, OP_V, 0b010010010, Zvbb, Zvkb, 4, {.custom_reg_val = 0b01000}},
+         {"vbrev8.v", VBREV8V, MVV, OP_V, 0b0100101010, Zvbb, Zvkb, 4, {.custom_reg_val = 0b01000}},
          {"vclmul.vv", VCLMULVV, MVV, OP_V, 0b0011001010, Zvbc, Zvknc, 4},
          {"vclmul.vx", VCLMULVX, MVX, OP_V, 0b0011001110, Zvbc, Zvknc, 4},
          {"vclmulh.vv", VCLMULHVV, MVV, OP_V, 0b0011011010, Zvbc, Zvknc, 4},
          {"vclmulh.vx", VCLMULHVX, MVX, OP_V, 0b0011011110, Zvbc, Zvknc, 4},
          {"vclz.v", VCLZV, MVV, OP_V, 0b0100101010, Zvbb, 4, {.custom_reg_val = 0b01100}},
-        }};
+         {"vctz.v", VCTZV, MVV, OP_V, 0b0100101010, Zvbb, 4, {.custom_reg_val = 0b01101}},
+         {"vghsh.vv", VGHSHVV, MVV, OP_VE, 0b1011001010, Zvkg, Zvkng, 4},
+         {"vgmul.vv", VGMULVV, MVV, OP_VE, 0b1010001010, Zvkg, Zvkng, 4, {.custom_reg_val = 0b10001}},
+         {"vrev8.v", VREV8V, MVV, OP_V, 0b0100101010, Zvbb, Zvkb, 4, {.custom_reg_val = 0b01001}},
+         {"vrol.vv", VROLVV, IVV, OP_V, 0b0101011000, Zvbb, Zvkb, 4},
+         {"vrol.vx", VROLVX, IVX, OP_V, 0b0101011100, Zvbb, Zvkb, 4},
+         {"vror.vv", VRORVV, IVV, OP_V, 0b0101001000, Zvbb, Zvkb, 4},
+         {"vror.vx", VRORVX, IVX, OP_V, 0b0101001100, Zvbb, Zvkb, 4},
+         {"vror.vi", VRORVI, IVI, OP_V, 0b0101001011, Zvbb, Zvkb, 4}, // Requires 6th bit of uimm to be in first bit of funct
+         {"vsha2ch.vv", VSHA2CHVV, MVV, OP_VE, 0b1011101010, Zvkn, Zvknc, 4},
+         {"vsha2cl.vv", VSHA2CLVV, MVV, OP_VE, 0b1011111010, Zvkn, Zvknc, 4},
+         {"vsha2ms.vv", VSHA2MSVV, MVV, OP_VE, 0b1011011010, Zvkn, Zvknc, 4},
+         {"vsm3c.vi", VSM3CVI, MVV, OP_VE, 0b1010111010, Zvks, Zvksc, 4, {.use_imm_for_rs = true}},
+         {"vsm3me.vv", VSM3MEVV, MVV, OP_VE, 0b1000001010, Zvks, Zvksc, 4},
+         {"vsm4k.vi", VSM4KVI, MVV, OP_VE, 0b1000011010, Zvks, Zvksc, 4, {.use_imm_for_rs = true}},
+         {"vsm4r.vv", VSM4RVV, MVV, OP_VE, 0b1010001010, Zvks, Zvksc, 4, {.custom_reg_val = 0b10000}},
+         {"vsm4r.vs", VSM4RVS, MVV, OP_VE, 0b1010011010, Zvks, Zvksc, 4, {.custom_reg_val = 0b10000}},
+         {"vwsll.vv", VWSLLVV, IVV, OP_V, 0b1101011000, Zvbb, 4},
+         {"vwsll.vx", VWSLLVX, IVX, OP_V, 0b1101011100, Zvbb, 4},
+         {"vwsll.vi", VWSLLVI, IVI, OP_V, 0b1101011011, Zvbb, 4}}
+};
 
 } // namespace libchata_internal

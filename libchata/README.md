@@ -73,7 +73,70 @@ Here's more on that. Chatassembler is...
 
 ### ▫️ Complete
 
-Supports all instructions in the RV32I, RV64I, RV32M, RV64M, RV32A, RV64A, RV32F, RV64F, RV32D, RV64D, RV32Q, RV64Q, RV32Zfh, RV64Zfh, Zihintntl, Zihintpause, Zifencei, Zicntr, Zihpm, Zicsr, Zawrs, Zicond, Zimop, Zacas, Zcb, Zcmp, Zcd, Zfinx, Zdinx, Zhinx, Zbb **(WIP)**, Zcf, Zcmt, Zfa, B **(WIP)**, and V **(WIP)** instruction sets, pseudoinstructions, custom instructions, labels, and many other directives. 
+Supports all 1100+ instructions in these RISC-V instruction sets!
+
+- RV32E
+- RV32I
+- RV64I
+- RV32M
+- RV32A
+- RV64A
+- RV32F
+- RV64F
+- RV32D
+- RV64D
+- RV32Q
+- RV64Q
+- RV32Zfh
+- RV64Zfh
+- B
+- V
+- C
+- Zifencei
+- Zicsr
+- Zawrs
+- Zicond
+- Zacas
+- Zcb
+- Zbb
+- Zcmp
+- Zcd
+- Zcf
+- Zcmt
+- Zfa
+- Zimop
+- Zbkb
+- Zbkc
+- Zbkx
+- Zknd
+- Zkne
+- Zknh
+- Zksed
+- Zksh
+- Zkr
+- Zkn
+- Zks
+- Zk
+- Zkt
+- Zvbb
+- Zvbc
+- Zvkb
+- Zvkg
+- Zvkned
+- Zvknh
+- Zvknhab
+- Zvknhb
+- Zvksed
+- Zvkn
+- Zvknc
+- Zvkng
+- Zvks
+- Zvksc
+- Zvksg
+- Zvkt
+- Zvksh
+  
+This includes pseudoinstructions, custom instructions, labels, and many other assembler directives!
 
 The endgame is full compatibility with GCC's `as` excluding certain features (more below).
 
@@ -91,9 +154,9 @@ Chatassembler shares zero (0) code with GCC or LLVM. That means we can make it a
 
 ### ▫️ Verified quality
 
-The Chatassembler testsuite currently has 1000+ tests covering all supported instructions and directives and other cases too.
+The Chatassembler testsuite currently has 1700+ tests covering all supported instructions and directives and other cases too.
 
-Interestingly, this has led to Chatassembler revealing lots of bugs in `as` including ones causing internal errors!
+This has led to Chatassembler revealing lots of bugs in `as` including ones causing internal errors!
 
 ### ▫️ Fast! 🏎️
 
@@ -125,39 +188,39 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 
 💀 = Irrelevant to Chatassembler
 
-| Directive | Status |
-|-----------|--------|
-| `.align` | 💀 |
-| `.attribute` | 💀 |
-| `.option rvc/norvc` | 💀 |
-| `.option arch` | 🪛 |
-| `.option pic/nopic` | 💀 |
-| `.option relax/norelax` | 💀 |
-| `.option push/pop` | ☑️ |
-| `.insn <value>` | ☑️ |
-| `.insn <insn_length>, <value>` | ☑️ |
-| `.insn <type> <fields>` | ☑️ |
-| Relocation functions | `%hi(symbol)`: ☑️ <br> `%lo(symbol)`: ☑️ <br> Others: 💀 |
-| Labels | ☑️ |
-| Absolute addressing | 💀 |
-| Relative addressing | 💀 |
-| GOT-indirect addressing | 💀 |
-| Load Immediate | ☑️ |
-| Load Upper Immediate’s Immediate | ☑️ |
-| Signed Immediates for I- and S-Type Instructions | ☑️ |
-| Floating-point literals | ☑️ |
-| Load Floating-point Immediate | `fli`: ☑️ <br> `.float`: 💀 <br> `.double`: 💀 |
-| Load Address | 💀 |
-| Load Local Address | 💀 |
-| Load Global Address | 💀 |
-| Load and Store Global | 💀 |
-| Constants | ☑️ |
-| Far Branches | ❌ |
-| Function Calls | ☑️ |
-| Floating-point rounding modes | ☑️ |
-| Control and Status Registers | ☑️ |
-| Standard pseudoinstructions | ☑️ |
-| CSR pseudoinstructions | ☑️ |
+| Directive                                        | Status                                                |
+| ------------------------------------------------ | ----------------------------------------------------- |
+| `.align`                                         | 💀                                                     |
+| `.attribute`                                     | 💀                                                     |
+| `.option rvc/norvc`                              | 💀                                                     |
+| `.option arch`                                   | 🪛                                                     |
+| `.option pic/nopic`                              | 💀                                                     |
+| `.option relax/norelax`                          | 💀                                                     |
+| `.option push/pop`                               | ☑️                                                     |
+| `.insn <value>`                                  | ☑️                                                     |
+| `.insn <insn_length>, <value>`                   | ☑️                                                     |
+| `.insn <type> <fields>`                          | ☑️                                                     |
+| Relocation functions                             | `%hi(symbol)`: ☑️ <br> `%lo(symbol)`: ☑️ <br> Others: 💀 |
+| Labels                                           | ☑️                                                     |
+| Absolute addressing                              | 💀                                                     |
+| Relative addressing                              | 💀                                                     |
+| GOT-indirect addressing                          | 💀                                                     |
+| Load Immediate                                   | ☑️                                                     |
+| Load Upper Immediate’s Immediate                 | ☑️                                                     |
+| Signed Immediates for I- and S-Type Instructions | ☑️                                                     |
+| Floating-point literals                          | ☑️                                                     |
+| Load Floating-point Immediate                    | `fli`: ☑️ <br> `.float`: 💀 <br> `.double`: 💀           |
+| Load Address                                     | 💀                                                     |
+| Load Local Address                               | 💀                                                     |
+| Load Global Address                              | 💀                                                     |
+| Load and Store Global                            | 💀                                                     |
+| Constants                                        | ☑️                                                     |
+| Far Branches                                     | ❌                                                     |
+| Function Calls                                   | ☑️                                                     |
+| Floating-point rounding modes                    | ☑️                                                     |
+| Control and Status Registers                     | ☑️                                                     |
+| Standard pseudoinstructions                      | ☑️                                                     |
+| CSR pseudoinstructions                           | ☑️                                                     |
 
 ### ▫️ License
 

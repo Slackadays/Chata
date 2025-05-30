@@ -475,7 +475,7 @@ void make_inst(assembly_context& c) {
         rs2 = 0b00000;
         imm = 0;*/
 
-        if (ssargs.use_imm_for_rs2) {
+        if (ssargs.use_imm_for_rs) {
             if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
                 imm = num.value();
             } else {
@@ -508,7 +508,7 @@ void make_inst(assembly_context& c) {
         }
         auto no_rs2 = ssargs.custom_reg_val.has_value();
         if (!no_rs2) {
-            if (ssargs.use_imm_for_rs2) {
+            if (ssargs.use_imm_for_rs) {
                 rs2 = imm;
             } else {
                 rs2 = decode_register(c.arg3).encoding;
@@ -553,7 +553,7 @@ void make_inst(assembly_context& c) {
         rs1 = decode_register(c.arg2).encoding;
         auto no_rs2 = ssargs.custom_reg_val.has_value();
         if (!no_rs2) {
-            if (ssargs.use_imm_for_rs2) {
+            if (ssargs.use_imm_for_rs) {
                 rs2 = imm;
             } else {
                 rs2 = decode_register(c.arg3).encoding;
@@ -891,6 +891,12 @@ void make_inst(assembly_context& c) {
 
         if (ssargs.custom_reg_val.has_value()) {
             rs1 = ssargs.custom_reg_val.value();
+        } else if (ssargs.use_imm_for_rs) {
+            if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                rs1 = num.value();
+            } else {
+                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+            }
         } else {
             rs1 = decode_register(c.arg3).encoding;
         }
@@ -926,6 +932,10 @@ void make_inst(assembly_context& c) {
 
             if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
                 imm = num.value();
+
+                if (id == VRORVI) {
+                    inst |= ((imm >> 5) & 0b1) << 26; // Add i5
+                }
             } else {
                 throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
@@ -1451,7 +1461,8 @@ void handle_directives(assembly_context& c) {
             const std::array<std::pair<std::string_view, RVInstructionSet>, 21> arch_option_names = {
                     {{"rv32i", RV32I}, {"rv64i", RV64I}, {"m", RV32M}, // Using RV32M although it means M in general
                      {"a", RV32A},     {"f", RV32F},     {"d", RV32D},   {"q", RV32Q}, {"zifencei", Zifencei}, {"zicsr", Zicsr}, {"zawrs", Zawrs}, {"zicond", Zicond}, {"zacas", Zacas},
-                     {"zcb", Zcb},     {"zbb", Zbb},     {"zcmp", Zcmp}, {"c", C},     {"zcd", Zcd},           {"zcf", Zcf},     {"zcmt", Zcmt},   {"b", B},           {"v", V}}};
+                     {"zcb", Zcb},     {"zbb", Zbb},     {"zcmp", Zcmp}, {"c", C},     {"zcd", Zcd},           {"zcf", Zcf},     {"zcmt", Zcmt},   {"b", B},           {"v", V}}
+            };
 
             auto get_arches_from_string = [&](const std::string_view& str) {
                 chatavector<RVInstructionSet> arches;
@@ -1507,7 +1518,8 @@ void handle_directives(assembly_context& c) {
                 {{"r", R},     {"i", I},        {"s", S},        {"b", Branch},   {"u", U},     {"j", J},       {"r4", R4},        {"cr", CR},    {"ci", CI},   {"css", CSS},
                  {"ciw", CIW}, {"cl", CL},      {"cs", CS},      {"ca", CA},      {"cb", CB},   {"cj", CJ},     {"vl", VL},        {"vls", VLS},  {"vlx", VLX}, {"vs", VS},
                  {"vss", VSS}, {"vsx", VSX},    {"vlr", VLR},    {"ivv", IVV},    {"fvv", FVV}, {"mvv", MVV},   {"ivi", IVI},      {"ivx", IVX},  {"fvf", FVF}, {"mvx", MVX},
-                 {"clb", CLB}, {"csb", CSBfmt}, {"clh", CLHfmt}, {"csh", CSHfmt}, {"cu", CU},   {"cmmv", CMMV}, {"cmjt", CMJTfmt}, {"cmpp", CMPP}}};
+                 {"clb", CLB}, {"csb", CSBfmt}, {"clh", CLHfmt}, {"csh", CSHfmt}, {"cu", CU},   {"cmmv", CMMV}, {"cmjt", CMJTfmt}, {"cmpp", CMPP}}
+        };
         if (!c.arg1.empty() && c.arg2.empty()) {
             if (auto num = decode_imm<uint32_t>(c.arg1, c); num.has_value()) {
                 custom_inst = num.value();
@@ -1896,7 +1908,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as -march=rv64gvfdcqb_zknd_zbkb_zknh_zksh_zksed_zbkx_zbc_zba_zicond_zacas_zcb_zcmp temp.s -o temp.o");
+    int res = std::system("riscv64-linux-gnu-as -march=rv64gvfdcqb_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp temp.s -o temp.o");
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)

@@ -1,1 +1,1 @@
-xperm4 x1, x2, x3
+vwsll.vi v29, v30, 16

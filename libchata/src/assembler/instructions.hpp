@@ -1206,7 +1206,7 @@ enum class RVInstructionID : uint16_t {
     VSHA2CHVV,
     VSHA2CLVV,
     VSHA2MSVV,
-    VM3CVI,
+    VSM3CVI,
     VSM3MEVV,
     VSM4KVI,
     VSM4RVV,
@@ -1297,7 +1297,7 @@ constexpr uint8_t OP_C2 = 0b10;
 
 struct special_snowflake_args {
     std::optional<uint8_t> custom_reg_val;
-    bool use_imm_for_rs2 = false;
+    bool use_imm_for_rs = false;
     bool use_frm_for_funct3 = false;
     bool super_special_snowflake = false;
     bool swap_rs1_rs2 = false;
@@ -1346,6 +1346,6 @@ struct rvinstruction {
             , ssargs(ssargs) {} // With subset
 };
 
-extern const std::array<rvinstruction, 1152> instructions;
+extern const std::array<rvinstruction, 1192> instructions;
 
 } // namespace libchata_internal

@@ -80,8 +80,6 @@ enum class RVInstructionSet : uint8_t {
     Zvksc,
     Zvksg,
     Zvkt,
-    Zvkg,
-    Zvksed,
     Zvksh
 };
 
