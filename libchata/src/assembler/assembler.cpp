@@ -913,8 +913,14 @@ void make_inst(assembly_context& c) {
         inst |= rs2 << 20;             // Add vs2
         inst |= (funct >> 3) << 25;    // Add vm, funct6
 
-        if (fast_eq(c.arg4, "v0.t")) {
-            inst &= ~(1 << 25); // Clear the 25th bit
+        if (ssargs.custom_reg_val.has_value()) {
+            if (fast_eq(c.arg3, "v0.t")) {
+                inst &= ~(1 << 25); // Clear the 25th bit
+            }
+        } else {
+            if (fast_eq(c.arg4, "v0.t")) {
+                inst &= ~(1 << 25);
+            }
         }
     } else if (type == IVI) {
         rd = decode_register(c.arg1).encoding;
@@ -948,6 +954,10 @@ void make_inst(assembly_context& c) {
         inst |= (imm & 0b11111) << 15; // Add imm[4:0]
         inst |= rs2 << 20;             // Add vs2
         inst |= (funct >> 3) << 25;    // Add vm, funct6
+
+        if (fast_eq(c.arg4, "v0.t")) {
+            inst &= ~(1 << 25); // Clear the 25th bit
+        }
     } else if (type == CLB) {
         rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {

@@ -1,1 +1,1 @@
-fadd.s f16, f17, f18, rmm
+vsext.vf2 v17, v18, v0.t
