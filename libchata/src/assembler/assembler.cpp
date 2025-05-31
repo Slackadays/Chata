@@ -520,7 +520,7 @@ void make_inst(assembly_context& c) {
             }
         }
         if (opcode != opcode::OP_IMM) {
-            if (!c.arg4.empty() && no_rs2) {
+            if (!c.arg4.empty() && opcode == opcode::OP_FP) {
                 frm = decode_frm(c.arg4);
             } else if (!c.arg5.empty() && !no_rs2) {
                 frm = decode_frm(c.arg5);

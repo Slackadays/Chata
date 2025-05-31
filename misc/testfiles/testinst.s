@@ -1,1 +1,1 @@
-vwsll.vi v29, v30, 16
+fadd.s f16, f17, f18, rmm

@@ -529,6 +529,12 @@ int main() {
     as("amomaxu.d.aqrl a3, t3, (s3)", 0xafb6c9e7);
     as("amomaxu.d.aqrl a3, t3, 0(s3)", 0xafb6c9e7);
     as("fmadd.s f0, f1, f2, f3", 0x43f02018);
+    as("fmadd.s f0, f1, f2, f3, rne", 0x43802018);
+    as("fmadd.s f0, f1, f2, f3, rtz", 0x43902018);
+    as("fmadd.s f0, f1, f2, f3, rdn", 0x43a02018);
+    as("fmadd.s f0, f1, f2, f3, rup", 0x43b02018);
+    as("fmadd.s f0, f1, f2, f3, rmm", 0x43c02018);
+    as("fmadd.s f0, f1, f2, f3, dyn", 0x43f02018);
     as("fmadd.s x0, x1, x2, x3", 0x43f02018); // x registers in f instruction = Zfinx
     as("fmsub.s f4, f5, f6, f7", 0x47f26238);
     as("fmsub.s x4, x5, x6, x7", 0x47f26238);
@@ -537,6 +543,12 @@ int main() {
     as("fnmadd.s f12, f13, f14, f15", 0x4ff6e678);
     as("fnmadd.s x12, x13, x14, x15", 0x4ff6e678);
     as("fadd.s f16, f17, f18", 0x53f82801);
+    as("fadd.s f16, f17, f18, rne", 0x53882801);
+    as("fadd.s f16, f17, f18, rtz", 0x53982801);
+    as("fadd.s f16, f17, f18, rdn", 0x53a82801);
+    as("fadd.s f16, f17, f18, rup", 0x53b82801);
+    as("fadd.s f16, f17, f18, rmm", 0x53c82801);
+    as("fadd.s f16, f17, f18, dyn", 0x53f82801);
     as("fadd.s x16, x17, x18", 0x53f82801);
     as("fsub.s f19, f20, f21", 0xd3795a09);
     as("fsub.s x19, x20, x21", 0xd3795a09);
