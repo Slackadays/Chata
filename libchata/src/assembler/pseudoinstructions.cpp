@@ -363,8 +363,8 @@ void vneg_v_instr(assembly_context& c) { // vneg.v vd, vs -> vrsub.vx vd, vs, ze
     make_inst(c);
 }
 
-void vnot_v_instr(assembly_context& c) { // vnot.v vd, vs, vm -> vxor.i vd, vs, -1, vm
-    c.inst_offset = fast_instr_search("vxor.i");
+void vnot_v_instr(assembly_context& c) { // vnot.v vd, vs, vm -> vxor.vi vd, vs, -1, vm
+    c.inst_offset = fast_instr_search("vxor.vi");
     c.arg4 = c.arg3;
     c.arg3 = "-1";
     make_inst(c);

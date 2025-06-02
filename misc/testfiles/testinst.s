@@ -1,1 +1,1 @@
-vsext.vf2 v17, v18, v0.t
+fmv.x.s a1, f1
