@@ -1258,9 +1258,9 @@ enum class RVInstructionFormat : uint8_t {
     CMPP
 };
 
-enum class RVInstructionSetMinimumRequirements : uint8_t { //The smallest set combination that provides the instruction
-    RV32E_or_RV32I,
-    RV64E_or_RV64I,
+enum class RVInSetMinReqs : uint8_t { //The smallest set combination that provides the instruction
+    I,
+    I_and_64b,
     M,
     M_and_64b,
     Zmmul,
@@ -1289,28 +1289,29 @@ enum class RVInstructionSetMinimumRequirements : uint8_t { //The smallest set co
     Zawrs,
     Zicond,
     Zacas,
-    B_Zba,
-    B_Zbb,
-    B_Zbs,
-    C_Zca,
-    C_Zcf,
-    C_Zcd,
-    C_Zcb_Zca,
-    C_Zcmp_Zca,
-    C_Zcmt_Zca,
+    Zacas_and_64b,
+    Zba,
+    Zbb,
+    Zbs,
+    Zca,
+    Zcf,
+    Zcd,
+    Zcb,
+    Zcmp,
+    Zcmt,
     Zfa,
     Zimop,
     V,
-    Zknd_Zkn_Zk,
-    Zkne_Zkn_Zk,
-    Zkne_Zknd_Zkn_Zk,
-    B_Zbb_Zbkb,
-    B_Zbkb,
-    B_Zbc_Zbkc,
-    Zknh_Zkn_Zk,
-    Zksh_Zks,
-    Zksed_Zks,
-    B_Zbkx
+    Zknd,
+    Zkne,
+    Zkne_or_Zknd,
+    Zbkb,
+    Zbb_or_Zbkb,
+    Zbc_or_Zbkc,
+    Zknh,
+    Zksh,
+    Zksed,
+    Zbkx
 };
 
 namespace opcode {
@@ -1364,11 +1365,11 @@ struct rvinstruction {
     RVInstructionFormat type;
     uint8_t opcode;
     uint16_t funct;
-    RVInstructionSetMinimumRequirements requirements;
+    RVInSetMinReqs requirements;
     uint8_t bytes;
     special_snowflake_args ssargs = {};
 
-    rvinstruction(std::string_view name, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInstructionSetMinimumRequirements requirements, uint8_t bytes, special_snowflake_args ssargs = {})
+    rvinstruction(std::string_view name, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs requirements, uint8_t bytes, special_snowflake_args ssargs = {})
             : name(name)
             , id(id)
             , type(type)
