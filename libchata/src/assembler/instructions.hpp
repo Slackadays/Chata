@@ -1258,6 +1258,61 @@ enum class RVInstructionFormat : uint8_t {
     CMPP
 };
 
+enum class RVInstructionSetMinimumRequirements : uint8_t { //The smallest set combination that provides the instruction
+    RV32E_or_RV32I,
+    RV64E_or_RV64I,
+    M,
+    M_and_64b,
+    Zmmul,
+    Zmmul_and_64b,
+    Zaamo,
+    Zaamo_and_64b,
+    Zalrsc,
+    Zalrsc_and_64b,
+    F,
+    F_and_64b,
+    F_or_Zfinx,
+    F_or_Zfinx_and_64b,
+    D,
+    D_and_64b,
+    D_or_Zdinx,
+    D_or_Zdinx_and_64b,
+    Q,
+    Q_and_64b,
+    Zfh,
+    Zfh_and_64b,
+    Zfh_or_Zfhinx,
+    Zfh_or_Zfhinx_and_64b,
+    Zfhxmin,
+    Zifencei,
+    Zicsr,
+    Zawrs,
+    Zicond,
+    Zacas,
+    B_Zba,
+    B_Zbb,
+    B_Zbs,
+    C_Zca,
+    C_Zcf,
+    C_Zcd,
+    C_Zcb_Zca,
+    C_Zcmp_Zca,
+    C_Zcmt_Zca,
+    Zfa,
+    Zimop,
+    V,
+    Zknd_Zkn_Zk,
+    Zkne_Zkn_Zk,
+    Zkne_Zknd_Zkn_Zk,
+    B_Zbb_Zbkb,
+    B_Zbkb,
+    B_Zbc_Zbkc,
+    Zknh_Zkn_Zk,
+    Zksh_Zks,
+    Zksed_Zks,
+    B_Zbkx
+};
+
 namespace opcode {
 
 constexpr uint8_t OP_LOAD = 0b0000011;
@@ -1309,41 +1364,19 @@ struct rvinstruction {
     RVInstructionFormat type;
     uint8_t opcode;
     uint16_t funct;
-    RVInstructionSet set;
-    RVInstructionSet subset;
+    RVInstructionSetMinimumRequirements requirements;
     uint8_t bytes;
     special_snowflake_args ssargs = {};
 
-    rvinstruction(std::string_view name, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInstructionSet set, uint8_t bytes, special_snowflake_args ssargs = {})
+    rvinstruction(std::string_view name, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInstructionSetMinimumRequirements requirements, uint8_t bytes, special_snowflake_args ssargs = {})
             : name(name)
             , id(id)
             , type(type)
             , opcode(opcode)
             , funct(funct)
-            , set(set)
-            , subset(set)
+            , requirements(requirements)
             , bytes(bytes)
-            , ssargs(ssargs) {} // Without subset
-    rvinstruction(
-            std::string_view name,
-            RVInstructionID id,
-            RVInstructionFormat type,
-            uint8_t opcode,
-            uint16_t funct,
-            RVInstructionSet set,
-            RVInstructionSet subset,
-            uint8_t bytes,
-            special_snowflake_args ssargs = {}
-    )
-            : name(name)
-            , id(id)
-            , type(type)
-            , opcode(opcode)
-            , funct(funct)
-            , set(set)
-            , subset(subset)
-            , bytes(bytes)
-            , ssargs(ssargs) {} // With subset
+            , ssargs(ssargs) {}
 };
 
 extern const std::array<rvinstruction, 1192> instructions;
