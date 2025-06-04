@@ -1259,7 +1259,7 @@ enum class RVInstructionFormat : uint8_t {
 };
 
 enum class RVInSetMinReqs : uint8_t { //The smallest set combination that provides the instruction
-    I,
+    RVI, // because I conflicts with RVInstructionFormat
     I_and_64b,
     M,
     M_and_64b,
@@ -1280,12 +1280,13 @@ enum class RVInSetMinReqs : uint8_t { //The smallest set combination that provid
     Q,
     Q_and_64b,
     Zfhmin,
-    Zfhmin_and_D_or_Zdinx,
     Zfhmin_and_Q,
+    Zfhmin_or_Zhinxmin,
+    Zfhmin_or_Zhinxmin_and_D_or_Zdinx,
     Zfh,
     Zfh_and_64b,
-    Zfh_or_Zfhinx,
-    Zfh_or_Zfhinx_and_64b,
+    Zfh_or_Zhinx,
+    Zfh_or_Zhinx_and_64b,
     Zifencei,
     Zicsr,
     Zawrs,
@@ -1302,18 +1303,40 @@ enum class RVInSetMinReqs : uint8_t { //The smallest set combination that provid
     Zcmp,
     Zcmt,
     Zfa,
+    Zfa_and_D,
+    Zfa_and_Q,
+    Zfa_and_Zfh_or_Zvfh,
     Zimop,
     V,
     Zknd,
     Zkne,
-    Zkne_or_Zknd,
+    Zknd_or_Zkne,
     Zbkb,
     Zbb_or_Zbkb,
     Zbc_or_Zbkc,
+    Zbc,
     Zknh,
     Zksh,
     Zksed,
-    Zbkx
+    Zvksed,
+    Zbkx,
+    Zvbb,
+    Zvkb,
+    Zvbc,
+    Zvkned,
+    Zvknha_or_Zvknhb,
+    Zvksh,
+    Zvkg
+};
+
+enum class RVInstructionImmConstraint : uint8_t {
+    None,
+    Signed_12b,
+    Signed_13b,
+    Signed_20b,
+    Signed_21b,
+    Unsigned_5b,
+    Unsigned_6b
 };
 
 namespace opcode {
@@ -1359,6 +1382,7 @@ struct special_snowflake_args {
     bool use_frm_for_funct3 = false;
     bool super_special_snowflake = false;
     bool swap_rs1_rs2 = false;
+    RVInstructionImmConstraint imm_constraint = RVInstructionImmConstraint::None;
 };
 
 struct rvinstruction {

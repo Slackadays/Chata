@@ -393,12 +393,13 @@ void make_inst(assembly_context& c) {
     DBG(std::cout << "arg3: " << c.arg3 << std::endl;)
 
     if (!c.supported_sets.empty()) {
-        for (const auto& set : c.supported_sets) {
+        /*for (const auto& set : c.supported_sets) {
             if (instructions.at(c.inst_offset).set != set && instructions.at(c.inst_offset).subset != set) {
                 DBG(std::cout << "Skipping instruction " << c.inst << " because it's not in the supported sets" << std::endl;)
                 return;
             }
-        }
+        }*/
+        DBG(std::cout << "Skipping this step because it's unimplemented" << std::endl;)
     }
 
     DBG(std::cout << "Making instruction" << std::endl;)
@@ -414,8 +415,7 @@ void make_inst(assembly_context& c) {
     auto& name = base_i.name;
     auto& type = base_i.type;
     auto& id = base_i.id;
-    auto& set = base_i.set;
-    auto& subset = base_i.subset;
+    auto& reqs = base_i.requirements;
     auto& funct = base_i.funct;
     auto& bytes = base_i.bytes;
     auto& opcode = base_i.opcode;
@@ -483,7 +483,7 @@ void make_inst(assembly_context& c) {
             }
         }
         rd = decode_register(c.arg1).encoding;
-        if (set == RVInstructionSet::RV32A || set == RVInstructionSet::RV64A || subset == RVInstructionSet::Zacas) { // The RV32A and RV64A sets sometimes use registers that look like (a0)
+        if (opcode == opcode::OP_AMO) { // The A and Zacas sets sometimes use registers that look like (a0)
             remove_extraneous_parentheses(c.arg2);
             remove_extraneous_parentheses(c.arg3);
             using enum RVInstructionID;
