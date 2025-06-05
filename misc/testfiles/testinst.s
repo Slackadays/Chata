@@ -1,1 +1,1 @@
-fmv.x.s a1, f1
+addi x5, zero, %lo(0xFFFFF)

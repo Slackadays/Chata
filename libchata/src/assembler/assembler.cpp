@@ -61,7 +61,7 @@ std::optional<T> decode_constant(const chatastring& constant, assembly_context& 
                     if (fast_eq(con.first, unwrapped)) {
                         auto num = to_num<T>(con.second);
                         if (num.has_value()) {
-                            return num.value() & 0xFFF;
+                            return (num.value() << 20) >> 20; // This preserves the sign bit
                         }
                     }
                 }
@@ -244,6 +244,69 @@ uint8_t decode_fli_imm(const float& value) {
         return 31;
     } else {
         throw ChataError(ChataErrorType::Compiler, "Invalid fli floating-point immediate " + to_chatastring(value));
+    }
+}
+
+void verify_imm(const int32_t& imm, RVInstructionImmConstraint constraint) {
+    using enum RVInstructionImmConstraint;
+    if (constraint == None || constraint == Signed_32b) {
+        return;
+    } else if (constraint == Signed_5b && (imm >= -16 && imm < 16)) {
+        return;
+    } else if (constraint == Signed_6b && (imm >= -32 && imm < 32)) {
+        return;
+    } else if (constraint == Signed_9b && (imm >= -256 && imm < 256)) {
+        return;
+    } else if (constraint == Signed_12b && (imm >= -2048 && imm < 2048)) {
+        return;
+    } else if (constraint == Signed_13b && (imm >= -4096 && imm < 4096)) {
+        return;
+    } else if (constraint == Signed_20b && (imm >= -1048576 && imm < 1048576)) {
+        return;
+    } else if (constraint == Signed_21b && (imm >= -2097152 && imm < 2097152)) {
+        return;
+    } else if (constraint == Unsigned_5b && (imm >= 0 && imm < 32)) {
+        return;
+    } else if (constraint == Unsigned_6b && (imm >= 0 && imm < 64)) {
+        return;
+    } else if (constraint == Unsigned_7b && (imm >= 0 && imm < 128)) {
+        return;
+    } else if (constraint == Unsigned_8b && (imm >= 0 && imm < 256)) {
+        return;
+    } else if (constraint == Unsigned_9b && (imm >= 0 && imm < 512)) {
+        return;
+    } else {
+        chatastring range;
+        if (constraint == None) {
+            range = "(no range)";
+        } else if (constraint == Signed_5b) {
+            range = "[-16, 16)";
+        } else if (constraint == Signed_6b) {
+            range = "[-32, 32)";
+        } else if (constraint == Signed_9b) {
+            range = "[-256, 256)";
+        } else if (constraint == Signed_12b) {
+            range = "[-2048, 2048)";
+        } else if (constraint == Signed_13b) {
+            range = "[-4096, 4096)";
+        } else if (constraint == Signed_20b) {
+            range = "[-1048576, 1048576)";
+        } else if (constraint == Signed_21b) {
+            range = "[-2097152, 2097152)";
+        } else if (constraint == Signed_32b) {
+            range = "(any value)";
+        } else if (constraint == Unsigned_5b) {
+            range = "[0, 32)";
+        } else if (constraint == Unsigned_6b) {
+            range = "[0, 64)";
+        } else if (constraint == Unsigned_7b) {
+            range = "[0, 128)";
+        } else if (constraint == Unsigned_8b) {
+            range = "[0, 256)";
+        } else if (constraint == Unsigned_9b) {
+            range = "[0, 512)";
+        }
+        throw ChataError(ChataErrorType::Compiler, "This instruction's immediate " + to_chatastring(imm) + " is out of the allowed range " + range);
     }
 }
 
@@ -477,6 +540,7 @@ void make_inst(assembly_context& c) {
 
         if (ssargs.use_imm_for_rs) {
             if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                verify_imm(imm, ssargs.imm_constraint);
                 imm = num.value();
             } else {
                 throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
@@ -589,10 +653,12 @@ void make_inst(assembly_context& c) {
 
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
             rs1 = decode_register(c.arg2).encoding;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
+            verify_imm(imm, ssargs.imm_constraint);
             rs1 = decode_register(reg).encoding;
         }
         rd = decode_register(c.arg1).encoding;
@@ -605,10 +671,12 @@ void make_inst(assembly_context& c) {
     } else if (type == S) {
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
             rs1 = decode_register(c.arg2).encoding;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
+            verify_imm(imm, ssargs.imm_constraint);
             rs1 = decode_register(reg).encoding;
         }
         rs2 = decode_register(c.arg1).encoding;
@@ -622,6 +690,7 @@ void make_inst(assembly_context& c) {
     } else if (type == Branch) {
         if (auto num = to_num<int>(c.arg3); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
         } else {
             imm = string_to_label(c.arg3, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = Branch});
@@ -640,6 +709,7 @@ void make_inst(assembly_context& c) {
     } else if (type == U) {
         if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
@@ -651,6 +721,7 @@ void make_inst(assembly_context& c) {
     } else if (type == J) {
         if (auto num = to_num<int>(c.arg2); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
         } else {
             imm = string_to_label(c.arg2, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = J});
@@ -666,6 +737,7 @@ void make_inst(assembly_context& c) {
     } else if (type == CJ) {
         if (auto num = to_num<int>(c.arg1); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
         } else {
             imm = string_to_label(c.arg1, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = CJ});
@@ -684,10 +756,12 @@ void make_inst(assembly_context& c) {
     } else if (type == CL) {
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
             rs1 = decode_register(c.arg2).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
+            verify_imm(imm, ssargs.imm_constraint);
             rs1 = decode_register(reg).encoding & 0b111;
         }
         rd = decode_register(c.arg1).encoding & 0b111;
@@ -706,10 +780,12 @@ void make_inst(assembly_context& c) {
     } else if (type == CS) {
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
             rs1 = decode_register(c.arg2).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
+            verify_imm(imm, ssargs.imm_constraint);
             rs1 = decode_register(reg).encoding & 0b111;
         }
         rs2 = decode_register(c.arg1).encoding & 0b111;
@@ -728,6 +804,7 @@ void make_inst(assembly_context& c) {
     } else if (type == CB) {
         if (auto num = to_num<int>(c.arg2); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
         } else {
             imm = string_to_label(c.arg2, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = CB});
@@ -769,9 +846,11 @@ void make_inst(assembly_context& c) {
         rd = decode_register(c.arg1).encoding;
         if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c); // discard reg
             imm = offset;
+            verify_imm(imm, ssargs.imm_constraint);
         }
 
         DBG(std::cout << "Encoding CI-type instruction with name " << name << std::endl;)
@@ -806,9 +885,11 @@ void make_inst(assembly_context& c) {
         rs2 = decode_register(c.arg1).encoding;
         if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c); // discard reg
             imm = offset;
+            verify_imm(imm, ssargs.imm_constraint);
         }
 
         DBG(std::cout << "Encoding CSS-type instruction with name " << name << std::endl;)
@@ -828,6 +909,7 @@ void make_inst(assembly_context& c) {
         rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
         if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
@@ -930,6 +1012,7 @@ void make_inst(assembly_context& c) {
 
             if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
                 imm = num.value();
+                verify_imm(imm, ssargs.imm_constraint);
             } else {
                 throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
             }
@@ -938,6 +1021,7 @@ void make_inst(assembly_context& c) {
 
             if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
                 imm = num.value();
+                verify_imm(imm, ssargs.imm_constraint);
 
                 if (id == VRORVI) {
                     inst |= ((imm >> 5) & 0b1) << 26; // Add i5
@@ -1051,6 +1135,7 @@ void make_inst(assembly_context& c) {
     } else if (type == CMJTfmt) {
         if (auto num = decode_imm<int>(c.arg1, c); num.has_value()) {
             imm = num.value();
+            verify_imm(imm, ssargs.imm_constraint);
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid index " + c.arg1, c.line, c.column);
         }
@@ -1171,6 +1256,7 @@ void make_inst(assembly_context& c) {
                 throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
             }
         }
+        verify_imm(imm, ssargs.imm_constraint);
 
         if (id == CMPUSH) {
             if (imm > 0) {
