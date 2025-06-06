@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(libchata LANGUAGES CXX C VERSION 1)
-set(CMAKE_CXX_STANDARD 20)
+project(ultrassembler LANGUAGES CXX C VERSION 1)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 execute_process( # save the current branch to GIT_BRANCH
@@ -31,8 +31,7 @@ if(lto_supported AND NOT NO_LTO)
   endif()
 endif()
 
-add_library(objchata OBJECT
-    src/libchata.cpp
+add_library(objuas OBJECT
     src/assembler/assembler.cpp
     src/compile.cpp
     src/utils.cpp
@@ -48,21 +47,21 @@ add_library(objchata OBJECT
     src/assembler/csr_search.cpp
 )
 
-target_compile_options(objchata PRIVATE -fno-rtti -fno-stack-protector -fomit-frame-pointer)
+target_compile_options(objuas PRIVATE -fno-rtti -fno-stack-protector -fomit-frame-pointer)
 
-set_property(TARGET objchata PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET objuas PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-add_library(chatashared SHARED $<TARGET_OBJECTS:objchata>)
-add_library(chatastatic STATIC $<TARGET_OBJECTS:objchata>)
+add_library(ultrashared SHARED $<TARGET_OBJECTS:objchata>)
+add_library(ultrastatic STATIC $<TARGET_OBJECTS:objchata>)
 
-set_target_properties(chatastatic PROPERTIES OUTPUT_NAME chata)
-set_target_properties(chatashared PROPERTIES OUTPUT_NAME chata)
+set_target_properties(ultrastatic PROPERTIES OUTPUT_NAME chata)
+set_target_properties(ultrashared PROPERTIES OUTPUT_NAME chata)
 
-add_executable(test_libchata
+add_executable(test_ultrassembler
   src/test.cpp
 )
 
-target_link_libraries(test_libchata PRIVATE chatashared)
+target_link_libraries(test_ultrassembler PRIVATE ultrashared)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   #add_definitions(-DDEBUG -Wall -Wextra -Wpedantic)
