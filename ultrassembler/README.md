@@ -1,12 +1,12 @@
 # Welcome to Ultrassembler!
 
-Chatassembler is the world's #1 (and only) complete assembler library for RISC-V. It's easy to use, fully independent of GCC and LLVM, and _over 10x faster_ 🏎️ than them.
+Ultrassembler is the world's #1 (and only) complete assembler library for RISC-V. It's easy to use, fully independent of GCC and LLVM, and _over 10x faster_ 🏎️ than them.
 
 <p align="center">
     <img src="assets/Figure_1.svg">
 </p>
 
-Here's more on that. Chatassembler is...
+Here's more on that. Ultrassembler is...
 
 ### ▫️ Complete
 
@@ -79,7 +79,7 @@ The endgame is full compatibility with GCC's `as` excluding certain features (mo
 
 ### ▫️ Not a binary
 
-Chatassembler ships in the lean and mean `libchata` library and is also available in the `chatacli` tool. Use it anywhere C++20 is supported and link it dynamically or statically. It's your choice.
+Ultrassembler ships in the lean and mean `ultrassembler` library and is also available in the `chatacli` tool. Use it anywhere C++20 is supported and link it dynamically or statically. It's your choice.
 
 ### ▫️ Zero config
 
@@ -87,35 +87,35 @@ There's only one (1) function with one (1) required parameter. Truly effortless.
 
 ### ▫️ Unrelated to GCC or LLVM
 
-Chatassembler shares zero (0) code with GCC or LLVM. That means we can make it a third reference implementation of RISC-V assembly!
+Ultrassembler shares zero (0) code with GCC or LLVM. That means we can make it a third reference implementation of RISC-V assembly!
 
 ### ▫️ Verified quality
 
-The Chatassembler testsuite currently has 1700+ tests covering all supported instructions and directives and other cases too.
+The Ultrassembler testsuite currently has 1700+ tests covering all supported instructions and directives and other cases too.
 
-This has led to Chatassembler revealing lots of bugs in `as` including ones causing internal errors!
+This has led to Ultrassembler revealing lots of bugs in `as` including ones causing internal errors!
 
 ### ▫️ Fast! 🏎️
 
-Chatassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Unlike `mold`, however, Chatassembler doesn't use multithreading, but it doesn't need to. **Coming soon: How is Chatassembler so fast?**
+Ultrassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Unlike `mold`, however, Ultrassembler doesn't use multithreading, but it doesn't need to. **Coming soon: How is Ultrassembler so fast?**
 
-On my desktop with a Zen 3 CPU and GCC 11, Chatassembler is approximately 13x faster than `as` and 9x faster on my RISC-V SBC with a TH1520 SoC and GCC 14, both assembling the `16kinstrs.s` sample file, measured in number of cycles.
+On my desktop with a Zen 3 CPU and GCC 11, Ultrassembler is approximately 13x faster than `as` and 9x faster on my RISC-V SBC with a TH1520 SoC and GCC 14, both assembling the `16kinstrs.s` sample file, measured in number of cycles.
 
 ## Differences to `as` and `llvm-mc`
 
-Chatassembler is different to `as` and `llvm-mc` in these important ways:
+Ultrassembler is different to `as` and `llvm-mc` in these important ways:
 
 ### ▫️ Machine code
 
-Chatassembler can only generate RISC-V machine code. It can't make ELF or other executable files. 
+Ultrassembler can only generate RISC-V machine code. It can't make ELF or other executable files. 
 
-In other words, Chatassembler replaces what you would otherwise do with `as foo.s && objcopy -O binary a.out`.
+In other words, Ultrassembler replaces what you would otherwise do with `as foo.s && objcopy -O binary a.out`.
 
 ### ▫️ Directive support
 
-Because Chatassembler only generates RISC-V machine code, it ignores directives such as `.align` and `.globl` which only make sense with executable files.
+Because Ultrassembler only generates RISC-V machine code, it ignores directives such as `.align` and `.globl` which only make sense with executable files.
 
-Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc) Chatassembler supports as of the latest commit:
+Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc) Ultrassembler supports as of the latest commit:
 
 ☑️ = Supported
 
@@ -123,7 +123,7 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 
 ❌ = Not Supported Yet
 
-💀 = Irrelevant to Chatassembler
+💀 = Irrelevant to Ultrassembler
 
 | Directive                                        | Status                                                |
 | ------------------------------------------------ | ----------------------------------------------------- |
@@ -161,38 +161,38 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 
 ### ▫️ License
 
-Chatassembler is available with the MPL 2.0 license. This may or may not be easier to include in your project than the GPL, but this depends on your situation.
+Ultrassembler is available with the MPL 2.0 license. This may or may not be easier to include in your project than the GPL, but this depends on your situation.
 
 ### ▫️ More flexible
 
-For some instructions, `as` only supports `(reg)` as a way to represent the value at the address stored in register `reg`. However, `reg` and `0(reg)` have the same effect, so Chatassembler supports those in addition to `(reg)`. For example, `as` will reject `lr.w a0, a1` and `lr.w a0, 0(a1)`, but Chatassembler won't. 
+For some instructions, `as` only supports `(reg)` as a way to represent the value at the address stored in register `reg`. However, `reg` and `0(reg)` have the same effect, so Ultrassembler supports those in addition to `(reg)`. For example, `as` will reject `lr.w a0, a1` and `lr.w a0, 0(a1)`, but Ultrassembler won't. 
 
-In general, Chatassembler accepts other instructions that `as` would reject because the RISC-V standard doesn't forbid them. Another example is with `.insn`, where `as` places constraints on the opcode field, but such constraints on custom instructions do not exist in the standard.
+In general, Ultrassembler accepts other instructions that `as` would reject because the RISC-V standard doesn't forbid them. Another example is with `.insn`, where `as` places constraints on the opcode field, but such constraints on custom instructions do not exist in the standard.
 
-## Why Chatassembler?
+## Why Ultrassembler?
 
-I wrote Chatassembler because Chata needs to generate RISC-V machine code to execute at runtime, FAST. Until now, the only way to do this was to manually invoke `as` and `objcopy` in a funky and inefficient way. This was because there were no good, independent RISC-V assembler libraries. But now, Chatassembler can do the same thing much faster, much easier, and much prettier.
+I wrote Ultrassembler because Chata needs to generate RISC-V machine code to execute at runtime, FAST. Until now, the only way to do this was to manually invoke `as` and `objcopy` in a funky and inefficient way. This was because there were no good, independent RISC-V assembler libraries. But now, Ultrassembler can do the same thing much faster, much easier, and much prettier.
 
-I was originally going to include Chatassembler as an entirely private part of the `libchata` library that you wouldn't be able to use on its own. However, I realized that with how useful an independent RISC-V assembler might turn out to be, you should be able to use Chatassembler independently of the rest of the Chata project. That's what you're seeing here.
+I was originally going to include Ultrassembler as an entirely private part of the `ultrassembler` library that you wouldn't be able to use on its own. However, I realized that with how useful an independent RISC-V assembler might turn out to be, you should be able to use Ultrassembler independently of the rest of the Chata project. That's what you're seeing here.
 
-One example of where you want to use Chatassembler is with embedded RISC-V scripts where you would also use [libriscv](https://github.com/libriscv/libriscv).
+One example of where you want to use Ultrassembler is with embedded RISC-V scripts where you would also use [libriscv](https://github.com/libriscv/libriscv).
 
 ## Quick Start
 
 ### ▫️ Installation
 
-Start by installing `libchata` how you would normally with the instructions in the `libchata` section.
+Start by installing `ultrassembler` how you would normally with the instructions in the `ultrassembler` section.
 
-Then, include the line `#include <libchata.hpp>` where you use Chatassembler.
+Then, include the line `#include <ultrassembler.hpp>` where you use Ultrassembler.
 
 Support for other languages is planned!
 
 ### ▫️ Usage
 
-The one function of Chatassembler is
+The one function of Ultrassembler is
 
 ```cpp
-std::span<uint8_t> libchata_assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {})
+std::span<uint8_t> ultrassembler_assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {})
 ```
 
 where `code` is your RISC-V assembly code and `supported_sets` is optionally an array of `RVInstructionSet` enums. It returns an array of bytes of RISC-V machine code. The following is the list of supported instruction sets:
@@ -236,26 +236,26 @@ Include instruction sets if:
 - You're assembling code which uses the `bclri`, `rev8`, `cm.push*`, or `cm.pop*` instructions, which are different on 32 bit systems than 64, and you're targeting a 32 bit system.
 - You're assembling code which uses the `.option arch` directive, which requires knowing the target instruction sets.
   
-By default, Chatassembler targets a 64 bit `RV64I` system.
+By default, Ultrassembler targets a 64 bit `RV64I` system.
 
 If you include instruction sets, you must include at least `RV32E`, `RV32I`, or `RV64I`.
 
-To preserve performance, Chatassembler doesn't check if instructions outside of `.option arch` blocks are valid for the provided instruction sets. If this is a problem for you, fix your broken software.
+To preserve performance, Ultrassembler doesn't check if instructions outside of `.option arch` blocks are valid for the provided instruction sets. If this is a problem for you, fix your broken software.
 
 ### ▫️ Exceptions
 
-Chatassembler may throw a `ChataError` exception if it encounters incorrect code or has some other error.
+Ultrassembler may throw a `UltraError` exception if it encounters incorrect code or has some other error.
 
 To catch these, just add a `try {} catch(...) {}` block like you would with other C++ code.
 
-These errors follow the same format that other parts of `libchata` use.
+These errors follow the same format that other parts of `ultrassembler` use.
 
 ### ▫️ Example
 
-Check out this example of how to use Chatassembler for yourself.
+Check out this example of how to use Ultrassembler for yourself.
 
 ```cpp
-#include <libchata.hpp>
+#include <ultrassembler.hpp>
 #include <string_view>
 #include <vector>
 
@@ -269,24 +269,24 @@ int main() {
     "sub a0, a0, a1\n"
     "ret";
 
-    auto machine_code1 = libchata::assemble(my_code);
+    auto machine_code1 = ultrassembler::assemble(my_code);
 
-    std::span<uint8_t> machine_code2 = libchata::assemble(my_code, my_enums);
+    std::span<uint8_t> machine_code2 = ultrassembler::assemble(my_code, my_enums);
 
     try {
-        auto caught_code = libchata::assemble(my_code);
-    } catch (ChataError& e) {
+        auto caught_code = ultrassembler::assemble(my_code);
+    } catch (UltraError& e) {
         // Handle your error!
     }
 }
 ```
 
-You can build this example by copying [the code file](chatassembler_example.cpp) and then running
+You can build this example by copying [the code file](ultrassembler_example.cpp) and then running
 
 ```sh
-g++ -std=c++20 chatassembler_example.cpp -lchata
+g++ -std=c++20 ultrassembler_example.cpp -lchata
 ```
 
-This concludes all of the public functionality of Chatassembler.
+This concludes all of the public functionality of Ultrassembler.
 
 

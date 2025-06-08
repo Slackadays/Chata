@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "instructions.hpp"
-#include "../libchata.hpp"
+#include "ultrassembler.hpp"
 #include <array>
 #include <cstdint>
 #include <initializer_list>
 #include <string_view>
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
 using enum RVInstructionID;
 using enum RVInstructionFormat;
@@ -1213,4 +1213,4 @@ const std::array<rvinstruction, 1192> instructions = {
          {"vwsll.vi", VWSLLVI, IVI, OP_V, 0b1101011011, Zvbb, 4, {.imm_constraint = Unsigned_5b}}}
 };
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal

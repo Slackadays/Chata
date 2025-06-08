@@ -12,8 +12,10 @@ set positional-arguments
 
 # build everything
 build type='Release':
+  @just build-uas {{type}}
   @just build-lib {{type}}
   @just build-cli {{type}}
+  
 
 # build just libchata
 build-lib type='Release':
@@ -31,14 +33,26 @@ build-cli type='Release':
 
   if [ ! -d "chatacli/build/CMakeFiles" ]; then cd chatacli/build; cmake .. -DCMAKE_BUILD_TYPE="{{type}}"; fi
 
-  cd chatacli/build; cmake --build .
+  cd chatacli/build; cmake --build . -j 12
 
   cd chatacli/build; sudo cmake --install .
 
+# build just ultrassembler
+build-uas type='Release':
+  if [ ! -d "ultrassembler/build" ]; then mkdir ultrassembler/build; fi 
+
+  if [ ! -d "ultrassembler/build/CMakeFiles" ]; then cd ultrassembler/build; cmake .. -DCMAKE_BUILD_TYPE="{{type}}"; fi
+
+  cd ultrassembler/build; cmake --build . -j 12
+
+  cd ultrassembler/build; sudo cmake --install .
+
 # clear all CMake files for everything
 clean:
+  @just clean-uas
   @just clean-lib
   @just clean-cli
+
 
 # clear all CMake files for just libchata
 clean-lib:
@@ -48,29 +62,35 @@ clean-lib:
 clean-cli:
   if [ -d "chatacli/build" ]; then rm -rf chatacli/build; fi
 
+# clear all CMake files for just ultrassembler
+clean-uas:
+  if [ -d "ultrassembler/build" ]; then rm -rf ultrassembler/build; fi
+
 # format all code
 format:
   cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose '{}' +
   cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose '{}' +
+  cd ultrassembler/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose '{}' +
 
 # check if all code is formatted
 check-format:
   cd libchata/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose --dry-run '{}' +
   cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose --dry-run '{}' +
+  cd ultrassembler/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose --dry-run '{}' +
 
 # run codegen scripts
 generate:
-  cd libchata/src; python3 scripts/generate_instruction_search.py
-  cd libchata/src; python3 scripts/generate_register_search.py
-  cd libchata/src; python3 scripts/generate_csr_search.py
-  cd libchata/src; python3 scripts/generate_pseudoinstruction_converter.py
+  cd ultrassembler/src; python3 scripts/generate_instruction_search.py
+  cd ultrassembler/src; python3 scripts/generate_register_search.py
+  cd ultrassembler/src; python3 scripts/generate_csr_search.py
+  cd ultrassembler/src; python3 scripts/generate_pseudoinstruction_converter.py
   @just format
 
 # run testsuites for everything
 test:
-  @just test-lib
+  @just test-uas
 
-# run testsuite for just libchata
-test-lib:
-  cd libchata/build; ./test_libchata
+# run testsuite for just ultraassembler
+test-uas:
+  cd ultrassembler/build; ./test_ultrassembler
   

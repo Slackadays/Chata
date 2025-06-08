@@ -31,31 +31,28 @@ if(lto_supported AND NOT NO_LTO)
   endif()
 endif()
 
-add_library(objuas OBJECT
-    src/assembler/assembler.cpp
-    src/compile.cpp
+add_library(objultra OBJECT
+    src/assembler.cpp
     src/utils.cpp
-    src/if.cpp
-    src/change.cpp
-    src/assembler/instructions.cpp
-    src/assembler/pseudoinstructions.cpp
-    src/assembler/make_inst_from_pseudoinst.cpp
+    src/instructions.cpp
+    src/pseudoinstructions.cpp
+    src/make_inst_from_pseudoinst.cpp
     src/registers.cpp
-    src/assembler/csrs.cpp
-    src/assembler/instruction_search.cpp
+    src/csrs.cpp
+    src/instruction_search.cpp
     src/register_search.cpp
-    src/assembler/csr_search.cpp
+    src/csr_search.cpp
 )
 
-target_compile_options(objuas PRIVATE -fno-rtti -fno-stack-protector -fomit-frame-pointer)
+target_compile_options(objultra PRIVATE -fno-rtti -fno-stack-protector -fomit-frame-pointer)
 
-set_property(TARGET objuas PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET objultra PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-add_library(ultrashared SHARED $<TARGET_OBJECTS:objchata>)
-add_library(ultrastatic STATIC $<TARGET_OBJECTS:objchata>)
+add_library(ultrashared SHARED $<TARGET_OBJECTS:objultra>)
+add_library(ultrastatic STATIC $<TARGET_OBJECTS:objultra>)
 
-set_target_properties(ultrastatic PROPERTIES OUTPUT_NAME chata)
-set_target_properties(ultrashared PROPERTIES OUTPUT_NAME chata)
+set_target_properties(ultrastatic PROPERTIES OUTPUT_NAME uas)
+set_target_properties(ultrashared PROPERTIES OUTPUT_NAME uas)
 
 add_executable(test_ultrassembler
   src/test.cpp
@@ -68,15 +65,15 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   add_definitions(-DDEBUG)
 endif()
 
-install(TARGETS chatashared
+install(TARGETS ultrashared
     DESTINATION lib
 )
 
-install(TARGETS chatastatic
+install(TARGETS ultrastatic
     DESTINATION lib
 )
 
 install(FILES
-    src/libchata.hpp
+    src/ultrassembler.hpp
     DESTINATION include
 )

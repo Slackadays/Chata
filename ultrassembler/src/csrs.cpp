@@ -1,7 +1,7 @@
 #include "csrs.hpp"
-#include "../libchata.hpp"
+#include "ultrassembler.hpp"
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
 const std::array<std::pair<std::string_view, uint16_t>, 376> csrs = {{
         {"fflags", 0x001},
@@ -382,4 +382,4 @@ const std::array<std::pair<std::string_view, uint16_t>, 376> csrs = {{
         {"dscratch1", 0x7B3},
 }};
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal

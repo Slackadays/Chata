@@ -19,91 +19,6 @@
 #define UNIX_OR_UNIX_LIKE
 #endif
 
-enum class RVInstructionSet : uint8_t {
-    RV32E,
-    RV32I,
-    RV64I,
-    RV32M,
-    RV64M,
-    RV32A,
-    RV64A,
-    RV32F,
-    RV64F,
-    RV32D,
-    RV64D,
-    RV32Q,
-    RV64Q,
-    RV32Zfh,
-    RV64Zfh,
-    Zfinx,
-    Zdinx,
-    Zhinx,
-    Zhinxmin,
-    Zmmul,
-    Zaamo,
-    Zalrsc,
-    Zifencei,
-    Zicsr,
-    Zawrs,
-    Zicond,
-    Zacas,
-    Zce,
-    Zcb,
-    Zbb,
-    Zcmp,
-    C,
-    Zcd,
-    Zcf,
-    Zcmt,
-    Zfa,
-    Zimop,
-    B,
-    V,
-    Zvl32b,
-    Zvl64b,
-    Zvl128b,
-    Zvl256b,
-    Zvl512b,
-    Zvl1024b,
-    Zve32x,
-    Zve32f,
-    Zve64x,
-    Zve64f,
-    Zve64d,
-    Zvfhmin,
-    Zvfh,
-    Zbkb,
-    Zbkc,
-    Zbkx,
-    Zknd,
-    Zkne,
-    Zknh,
-    Zksed,
-    Zksh,
-    Zkr,
-    Zkn,
-    Zks,
-    Zk,
-    Zkt,
-    Zvbb,
-    Zvbc,
-    Zvkb,
-    Zvkg,
-    Zvkned,
-    Zvknh,
-    Zvknhab,
-    Zvknhb,
-    Zvksed,
-    Zvkn,
-    Zvknc,
-    Zvkng,
-    Zvks,
-    Zvksc,
-    Zvksg,
-    Zvkt,
-    Zvksh
-};
-
 enum class ChataErrorType {
     Unspecified,
     Compiler,
@@ -210,8 +125,6 @@ struct compilation_context {
     int line = 1;
     int column = 0;
 };
-
-chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavector<RVInstructionSet> sets = {});
 
 chatastring compile_code(chatavector<InternalFile>& files);
 
@@ -521,14 +434,5 @@ namespace libchata {
 void reset_memory_bank();
 
 std::string_view version();
-
-/**
- * @brief Assemble RISC-V assembly with Chatassembler
- *
- * @param code The RISC-V assembly you want to assemble
- * @param supported_sets An array or vector of supported instruction sets to be used for bit-dependent instructions and architecture options
- * @return std::span<uint8_t>
- */
-std::span<uint8_t> assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {});
 
 } // namespace libchata

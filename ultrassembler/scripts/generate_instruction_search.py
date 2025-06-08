@@ -58,9 +58,9 @@ current_instr = ""
 code = "// SPDX-License-Identifier: MPL-2.0\n"
 code += "// The generate_instruction_search.py script automatically generated this code. DO NOT MODIFY!\n"
 code += "#include \"instructions.hpp\"\n"
-code += "#include \"../libchata.hpp\"\n\n"
-code += "namespace libchata_internal {\n\n"
-code += "const uint16_t fast_instr_search(const chatastring& inst) {\n"
+code += "#include \"ultrassembler.hpp\"\n\n"
+code += "namespace ultrassembler_internal {\n\n"
+code += "const uint16_t fast_instr_search(const ultrastring& inst) {\n"
 
 def ind():
     return "    " * (depth + 1)
@@ -100,7 +100,7 @@ process_depth()
 
 code += ind() + "return instr_search_failed;\n"
 code += "}\n\n"
-code += "} // namespace libchata_internal"
+code += "} // namespace ultrassembler_internal"
 
 print(code)
 

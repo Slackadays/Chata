@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
-#include "../libchata.hpp"
+#include "ultrassembler.hpp"
 #include <array>
 #include <cstdint>
 #include <initializer_list>
@@ -8,10 +8,10 @@
 
 #pragma once
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
 constexpr uint16_t instr_search_failed = (uint16_t)-1;
-const uint16_t fast_instr_search(const chatastring& inst);
+const uint16_t fast_instr_search(const ultrastring& inst);
 
 enum class RVInstructionID : uint16_t {
     LUI, // RV32I
@@ -1415,4 +1415,4 @@ struct rvinstruction {
 
 extern const std::array<rvinstruction, 1192> instructions;
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal

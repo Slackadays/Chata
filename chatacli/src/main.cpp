@@ -12,6 +12,7 @@
 #include <thread>
 #include <unistd.h>
 #include <vector>
+#include <ultrassembler.hpp>
 
 namespace fs = std::filesystem;
 
@@ -105,9 +106,12 @@ int main(int argc, char* argv[]) {
         std::cout << "Assembling the file " << filePath.string() << std::endl;
         std::span<uint8_t> result;
         try {
-            result = libchata::assemble(file.data);
+            result = ultrassembler::assemble(file.data);
         } catch (ChataError& e) {
             std::cout << e.what() << std::endl;
+            return 1;
+        }  catch (UltraError& e) {
+            std::cout << "" << e.what() << std::endl;
             return 1;
         }
         if (!no_write_flag) {

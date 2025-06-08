@@ -43,6 +43,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 
 target_link_libraries(chatacli PRIVATE chata)
+target_link_libraries(chatacli PRIVATE uas)
 
 set_property(
     TARGET chatacli

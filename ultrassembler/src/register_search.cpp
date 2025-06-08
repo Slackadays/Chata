@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
 // The generate_register_search.py script automatically generated this code. DO NOT MODIFY!
-#include "libchata.hpp"
+#include "ultrassembler.hpp"
 #include "registers.hpp"
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
-const uint8_t fast_reg_search(const chatastring& reg) {
+const uint8_t fast_reg_search(const ultrastring& reg) {
     if (reg.size() < 1) return reg_search_failed;
     if (reg[0] == 'a') {
         if (reg.size() < 2) return reg_search_failed;
@@ -532,4 +532,4 @@ const uint8_t fast_reg_search(const chatastring& reg) {
     return reg_search_failed;
 }
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal

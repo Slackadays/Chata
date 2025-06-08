@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
 // The generate_instruction_search.py script automatically generated this code. DO NOT MODIFY!
-#include "../libchata.hpp"
+#include "ultrassembler.hpp"
 #include "instructions.hpp"
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
-const uint16_t fast_instr_search(const chatastring& inst) {
+const uint16_t fast_instr_search(const ultrastring& inst) {
     if (inst.size() < 1) return instr_search_failed;
     if (inst[0] == 'a') {
         if (inst.size() < 2) return instr_search_failed;
@@ -11011,4 +11011,4 @@ const uint16_t fast_instr_search(const chatastring& inst) {
     return instr_search_failed;
 }
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal

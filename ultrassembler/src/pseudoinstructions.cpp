@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MPL-2.0
-#include "../libchata.hpp"
+#include "ultrassembler.hpp"
 #include "assembler.hpp"
 #include "instructions.hpp"
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
 void li_instr(assembly_context& c) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
                                      // Case 1: imm is a 12-bit signed integer
@@ -11,22 +11,22 @@ void li_instr(assembly_context& c) { // li rd, imm -> lui rd, imm[31:12]; addi r
     if (auto num = to_num<int>(c.arg2); num.has_value()) {
         imm = num.value();
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+        throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
     }
     if (imm >= -2048 && imm <= 2047) {
         c.inst_offset = fast_instr_search("addi");
         c.arg2 = "zero";
-        c.arg3 = to_chatastring(imm);
+        c.arg3 = to_ultrastring(imm);
         make_inst(c);
         return;
     }
     // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
     c.inst_offset = fast_instr_search("lui");
-    c.arg2 = to_chatastring(imm >> 12);
+    c.arg2 = to_ultrastring(imm >> 12);
     make_inst(c);
     c.inst_offset = fast_instr_search("addi");
     c.arg2 = c.arg1;
-    c.arg3 = to_chatastring(imm & 0xFFF);
+    c.arg3 = to_ultrastring(imm & 0xFFF);
     make_inst(c);
 }
 
@@ -36,22 +36,22 @@ void la_instr(assembly_context& c) { // la rd, imm -> auipc rd, imm[31:12]; addi
     if (auto num = to_num<int>(c.arg2); num.has_value()) {
         imm = num.value();
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+        throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
     }
     if (imm >= -2048 && imm <= 2047) {
         c.inst_offset = fast_instr_search("addi");
         c.arg2 = "zero";
-        c.arg3 = to_chatastring(imm);
+        c.arg3 = to_ultrastring(imm);
         make_inst(c);
         return;
     }
     // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
     c.inst_offset = fast_instr_search("auipc");
-    c.arg2 = to_chatastring(imm >> 12);
+    c.arg2 = to_ultrastring(imm >> 12);
     make_inst(c);
     c.inst_offset = fast_instr_search("addi");
     c.arg2 = c.arg1;
-    c.arg3 = to_chatastring(imm & 0xFFF);
+    c.arg3 = to_ultrastring(imm & 0xFFF);
     make_inst(c);
 }
 
@@ -229,7 +229,7 @@ void call_instr(assembly_context& c) {
     if (auto num = to_num<int>(c.arg1); num.has_value()) {
         imm = num.value();
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg1, c.line, c.column);
+        throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg1, c.line, c.column);
     }
     if (imm >= -2048 && imm <= 2047) {
         c.inst_offset = fast_instr_search("jalr");
@@ -240,7 +240,7 @@ void call_instr(assembly_context& c) {
         return;
     }
     // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-    throw ChataError(ChataErrorType::Assembler, "Not implemented yet");
+    throw UltraError(UltraErrorType::Assembler, "Not implemented yet");
 }
 
 void ret_instr(assembly_context& c) {
@@ -311,13 +311,13 @@ void vmset_m_instr(assembly_context& c) { // vmset.m vd -> vmxnor.mm vd, vd, vd
 
 void vmsge_vi_instr(assembly_context& c) { // vmsge.vi vd, va, i, vm -> vmsgt.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsgt.vi");
-    c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
     make_inst(c);
 }
 
 void vmsgeu_vi_instr(assembly_context& c) { // vmsgeu.vi vd, va, i, vm -> vmsgtu.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsgtu.vi");
-    c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
     make_inst(c);
 }
 
@@ -347,13 +347,13 @@ void vmsgtu_vv_instr(assembly_context& c) { // vmsgtu.vv vd, va, vb, vm -> vmslt
 
 void vmslt_vi_instr(assembly_context& c) { // vmslt.vi vd, va, i, vm -> vmsle.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsle.vi");
-    c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
     make_inst(c);
 }
 
 void vmsltu_vi_instr(assembly_context& c) { // vmsltu.vi vd, va, i, vm -> vmsleu.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsleu.vi");
-    c.arg3 = to_chatastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
     make_inst(c);
 }
 
@@ -635,4 +635,4 @@ void ntl_all_instr(assembly_context& c) { // ntl.all -> add x0, x0, x5
     make_inst(c);
 }
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal

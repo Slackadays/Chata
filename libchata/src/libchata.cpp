@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string.h>
 #include <vector>
+#include <ultrassembler.hpp>
 
 #if defined(UNIX_OR_UNIX_LIKE)
 #include <sys/mman.h>
@@ -99,7 +100,9 @@ void ChataProcessor::compile(const std::span<InputFile> input) {
 
     DBG(std::cout << "Ok, here's the processed code: " << compiled << std::endl;)
 
-    auto assembled = assemble_code(compiled);
+    auto temp = ultrassembler::assemble(compiled);
+
+    chatavector<uint8_t> assembled{temp.begin(), temp.end()};
 
     DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form
@@ -151,11 +154,6 @@ void reset_memory_bank() {
 
 std::string_view version() {
     return libchata_version_str;
-}
-
-std::span<uint8_t> assemble(std::string_view code, std::span<RVInstructionSet> supported_sets) {
-    auto assembled = assemble_code(code, chatavector<RVInstructionSet>(supported_sets.begin(), supported_sets.end()));
-    return std::span<uint8_t>(assembled.data(), assembled.size());
 }
 
 } // namespace libchata

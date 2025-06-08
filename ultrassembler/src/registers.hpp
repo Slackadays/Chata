@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MPL-2.0
-#include "libchata.hpp"
+#include "ultrassembler.hpp"
 #include <array>
 #include <cstdint>
 #include <string_view>
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
 constexpr std::array<std::string_view, 15> integer_register_replacement_priority_list = {"t0", "t1", "t2", "t3", "t4", "t5", "t6", "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7"};
 
@@ -25,7 +25,7 @@ constexpr std::array<std::string_view, 32> valid_vector_registers = {"v0",  "v1"
                                                                      "v16", "v17", "v18", "v19", "v20", "v21", "v22", "v23", "v24", "v25", "v26", "v27", "v28", "v29", "v30", "v31"};
 
 constexpr uint8_t reg_search_failed = (uint8_t)-1;
-const uint8_t fast_reg_search(const chatastring& reg);
+const uint8_t fast_reg_search(const ultrastring& reg);
 
 enum class RegisterType : uint8_t {
     Integer,
@@ -160,4 +160,4 @@ struct rvregister {
 
 extern const std::array<rvregister, 96> registers;
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal

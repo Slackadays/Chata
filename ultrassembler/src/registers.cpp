@@ -3,7 +3,7 @@
 #include <array>
 #include <string_view>
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
 using enum RegisterType;
 using enum RegisterID;
@@ -107,4 +107,4 @@ const std::array<rvregister, 96> registers = {
          {"v31", "v31", Vector, v31, 31}}
 };
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal

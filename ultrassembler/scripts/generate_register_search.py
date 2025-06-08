@@ -32,10 +32,10 @@ current_reg = ""
 
 code = "// SPDX-License-Identifier: MPL-2.0\n"
 code += "// The generate_register_search.py script automatically generated this code. DO NOT MODIFY!\n"
-code += "#include \"libchata.hpp\"\n"
+code += "#include \"ultrassembler.hpp\"\n"
 code += "#include \"registers.hpp\"\n\n"
-code += "namespace libchata_internal {\n\n"
-code += "const uint8_t fast_reg_search(const chatastring& reg) {\n"
+code += "namespace ultrassembler_internal {\n\n"
+code += "const uint8_t fast_reg_search(const ultrastring& reg) {\n"
 
 def ind():
     return "    " * (depth + 1)
@@ -75,7 +75,7 @@ process_depth()
 
 code += ind() + "return reg_search_failed;\n"
 code += "}\n\n"
-code += "} // namespace libchata_internal"
+code += "} // namespace ultrassembler_internal"
 
 print(code)
 

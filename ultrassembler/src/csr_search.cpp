@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
 // The generate_csrister_search.py script automatically generated this code. DO NOT MODIFY!
-#include "../libchata.hpp"
+#include "ultrassembler.hpp"
 #include "csrs.hpp"
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
-const uint16_t fast_csr_search(const chatastring& csr) {
+const uint16_t fast_csr_search(const ultrastring& csr) {
     if (csr.size() < 1) return csr_search_failed;
     if (csr[0] == 'c') {
         if (csr.size() < 2) return csr_search_failed;
@@ -2146,4 +2146,4 @@ const uint16_t fast_csr_search(const chatastring& csr) {
     return csr_search_failed;
 }
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal

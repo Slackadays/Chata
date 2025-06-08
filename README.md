@@ -6,7 +6,7 @@ Chata aims to fix problems other DSP libraries and languages have such as poor d
 
 **This project currently consists of these five parts:**
 
-👉 **`libchata`** The core C++ library with the Chata compiler, Chatassembler, and execution environment. [`Click here to see libchata.`](libchata)
+👉 **`libchata`** The core C++ library with the Chata compiler, Ultrassembler, and execution environment. [`Click here to see libchata.`](libchata)
 
 👉 **`chatadsp`** The standard library of DSP effects. [`Click here to see chatadsp.`](chatadsp)
 

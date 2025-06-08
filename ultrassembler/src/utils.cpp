@@ -1,48 +1,58 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "debug.hpp"
-#include "libchata.hpp"
+#include "ultrassembler.hpp"
 #include "registers.hpp"
 #include <algorithm>
 #include <charconv>
 
-namespace libchata_internal {
+constexpr std::string_view ultrassembler_version_str = PROJECT_VERSION;
 
-bool is_integer(const chatastring& str) {
-    for (auto c : str) {
-        if (!std::isdigit(c)) {
-            return false;
-        }
+using namespace ultrassembler_internal;
+
+GlobalMemoryBank ultrassembler_internal::memory_bank;
+
+void* GlobalMemoryBank::grab_some_memory(size_t requested) {
+    // DBG(std::cout << "Allocating " << requested << " bytes, " << used << " used" << std::endl;)
+    if (requested + used > pool.size()) {
+        throw UltraError(UltraErrorType::Other, "Out of memory!");
     }
-    return true;
+    void* ptr = reinterpret_cast<void*>(pool.data() + used);
+    used += requested;
+    return ptr;
 }
 
-bool is_float(const chatastring& str) {
-    bool has_dot = false;
-    for (auto c : str) {
-        if (!std::isdigit(c) && c != '.') {
-            return false;
-        }
-        if (c == '.') {
-            if (has_dot) {
-                return false;
-            }
-            has_dot = true;
-        }
+void* GlobalMemoryBank::grab_aligned_memory(size_t requested) {
+    // DBG(std::cout << "Allocating " << requested << " aligned bytes" << std::endl;)
+    size_t current_offset = reinterpret_cast<size_t>(pool.data() + used);
+    size_t aligned_offset = (current_offset + pagesize - 1) & ~(pagesize - 1);
+    size_t padding = aligned_offset - current_offset;
+
+    // DBG(std::cout << "current_offset: " << current_offset << ", aligned_offset: " << aligned_offset << ", padding: " << padding << std::endl;)
+
+    if (padding + requested + used > pool.size()) {
+        throw UltraError(UltraErrorType::Other, "Out of memory!");
     }
-    return true;
+
+    used += padding;
+    void* ptr = reinterpret_cast<void*>(pool.data() + used);
+    used += requested;
+    return ptr;
 }
 
-bool is_number(const chatastring& str) {
-    return is_integer(str) || is_float(str);
+void GlobalMemoryBank::reset() {
+    DBG(std::cout << "Resetting memory bank, used " << used << " bytes" << std::endl;)
+    used = 0;
 }
 
-chatastring to_chatastring(const int& num) {
-    chatastring result;
+namespace ultrassembler_internal {
+
+ultrastring to_ultrastring(const int& num) {
+    ultrastring result;
     result.reserve(32);
     std::array<char, 16> temp;
     auto res = std::to_chars(temp.data(), temp.data() + temp.size(), num);
     if (res.ec != std::errc()) {
-        throw ChataError(ChataErrorType::Other, "Invalid integer");
+        throw UltraError(UltraErrorType::Other, "Invalid integer");
     }
     for (auto i = temp.data(); i < res.ptr; i++) {
         result.push_back(*i);
@@ -51,52 +61,30 @@ chatastring to_chatastring(const int& num) {
     return result;
 }
 
-double to_float(const chatastring& str) {
+double to_float(const ultrastring& str) {
     double result = 0;
     auto res = std::from_chars(str.data(), str.data() + str.size(), result);
     if (res.ec != std::errc()) {
-        throw ChataError(ChataErrorType::Other, "Invalid float " + str);
+        throw UltraError(UltraErrorType::Other, "Invalid float " + str);
     }
     return result;
 }
 
-bool is_register_character(const char& c) {
-    return std::islower(c) || std::isdigit(c);
+} // namespace ultrassembler_internal
+
+namespace ultrassembler {
+
+void reset_memory_bank() {
+    ultrassembler_internal::memory_bank.reset();
 }
 
-bool is_int_register(chatastring& reg) {
-    return std::find_if(registers.begin(), registers.end(), [&](const auto& r) { return (r.name == reg || r.alias == reg) && r.type == RegisterType::Integer; }) != registers.end();
+std::string_view version() {
+    return ultrassembler_version_str;
 }
 
-bool is_float_register(chatastring& reg) {
-    return std::find_if(registers.begin(), registers.end(), [&](const auto& r) { return (r.name == reg || r.alias == reg) && r.type == RegisterType::FloatingPoint; }) != registers.end();
+std::span<uint8_t> assemble(std::string_view code, std::span<RVInstructionSet> supported_sets) {
+    auto assembled = assemble_code(code, ultravector<RVInstructionSet>(supported_sets.begin(), supported_sets.end()));
+    return std::span<uint8_t>(assembled.data(), assembled.size());
 }
 
-chatastring make_base_register(const chatastring& reg) {
-    auto reg_it = std::find_if(registers.begin(), registers.end(), [&](const auto& r) { return r.alias == reg; });
-    if (reg_it == registers.end()) {
-        return reg;
-    }
-    return chatastring(reg_it->name);
-}
-
-int extract_number_from_string(const chatastring& str) {
-    int result = 0;
-    for (auto c : str) {
-        if (std::isdigit(c)) {
-            result = result * 10 + (c - '0');
-        }
-    }
-    return result;
-}
-
-int decimal_representation_of_float(const float& input) {
-    union {
-        float f;
-        int i;
-    } u;
-    u.f = input;
-    return u.i;
-}
-
-} // namespace libchata_internal
+} // namespace ultrassembler

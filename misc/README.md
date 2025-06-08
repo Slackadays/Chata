@@ -4,4 +4,4 @@ This folder holds everything that doesn't fit into the other Chata project secti
 
 ## `testfiles`
 
-The test files for testing `libchata` and benchmarking Chatassembler. 
+The test files for testing `libchata` and benchmarking Ultrassembler. 

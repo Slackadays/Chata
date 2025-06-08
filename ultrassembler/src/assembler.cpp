@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "assembler.hpp"
-#include "../debug.hpp"
-#include "../libchata.hpp"
-#include "../registers.hpp"
+#include "debug.hpp"
+#include "ultrassembler.hpp"
+#include "registers.hpp"
 #include "csrs.hpp"
 #include "instructions.hpp"
 #include "pseudoinstructions.hpp"
@@ -17,9 +17,9 @@
 #include <string>
 #include <utility>
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
-int string_to_label(chatastring& str, assembly_context& c) {
+int string_to_label(ultrastring& str, assembly_context& c) {
     while (str.back() == ':') {
         str.pop_back();
     }
@@ -49,13 +49,13 @@ int string_to_label(chatastring& str, assembly_context& c) {
 }
 
 template <typename T>
-std::optional<T> decode_constant(const chatastring& constant, assembly_context& c) {
+std::optional<T> decode_constant(const ultrastring& constant, assembly_context& c) {
     if (c.constants.empty()) {
         return std::nullopt;
     }
     if (constant.size() > 5) {
         if (constant[0] == '%') {
-            chatastring unwrapped = constant.substr(4, constant.size() - 5);
+            ultrastring unwrapped = constant.substr(4, constant.size() - 5);
             if (constant[1] == 'l' && constant[2] == 'o' && constant[3] == '(' && constant[constant.size() - 1] == ')') {
                 for (const auto& con : c.constants) {
                     if (fast_eq(con.first, unwrapped)) {
@@ -75,7 +75,7 @@ std::optional<T> decode_constant(const chatastring& constant, assembly_context& 
                     }
                 }
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid relocation mode " + constant);
+                throw UltraError(UltraErrorType::Compiler, "Invalid relocation mode " + constant);
             }
         }
     } else {
@@ -89,7 +89,7 @@ std::optional<T> decode_constant(const chatastring& constant, assembly_context& 
 }
 
 template <typename T>
-std::optional<T> decode_imm(const chatastring& imm, assembly_context& c) {
+std::optional<T> decode_imm(const ultrastring& imm, assembly_context& c) {
     if (auto num = to_num<T>(imm); num.has_value()) {
         return num;
     } else {
@@ -97,16 +97,16 @@ std::optional<T> decode_imm(const chatastring& imm, assembly_context& c) {
     }
 }
 
-const rvregister& decode_register(const chatastring& str) {
+const rvregister& decode_register(const ultrastring& str) {
     // return registers[4];
     if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
         return registers[reg];
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid register " + str);
+        throw UltraError(UltraErrorType::Compiler, "Invalid register " + str);
     }
 }
 
-uint8_t decode_frm(const chatastring& frm) {
+uint8_t decode_frm(const ultrastring& frm) {
     if (fast_eq(frm, "rne")) {
         return 0b000;
     } else if (fast_eq(frm, "rtz")) {
@@ -120,11 +120,11 @@ uint8_t decode_frm(const chatastring& frm) {
     } else if (fast_eq(frm, "dyn")) {
         return 0b111;
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid rounding mode " + frm);
+        throw UltraError(UltraErrorType::Compiler, "Invalid rounding mode " + frm);
     }
 }
 
-uint8_t decode_fence(const chatastring& setting) {
+uint8_t decode_fence(const ultrastring& setting) {
     if (fast_eq(setting, "r")) {
         return 0b0010;
     } else if (fast_eq(setting, "w")) {
@@ -132,18 +132,18 @@ uint8_t decode_fence(const chatastring& setting) {
     } else if (fast_eq(setting, "rw")) {
         return 0b0011;
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid fence setting " + setting);
+        throw UltraError(UltraErrorType::Compiler, "Invalid fence setting " + setting);
     }
 }
 
-const uint16_t& decode_csr(const chatastring& csr) {
+const uint16_t& decode_csr(const ultrastring& csr) {
     if (auto res = fast_csr_search(csr); res != csr_search_failed) {
         return csrs[res].second;
     }
-    throw ChataError(ChataErrorType::Compiler, "Invalid CSR " + csr);
+    throw UltraError(UltraErrorType::Compiler, "Invalid CSR " + csr);
 }
 
-std::optional<uint8_t> decode_vsew(const chatastring& str) {
+std::optional<uint8_t> decode_vsew(const ultrastring& str) {
     if (fast_eq(str, "e8")) {
         return 0b000;
     } else if (fast_eq(str, "e16")) {
@@ -157,7 +157,7 @@ std::optional<uint8_t> decode_vsew(const chatastring& str) {
     }
 }
 
-std::optional<uint8_t> decode_vlmul(const chatastring& str) {
+std::optional<uint8_t> decode_vlmul(const ultrastring& str) {
     if (fast_eq(str, "m1")) {
         return 0b000;
     } else if (fast_eq(str, "m2")) {
@@ -243,7 +243,7 @@ uint8_t decode_fli_imm(const float& value) {
     } else if (std::isnan(value)) {
         return 31;
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid fli floating-point immediate " + to_chatastring(value));
+        throw UltraError(UltraErrorType::Compiler, "Invalid fli floating-point immediate " + to_ultrastring(value));
     }
 }
 
@@ -276,7 +276,7 @@ void verify_imm(const int32_t& imm, RVInstructionImmConstraint constraint) {
     } else if (constraint == Unsigned_9b && (imm >= 0 && imm < 512)) {
         return;
     } else {
-        chatastring range;
+        ultrastring range;
         if (constraint == None) {
             range = "(no range)";
         } else if (constraint == Signed_5b) {
@@ -306,7 +306,7 @@ void verify_imm(const int32_t& imm, RVInstructionImmConstraint constraint) {
         } else if (constraint == Unsigned_9b) {
             range = "[0, 512)";
         }
-        throw ChataError(ChataErrorType::Compiler, "This instruction's immediate " + to_chatastring(imm) + " is out of the allowed range " + range);
+        throw UltraError(UltraErrorType::Compiler, "This instruction's immediate " + to_ultrastring(imm) + " is out of the allowed range " + range);
     }
 }
 
@@ -342,7 +342,7 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             rs1 = num.value();
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+            throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
         }
         DBG(std::cout << "CSRI instruction made" << std::endl;)
     } else if (id == WRSNTO) {
@@ -367,7 +367,7 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
             if (res.has_value()) {
                 rs1 = res.value();
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
             }
 
             imm |= 0b11 << 10;
@@ -377,7 +377,7 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
         if (sew.has_value()) {
             imm |= sew.value() << 3;
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid VSEW " + c.arg3, c.line, c.column);
+            throw UltraError(UltraErrorType::Compiler, "Invalid VSEW " + c.arg3, c.line, c.column);
         }
         if (c.arg4.empty()) {
             return;
@@ -413,14 +413,14 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
                 }
             }
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid vtypei " + c.arg4, c.line, c.column);
+            throw UltraError(UltraErrorType::Compiler, "Invalid vtypei " + c.arg4, c.line, c.column);
         }
     }
 }
 
-std::pair<int32_t, chatastring> decode_offset_plus_reg(const chatastring& str, assembly_context& c) {
+std::pair<int32_t, ultrastring> decode_offset_plus_reg(const ultrastring& str, assembly_context& c) {
     int32_t offset = 0;
-    chatastring temp;
+    ultrastring temp;
     size_t j = 0;
     for (; j < str.size() && str.at(j) != '('; j++) {
         temp.push_back(str.at(j));
@@ -437,7 +437,7 @@ std::pair<int32_t, chatastring> decode_offset_plus_reg(const chatastring& str, a
     return {offset, temp};
 }
 
-void remove_extraneous_parentheses(chatastring& str) {
+void remove_extraneous_parentheses(ultrastring& str) {
     if (str.front() == '0') {
         str.erase(0, 1);
     }
@@ -543,7 +543,7 @@ void make_inst(assembly_context& c) {
                 verify_imm(imm, ssargs.imm_constraint);
                 imm = num.value();
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         }
         rd = decode_register(c.arg1).encoding;
@@ -565,7 +565,7 @@ void make_inst(assembly_context& c) {
             } else if (fast_eq(c.arg2, "nan")) {
                 rs1 = decode_fli_imm(std::numeric_limits<float>::quiet_NaN());
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
             }
         } else {
             rs1 = decode_register(c.arg2).encoding;
@@ -711,7 +711,7 @@ void make_inst(assembly_context& c) {
             imm = num.value();
             verify_imm(imm, ssargs.imm_constraint);
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+            throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
         rd = decode_register(c.arg1).encoding;
 
@@ -911,7 +911,7 @@ void make_inst(assembly_context& c) {
             imm = num.value();
             verify_imm(imm, ssargs.imm_constraint);
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+            throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
 
         DBG(std::cout << "Encoding CIW-type instruction with name " << name << std::endl;)
@@ -977,7 +977,7 @@ void make_inst(assembly_context& c) {
             if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
                 rs1 = num.value();
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         } else {
             rs1 = decode_register(c.arg3).encoding;
@@ -1014,7 +1014,7 @@ void make_inst(assembly_context& c) {
                 imm = num.value();
                 verify_imm(imm, ssargs.imm_constraint);
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
             }
         } else {
             rs2 = decode_register(c.arg2).encoding;
@@ -1027,7 +1027,7 @@ void make_inst(assembly_context& c) {
                     inst |= ((imm >> 5) & 0b1) << 26; // Add i5
                 }
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         }
 
@@ -1137,7 +1137,7 @@ void make_inst(assembly_context& c) {
             imm = num.value();
             verify_imm(imm, ssargs.imm_constraint);
         } else {
-            throw ChataError(ChataErrorType::Compiler, "Invalid index " + c.arg1, c.line, c.column);
+            throw UltraError(UltraErrorType::Compiler, "Invalid index " + c.arg1, c.line, c.column);
         }
 
         DBG(std::cout << "Encoding CMJT-type instruction with name " << name << std::endl;)
@@ -1145,7 +1145,7 @@ void make_inst(assembly_context& c) {
         inst |= (imm & 0b11111111) << 2; // Add imm[7:0]
         inst |= funct << 10;             // Add funct6
 
-    } else if (type == CMPP) { // This one's weird. These instructions look like "inst {ra, s0-s11}, offset", where the part in brackets is a register list. To Chatassembler, this looks like "inst"
+    } else if (type == CMPP) { // This one's weird. These instructions look like "inst {ra, s0-s11}, offset", where the part in brackets is a register list. To Ultrassembler, this looks like "inst"
                                // "{ra" "s0-s11}" "offset" so we need to just look at the components instead. Here's all the potential cases for the range:
                                /*
                            case 4: {reg_list="ra"; xreg_list="x1";}
@@ -1241,32 +1241,32 @@ void make_inst(assembly_context& c) {
             if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
                 imm = num.value();
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
             }
         } else if (c.arg4.empty()) {
             if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
                 imm = num.value();
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         } else {
             if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
                 imm = num.value();
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
             }
         }
         verify_imm(imm, ssargs.imm_constraint);
 
         if (id == CMPUSH) {
             if (imm > 0) {
-                throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
             } else {
                 imm = -imm;
             }
         } else if (id == CMPOP || id == CMPOPRET || id == CMPOPRETZ) {
             if (imm < 0) {
-                throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
             }
         }
 
@@ -1281,7 +1281,7 @@ void make_inst(assembly_context& c) {
             // stack_adj_base = 16;
             // stack_adj = [16|32|48|64]
             if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
-                throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
             }
             spimm = (imm - 16) / 16;
         } else if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32I) != c.supported_sets.end()) {
@@ -1303,26 +1303,26 @@ void make_inst(assembly_context& c) {
                 } */
             if (rlist >= 4 && rlist <= 7) {
                 if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 16) / 16;
             } else if (rlist >= 8 && rlist <= 11) {
                 if (imm != 32 && imm != 48 && imm != 64 && imm != 80) {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 32) / 16;
             } else if (rlist >= 12 && rlist <= 14) {
                 if (imm != 48 && imm != 64 && imm != 80 && imm != 96) {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 48) / 16;
             } else if (rlist == 15) {
                 if (imm != 64 && imm != 80 && imm != 96 && imm != 112) {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 64) / 16;
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid register list " + c.arg1, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid register list " + c.arg1, c.line, c.column);
             }
         } else { // RV64I is the default case
             // stack_adj = stack_adj_base + spimm[5:4] * 16;
@@ -1349,41 +1349,41 @@ void make_inst(assembly_context& c) {
                 }*/
             if (rlist >= 4 && rlist <= 5) {
                 if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 16) / 16;
             } else if (rlist >= 6 && rlist <= 7) {
                 if (imm != 32 && imm != 48 && imm != 64 && imm != 80) {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 32) / 16;
             } else if (rlist >= 8 && rlist <= 9) {
                 if (imm != 48 && imm != 64 && imm != 80 && imm != 96) {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 48) / 16;
             } else if (rlist >= 10 && rlist <= 11) {
                 if (imm != 64 && imm != 80 && imm != 96 && imm != 112) {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 64) / 16;
             } else if (rlist >= 12 && rlist <= 13) {
                 if (imm != 80 && imm != 96 && imm != 112 && imm != 128) {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 80) / 16;
             } else if (rlist == 14) {
                 if (imm != 96 && imm != 112 && imm != 128 && imm != 144) {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 96) / 16;
             } else if (rlist == 15) {
                 if (imm != 112 && imm != 128 && imm != 144 && imm != 160) {
-                    throw ChataError(ChataErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UltraError(UltraErrorType::Compiler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 112) / 16;
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid register list " + c.arg1, c.line, c.column);
+                throw UltraError(UltraErrorType::Compiler, "Invalid register list " + c.arg1, c.line, c.column);
             }
         }
 
@@ -1459,10 +1459,10 @@ void solve_label_offsets(assembly_context& c) {
     }
 }
 
-chatavector<RVInstructionSet> decode_sets(const chatastring& str) {
+ultravector<RVInstructionSet> decode_sets(const ultrastring& str) {
     // Example: For an input str that looks like "rv64ifma", this function will return a vector containing RV64I, RV64F, RV64M, and RV64A
-    chatavector<RVInstructionSet> sets;
-    chatastring search_str;
+    ultravector<RVInstructionSet> sets;
+    ultrastring search_str;
     for (const char& c : str) {
         search_str.push_back(c);
         // for (const auto& name : instruction_set
@@ -1470,7 +1470,7 @@ chatavector<RVInstructionSet> decode_sets(const chatastring& str) {
     return sets;
 }
 
-uint8_t decode_opcode(const chatastring& str) {
+uint8_t decode_opcode(const ultrastring& str) {
     using namespace opcode;
     if (fast_eq(str, "LOAD")) {
         return OP_LOAD;
@@ -1535,7 +1535,7 @@ uint8_t decode_opcode(const chatastring& str) {
     } else if (fast_eq(str, "C2")) {
         return OP_C2;
     } else {
-        throw ChataError(ChataErrorType::Compiler, "Invalid opcode " + str);
+        throw UltraError(UltraErrorType::Compiler, "Invalid opcode " + str);
     }
 }
 
@@ -1561,8 +1561,8 @@ void handle_directives(assembly_context& c) {
             };
 
             auto get_arches_from_string = [&](const std::string_view& str) {
-                chatavector<RVInstructionSet> arches;
-                chatastring temp;
+                ultravector<RVInstructionSet> arches;
+                ultrastring temp;
                 for (const char& c : str) {
                     temp.push_back(c);
                     for (const auto& [name, arch] : arch_option_names) {
@@ -1634,10 +1634,10 @@ void handle_directives(assembly_context& c) {
             }
             if (is_type) {
                 DBG(std::cout << "Making a custom type instruction" << std::endl;)
-                auto get_extra_args = [&]() -> chatavector<chatastring> {
+                auto get_extra_args = [&]() -> ultravector<ultrastring> {
                     // Parse all the extra args from c.arg_extra, which are separated by commas and whitespace
-                    chatavector<chatastring> args;
-                    chatastring temp;
+                    ultravector<ultrastring> args;
+                    ultrastring temp;
                     auto is_whitespace = [](const char& c) {
                         return c == ' ' || c == '\t';
                     };
@@ -1719,7 +1719,7 @@ void handle_directives(assembly_context& c) {
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
                     uint8_t rs1 = decode_register(c.arg4).encoding;
                     uint8_t rs2 = decode_register(c.arg5).encoding;
-                    chatastring symbol = c.arg6;
+                    ultrastring symbol = c.arg6;
 
                     if (auto num = to_num<int32_t>(symbol); num.has_value()) {
                         custom_inst = custom_inst | ((num.value() & 0b1) << 7) | (((num.value() >> 1) & 0b1111) << 8) | (func3 << 12) | (rs1 << 15) | (rs2 << 20)
@@ -1738,7 +1738,7 @@ void handle_directives(assembly_context& c) {
                     inst_len = 4;
                 } else if (this_type == J) { // J type: .insn j opcode7, rd, symbol
                     uint8_t rd = decode_register(c.arg3).encoding;
-                    chatastring symbol = c.arg4;
+                    ultrastring symbol = c.arg4;
 
                     if (auto num = to_num<int32_t>(symbol); num.has_value()) {
                         custom_inst = custom_inst | (rd << 7) | (((num.value() >> 12) & 0b11111111) << 12) | (((num.value() >> 11) & 0b1) << 20) | (((num.value() >> 1) & 0b1111111111) << 21)
@@ -1805,7 +1805,7 @@ void handle_directives(assembly_context& c) {
                 } else if (this_type == CB) { // CB type: .insn cb opcode2, func3, rs1', symbol
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
                     uint8_t rs1 = decode_register(c.arg4).encoding & 0b111; // Only use the lower 3 bits
-                    chatastring symbol = c.arg5;
+                    ultrastring symbol = c.arg5;
 
                     if (auto num = to_num<int32_t>(symbol); num.has_value()) {
                         custom_inst = custom_inst | (((num.value() >> 5) & 0b1) << 2) | (((num.value() >> 1) & 0b11) << 3) | (((num.value() >> 6) & 0b11) << 5) | (rs1 << 7)
@@ -1817,7 +1817,7 @@ void handle_directives(assembly_context& c) {
                     inst_len = 2;
                 } else if (this_type == CJ) { // CJ type: .insn cj opcode2, func3, symbol
                     uint8_t func3 = decode_imm<uint8_t>(c.arg3, c).value();
-                    chatastring symbol = c.arg4;
+                    ultrastring symbol = c.arg4;
 
                     if (auto num = to_num<int32_t>(symbol); num.has_value()) {
                         custom_inst = custom_inst | (((num.value() >> 5) & 0b1) << 2) | (((num.value() >> 1) & 0b111) << 3) | (((num.value() >> 7) & 0b1) << 6) | (((num.value() >> 6) & 0b1) << 7)
@@ -1836,7 +1836,7 @@ void handle_directives(assembly_context& c) {
                 }
                 if (auto num = decode_imm<uint8_t>(c.arg1, c); num.has_value()) {
                     if (num.value() != inst_len) {
-                        throw ChataError(ChataErrorType::Assembler, "Instruction length mismatch: expected " + to_chatastring(num.value()) + ", got " + to_chatastring(inst_len), c.line, c.column);
+                        throw UltraError(UltraErrorType::Assembler, "Instruction length mismatch: expected " + to_ultrastring(num.value()) + ", got " + to_ultrastring(inst_len), c.line, c.column);
                     }
                 }
             }
@@ -1856,7 +1856,7 @@ void handle_directives(assembly_context& c) {
         // .equ <name>, <value> = define a constant with name <name> and value <value>
 
         if (c.arg1.empty() || c.arg2.empty()) {
-            throw ChataError(ChataErrorType::Assembler, "Invalid .equ directive", c.line, c.column);
+            throw UltraError(UltraErrorType::Assembler, "Invalid .equ directive", c.line, c.column);
         }
 
         c.constants.push_back({c.arg1, c.arg2});
@@ -1903,7 +1903,7 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
     while (i < data.size() && not_at_end(ch()) && is_whitespace(ch())) {
         i++;
     }
-    auto parse_arg = [&](chatastring& arg) {
+    auto parse_arg = [&](ultrastring& arg) {
         arg.clear();
         while (i < data.size() && not_at_end(ch()) && ch() != ',' && !is_whitespace(ch())) {
             arg.push_back(ch());
@@ -1947,7 +1947,7 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
     }
 }
 
-chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavector<RVInstructionSet> supported_sets) {
+ultravector<uint8_t> assemble_code(const std::string_view& data, const ultravector<RVInstructionSet> supported_sets) {
     // auto then = std::chrono::high_resolution_clock::now();
 
     assembly_context c;
@@ -1959,7 +1959,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
     if (!c.supported_sets.empty()) {
         if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32I) == c.supported_sets.end()
             && std::find(c.supported_sets.begin(), c.supported_sets.end(), RV64I) == c.supported_sets.end()) {
-            throw ChataError(ChataErrorType::Assembler, "The set of supported RISC-V instruction sets must include at least RV32I or RV64I");
+            throw UltraError(UltraErrorType::Assembler, "The set of supported RISC-V instruction sets must include at least RV32I or RV64I");
         }
     }
 
@@ -2009,7 +2009,7 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)
         // exit(1);
-        throw ChataError(ChataErrorType::Assembler, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
+        throw UltraError(UltraErrorType::Assembler, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
     }
 
     res = std::system("riscv64-linux-gnu-objcopy -O binary temp.o temp.bin");
@@ -2017,11 +2017,11 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin" << std::endl;)
         // exit(1);
-        throw ChataError(ChataErrorType::Assembler, "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin", 0, 0);
+        throw UltraError(UltraErrorType::Assembler, "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin", 0, 0);
     }
 
     std::ifstream in("temp.bin", std::ios::binary);
-    chatastring result((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+    ultrastring result((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
     in.close();
 
     std::filesystem::remove("temp.s");
@@ -2038,4 +2038,4 @@ chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavect
 #endif
 }
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal

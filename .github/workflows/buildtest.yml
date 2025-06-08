@@ -16,7 +16,7 @@ jobs:
           just build
           echo "Now building the libchata example..."
           cd libchata
-          g++ -std=c++20 chatassembler_example.cpp -lchata
+          g++ -std=c++20 ultrassembler_example.cpp -lchata
           echo "Success"
   test:
     runs-on: ubuntu-latest

@@ -104,7 +104,7 @@ enum class RVInstructionSet : uint8_t {
     Zvksh
 };
 
-enum class ChataErrorType {
+enum class UltraErrorType {
     Unspecified,
     Compiler,
     Assembler,
@@ -112,43 +112,32 @@ enum class ChataErrorType {
     Other
 };
 
-class ChataError;
+class UltraError;
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
 #if defined(DEBUG)
 #define DBG(x) x
 #else
 #define DBG(x)
 #endif
+} // namespace ultrassembler_internal
 
-class InternalFile;
-} // namespace libchata_internal
-
-struct InputFile {
-    std::string_view data;
-    std::optional<std::string_view> filename;
-};
-
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
 constexpr size_t memory_pool_size = 33554432;
 
 template <class T>
 class MemoryBank;
 
-typedef std::basic_string<char, std::char_traits<char>, MemoryBank<char>> chatastring;
+typedef std::basic_string<char, std::char_traits<char>, MemoryBank<char>> ultrastring;
 
 template <typename T>
-using chatavector = std::vector<T, MemoryBank<T>>;
+using ultravector = std::vector<T, MemoryBank<T>>;
 
-chatastring to_chatastring(const int& num);
-chatastring allocate_label(struct compilation_context& c);
-chatastring allocate_label(int num);
-chatastring allocate_int_register(struct compilation_context& c);
-chatastring allocate_int_register(int num);
-chatastring allocate_float_register(struct compilation_context& c);
-chatastring allocate_float_register(int num);
+ultrastring to_ultrastring(const int& num);
+ultrastring allocate_label(struct compilation_context& c);
+ultrastring allocate_label(int num);
 
 class GlobalMemoryBank {
     inline static std::array<std::byte, memory_pool_size> pool;
@@ -197,57 +186,7 @@ public:
     void deallocate(T* ptr, size_t requested) { return; }
 };
 
-struct InternalFile {
-    chatastring data;
-    std::optional<std::string_view> filename;
-    InternalFile(const InputFile& file) : data(file.data.begin(), file.data.end()), filename(file.filename) {}
-};
-
-struct compilation_context {
-    int generated_label_num = 0;
-    int placeholder_temp_integer_register_num = 0;
-    int placeholder_temp_floating_point_register_num = 0;
-    int line = 1;
-    int column = 0;
-};
-
-chatavector<uint8_t> assemble_code(const std::string_view& data, const chatavector<RVInstructionSet> sets = {});
-
-chatastring compile_code(chatavector<InternalFile>& files);
-
-bool is_float(const chatastring& str);
-
-bool is_integer(const chatastring& str);
-
-bool is_number(const chatastring& str);
-
-double to_float(const chatastring& str);
-
-bool is_int_register(chatastring& reg);
-
-bool is_float_register(chatastring& reg);
-
-void jump_to_next_line(InternalFile& file, struct compilation_context& c, size_t& i);
-
-chatastring read_this_line(InternalFile& file, struct compilation_context& c, size_t& i);
-
-int decimal_representation_of_float(const float& input);
-
-void process_ifs(InternalFile& file, struct compilation_context& c);
-
-void process_changes(InternalFile& file, struct compilation_context& c);
-
-bool is_register_character(const char& c);
-
-chatastring make_base_register(const chatastring& reg);
-
-int extract_number_from_string(const chatastring& str);
-
-constexpr std::string_view generated_label_prefix = "generated_code_label";
-
-constexpr std::string_view placeholder_temp_integer_register = "generated_placeholder_integer_register";
-
-constexpr std::string_view placeholder_temp_floating_point_register = "generated_placeholder_floating_point_register";
+ultravector<uint8_t> assemble_code(const std::string_view& data, const ultravector<RVInstructionSet> sets = {});
 
 bool fast_eq(const auto& first, const std::string_view& second) {
     if (first.size() != second.size()) { // First make sure the sizes are equal because no two strings can ever be the same if they have different sizes. Also, this lets us save on future bound checks
@@ -265,7 +204,7 @@ bool fast_eq(const auto& first, const std::string_view& second) {
 }
 
 template <typename T>
-std::optional<T> to_num(const chatastring& str) {
+std::optional<T> to_num(const ultrastring& str) {
     T result = 0;
     std::from_chars_result res;
     int relocation_mode = 0; // 0 = normal, -1 = %lo(symbol), 1 = %hi(symbol)
@@ -283,7 +222,7 @@ std::optional<T> to_num(const chatastring& str) {
                 relocation_mode = 1;
                 relocation_offset = 4;
             } else {
-                throw ChataError(ChataErrorType::Compiler, "Invalid relocation mode " + str);
+                throw UltraError(UltraErrorType::Compiler, "Invalid relocation mode " + str);
             }
         }
     }
@@ -345,9 +284,9 @@ std::optional<T> to_num(const chatastring& str) {
     return result;
 }
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal
 
-class ChataError : public std::exception {
+class UltraError : public std::exception {
     std::string_view color_start = "\033[1;31m";
     std::string_view color_end = "\033[0m";
 
@@ -359,41 +298,41 @@ class ChataError : public std::exception {
     }
 
 public:
-    std::optional<ChataErrorType> type;
+    std::optional<UltraErrorType> type;
     std::optional<std::string_view> details;
     std::optional<std::string_view> filename;
     std::optional<uint32_t> line = 0;
     std::optional<uint32_t> column = 0;
-    std::optional<libchata_internal::chatastring> line_content;
+    std::optional<ultrassembler_internal::ultrastring> line_content;
 
     char* what() {
         set_color();
-        libchata_internal::chatastring error_message;
+        ultrassembler_internal::ultrastring error_message;
         error_message += "| ";
         error_message += color_start;
         if (!type.has_value()) {
             error_message += "Unspecified error";
-        } else if (*type == ChataErrorType::Unspecified) {
+        } else if (*type == UltraErrorType::Unspecified) {
             error_message += "Unspecified error";
-        } else if (*type == ChataErrorType::Compiler) {
+        } else if (*type == UltraErrorType::Compiler) {
             error_message += "Compiler error";
-        } else if (*type == ChataErrorType::Assembler) {
+        } else if (*type == UltraErrorType::Assembler) {
             error_message += "Assembler error";
-        } else if (*type == ChataErrorType::Execution) {
+        } else if (*type == UltraErrorType::Execution) {
             error_message += "Execution error";
-        } else if (*type == ChataErrorType::Other) {
+        } else if (*type == UltraErrorType::Other) {
             error_message += "Other error";
         }
         error_message += color_end;
         error_message += " at line ";
         if (line.has_value()) {
-            error_message += libchata_internal::to_chatastring(*line);
+            error_message += ultrassembler_internal::to_ultrastring(*line);
         } else {
             error_message += "(unknown)";
         }
         error_message += ", column ";
         if (column.has_value()) {
-            error_message += libchata_internal::to_chatastring(*column);
+            error_message += ultrassembler_internal::to_ultrastring(*column);
         } else {
             error_message += "(unknown)";
         }
@@ -410,13 +349,13 @@ public:
         if (line_content.has_value()) {
             error_message += "\n| ";
             if (line.has_value()) {
-                error_message += libchata_internal::to_chatastring(line.value());
+                error_message += ultrassembler_internal::to_ultrastring(line.value());
             } else {
                 error_message += "(unknown)";
             }
             error_message += ":";
             if (column.has_value()) {
-                error_message += libchata_internal::to_chatastring(column.value());
+                error_message += ultrassembler_internal::to_ultrastring(column.value());
             } else {
                 error_message += "(unknown)";
             }
@@ -426,14 +365,14 @@ public:
         return error_message.data();
     }
 
-    ChataError(ChataErrorType type, std::string_view details, uint32_t line, uint32_t column, std::string_view filename)
+    UltraError(UltraErrorType type, std::string_view details, uint32_t line, uint32_t column, std::string_view filename)
             : type(type)
             , details(details)
             , line(line)
             , column(column)
             , filename(filename) {}
 
-    ChataError(ChataErrorType type, std::string_view details, uint32_t line, uint32_t column, std::string_view filename, libchata_internal::chatastring line_content)
+    UltraError(UltraErrorType type, std::string_view details, uint32_t line, uint32_t column, std::string_view filename, ultrassembler_internal::ultrastring line_content)
             : type(type)
             , details(details)
             , line(line)
@@ -441,89 +380,28 @@ public:
             , filename(filename)
             , line_content(line_content) {}
 
-    ChataError(ChataErrorType type, std::optional<std::string_view> details, uint32_t line, uint32_t column) : type(type), details(details), line(line), column(column) {}
+    UltraError(UltraErrorType type, std::optional<std::string_view> details, uint32_t line, uint32_t column) : type(type), details(details), line(line), column(column) {}
 
-    ChataError(ChataErrorType type, std::optional<std::string_view> details, uint32_t line, uint32_t column, libchata_internal::chatastring line_content)
+    UltraError(UltraErrorType type, std::optional<std::string_view> details, uint32_t line, uint32_t column, ultrassembler_internal::ultrastring line_content)
             : type(type)
             , details(details)
             , line(line)
             , column(column)
             , line_content(line_content) {}
 
-    ChataError(ChataErrorType type, std::string_view details) : type(type), details(details) {}
+    UltraError(UltraErrorType type, std::string_view details) : type(type), details(details) {}
 
-    ChataError(ChataErrorType type, std::string_view details, libchata_internal::chatastring line_content) : type(type), details(details), line_content(line_content) {}
+    UltraError(UltraErrorType type, std::string_view details, ultrassembler_internal::ultrastring line_content) : type(type), details(details), line_content(line_content) {}
 };
 
-struct chata_args {
-    double input1;
-    double input2;
-    double input3;
-    double input4;
-};
-
-class ChataProcessor {
-    using chatastring = libchata_internal::chatastring;
-    template <typename T>
-    using AlignedMemory = libchata_internal::AlignedMemory<T>;
-
-    std::array<std::vector<uint8_t, AlignedMemory<uint8_t>>, 2> executable_memory;
-    int current_executable_memory = 0;
-
-    size_t executable_size = 0;
-
-    size_t executable_instruction_count = 0;
-
-    size_t compiled_size = 0;
-
-    size_t compiled_instruction_count = 0;
-
-    void (*executable_function)(chata_args&) = nullptr;
-
-    void save_to_memory(const libchata_internal::chatavector<uint8_t>& data);
-
-public:
-    void compile(const std::string_view& code);
-
-    void compile(const InputFile& file);
-
-    void compile(const std::span<InputFile> files);
-
-    void compile_and_commit(const std::string_view& code);
-
-    void compile_and_commit(const InputFile& file);
-
-    void compile_and_commit(const std::span<InputFile> files);
-
-    void process_data(chata_args& in1);
-
-    void commit();
-
-    [[nodiscard]] size_t get_executable_size() { return executable_size; }
-
-    [[nodiscard]] size_t get_executable_instruction_count() { return executable_instruction_count; }
-
-    [[nodiscard]] size_t get_compiled_size() { return compiled_size; }
-
-    [[nodiscard]] size_t get_compiled_instruction_count() { return compiled_instruction_count; }
-
-    ChataProcessor(const std::string_view& code) { compile_and_commit(code); }
-
-    ChataProcessor(const InputFile& file) { compile_and_commit(file); }
-
-    ChataProcessor(const std::span<InputFile> files) { compile_and_commit(files); }
-
-    ChataProcessor() = default;
-};
-
-namespace libchata {
+namespace ultrassembler {
 
 void reset_memory_bank();
 
 std::string_view version();
 
 /**
- * @brief Assemble RISC-V assembly with Chatassembler
+ * @brief Assemble RISC-V assembly with Ultrassembler
  *
  * @param code The RISC-V assembly you want to assemble
  * @param supported_sets An array or vector of supported instruction sets to be used for bit-dependent instructions and architecture options
@@ -531,4 +409,4 @@ std::string_view version();
  */
 std::span<uint8_t> assemble(std::string_view code, std::span<RVInstructionSet> supported_sets = {});
 
-} // namespace libchata
+} // namespace ultrassembler

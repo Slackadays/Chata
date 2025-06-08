@@ -33,19 +33,12 @@ endif()
 
 add_library(objchata OBJECT
     src/libchata.cpp
-    src/assembler/assembler.cpp
     src/compile.cpp
     src/utils.cpp
     src/if.cpp
     src/change.cpp
-    src/assembler/instructions.cpp
-    src/assembler/pseudoinstructions.cpp
-    src/assembler/make_inst_from_pseudoinst.cpp
     src/registers.cpp
-    src/assembler/csrs.cpp
-    src/assembler/instruction_search.cpp
     src/register_search.cpp
-    src/assembler/csr_search.cpp
 )
 
 target_compile_options(objchata PRIVATE -fno-rtti -fno-stack-protector -fomit-frame-pointer)
@@ -63,6 +56,9 @@ add_executable(test_libchata
 )
 
 target_link_libraries(test_libchata PRIVATE chatashared)
+
+target_link_libraries(chatashared PRIVATE uas)
+target_link_libraries(chatastatic PRIVATE uas)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   #add_definitions(-DDEBUG -Wall -Wextra -Wpedantic)

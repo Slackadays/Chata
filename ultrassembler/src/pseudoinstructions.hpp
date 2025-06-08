@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
-#include "../libchata.hpp"
+#include "ultrassembler.hpp"
 #include "assembler.hpp"
 
-namespace libchata_internal {
+namespace ultrassembler_internal {
 
 extern bool make_inst_from_pseudoinst(assembly_context& c);
 
@@ -90,4 +90,4 @@ void ntl_pall_instr(assembly_context& c);
 void ntl_s1_instr(assembly_context& c);
 void ntl_all_instr(assembly_context& c);
 
-} // namespace libchata_internal
+} // namespace ultrassembler_internal
