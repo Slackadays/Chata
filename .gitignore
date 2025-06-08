@@ -48,8 +48,6 @@ gmon.out
 
 credentials.sh
 
-test.cpp
-
 test
 
 *.bin

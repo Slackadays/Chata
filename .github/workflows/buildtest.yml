@@ -14,9 +14,9 @@ jobs:
       - name: Build Chata
         run: |
           just build
-          echo "Now building the libchata example..."
-          cd libchata
-          g++ -std=c++20 ultrassembler_example.cpp -lchata
+          echo "Now building the ultrassembler example..."
+          cd ultrassembler
+          g++ -std=c++23 ultrassembler_example.cpp -lchata
           echo "Success"
   test:
     runs-on: ubuntu-latest
