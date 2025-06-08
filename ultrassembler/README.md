@@ -284,7 +284,7 @@ int main() {
 You can build this example by copying [the code file](ultrassembler_example.cpp) and then running
 
 ```sh
-g++ -std=c++20 ultrassembler_example.cpp -lchata
+g++ -std=c++23 ultrassembler_example.cpp -lchata -luas
 ```
 
 This concludes all of the public functionality of Ultrassembler.

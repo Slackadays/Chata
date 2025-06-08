@@ -16,7 +16,7 @@ jobs:
           just build
           echo "Now building the ultrassembler example..."
           cd ultrassembler
-          g++ -std=c++23 ultrassembler_example.cpp -lchata
+          g++ -std=c++23 ultrassembler_example.cpp -lchata -luas
           echo "Success"
   test:
     runs-on: ubuntu-latest
