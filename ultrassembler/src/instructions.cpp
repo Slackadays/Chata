@@ -15,7 +15,7 @@ using enum RVInSetMinReqs;
 using enum RVInstructionImmConstraint;
 using std::nullopt;
 
-const std::array<rvinstruction, 1192> instructions = {
+const std::array<rvinstruction, 1279> instructions = {
         {{"lui", LUI, U, OP_LUI, 0b000, RVI, 4, {.imm_constraint = Signed_32b}},
          {"auipc", AUIPC, U, OP_AUIPC, 0b000, RVI, 4, {.imm_constraint = Signed_32b}},
          {"jal", JAL, J, OP_JAL, 0b000, RVI, 4, {.imm_constraint = Signed_21b}},
@@ -365,6 +365,12 @@ const std::array<rvinstruction, 1192> instructions = {
          {"amocas.w.aqrl", AMOCASWAQRL, R, OP_AMO, 0b0010111010, Zacas, 4},
          {"amocas.d.aqrl", AMOCASDAQRL, R, OP_AMO, 0b0010111011, Zacas, 4},
          {"amocas.q.aqrl", AMOCASQAQRL, R, OP_AMO, 0b0010111100, Zacas, 4},
+         {"amoswap.b", AMOSWAPB, R, OP_AMO, 0b0000100000, Zabha, 4},
+         {"amoswap.h", AMOSWAPH, R, OP_AMO, 0b0000100001, Zabha, 4},
+         {"amoadd.b", AMOADDB, R, OP_AMO, 0b0000000000, Zabha, 4},
+         {"amoadd.h", AMOADDH, R, OP_AMO, 0b0000000001, Zabha, 4},
+         {"amoand.b", AMOANDB, R, OP_AMO, 0b0110000000, Zabha, 4},
+
          {"c.lbu", CLBU, CLB, OP_C0, 0b100000, Zcb, 2},
          {"c.lhu", CLHU, CLHfmt, OP_C0, 0b1000010, Zcb, 2},
          {"c.lh", CLH, CLHfmt, OP_C0, OP_MADD, Zcb, 2},
@@ -1210,7 +1216,13 @@ const std::array<rvinstruction, 1192> instructions = {
          {"vsm4r.vs", VSM4RVS, MVV, OP_VE, 0b1010011010, Zvksed, 4, {.custom_reg_val = 0b10000}},
          {"vwsll.vv", VWSLLVV, IVV, OP_V, 0b1101011000, Zvbb, 4},
          {"vwsll.vx", VWSLLVX, IVX, OP_V, 0b1101011100, Zvbb, 4},
-         {"vwsll.vi", VWSLLVI, IVI, OP_V, 0b1101011011, Zvbb, 4, {.imm_constraint = Unsigned_5b}}}
+         {"vwsll.vi", VWSLLVI, IVI, OP_V, 0b1101011011, Zvbb, 4, {.imm_constraint = Unsigned_5b}},
+         {"fcvt.bf16.s", FCVTBF16S, R, OP_FP, 0b0100010, Zfbfmin, 4, {.use_frm_for_funct3 = true, .custom_reg_val = 0b01000}},
+         {"fcvt.s.bf16", FCVTSBF16, R, OP_FP, 0b0100000, Zfbfmin, 4, {.use_frm_for_funct3 = true, .custom_reg_val = 0b00110}},
+         {"vfncvtbf16.f.f.w", VFNCVTBF16FFW, FVV, OP_V, 0b0100101001, Zvfbfmin, 4, {.custom_reg_val = 0b11101}},
+         {"vfwcvtbf16.f.f.v", VFWCVTBF16FFV, FVV, OP_V, 0b0100101001, Zvfbfmin, 4, {.custom_reg_val = 0b01101}},
+         {"vfwmaccbf16.vv", VFWMACCBF16VV, FVV, OP_V, 0b1110111001, Zvfbfwma, 4},
+         {"vfwmaccbf16.vf", VFWMACCBF16VF, FVF, OP_V, 0b1110111101, Zvfbfwma, 4}}
 };
 
 } // namespace ultrassembler_internal
