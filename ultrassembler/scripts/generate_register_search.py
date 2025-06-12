@@ -1,5 +1,5 @@
-input = "registers.cpp"
-output = "register_search.cpp"
+input = "src/registers.cpp"
+output = "src/register_search.cpp"
 
 import re
 

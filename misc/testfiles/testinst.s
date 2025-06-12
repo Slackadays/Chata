@@ -1,1 +1,1 @@
-addi x5, zero, %lo(0xFFFFF)
+fcvt.s.bf16 fa2, fa3

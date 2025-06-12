@@ -80,10 +80,10 @@ check-format:
 
 # run codegen scripts
 generate:
-  cd ultrassembler/src; python3 scripts/generate_instruction_search.py
-  cd ultrassembler/src; python3 scripts/generate_register_search.py
-  cd ultrassembler/src; python3 scripts/generate_csr_search.py
-  cd ultrassembler/src; python3 scripts/generate_pseudoinstruction_converter.py
+  cd ultrassembler; python3 scripts/generate_instruction_search.py
+  cd ultrassembler; python3 scripts/generate_register_search.py
+  cd ultrassembler; python3 scripts/generate_csr_search.py
+  cd ultrassembler; python3 scripts/generate_pseudoinstruction_converter.py
   @just format
 
 # run testsuites for everything

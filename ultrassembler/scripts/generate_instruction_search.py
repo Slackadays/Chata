@@ -30,8 +30,8 @@ if (ins[0] == 'a') { // Then check if there are instructions with prefix 'a'. Th
 }
 '''
 
-input = "assembler/instructions.cpp"
-output = "assembler/instruction_search.cpp"
+input = "src/instructions.cpp"
+output = "src/instruction_search.cpp"
 
 import re
 

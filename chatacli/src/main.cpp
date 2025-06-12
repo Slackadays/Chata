@@ -10,9 +10,9 @@
 #include <optional>
 #include <string>
 #include <thread>
+#include <ultrassembler.hpp>
 #include <unistd.h>
 #include <vector>
-#include <ultrassembler.hpp>
 
 namespace fs = std::filesystem;
 
@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
         } catch (ChataError& e) {
             std::cout << e.what() << std::endl;
             return 1;
-        }  catch (UltraError& e) {
+        } catch (UltraError& e) {
             std::cout << "" << e.what() << std::endl;
             return 1;
         }

@@ -246,7 +246,7 @@ std::optional<T> to_num(const chatastring& str) {
     }
 
     if constexpr (!std::is_same<T, float>::value) {
-        if (relocation_mode == -1) { // %lo()
+        if (relocation_mode == -1) {       // %lo()
             result = (result << 20) >> 20; // This preserves the sign bit
         } else if (relocation_mode == 1) { // %hi()
             result = (result >> 12) & 0xFFFFF;

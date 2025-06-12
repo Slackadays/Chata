@@ -15,7 +15,7 @@ using enum RVInSetMinReqs;
 using enum RVInstructionImmConstraint;
 using std::nullopt;
 
-const std::array<rvinstruction, 1279> instructions = {
+const std::array<rvinstruction, 1278> instructions = {
         {{"lui", LUI, U, OP_LUI, 0b000, RVI, 4, {.imm_constraint = Signed_32b}},
          {"auipc", AUIPC, U, OP_AUIPC, 0b000, RVI, 4, {.imm_constraint = Signed_32b}},
          {"jal", JAL, J, OP_JAL, 0b000, RVI, 4, {.imm_constraint = Signed_21b}},
@@ -405,6 +405,46 @@ const std::array<rvinstruction, 1279> instructions = {
          {"amominu.h.aq", AMOMINUHAQ, R, OP_AMO, 0b1100010001, Zabha, 4},
          {"amocas.b.aq", AMOCASBAQ, R, OP_AMO, 0b0010110000, Zabha_and_Zacas, 4},
          {"amocas.h.aq", AMOCASHAQ, R, OP_AMO, 0b0010110001, Zabha_and_Zacas, 4},
+         {"amoswap.b.rl", AMOSWAPBRL, R, OP_AMO, 0b0000101000, Zabha, 4},
+         {"amoswap.h.rl", AMOSWAPHRL, R, OP_AMO, 0b0000101001, Zabha, 4},
+         {"amoadd.b.rl", AMOADDBRL, R, OP_AMO, 0b0000001000, Zabha, 4},
+         {"amoadd.h.rl", AMOADDHRL, R, OP_AMO, 0b0000001001, Zabha, 4},
+         {"amoand.b.rl", AMOANDBRL, R, OP_AMO, 0b0110001000, Zabha, 4},
+         {"amoand.h.rl", AMOANDHRL, R, OP_AMO, 0b0110001001, Zabha, 4},
+         {"amoor.b.rl", AMOORBRL, R, OP_AMO, 0b0100001000, Zabha, 4},
+         {"amoor.h.rl", AMOORHRL, R, OP_AMO, 0b0100001001, Zabha, 4},
+         {"amoxor.b.rl", AMOXORBRL, R, OP_AMO, 0b0010001000, Zabha, 4},
+         {"amoxor.h.rl", AMOXORHRL, R, OP_AMO, 0b0010001001, Zabha, 4},
+         {"amomax.b.rl", AMOMAXBRL, R, OP_AMO, 0b1010001000, Zabha, 4},
+         {"amomax.h.rl", AMOMAXHRL, R, OP_AMO, 0b1010001001, Zabha, 4},
+         {"amomaxu.b.rl", AMOMAXUBRL, R, OP_AMO, 0b1110001000, Zabha, 4},
+         {"amomaxu.h.rl", AMOMAXUHRL, R, OP_AMO, 0b1110001001, Zabha, 4},
+         {"amomin.b.rl", AMOMINBRL, R, OP_AMO, 0b1000001000, Zabha, 4},
+         {"amomin.h.rl", AMOMINHRL, R, OP_AMO, 0b1000001001, Zabha, 4},
+         {"amominu.b.rl", AMOMINUBRL, R, OP_AMO, 0b1100001000, Zabha, 4},
+         {"amominu.h.rl", AMOMINUHRL, R, OP_AMO, 0b1100001001, Zabha, 4},
+         {"amocas.b.rl", AMOCASBRL, R, OP_AMO, 0b0010101000, Zabha_and_Zacas, 4},
+         {"amocas.h.rl", AMOCASHRL, R, OP_AMO, 0b0010101001, Zabha_and_Zacas, 4},
+         {"amoswap.b.aqrl", AMOSWAPBAQ, R, OP_AMO, 0b0000110000, Zabha, 4},
+         {"amoswap.h.aqrl", AMOSWAPHAQ, R, OP_AMO, 0b0000110001, Zabha, 4},
+         {"amoadd.b.aqrl", AMOADDBAQ, R, OP_AMO, 0b0000010000, Zabha, 4},
+         {"amoadd.h.aqrl", AMOADDHAQ, R, OP_AMO, 0b0000010001, Zabha, 4},
+         {"amoand.b.aqrl", AMOANDBAQ, R, OP_AMO, 0b0110010000, Zabha, 4},
+         {"amoand.h.aqrl", AMOANDHAQ, R, OP_AMO, 0b0110010001, Zabha, 4},
+         {"amoor.b.aqrl", AMOORBAQ, R, OP_AMO, 0b0100010000, Zabha, 4},
+         {"amoor.h.aqrl", AMOORHAQ, R, OP_AMO, 0b0100010001, Zabha, 4},
+         {"amoxor.b.aqrl", AMOXORBAQ, R, OP_AMO, 0b0010010000, Zabha, 4},
+         {"amoxor.h.aqrl", AMOXORHAQ, R, OP_AMO, 0b0010010001, Zabha, 4},
+         {"amomax.b.aqrl", AMOMAXBAQ, R, OP_AMO, 0b1010010000, Zabha, 4},
+         {"amomax.h.aqrl", AMOMAXHAQ, R, OP_AMO, 0b1010010001, Zabha, 4},
+         {"amomaxu.b.aqrl", AMOMAXUBAQ, R, OP_AMO, 0b1110010000, Zabha, 4},
+         {"amomaxu.h.aqrl", AMOMAXUHAQ, R, OP_AMO, 0b1110010001, Zabha, 4},
+         {"amomin.b.aqrl", AMOMINBAQ, R, OP_AMO, 0b1000010000, Zabha, 4},
+         {"amomin.h.aqrl", AMOMINHAQ, R, OP_AMO, 0b1000010001, Zabha, 4},
+         {"amominu.b.aqrl", AMOMINUBAQ, R, OP_AMO, 0b1100010000, Zabha, 4},
+         {"amominu.h.aqrl", AMOMINUHAQ, R, OP_AMO, 0b1100010001, Zabha, 4},
+         {"amocas.b.aqrl", AMOCASBAQ, R, OP_AMO, 0b0010110000, Zabha_and_Zacas, 4},
+         {"amocas.h.aqrl", AMOCASHAQ, R, OP_AMO, 0b0010110001, Zabha_and_Zacas, 4},
          {"c.lbu", CLBU, CLB, OP_C0, 0b100000, Zcb, 2},
          {"c.lhu", CLHU, CLHfmt, OP_C0, 0b1000010, Zcb, 2},
          {"c.lh", CLH, CLHfmt, OP_C0, OP_MADD, Zcb, 2},
@@ -446,7 +486,7 @@ const std::array<rvinstruction, 1279> instructions = {
          {"fround.q", FROUNDQ, R, OP_FP, 0b0100011000, Zfa_and_Q, 4, {.custom_reg_val = 0b00100, .use_frm_for_funct3 = true}},
          {"froundnx.q", FROUNDQ, R, OP_FP, 0b0100011000, Zfa_and_Q, 4, {.custom_reg_val = 0b00101, .use_frm_for_funct3 = true}},
          {"fcvtmod.w.d", FCVTMODWD, R, OP_FP, 0b1100001000, Zfa_and_D, 4, {.custom_reg_val = 0b01000, .use_frm_for_funct3 = true}}, // This one needs 0b001 for frm (RTZ), and that "rtz" is explicitly
-                                                                                                                                     // included in the assembly, like fcvtmod.w.d rd, rs1, rtz
+                                                                                                                                    // included in the assembly, like fcvtmod.w.d rd, rs1, rtz
          {"fmvh.x.d", FMVHXD, R, OP_FP, 0b1110001000, Zfa_and_D, 4, {.custom_reg_val = 0b00001}},
          {"fmvp.d.x", FMVPDX, R, OP_FP, 0b1011001000, Zfa_and_D, 4},
          {"fmvh.x.q", FMVHXQ, R, OP_FP, 0b1110011000, Zfa_and_Q, 4, {.custom_reg_val = 0b00001}},
@@ -503,8 +543,8 @@ const std::array<rvinstruction, 1279> instructions = {
          {"andn", ANDN, R, OP_OP, 0b0100000111, Zbb_or_Zbkb, 4},
          {"bclr", BCLR, R, OP_OP, 0b0100100001, Zbs, 4},
          {"bclri", BCLRI, R, OP_IMM, 0b0100100001, Zbs, 4, {.use_imm_for_rs = true}}, // This one "requires" an extra bit in shamt for RV64, but in reality it's a special case where shamt is big
-                                                                                     // enough to clear a 64 bit register, so we just add the extra bit to rs2 and let the extra available space
-                                                                                     // handle it transparently
+                                                                                      // enough to clear a 64 bit register, so we just add the extra bit to rs2 and let the extra available space
+                                                                                      // handle it transparently
          {"bext", BEXT, R, OP_OP, 0b0100100101, Zbs, 4},
          {"bexti", BEXTI, R, OP_IMM, 0b0100100101, Zbs, 4, {.use_imm_for_rs = true}}, // Same idea as bclri
          {"binv", BINV, R, OP_OP, 0b0110100001, Zbs, 4},
@@ -1251,12 +1291,11 @@ const std::array<rvinstruction, 1279> instructions = {
          {"vwsll.vv", VWSLLVV, IVV, OP_V, 0b1101011000, Zvbb, 4},
          {"vwsll.vx", VWSLLVX, IVX, OP_V, 0b1101011100, Zvbb, 4},
          {"vwsll.vi", VWSLLVI, IVI, OP_V, 0b1101011011, Zvbb, 4, {.imm_constraint = Unsigned_5b}},
-         {"fcvt.bf16.s", FCVTBF16S, R, OP_FP, 0b0100010, Zfbfmin, 4, {.use_frm_for_funct3 = true, .custom_reg_val = 0b01000}},
-         {"fcvt.s.bf16", FCVTSBF16, R, OP_FP, 0b0100000, Zfbfmin, 4, {.use_frm_for_funct3 = true, .custom_reg_val = 0b00110}},
+         {"fcvt.bf16.s", FCVTBF16S, R, OP_FP, 0b0100010000, Zfbfmin, 4, {.custom_reg_val = 0b01000, .use_frm_for_funct3 = true}},
+         {"fcvt.s.bf16", FCVTSBF16, R, OP_FP, 0b0100000000, Zfbfmin, 4, {.custom_reg_val = 0b00110, .use_frm_for_funct3 = true}},
          {"vfncvtbf16.f.f.w", VFNCVTBF16FFW, FVV, OP_V, 0b0100101001, Zvfbfmin, 4, {.custom_reg_val = 0b11101}},
          {"vfwcvtbf16.f.f.v", VFWCVTBF16FFV, FVV, OP_V, 0b0100101001, Zvfbfmin, 4, {.custom_reg_val = 0b01101}},
          {"vfwmaccbf16.vv", VFWMACCBF16VV, FVV, OP_V, 0b1110111001, Zvfbfwma, 4},
-         {"vfwmaccbf16.vf", VFWMACCBF16VF, FVF, OP_V, 0b1110111101, Zvfbfwma, 4}}
-};
+         {"vfwmaccbf16.vf", VFWMACCBF16VF, FVF, OP_V, 0b1110111101, Zvfbfwma, 4}}};
 
 } // namespace ultrassembler_internal

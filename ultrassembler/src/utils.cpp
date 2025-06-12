@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 #include "debug.hpp"
-#include "ultrassembler.hpp"
 #include "registers.hpp"
+#include "ultrassembler.hpp"
 #include <algorithm>
 #include <charconv>
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
-#include "ultrassembler.hpp"
 #include "assembler.hpp"
 #include "instructions.hpp"
+#include "ultrassembler.hpp"
 
 namespace ultrassembler_internal {
 

@@ -1891,6 +1891,9 @@ int main() {
     as("vwsll.vv v24, v25, v26", 0x570c9dd7);
     as("vwsll.vx v27, v28, t5", 0xd74dcfd7);
     as("vwsll.vi v29, v30, 16", 0xd73ee8d7);
+    as("fcvt.bf16.s fa0, fa1", 0x53f58544);
+    as("fcvt.s.bf16 fa2, fa3", 0x53f66640);
+    as("vfncvtbf16.f.f.w
 
     as("beq t0, t1, foolabel\n#blahblah comment\nadd a0, a5, a6\nfoolabel:", {0x63, 0x84, 0x62, 0x00, 0x33, 0x85, 0x07, 0x01});
     as("foolabel:\nadd a0, a5, a6\nbne t0, t1, foolabel\n#ignore this", {0x33, 0x85, 0x07, 0x01, 0xe3, 0x9e, 0x62, 0xfe});

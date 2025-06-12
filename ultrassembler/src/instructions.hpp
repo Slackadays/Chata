@@ -379,8 +379,8 @@ enum class RVInstructionID : uint16_t {
     AMOMAXUH,
     AMOMINB,
     AMOMINH,
+    AMOMINUB,
     AMOMINUH,
-    AMOMINUHB,
     AMOCASB,
     AMOCASH,
     AMOSWAPBAQ,
@@ -1344,8 +1344,8 @@ enum class RVInstructionFormat : uint8_t {
     CMPP
 };
 
-enum class RVInSetMinReqs : uint8_t { //The smallest set combination that provides the instruction
-    RVI, // because I conflicts with RVInstructionFormat
+enum class RVInSetMinReqs : uint8_t { // The smallest set combination that provides the instruction
+    RVI,                              // because I conflicts with RVInstructionFormat
     I_and_64b,
     M,
     M_and_64b,
@@ -1504,6 +1504,6 @@ struct rvinstruction {
             , ssargs(ssargs) {}
 };
 
-extern const std::array<rvinstruction, 1279> instructions;
+extern const std::array<rvinstruction, 1278> instructions;
 
 } // namespace ultrassembler_internal

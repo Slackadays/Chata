@@ -5,8 +5,8 @@
 #include <fstream>
 #include <iostream>
 #include <string.h>
-#include <vector>
 #include <ultrassembler.hpp>
+#include <vector>
 
 #if defined(UNIX_OR_UNIX_LIKE)
 #include <sys/mman.h>
@@ -102,7 +102,7 @@ void ChataProcessor::compile(const std::span<InputFile> input) {
 
     auto temp = ultrassembler::assemble(compiled);
 
-    chatavector<uint8_t> assembled{temp.begin(), temp.end()};
+    chatavector<uint8_t> assembled {temp.begin(), temp.end()};
 
     DBG(std::cout << "Ok, here's the assembled code:" << std::endl;)
     // Show the code in hex form

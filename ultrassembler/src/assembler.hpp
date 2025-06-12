@@ -1,5 +1,5 @@
-#include "ultrassembler.hpp"
 #include "instructions.hpp"
+#include "ultrassembler.hpp"
 
 #pragma once
 
