@@ -1,1 +1,1 @@
-fcvt.s.bf16 fa2, fa3
+amoswap.b.rl x23, x24, (x25)

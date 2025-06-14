@@ -169,6 +169,13 @@ enum class RVInstructionID : uint16_t {
     AMOMAXDAQRL,
     AMOMINUDAQRL,
     AMOMAXUDAQRL,
+    CBOCLEAN,
+    CBOFLUSH,
+    CBOINVAL,
+    CBOZERO,
+    PREFETCHI,
+    PREFETCHR,
+    PREFETCHW,
     FMADDS, // RV32F
     FMSUBS,
     FNMSUBS,
@@ -1355,6 +1362,9 @@ enum class RVInSetMinReqs : uint8_t { // The smallest set combination that provi
     Zaamo_and_64b,
     Zalrsc,
     Zalrsc_and_64b,
+    Zicbom,
+    Zicboz,
+    Zicbop,
     F,
     F_and_64b,
     F_or_Zfinx,
@@ -1504,6 +1514,6 @@ struct rvinstruction {
             , ssargs(ssargs) {}
 };
 
-extern const std::array<rvinstruction, 1278> instructions;
+extern const std::array<rvinstruction, 1285> instructions;
 
 } // namespace ultrassembler_internal

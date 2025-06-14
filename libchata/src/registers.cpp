@@ -104,6 +104,7 @@ const std::array<rvregister, 96> registers = {
          {"v28", "v28", Vector, v28, 28},
          {"v29", "v29", Vector, v29, 29},
          {"v30", "v30", Vector, v30, 30},
-         {"v31", "v31", Vector, v31, 31}}};
+         {"v31", "v31", Vector, v31, 31}}
+};
 
 } // namespace libchata_internal
