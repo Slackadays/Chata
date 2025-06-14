@@ -528,6 +528,18 @@ int main() {
     as("amomaxu.d.aqrl a3, t3, s3", 0xafb6c9e7);
     as("amomaxu.d.aqrl a3, t3, (s3)", 0xafb6c9e7);
     as("amomaxu.d.aqrl a3, t3, 0(s3)", 0xafb6c9e7);
+    as("cbo.clean 0(s0)", 0x0f201400);
+    as("cbo.clean (s0)", 0x0f201400);
+    as("cbo.clean s0", 0x0f201400);
+    as("cbo.flush 0(s1)", 0x0fa02400);
+    as("cbo.flush (s1)", 0x0fa02400);
+    as("cbo.flush s1", 0x0fa02400);
+    as("cbo.inval 0(s2)", 0x0f200900);
+    as("cbo.inval (s2)", 0x0f200900);
+    as("cbo.inval s2", 0x0f200900);
+    as("prefetch.i 64(s3)", 0x13e00904);
+    as("prefetch.r 64(s4)", 0x13601a04);
+    as("prefetch.w 64(s5)", 0x13e03a04);
     as("fmadd.s f0, f1, f2, f3", 0x43f02018);
     as("fmadd.s f0, f1, f2, f3, rne", 0x43802018);
     as("fmadd.s f0, f1, f2, f3, rtz", 0x43902018);

@@ -1,1 +1,1 @@
-amoswap.b.rl x23, x24, (x25)
+prefetch.w 64(s5)

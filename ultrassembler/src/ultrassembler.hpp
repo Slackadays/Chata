@@ -105,7 +105,20 @@ enum class RVInstructionSet : uint8_t {
     Zvksc,
     Zvksg,
     Zvkt,
-    Zvksh
+    Zvksh,
+    XTheadCmo,
+    XTheadSync,
+    XTheadBa,
+    XTheadBb,
+    XTheadBs,
+    XTheadCondMov,
+    XTheadMemIdx,
+    XTheadMemPair,
+    XTheadFMemIdx,
+    XTheadMac,
+    XTheadFmv,
+    XTheadVdot,
+    XTheadVector
 };
 
 enum class UltraErrorType {

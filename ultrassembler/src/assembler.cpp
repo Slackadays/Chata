@@ -310,6 +310,37 @@ void verify_imm(const int32_t& imm, RVInstructionImmConstraint constraint) {
     }
 }
 
+std::pair<int32_t, ultrastring> decode_offset_plus_reg(const ultrastring& str, assembly_context& c) {
+    int32_t offset = 0;
+    ultrastring temp;
+    size_t j = 0;
+    for (; j < str.size() && str.at(j) != '('; j++) {
+        temp.push_back(str.at(j));
+    }
+    auto res = decode_imm<int32_t>(temp, c);
+    if (res.has_value()) {
+        offset = res.value();
+    }
+    j++;
+    temp.clear();
+    for (; j < str.size() && str.at(j) != ')'; j++) {
+        temp.push_back(str.at(j));
+    }
+    return {offset, temp};
+}
+
+void remove_extraneous_parentheses(ultrastring& str) {
+    if (str.front() == '0') {
+        str.erase(0, 1);
+    }
+    if (str.front() == '(') {
+        str.erase(0, 1);
+    }
+    if (str.back() == ')') {
+        str.pop_back();
+    }
+}
+
 void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, const RVInstructionID& id, assembly_context& c) {
     using enum RVInstructionID;
     if (id == FENCE) {
@@ -415,37 +446,38 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
         } else {
             throw UltraError(UltraErrorType::Compiler, "Invalid vtypei " + c.arg4, c.line, c.column);
         }
-    }
-}
-
-std::pair<int32_t, ultrastring> decode_offset_plus_reg(const ultrastring& str, assembly_context& c) {
-    int32_t offset = 0;
-    ultrastring temp;
-    size_t j = 0;
-    for (; j < str.size() && str.at(j) != '('; j++) {
-        temp.push_back(str.at(j));
-    }
-    auto res = decode_imm<int32_t>(temp, c);
-    if (res.has_value()) {
-        offset = res.value();
-    }
-    j++;
-    temp.clear();
-    for (; j < str.size() && str.at(j) != ')'; j++) {
-        temp.push_back(str.at(j));
-    }
-    return {offset, temp};
-}
-
-void remove_extraneous_parentheses(ultrastring& str) {
-    if (str.front() == '0') {
-        str.erase(0, 1);
-    }
-    if (str.front() == '(') {
-        str.erase(0, 1);
-    }
-    if (str.back() == ')') {
-        str.pop_back();
+    } else if (id == CBOCLEAN || id == CBOFLUSH || id == CBOINVAL || id == CBOZERO) {
+        if (id == CBOCLEAN) {
+            imm = 0b000000000001;
+        } else if (id == CBOFLUSH) {
+            imm = 0b000000000010;
+        } else if (id == CBOINVAL) {
+            imm = 0b000000000000;
+        } else if (id == CBOZERO) {
+            imm = 0b000000000100;
+        }
+        rd = 0b00000;
+        remove_extraneous_parentheses(c.arg1);
+        rs1 = decode_register(c.arg1).encoding;
+    } else if (id == PREFETCHI || id == PREFETCHR || id == PREFETCHW) {
+        if (id == PREFETCHI) {
+            imm = 0b00000;
+        } else if (id == PREFETCHR) {
+            imm = 0b00001;
+        } else if (id == PREFETCHW) {
+            imm = 0b00011;
+        }
+        rd = 0b00000;
+        auto [offset, reg] = decode_offset_plus_reg(c.arg1, c);
+        if (reg.empty()) {
+            throw UltraError(UltraErrorType::Compiler, "Invalid prefetch argument " + c.arg1, c.line, c.column);
+        }
+        if (auto reg_res = fast_reg_search(reg); reg_res != reg_search_failed) {
+            rs1 = decode_register(reg).encoding;
+        } else {
+            throw UltraError(UltraErrorType::Compiler, "Invalid register in prefetch argument " + c.arg1, c.line, c.column);
+        }
+        imm |= ((offset >> 5) & 0b111111) << 5; // Add offset[11:5]
     }
 }
 
@@ -2005,7 +2037,7 @@ ultravector<uint8_t> assemble_code(const std::string_view& data, const ultravect
     out.close();
 
     int res = std::system(
-            "riscv64-linux-gnu-as -march=rv64gvfdcqb_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp_zfbfmin_zvfbfmin_zvfbfwma_zabha "
+            "riscv64-linux-gnu-as -march=rv64gvfdcqb_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp_zfbfmin_zvfbfmin_zvfbfwma_zabha_zicbom_zicboz_zicbop "
             "temp.s -o temp.o"
     );
 
