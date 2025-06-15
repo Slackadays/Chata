@@ -1855,8 +1855,6 @@ enum class RVInstructionID : uint16_t {
 	THVMSGEVI,
 	THVMSGEUVI,
 	THVMSGEVX,
-	THVMSGEVX,
-	THVMSGEUVX,
 	THVMSGEUVX,
 	THVMINUVV,
 	THVMINUVX,
@@ -2220,23 +2218,6 @@ enum class RVInSetMinReqs : uint8_t { // The smallest set combination that provi
     XTheadVector
 };
 
-enum class RVInstructionImmConstraint : uint8_t {
-    None,
-    Signed_5b,
-    Signed_6b,
-    Signed_9b,
-    Signed_12b,
-    Signed_13b,
-    Signed_20b,
-    Signed_21b,
-    Signed_32b,
-    Unsigned_5b,
-    Unsigned_6b,
-    Unsigned_7b,
-    Unsigned_8b,
-    Unsigned_9b
-};
-
 namespace opcode {
 
 constexpr uint8_t OP_LOAD = 0b0000011;
@@ -2280,7 +2261,6 @@ struct special_snowflake_args {
     bool use_frm_for_funct3 = false;
     bool super_special_snowflake = false;
     bool swap_rs1_rs2 = false;
-    RVInstructionImmConstraint imm_constraint = RVInstructionImmConstraint::None;
 };
 
 struct rvinstruction {
