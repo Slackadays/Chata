@@ -1,1 +1,1 @@
-prefetch.w 64(s5)
+fence.tso

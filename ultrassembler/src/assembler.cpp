@@ -284,21 +284,6 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
         imm |= decode_fence(c.arg1) << 4; // Add pred
         imm |= decode_fence(c.arg2);      // Add succ
         DBG(std::cout << "FENCE instruction made" << std::endl;)
-    } else if (id == FENCETSO) {
-        imm = 0b100000110011; // Set imm to the TSO fence value
-        DBG(std::cout << "FENCE.TSO instruction made" << std::endl;)
-    } else if (id == PAUSE) {
-        imm = 0b000000010000; // Set imm to the PAUSE value
-        DBG(std::cout << "PAUSE instruction made" << std::endl;)
-    } else if (id == ECALL) {
-        imm = 0b000000000000; // Set imm to the ECALL value
-        DBG(std::cout << "ECALL instruction made" << std::endl;)
-    } else if (id == EBREAK) {
-        imm = 0b000000000001; // Set imm to the EBREAK value
-        DBG(std::cout << "EBREAK instruction made" << std::endl;)
-    } else if (id == FENCEI) {
-        imm = 0b000000000000; // Set imm to the FENCE.I value
-        DBG(std::cout << "FENCE.I instruction made" << std::endl;)
     } else if (id == CSRRW || id == CSRRS || id == CSRRC) {
         rd = decode_register(c.arg1).encoding;
         imm = decode_csr(c.arg2);
@@ -313,18 +298,6 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
             throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
         }
         DBG(std::cout << "CSRI instruction made" << std::endl;)
-    } else if (id == WRSNTO) {
-        imm = 0b000000001101; // Set imm to the WRSNTO value
-        DBG(std::cout << "WRSNTO instruction made" << std::endl;)
-    } else if (id == WRSSTO) {
-        imm = 0b000000011101; // Set imm to the WRSSTO value
-        DBG(std::cout << "WRSSTO instruction made" << std::endl;)
-    } else if (id == CNOP) {
-        imm = 0b000000000000; // Set imm to the CNOP value
-        DBG(std::cout << "CNOP instruction made" << std::endl;)
-    } else if (id == CEBREAK) {
-        imm = 0b000000000000;
-        DBG(std::cout << "CEBREAK instruction made" << std::endl;)
     } else if (id == VSETVLI || id == VSETIVLI) {
         rd = decode_register(c.arg1).encoding;
 
@@ -383,38 +356,6 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
         } else {
             throw UltraError(UltraErrorType::Compiler, "Invalid vtypei " + c.arg4, c.line, c.column);
         }
-    } else if (id == CBOCLEAN || id == CBOFLUSH || id == CBOINVAL || id == CBOZERO) {
-        if (id == CBOCLEAN) {
-            imm = 0b000000000001;
-        } else if (id == CBOFLUSH) {
-            imm = 0b000000000010;
-        } else if (id == CBOINVAL) {
-            imm = 0b000000000000;
-        } else if (id == CBOZERO) {
-            imm = 0b000000000100;
-        }
-        rd = 0b00000;
-        remove_extraneous_parentheses(c.arg1);
-        rs1 = decode_register(c.arg1).encoding;
-    } else if (id == PREFETCHI || id == PREFETCHR || id == PREFETCHW) {
-        if (id == PREFETCHI) {
-            imm = 0b00000;
-        } else if (id == PREFETCHR) {
-            imm = 0b00001;
-        } else if (id == PREFETCHW) {
-            imm = 0b00011;
-        }
-        rd = 0b00000;
-        auto [offset, reg] = decode_offset_plus_reg(c.arg1, c);
-        if (reg.empty()) {
-            throw UltraError(UltraErrorType::Compiler, "Invalid prefetch argument " + c.arg1, c.line, c.column);
-        }
-        if (auto reg_res = fast_reg_search(reg); reg_res != reg_search_failed) {
-            rs1 = decode_register(reg).encoding;
-        } else {
-            throw UltraError(UltraErrorType::Compiler, "Invalid register in prefetch argument " + c.arg1, c.line, c.column);
-        }
-        imm |= ((offset >> 5) & 0b111111) << 5; // Add offset[11:5]
     }
 }
 
@@ -478,25 +419,11 @@ void make_inst(assembly_context& c) {
 
     if (ssargs.super_special_snowflake) {
         handle_super_special_snowflakes(imm, rd, rs1, id, c);
-        if (type == I) {
-            DBG(std::cout << "Encoding I-type special snowflake instruction with name " << name << std::endl;)
-            inst |= rd << 7;     // Add rd
-            inst |= funct << 12; // Add funct3
-            inst |= rs1 << 15;   // Add rs1
-            inst |= imm << 20;   // Add imm
-        } else if (type == CI) {
-            DBG(std::cout << "Encoding CI-type special snowflake instruction with name " << name << std::endl;)
-            inst |= ((imm >> 6) & 0b1111) << 2; // Add offset[9:6]
-            inst |= ((imm >> 4) & 0b1) << 6;    // Add offset[4]
-            inst |= ((imm >> 5) & 0b1) << 12;   // Add offset[5]
-            inst |= rd << 7;                    // Add rd
-            if (id == CEBREAK) {
-                inst |= funct << 12; // Add funct4
-            } else {
-                inst |= funct << 13; // Add funct3
-            }
-        }
-
+        DBG(std::cout << "Encoding I-type special snowflake instruction with name " << name << std::endl;)
+        inst |= rd << 7;     // Add rd
+        inst |= funct << 12; // Add funct3
+        inst |= rs1 << 15;   // Add rs1
+        inst |= imm << 20;   // Add imm
         reinterpret_cast<uint32_t&>(c.machine_code[c.machine_code.size() - bytes]) = inst;
         return;
     }
@@ -507,7 +434,7 @@ void make_inst(assembly_context& c) {
         rs2 = 0b00000;
         imm = 0;*/
 
-        if (ssargs.use_imm_for_rs) {
+        if (ssargs.get_imm_for_rs) {
             if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
                 // Check for unsigned 5b
                 if (imm < 0 || imm >= 32) {
@@ -544,7 +471,7 @@ void make_inst(assembly_context& c) {
         }
         auto no_rs2 = ssargs.custom_reg_val.has_value();
         if (!no_rs2) {
-            if (ssargs.use_imm_for_rs) {
+            if (ssargs.get_imm_for_rs) {
                 rs2 = imm;
             } else {
                 rs2 = decode_register(c.arg3).encoding;
@@ -589,7 +516,7 @@ void make_inst(assembly_context& c) {
         rs1 = decode_register(c.arg2).encoding;
         auto no_rs2 = ssargs.custom_reg_val.has_value();
         if (!no_rs2) {
-            if (ssargs.use_imm_for_rs) {
+            if (ssargs.get_imm_for_rs) {
                 rs2 = imm;
             } else {
                 rs2 = decode_register(c.arg3).encoding;
@@ -620,15 +547,39 @@ void make_inst(assembly_context& c) {
     } else if (type == I) {
         /*rd = 0b00000;
         rs1 = 0b00000;
-        rs2 = 0b00000;
+        rs2 = 0b00000;+
         imm = 0;*/
 
-        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+        if (ssargs.use_funct_for_imm) {
+            imm = (funct >> 3) & 0b111111111111; // put funct12 in imm and don't sign extend
+
+            if (id == PREFETCHI || id == PREFETCHR || id == PREFETCHW) {
+                auto [offset, reg] = decode_offset_plus_reg(c.arg1, c);
+                if (reg.empty()) {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid prefetch argument " + c.arg1, c.line, c.column);
+                }
+                if (auto reg_res = fast_reg_search(reg); reg_res != reg_search_failed) {
+                    rs1 = decode_register(reg).encoding;
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid register in prefetch argument " + c.arg1, c.line, c.column);
+                }
+                imm |= ((offset >> 5) & 0b111111) << 5; // Add offset[11:5]
+            } else {
+                if (ssargs.custom_reg_val.has_value() && !ssargs.no_rs1) {
+                    rd = ssargs.custom_reg_val.value();
+                    remove_extraneous_parentheses(c.arg1);
+                    rs1 = decode_register(c.arg1).encoding;
+                } else {
+                    rd = ssargs.custom_reg_val.value();
+                }
+            }
+        } else if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
-            //check for signed 12b
+            // check for signed 12b
             if (imm < -2048 || imm >= 2048) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-2048, 2048)", c.line, c.column);
             }
+            rd = decode_register(c.arg1).encoding;
             rs1 = decode_register(c.arg2).encoding;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
@@ -637,15 +588,15 @@ void make_inst(assembly_context& c) {
             if (imm < -2048 || imm >= 2048) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-2048, 2048)", c.line, c.column);
             }
+            rd = decode_register(c.arg1).encoding;
             rs1 = decode_register(reg).encoding;
         }
-        rd = decode_register(c.arg1).encoding;
 
         DBG(std::cout << "Encoding I-type instruction with name " << name << std::endl;)
-        inst |= rd << 7;     // Add rd
-        inst |= funct << 12; // Add funct3
-        inst |= rs1 << 15;   // Add rs1
-        inst |= imm << 20;   // Add imm
+        inst |= rd << 7;               // Add rd
+        inst |= (funct & 0b111) << 12; // Add funct3, trim to last 3b for some which have longer functs
+        inst |= rs1 << 15;             // Add rs1
+        inst |= imm << 20;             // Add imm
     } else if (type == S) {
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
@@ -711,7 +662,7 @@ void make_inst(assembly_context& c) {
             if (imm < -1048576 || imm >= 1048576) {
                 throw UltraError(UltraErrorType::Compiler, "J-type immediate " + to_ultrastring(imm) + " is out of range [-1048576, 1048576)", c.line, c.column);
             }
-            
+
         } else {
             imm = string_to_label(c.arg2, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = J});
@@ -758,8 +709,8 @@ void make_inst(assembly_context& c) {
         rd = decode_register(c.arg1).encoding & 0b111;
 
         DBG(std::cout << "Encoding CL-type instruction with name " << name << std::endl;)
-        inst |= rd << 2;                      // Add rd' (just 3 bits)
-        if (id == CLW || id == CFLW) {        // offset[2|6]
+        inst |= rd << 2;               // Add rd' (just 3 bits)
+        if (id == CLW || id == CFLW) { // offset[2|6]
             // check for unsigned 7b
             if (imm < 0 || imm >= 128) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 128)", c.line, c.column);
@@ -788,8 +739,8 @@ void make_inst(assembly_context& c) {
         rs2 = decode_register(c.arg1).encoding & 0b111;
 
         DBG(std::cout << "Encoding CS-type instruction with name " << name << std::endl;)
-        inst |= rs2 << 2;                     // Add rs2' (just 3 bits)
-        if (id == CSW || id == CFSW) {        // offset[2|6]
+        inst |= rs2 << 2;              // Add rs2' (just 3 bits)
+        if (id == CSW || id == CFSW) { // offset[2|6]
             // check for unsigned 7b
             if (imm < 0 || imm >= 128) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 128)", c.line, c.column);
@@ -821,8 +772,8 @@ void make_inst(assembly_context& c) {
             if (imm < 0 || imm >= 64) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 64)", c.line, c.column);
             }
-            inst |= (imm & 0b11111) << 2;                // Add shamt[4:0]
-            inst |= ((imm >> 5) & 0b1) << 12;            // Add shamt[5]
+            inst |= (imm & 0b11111) << 2;     // Add shamt[4:0]
+            inst |= ((imm >> 5) & 0b1) << 12; // Add shamt[5]
         } else {
             // check for signed 9b
             if (imm < -256 || imm >= 256) {
@@ -842,7 +793,10 @@ void make_inst(assembly_context& c) {
             inst |= funct << 13; // Add funct3
         }
     } else if (type == CR) {
-        rd = decode_register(c.arg1).encoding;
+        if (!ssargs.no_rs1) {
+            rd = decode_register(c.arg1).encoding;
+        }
+
         if (ssargs.custom_reg_val.has_value()) {
             rs2 = ssargs.custom_reg_val.value();
         } else {
@@ -855,66 +809,73 @@ void make_inst(assembly_context& c) {
         inst |= funct << 12; // Add funct4
     } else if (type == CI) {
 
-        rd = decode_register(c.arg1).encoding;
-        if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
-            imm = num.value();
+        if (ssargs.custom_reg_val.has_value()) {
+            rd = ssargs.custom_reg_val.value();
+            if (ssargs.use_funct_for_imm) {
+                imm = (funct & 0b111111);
+            }
         } else {
-            auto [offset, reg] = decode_offset_plus_reg(c.arg2, c); // discard reg
-            imm = offset;
+            rd = decode_register(c.arg1).encoding;
+            if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
+                imm = num.value();
+            } else {
+                auto [offset, reg] = decode_offset_plus_reg(c.arg2, c); // discard reg
+                imm = offset;
+            }
         }
 
         DBG(std::cout << "Encoding CI-type instruction with name " << name << std::endl;)
-        if (id == CLWSP || id == CFLWSP) {                                    // offset[4:2|7:6]
+        if (id == CLWSP || id == CFLWSP) { // offset[4:2|7:6]
             // check for unsigned 8b
             if (imm < 0 || imm >= 256) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 256)", c.line, c.column);
             }
-            inst |= ((imm >> 6) & 0b11) << 2;                                 // Add offset[7:6]
-            inst |= ((imm >> 2) & 0b1111) << 4;                               // Add offset[4:2]
-            inst |= ((imm >> 5) & 0b1) << 12;                                 // Add offset[5]
-        } else if (id == CLDSP || id == CFLDSP) {                             // offset[4:3|8:6]
+            inst |= ((imm >> 6) & 0b11) << 2;     // Add offset[7:6]
+            inst |= ((imm >> 2) & 0b1111) << 4;   // Add offset[4:2]
+            inst |= ((imm >> 5) & 0b1) << 12;     // Add offset[5]
+        } else if (id == CLDSP || id == CFLDSP) { // offset[4:3|8:6]
             // check for unsigned 9b
             if (imm < 0 || imm >= 512) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 512)", c.line, c.column);
             }
-            inst |= ((imm >> 6) & 0b111) << 2;                                // Add offset[8:6]
-            inst |= ((imm >> 3) & 0b11) << 5;                                 // Add offset[4:3]
-            inst |= ((imm >> 5) & 0b1) << 12;                                 // Add offset[5]
+            inst |= ((imm >> 6) & 0b111) << 2;                 // Add offset[8:6]
+            inst |= ((imm >> 3) & 0b11) << 5;                  // Add offset[4:3]
+            inst |= ((imm >> 5) & 0b1) << 12;                  // Add offset[5]
         } else if (id == CLI || id == CADDI || id == CADDIW) { // imm[5], imm[4:0]
             // check for signed 6b
             if (imm < -32 || imm >= 32) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-32, 32)", c.line, c.column);
             }
-            inst |= (imm & 0b11111) << 2;                                     // Add imm[4:0]
-            inst |= ((imm >> 5) & 0b1) << 12;                                 // Add imm[5]
-        } else if (id == CSLLI) {// imm[5], imm[4:0]
+            inst |= (imm & 0b11111) << 2;     // Add imm[4:0]
+            inst |= ((imm >> 5) & 0b1) << 12; // Add imm[5]
+        } else if (id == CSLLI) {             // imm[5], imm[4:0]
             // check for unsigned 6b
             if (imm < 0 || imm >= 64) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 64)", c.line, c.column);
             }
-            inst |= (imm & 0b11111) << 2;                                     // Add imm[4:0]
-            inst |= ((imm >> 5) & 0b1) << 12;                                 // Add imm[5]
-        } else if (id == CLUI) {                                              // nzimm[17], imm[16:12]
+            inst |= (imm & 0b11111) << 2;     // Add imm[4:0]
+            inst |= ((imm >> 5) & 0b1) << 12; // Add imm[5]
+        } else if (id == CLUI) {              // nzimm[17], imm[16:12]
             // check for signed 6b
             if (imm < -32 || imm >= 32) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-32, 32)", c.line, c.column);
             }
-            inst |= ((imm >> 12) & 0b11111) << 2;                             // Add imm[16:12]
-            inst |= ((imm >> 17) & 0b1) << 12;                                // Add nzimm[17]
-        } else if (id == CADDI16SP) {                                         // nzimm[9], nzimm[4|6|8:7|5]
+            inst |= ((imm >> 12) & 0b11111) << 2; // Add imm[16:12]
+            inst |= ((imm >> 17) & 0b1) << 12;    // Add nzimm[17]
+        } else if (id == CADDI16SP) {             // nzimm[9], nzimm[4|6|8:7|5]
             // check for signed 10b
             if (imm < -512 || imm >= 512) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-512, 512)", c.line, c.column);
             }
-            inst |= ((imm >> 5) & 0b1) << 2;                                  // Add nzimm[5]
-            inst |= ((imm >> 7) & 0b11) << 3;                                 // Add nzimm[8:7]
-            inst |= ((imm >> 6) & 0b1) << 5;                                  // Add nzimm[6]
-            inst |= ((imm >> 4) & 0b1) << 6;                                  // Add nzimm[4]
-            inst |= ((imm >> 9) & 0b1) << 12;                                 // Add nzimm[9]
-        } else {                                                              // offset[4|9:6]
-            inst |= ((imm >> 6) & 0b1111) << 2;                               // Add offset[9:6]
-            inst |= ((imm >> 4) & 0b1) << 6;                                  // Add offset[4]
-            inst |= ((imm >> 5) & 0b1) << 12;                                 // Add offset[5]
+            inst |= ((imm >> 5) & 0b1) << 2;    // Add nzimm[5]
+            inst |= ((imm >> 7) & 0b11) << 3;   // Add nzimm[8:7]
+            inst |= ((imm >> 6) & 0b1) << 5;    // Add nzimm[6]
+            inst |= ((imm >> 4) & 0b1) << 6;    // Add nzimm[4]
+            inst |= ((imm >> 9) & 0b1) << 12;   // Add nzimm[9]
+        } else {                                // offset[4|9:6]
+            inst |= ((imm >> 6) & 0b1111) << 2; // Add offset[9:6]
+            inst |= ((imm >> 4) & 0b1) << 6;    // Add offset[4]
+            inst |= ((imm >> 5) & 0b1) << 12;   // Add offset[5]
         }
         inst |= rd << 7;     // Add rd
         inst |= funct << 13; // Add funct3
@@ -928,8 +889,8 @@ void make_inst(assembly_context& c) {
         }
 
         DBG(std::cout << "Encoding CSS-type instruction with name " << name << std::endl;)
-        inst |= rs2 << 2;                         // Add rs2
-        if (id == CSWSP || id == CFSWSP) {        // offset[5:2|7:6]
+        inst |= rs2 << 2;                  // Add rs2
+        if (id == CSWSP || id == CFSWSP) { // offset[5:2|7:6]
             // check for unsigned 8b
             if (imm < 0 || imm >= 256) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 256)", c.line, c.column);
@@ -941,11 +902,11 @@ void make_inst(assembly_context& c) {
             if (imm < 0 || imm >= 512) {
                 throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 512)", c.line, c.column);
             }
-            inst |= ((imm >> 6) & 0b111) << 7;    // Add offset[8:6]
-            inst |= ((imm >> 3) & 0b111) << 10;   // Add offset[5:3]
-        } else {                                  // offset[5:4|9:6]
-            inst |= ((imm >> 6) & 0b1111) << 7;   // Add offset[9:6]
-            inst |= ((imm >> 4) & 0b11) << 11;    // Add offset[5:4]
+            inst |= ((imm >> 6) & 0b111) << 7;  // Add offset[8:6]
+            inst |= ((imm >> 3) & 0b111) << 10; // Add offset[5:3]
+        } else {                                // offset[5:4|9:6]
+            inst |= ((imm >> 6) & 0b1111) << 7; // Add offset[9:6]
+            inst |= ((imm >> 4) & 0b11) << 11;  // Add offset[5:4]
         }
         inst |= funct << 13; // Add funct3
     } else if (type == CIW) {
@@ -1015,7 +976,7 @@ void make_inst(assembly_context& c) {
 
         if (ssargs.custom_reg_val.has_value()) {
             rs1 = ssargs.custom_reg_val.value();
-        } else if (ssargs.use_imm_for_rs) {
+        } else if (ssargs.get_imm_for_rs) {
             if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
                 rs1 = num.value();
             } else {
@@ -1066,8 +1027,9 @@ void make_inst(assembly_context& c) {
 
             if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
                 imm = num.value();
-                
-                if (id == VSLLVI || id == VSRLVI || id == VSRAVI || id == VNSRLWI || id == VNSRAWI || id == VSSRLVI || id == VSSRAVI || id == VNCLIPUWI || id == VNCLIPWI || id == VSLIDEUPVI || id == VSLIDEDOWNVI || id == VRGATHERVI || id == VWSLLVI) {
+
+                if (id == VSLLVI || id == VSRLVI || id == VSRAVI || id == VNSRLWI || id == VNSRAWI || id == VSSRLVI || id == VSSRAVI || id == VNCLIPUWI || id == VNCLIPWI || id == VSLIDEUPVI
+                    || id == VSLIDEDOWNVI || id == VRGATHERVI || id == VWSLLVI) {
                     // check for unsigned 5b
                     if (imm < 0 || imm >= 32) {
                         throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 32)", c.line, c.column);
@@ -2064,7 +2026,8 @@ ultravector<uint8_t> assemble_code(const std::string_view& data, const ultravect
     out.close();
 
     int res = std::system(
-            "riscv64-linux-gnu-as -march=rv64gvfdcqb_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp_zfbfmin_zvfbfmin_zvfbfwma_zabha_zicbom_zicboz_zicbop "
+            "riscv64-linux-gnu-as "
+            "-march=rv64gvfdcqb_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp_zfbfmin_zvfbfmin_zvfbfwma_zabha_zicbom_zicboz_zicbop "
             "temp.s -o temp.o"
     );
 
