@@ -14,7 +14,7 @@ using namespace opcode;
 using enum RVInSetMinReqs;
 using std::nullopt;
 
-const std::array<rvinstruction, 1363> instructions = {
+const std::array<rvinstruction, 1398> instructions = {
         {{"lui", LUI, U, OP_LUI, 0b000, RVI, 4},
          {"auipc", AUIPC, U, OP_AUIPC, 0b000, RVI, 4},
          {"jal", JAL, J, OP_JAL, 0b000, RVI, 4},
@@ -1380,7 +1380,43 @@ const std::array<rvinstruction, 1363> instructions = {
          {"th.lurh", THLURH, I, OP_CUSTOM_0, 0b001100000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
          {"th.lurhu", THLURHU, I, OP_CUSTOM_0, 0b101100000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
          {"th.lurw", THLURW, I, OP_CUSTOM_0, 0b010100000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
-         {"th.lurwu", THLURWU, I, OP_CUSTOM_0, 0b110100000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}}}
+         {"th.lurwu", THLURWU, I, OP_CUSTOM_0, 0b110100000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
+         {"th.lurf", THLURD, I, OP_CUSTOM_0, 0b011100000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
+         {"th.surb", THSURB, I, OP_CUSTOM_0, 0b000100000000101, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
+         {"th.surh", THSURH, I, OP_CUSTOM_0, 0b001100000000101, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
+         {"th.surw", THSURW, I, OP_CUSTOM_0, 0b010100000000101, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
+         {"th.surd", THSURD, I, OP_CUSTOM_0, 0b011100000000101, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
+         {"th.ldd", THLDD, R, OP_CUSTOM_0, 0b1111100100, XTheadMemPair, 4},
+         {"th.lwd", THLWD, R, OP_CUSTOM_0, 0b1110000100, XTheadMemPair, 4},
+         {"th.lwud", THLWUD, R, OP_CUSTOM_0, 0b1111000100, XTheadMemPair, 4},
+         {"th.sdd", THSDD, R, OP_CUSTOM_0, 0b1111100101, XTheadMemPair, 4},
+         {"th.swd", THSWD, R, OP_CUSTOM_0, 0b1110000101, XTheadMemPair, 4},
+         {"th.flrd", THFLRD, R, OP_CUSTOM_0, 0b0110000110, XTheadFMemIdx, 4},
+         {"th.flrw", THFLRW, R, OP_CUSTOM_0, 0b0100000110, XTheadFMemIdx, 4},
+         {"th.flurd", THFLURD, R, OP_CUSTOM_0, 0b0111000110, XTheadFMemIdx, 4},
+         {"th.flurw", THFLURW, R, OP_CUSTOM_0, 0b0101000110, XTheadFMemIdx, 4},
+         {"th.fsrd", THFSRD, R, OP_CUSTOM_0, 0b0110000111, XTheadFMemIdx, 4},
+         {"th.fsrw", THFSRW, R, OP_CUSTOM_0, 0b0100000111, XTheadFMemIdx, 4},
+         {"th.fsurd", THFSURD, R, OP_CUSTOM_0, 0b0111000111, XTheadFMemIdx, 4},
+         {"th.fsurw", THFSURW, R, OP_CUSTOM_0, 0b0101000111, XTheadFMemIdx, 4},
+         {"th.mula", THMULA, R, OP_CUSTOM_0, 0b0010000001, XTheadMac, 4}, 
+         {"th.mulah", THMULAH, R, OP_CUSTOM_0, 0b0010100001, XTheadMac, 4},
+         {"th.mulaw", THMULAW, R, OP_CUSTOM_0, 0b0010010001, XTheadMac, 4},
+         {"th.muls", THMULS, R, OP_CUSTOM_0, 0b0010001001, XTheadMac, 4},
+         {"th.mulsh", THMULSH, R, OP_CUSTOM_0, 0b0010101001, XTheadMac, 4},
+         {"th.mulsw", THMULSW, R, OP_CUSTOM_0, 0b0010011001, XTheadMac, 4},
+         {"th.fmv.x.hw", THFMVXHW, I, OP_CUSTOM_0, 0b110000000000001, XTheadFmv, 4, {.use_funct_for_imm = true}},
+         {"th.fmv.hw.x", THFMVHWX, I, OP_CUSTOM_0, 0b101000000000001, XTheadFmv, 4, {.use_funct_for_imm = true}},
+         {"th.ipush", THIPUSH, I, OP_CUSTOM_0, 0b000000000100000, XTheadInt, 4, {.custom_reg_val = 0b00000, .use_funct_for_imm = true, .no_rs1 = true}},
+         {"th.ipop", THIPOP, I, OP_CUSTOM_0, 0b000000000101000, XTheadInt, 4, {.custom_reg_val = 0b00000, .use_funct_for_imm = true, .no_rs1 = true}},
+         {"th.vmaqa.vv", THVMAQAVV, MVV, OP_CUSTOM_0, 0b1000001110, XTheadVdot, 4},
+         {"th.vmaqa.vx", THVMAQAVX, MVX, OP_CUSTOM_0, 0b1000011110, XTheadVdot, 4},
+         {"th.vmaqau.vv", THVMAQAUVV, MVV, OP_CUSTOM_0, 0b1000101110, XTheadVdot, 4},
+         {"th.vmaqau.vx", THVMAQAUVX, MVX, OP_CUSTOM_0, 0b1000111110, XTheadVdot, 4},
+         {"th.vmaqasu.vv", THVMAQASUVV, MVV, OP_CUSTOM_0, 0b1001001110, XTheadVdot, 4},
+         {"th.vmaqasu.vx", THVMAQASUVX, MVX, OP_CUSTOM_0, 0b1001011110, XTheadVdot, 4},
+         {"th.vmaqaus.vx", THVMAQAUSVX, MVX, OP_CUSTOM_0, 0b1001111110, XTheadVdot, 4}
+        }
 
 };
 

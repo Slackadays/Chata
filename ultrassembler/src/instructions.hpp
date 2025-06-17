@@ -2214,6 +2214,7 @@ enum class RVInSetMinReqs : uint8_t { // The smallest set combination that provi
     XTheadFMemIdx,
     XTheadMac,
     XTheadFmv,
+    XTheadInt,
     XTheadVdot,
     XTheadVector
 };
@@ -2286,6 +2287,6 @@ struct rvinstruction {
             , ssargs(ssargs) {}
 };
 
-extern const std::array<rvinstruction, 1363> instructions;
+extern const std::array<rvinstruction, 1398> instructions;
 
 } // namespace ultrassembler_internal
