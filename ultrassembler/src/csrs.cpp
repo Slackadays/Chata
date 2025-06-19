@@ -3,16 +3,21 @@
 
 namespace ultrassembler_internal {
 
-const std::array<std::pair<std::string_view, uint16_t>, 376> csrs = {{
+const std::array<std::pair<std::string_view, uint16_t>, 381> csrs = {{
         {"fflags", 0x001},
         {"frm", 0x002},
         {"fcsr", 0x003},
         {"vstart", 0x008},
+        {"th.vstart", 0x008},
         {"vxsat", 0x009},
+        {"th.vxsat", 0x009},
         {"vxrm", 0x00A},
+        {"th.vxrm", 0x00A},
         {"vcsr", 0x00F},
         {"vl", 0xC20},
+        {"th.vl", 0xC20},
         {"vtype", 0xC21},
+        {"th.vtype", 0xC21},
         {"vlenb", 0xC22},
         {"ssp", 0x011},
         {"jvt", 0x017},
