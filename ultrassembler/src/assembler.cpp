@@ -1578,7 +1578,8 @@ void handle_directives(assembly_context& c) {
             const std::array<std::pair<std::string_view, RVInstructionSet>, 21> arch_option_names = {
                     {{"rv32i", RV32I}, {"rv64i", RV64I}, {"m", RV32M}, // Using RV32M although it means M in general
                      {"a", RV32A},     {"f", RV32F},     {"d", RV32D},   {"q", RV32Q}, {"zifencei", Zifencei}, {"zicsr", Zicsr}, {"zawrs", Zawrs}, {"zicond", Zicond}, {"zacas", Zacas},
-                     {"zcb", Zcb},     {"zbb", Zbb},     {"zcmp", Zcmp}, {"c", C},     {"zcd", Zcd},           {"zcf", Zcf},     {"zcmt", Zcmt},   {"b", B},           {"v", V}}};
+                     {"zcb", Zcb},     {"zbb", Zbb},     {"zcmp", Zcmp}, {"c", C},     {"zcd", Zcd},           {"zcf", Zcf},     {"zcmt", Zcmt},   {"b", B},           {"v", V}}
+            };
 
             auto get_arches_from_string = [&](const std::string_view& str) {
                 ultravector<RVInstructionSet> arches;
@@ -1634,7 +1635,8 @@ void handle_directives(assembly_context& c) {
                 {{"r", R},     {"i", I},        {"s", S},        {"b", Branch},   {"u", U},     {"j", J},       {"r4", R4},        {"cr", CR},    {"ci", CI},   {"css", CSS},
                  {"ciw", CIW}, {"cl", CL},      {"cs", CS},      {"ca", CA},      {"cb", CB},   {"cj", CJ},     {"vl", VL},        {"vls", VLS},  {"vlx", VLX}, {"vs", VS},
                  {"vss", VSS}, {"vsx", VSX},    {"vlr", VLR},    {"ivv", IVV},    {"fvv", FVV}, {"mvv", MVV},   {"ivi", IVI},      {"ivx", IVX},  {"fvf", FVF}, {"mvx", MVX},
-                 {"clb", CLB}, {"csb", CSBfmt}, {"clh", CLHfmt}, {"csh", CSHfmt}, {"cu", CU},   {"cmmv", CMMV}, {"cmjt", CMJTfmt}, {"cmpp", CMPP}}};
+                 {"clb", CLB}, {"csb", CSBfmt}, {"clh", CLHfmt}, {"csh", CSHfmt}, {"cu", CU},   {"cmmv", CMMV}, {"cmjt", CMJTfmt}, {"cmpp", CMPP}}
+        };
         if (!c.arg1.empty() && c.arg2.empty()) {
             if (auto num = decode_imm<uint32_t>(c.arg1, c); num.has_value()) {
                 custom_inst = num.value();
@@ -2023,10 +2025,12 @@ ultravector<uint8_t> assemble_code(const std::string_view& data, const ultravect
     out << data;
     out.close();
 
-    int res = std::system("riscv64-linux-gnu-as "
-                          "-march=rv64gvfdcqb_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp_zfbfmin_zvfbfmin_zvfbfwma_zabha_zicbom_"
-                          "zicboz_zicbop_xtheadvector "
-                          "temp.s -o temp.o");
+    int res = std::system(
+            "riscv64-linux-gnu-as "
+            "-march=rv64gvfdcqb_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp_zfbfmin_zvfbfmin_zvfbfwma_zabha_zicbom_"
+            "zicboz_zicbop_xtheadvector "
+            "temp.s -o temp.o"
+    );
 
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)

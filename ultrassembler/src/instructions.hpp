@@ -2216,7 +2216,8 @@ enum class RVInSetMinReqs : uint8_t { // The smallest set combination that provi
     XTheadFmv,
     XTheadInt,
     XTheadVdot,
-    XTheadVector
+    XTheadVector,
+    XTheadZvamo
 };
 
 namespace opcode {
