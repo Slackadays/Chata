@@ -85,7 +85,7 @@ Ultrassembler ships in the lean and mean `ultrassembler` library and is also ava
 
 There's only one (1) function with one (1) required parameter. Truly effortless.
 
-### ▫️ Unrelated to GCC or LLVM
+### ▫️ Independent of GCC and LLVM
 
 Ultrassembler shares zero (0) code with GCC or LLVM. That means we can make it a third reference implementation of RISC-V assembly!
 
