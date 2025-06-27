@@ -1883,7 +1883,7 @@ void handle_directives(assembly_context& c) {
     }
 }
 
-void parse_this_line(size_t& i, const std::string_view& data, assembly_context& c) {
+size_t parse_this_line(size_t i, const std::string_view& data, assembly_context& c) {
     /*c.inst = "addi";
     c.arg1 = "zero";
     c.arg2 = "zero";
@@ -1965,6 +1965,7 @@ void parse_this_line(size_t& i, const std::string_view& data, assembly_context& 
     while (i < data.size() && ch() == '\n') {
         i++;
     }
+    return i;
 }
 
 ultravector<uint8_t> assemble_code(const std::string_view& data, const ultravector<RVInstructionSet> supported_sets) {
@@ -1994,7 +1995,7 @@ ultravector<uint8_t> assemble_code(const std::string_view& data, const ultravect
     c.machine_code.reserve(128000);
 
     for (size_t i = 0; i < data.size();) {
-        parse_this_line(i, data, c);
+        i = parse_this_line(i, data, c);
         if (c.inst_offset = fast_instr_search(c.inst); c.inst_offset != instr_search_failed) {
             make_inst(c);
         } else if (!make_inst_from_pseudoinst(c)) {
