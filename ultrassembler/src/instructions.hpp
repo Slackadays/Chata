@@ -2268,7 +2268,6 @@ struct special_snowflake_args {
 };
 
 struct rvinstruction {
-    std::string_view name;
     RVInstructionID id;
     RVInstructionFormat type;
     uint8_t opcode;
@@ -2277,9 +2276,8 @@ struct rvinstruction {
     uint8_t bytes;
     special_snowflake_args ssargs = {};
 
-    rvinstruction(std::string_view name, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs requirements, uint8_t bytes, special_snowflake_args ssargs = {})
-            : name(name)
-            , id(id)
+    rvinstruction(const char* dummyname, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs requirements, uint8_t bytes, special_snowflake_args ssargs = {})
+            : id(id)
             , type(type)
             , opcode(opcode)
             , funct(funct)
@@ -2288,6 +2286,6 @@ struct rvinstruction {
             , ssargs(ssargs) {}
 };
 
-extern const std::array<rvinstruction, 1398> instructions;
+extern const std::array<rvinstruction, 2034> instructions;
 
 } // namespace ultrassembler_internal

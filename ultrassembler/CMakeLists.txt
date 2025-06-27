@@ -34,14 +34,14 @@ endif()
 add_library(objultra OBJECT
     src/assembler.cpp
     src/utils.cpp
-    src/instructions.cpp
     src/pseudoinstructions.cpp
-    src/make_inst_from_pseudoinst.cpp
     src/registers.cpp
     src/csrs.cpp
-    src/instruction_search.cpp
-    src/register_search.cpp
-    src/csr_search.cpp
+    src/instructions.cpp
+    src/generated/make_inst_from_pseudoinst.cpp
+    src/generated/instruction_search.cpp
+    src/generated/register_search.cpp
+    src/generated/csr_search.cpp
 )
 
 target_compile_options(objultra PRIVATE -fno-rtti -fno-stack-protector -fomit-frame-pointer)

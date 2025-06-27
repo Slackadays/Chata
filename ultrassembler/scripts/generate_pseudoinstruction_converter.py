@@ -1,5 +1,5 @@
 input = "src/pseudoinstructions.cpp"
-output = "src/make_inst_from_pseudoinst.cpp"
+output = "src/generated/make_inst_from_pseudoinst.cpp"
 
 import re
 
@@ -27,8 +27,8 @@ current_instr = ""
 
 code = "// SPDX-License-Identifier: MPL-2.0\n"
 code += "// The generate_pseudoinstruction_converter.py script automatically generated this code. DO NOT MODIFY!\n"
-code += "#include \"pseudoinstructions.hpp\"\n"
-code += "#include \"ultrassembler.hpp\"\n\n"
+code += "#include \"../pseudoinstructions.hpp\"\n"
+code += "#include \"../ultrassembler.hpp\"\n\n"
 code += "namespace ultrassembler_internal {\n\n"
 code += "bool make_inst_from_pseudoinst(assembly_context& c) {\n"
 

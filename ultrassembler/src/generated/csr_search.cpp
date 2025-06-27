@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 // The generate_csrister_search.py script automatically generated this code. DO NOT MODIFY!
-#include "csrs.hpp"
-#include "ultrassembler.hpp"
+#include "../csrs.hpp"
+#include "../ultrassembler.hpp"
 
 namespace ultrassembler_internal {
 

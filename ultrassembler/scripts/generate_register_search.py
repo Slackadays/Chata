@@ -1,5 +1,5 @@
 input = "src/registers.cpp"
-output = "src/register_search.cpp"
+output = "src/generated/register_search.cpp"
 
 import re
 
@@ -32,8 +32,8 @@ current_reg = ""
 
 code = "// SPDX-License-Identifier: MPL-2.0\n"
 code += "// The generate_register_search.py script automatically generated this code. DO NOT MODIFY!\n"
-code += "#include \"ultrassembler.hpp\"\n"
-code += "#include \"registers.hpp\"\n\n"
+code += "#include \"../ultrassembler.hpp\"\n"
+code += "#include \"../registers.hpp\"\n\n"
 code += "namespace ultrassembler_internal {\n\n"
 code += "const uint8_t fast_reg_search(const ultrastring& reg) {\n"
 

@@ -385,7 +385,6 @@ void make_inst(assembly_context& c) {
     uint8_t frm = 0;
 
     auto base_i = instructions.at(c.inst_offset); // Don't make this one auto&, it's slower
-    auto& name = base_i.name;
     auto& type = base_i.type;
     auto& id = base_i.id;
     auto& reqs = base_i.requirements;

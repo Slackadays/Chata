@@ -1,5 +1,5 @@
 input = "src/csrs.cpp"
-output = "src/csr_search.cpp"
+output = "src/generated/csr_search.cpp"
 
 import re
 
@@ -25,8 +25,8 @@ current_csr = ""
 
 code = "// SPDX-License-Identifier: MPL-2.0\n"
 code += "// The generate_csrister_search.py script automatically generated this code. DO NOT MODIFY!\n"
-code += "#include \"csrs.hpp\"\n"
-code += "#include \"ultrassembler.hpp\"\n\n"
+code += "#include \"../csrs.hpp\"\n"
+code += "#include \"../ultrassembler.hpp\"\n\n"
 code += "namespace ultrassembler_internal {\n\n"
 code += "const uint16_t fast_csr_search(const ultrastring& csr) {\n"
 

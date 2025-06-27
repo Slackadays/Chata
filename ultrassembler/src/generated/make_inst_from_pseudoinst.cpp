@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 // The generate_pseudoinstruction_converter.py script automatically generated this code. DO NOT MODIFY!
-#include "pseudoinstructions.hpp"
-#include "ultrassembler.hpp"
+#include "../pseudoinstructions.hpp"
+#include "../ultrassembler.hpp"
 
 namespace ultrassembler_internal {
 
