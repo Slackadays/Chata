@@ -10,7 +10,7 @@ Here's more on that. Ultrassembler is...
 
 ### ▫️ Complete
 
-Supports all 1100+ instructions in these RISC-V instruction sets!
+Supports all 2000+ instructions in these RISC-V instruction sets!
 
 - RV32E
 - RV32I
@@ -72,6 +72,20 @@ Supports all 1100+ instructions in these RISC-V instruction sets!
 - Zvksg
 - Zvkt
 - Zvksh
+- XTheadCmo,
+- XTheadSync
+- XTheadBa
+- XTheadBb
+- XTheadBs
+- XTheadCondMov
+- XTheadMemIdx
+- XTheadMemPair
+- XTheadFMemIdx
+- XTheadMac
+- XTheadFmv
+- XTheadVdot
+- XTheadVector
+- XTheadZvamo
   
 This includes pseudoinstructions, custom instructions, labels, and many other assembler directives!
 
