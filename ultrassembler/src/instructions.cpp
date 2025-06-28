@@ -14,7 +14,7 @@ using namespace opcode;
 using enum RVInSetMinReqs;
 using std::nullopt;
 
-const std::array<rvinstruction, 2034> instructions = {
+const std::array<rvinstruction, 2033> instructions = {
         {{"lui", LUI, U, OP_LUI, 0b000, RVI, 4},
          {"auipc", AUIPC, U, OP_AUIPC, 0b000, RVI, 4},
          {"jal", JAL, J, OP_JAL, 0b000, RVI, 4},
@@ -1347,7 +1347,7 @@ const std::array<rvinstruction, 2034> instructions = {
          {"th.lbuia", THLBUIA, I, OP_CUSTOM_0, 0b100110000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
          {"th.lbuib", THLBUIB, I, OP_CUSTOM_0, 0b100010000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
          {"th.lhia", THLHIA, I, OP_CUSTOM_0, 0b001110000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
-         {"th.lhib", THLHUIB, I, OP_CUSTOM_0, 0b001010000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
+         {"th.lhib", THLHIB, I, OP_CUSTOM_0, 0b001010000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
          {"th.lhuia", THLHUIA, I, OP_CUSTOM_0, 0b101110000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
          {"th.lhuib", THLHUIB, I, OP_CUSTOM_0, 0b101010000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
          {"th.lwia", THLWIA, I, OP_CUSTOM_0, 0b010110000000100, XTheadMemIdx, 4, {.use_funct_for_imm = true}},
@@ -1747,7 +1747,7 @@ const std::array<rvinstruction, 2034> instructions = {
          {"th.vamoaddw.v", THVAMOADDWV, IVX, OP_AMO, 0b0000011110, XTheadZvamo, 4},
          {"th.vamoaddd.v", THVAMOADDDV, IVX, OP_AMO, 0b0000011111, XTheadZvamo, 4},
          {"th.vamoxorw.v", THVAMOXORWV, IVX, OP_AMO, 0b0010011110, XTheadZvamo, 4},
-         {"th.vamoxord.v", THVAMOXORWV, IVX, OP_AMO, 0b0010011111, XTheadZvamo, 4},
+         {"th.vamoxord.v", THVAMOXORDV, IVX, OP_AMO, 0b0010011111, XTheadZvamo, 4},
          {"th.vamoandw.v", THVAMOANDWV, IVX, OP_AMO, 0b0110011110, XTheadZvamo, 4},
          {"th.vamoandd.v", THVAMOANDDV, IVX, OP_AMO, 0b0110011111, XTheadZvamo, 4},
          {"th.vamoorw.v", THVAMOORWV, IVX, OP_AMO, 0b0100011110, XTheadZvamo, 4},
@@ -2037,7 +2037,6 @@ const std::array<rvinstruction, 2034> instructions = {
          {"th.vmsof.m", THVMSOFM, MVV, OP_V, 0b0101101010, XTheadVector, 4, {.custom_reg_val = 0b00010}},
          {"th.viota.m", THVIOTAM, MVV, OP_V, 0b0101101010, XTheadVector, 4, {.custom_reg_val = 0b00001}},
          {"th.vid.v", THVIDV, MVV, OP_V, 0b0101101010, XTheadVector, 4, {.custom_reg_val = 0b10001}},
-         {"th.vext.x.v", THVEXTXV, MVV, OP_V, 0b001100, XTheadVector, 4},
          {"th.vmv.s.x", THVMVSX, MVX, OP_V, 0b0011011110, XTheadVector, 4, {.custom_reg_val = 0b00000, .swap_rs1_rs2 = true}},
          {"th.vext.x.v", THVEXTXV, MVV, OP_V, 0b0011001010, XTheadVector, 4},
          {"th.vfmv.f.s", THVFMVFS, FVV, OP_V, 0b0011001001, XTheadVector, 4, {.custom_reg_val = 0b00000, .swap_rs1_rs2 = true}},

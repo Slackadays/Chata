@@ -48,6 +48,7 @@ void th_vmfge_vv_instr(assembly_context& c);
 void vmfgt_vv_instr(assembly_context& c);
 void th_vmfgt_vv_instr(assembly_context& c);
 void vmmv_m_instr(assembly_context& c);
+void th_vmcpy_m_instr(assembly_context& c);
 void th_vmmv_m_instr(assembly_context& c);
 void vmnot_m_instr(assembly_context& c);
 void th_vmnot_m_instr(assembly_context& c);

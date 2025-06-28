@@ -327,6 +327,12 @@ void vmmv_m_instr(assembly_context& c) { // vmmv.m vd, vs -> vmand.mm vd, vs, vs
     make_inst(c);
 }
 
+void th_vmcpy_m_instr(assembly_context& c) { // th.vmcpy.m vd, vs -> th.vmand.mm vd, vs, vs
+    c.inst_offset = fast_instr_search("th.vmand.mm");
+    c.arg3 = c.arg2;
+    make_inst(c);
+}
+
 void th_vmmv_m_instr(assembly_context& c) { // th.vmmv.m vd, vs -> th.vmand.mm vd, vs, vs
     c.inst_offset = fast_instr_search("th.vmand.mm");
     c.arg3 = c.arg2;

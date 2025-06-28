@@ -310,6 +310,21 @@ bool make_inst_from_pseudoinst(assembly_context& c) {
                                     }
                                 }
                             }
+                            if (c.inst[6] == 'p') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 'y') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'm') {
+                                            if (c.inst.size() < 11) {
+                                                th_vmcpy_m_instr(c);
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                         if (c.inst[5] == 's') {
                             if (c.inst.size() < 7) return false;
