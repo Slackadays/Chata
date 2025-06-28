@@ -106,6 +106,393 @@ bool make_inst_from_pseudoinst(assembly_context& c) {
             }
         }
     }
+    if (c.inst[0] == 't') {
+        if (c.inst.size() < 2) return false;
+        if (c.inst[1] == 'h') {
+            if (c.inst.size() < 3) return false;
+            if (c.inst[2] == '.') {
+                if (c.inst.size() < 4) return false;
+                if (c.inst[3] == 'v') {
+                    if (c.inst.size() < 5) return false;
+                    if (c.inst[4] == 'n') {
+                        if (c.inst.size() < 6) return false;
+                        if (c.inst[5] == 'e') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'g') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == '.') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == 'v') {
+                                        if (c.inst.size() < 10) {
+                                            th_vneg_v_instr(c);
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (c.inst[5] == 'c') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'v') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 't') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'x') {
+                                            if (c.inst.size() < 11) return false;
+                                            if (c.inst[10] == '.') {
+                                                if (c.inst.size() < 12) return false;
+                                                if (c.inst[11] == 'x') {
+                                                    if (c.inst.size() < 13) return false;
+                                                    if (c.inst[12] == '.') {
+                                                        if (c.inst.size() < 14) return false;
+                                                        if (c.inst[13] == 'v') {
+                                                            if (c.inst.size() < 15) {
+                                                                th_vncvt_x_x_v_instr(c);
+                                                                return true;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (c.inst[5] == 'o') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 't') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == '.') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == 'v') {
+                                        if (c.inst.size() < 10) {
+                                            th_vnot_v_instr(c);
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (c.inst[4] == 'w') {
+                        if (c.inst.size() < 6) return false;
+                        if (c.inst[5] == 'c') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'v') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 't') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == 'u') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == '.') {
+                                            if (c.inst.size() < 11) return false;
+                                            if (c.inst[10] == 'x') {
+                                                if (c.inst.size() < 12) return false;
+                                                if (c.inst[11] == '.') {
+                                                    if (c.inst.size() < 13) return false;
+                                                    if (c.inst[12] == 'x') {
+                                                        if (c.inst.size() < 14) return false;
+                                                        if (c.inst[13] == '.') {
+                                                            if (c.inst.size() < 15) return false;
+                                                            if (c.inst[14] == 'v') {
+                                                                if (c.inst.size() < 16) {
+                                                                    th_vwcvtu_x_x_v_instr(c);
+                                                                    return true;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'x') {
+                                            if (c.inst.size() < 11) return false;
+                                            if (c.inst[10] == '.') {
+                                                if (c.inst.size() < 12) return false;
+                                                if (c.inst[11] == 'x') {
+                                                    if (c.inst.size() < 13) return false;
+                                                    if (c.inst[12] == '.') {
+                                                        if (c.inst.size() < 14) return false;
+                                                        if (c.inst[13] == 'v') {
+                                                            if (c.inst.size() < 15) {
+                                                                th_vwcvt_x_x_v_instr(c);
+                                                                return true;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (c.inst[4] == 'f') {
+                        if (c.inst.size() < 6) return false;
+                        if (c.inst[5] == 'n') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'e') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 'g') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'v') {
+                                            if (c.inst.size() < 11) {
+                                                th_vfneg_v_instr(c);
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (c.inst[5] == 'a') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'b') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 's') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'v') {
+                                            if (c.inst.size() < 11) {
+                                                th_vfabs_v_instr(c);
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (c.inst[4] == 'm') {
+                        if (c.inst.size() < 6) return false;
+                        if (c.inst[5] == 'n') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'o') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 't') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'm') {
+                                            if (c.inst.size() < 11) {
+                                                th_vmnot_m_instr(c);
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (c.inst[5] == 'c') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'l') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 'r') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'm') {
+                                            if (c.inst.size() < 11) {
+                                                th_vmclr_m_instr(c);
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (c.inst[5] == 's') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'e') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 't') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'm') {
+                                            if (c.inst.size() < 11) {
+                                                th_vmset_m_instr(c);
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (c.inst[6] == 'g') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 'e') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == 'u') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == '.') {
+                                            if (c.inst.size() < 11) return false;
+                                            if (c.inst[10] == 'v') {
+                                                if (c.inst.size() < 12) return false;
+                                                if (c.inst[11] == 'i') {
+                                                    if (c.inst.size() < 13) {
+                                                        th_vmsgeu_vi_instr(c);
+                                                        return true;
+                                                    }
+                                                }
+                                                if (c.inst[11] == 'v') {
+                                                    if (c.inst.size() < 13) {
+                                                        th_vmsgeu_vv_instr(c);
+                                                        return true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'v') {
+                                            if (c.inst.size() < 11) return false;
+                                            if (c.inst[10] == 'i') {
+                                                if (c.inst.size() < 12) {
+                                                    th_vmsge_vi_instr(c);
+                                                    return true;
+                                                }
+                                            }
+                                            if (c.inst[10] == 'v') {
+                                                if (c.inst.size() < 12) {
+                                                    th_vmsge_vv_instr(c);
+                                                    return true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if (c.inst[7] == 't') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == 'u') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == '.') {
+                                            if (c.inst.size() < 11) return false;
+                                            if (c.inst[10] == 'v') {
+                                                if (c.inst.size() < 12) return false;
+                                                if (c.inst[11] == 'v') {
+                                                    if (c.inst.size() < 13) {
+                                                        th_vmsgtu_vv_instr(c);
+                                                        return true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'v') {
+                                            if (c.inst.size() < 11) return false;
+                                            if (c.inst[10] == 'v') {
+                                                if (c.inst.size() < 12) {
+                                                    th_vmsgt_vv_instr(c);
+                                                    return true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (c.inst[6] == 'l') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 't') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == 'u') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == '.') {
+                                            if (c.inst.size() < 11) return false;
+                                            if (c.inst[10] == 'v') {
+                                                if (c.inst.size() < 12) return false;
+                                                if (c.inst[11] == 'i') {
+                                                    if (c.inst.size() < 13) {
+                                                        th_vmsltu_vi_instr(c);
+                                                        return true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'v') {
+                                            if (c.inst.size() < 11) return false;
+                                            if (c.inst[10] == 'i') {
+                                                if (c.inst.size() < 12) {
+                                                    th_vmslt_vi_instr(c);
+                                                    return true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (c.inst[5] == 'f') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'g') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 'e') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'v') {
+                                            if (c.inst.size() < 11) return false;
+                                            if (c.inst[10] == 'v') {
+                                                if (c.inst.size() < 12) {
+                                                    th_vmfge_vv_instr(c);
+                                                    return true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if (c.inst[7] == 't') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 'v') {
+                                            if (c.inst.size() < 11) return false;
+                                            if (c.inst[10] == 'v') {
+                                                if (c.inst.size() < 12) {
+                                                    th_vmfgt_vv_instr(c);
+                                                    return true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (c.inst[5] == 'm') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == 'v') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == '.') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == 'm') {
+                                        if (c.inst.size() < 10) {
+                                            th_vmmv_m_instr(c);
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     if (c.inst[0] == 'l') {
         if (c.inst.size() < 2) return false;
         if (c.inst[1] == 'a') {

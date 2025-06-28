@@ -265,8 +265,20 @@ void vfneg_v_instr(assembly_context& c) { // vfneg.v vd, vs -> vfsgnjn.vv vd, vs
     make_inst(c);
 }
 
+void th_vfneg_v_instr(assembly_context& c) { // th.vfneg.v vd, vs -> th.vfsgnjn.vv vd, vs, vs
+    c.inst_offset = fast_instr_search("th.vfsgnjn.vv");
+    c.arg3 = c.arg2;
+    make_inst(c);
+}
+
 void vfabs_v_instr(assembly_context& c) { // vfabs.v vd, vs -> vfsgnjx.vv vd, vs, vs
     c.inst_offset = fast_instr_search("vfsgnjx.vv");
+    c.arg3 = c.arg2;
+    make_inst(c);
+}
+
+void th_vfabs_v_instr(assembly_context& c) { // th.vfabs.v vd, vs -> th.vfsgnjx.vv vd, vs, vs
+    c.inst_offset = fast_instr_search("th.vfsgnjx.vv");
     c.arg3 = c.arg2;
     make_inst(c);
 }
@@ -278,8 +290,21 @@ void vmclr_m_instr(assembly_context& c) { // vmclr.m vd -> vmxor.mm vd, vd, vd
     make_inst(c);
 }
 
+void th_vmclr_m_instr(assembly_context& c) { // th.vmclr.m vd -> th.vmxor.mm vd, vd, vd
+    c.inst_offset = fast_instr_search("th.vmxor.mm");
+    c.arg2 = c.arg1;
+    c.arg3 = c.arg2;
+    make_inst(c);
+}
+
 void vmfge_vv_instr(assembly_context& c) { // vmfge.vv vd, va, vb, vm -> vmfle.vv vd, vb, va, vm
     c.inst_offset = fast_instr_search("vmfle.vv");
+    std::swap(c.arg2, c.arg3);
+    make_inst(c);
+}
+
+void th_vmfge_vv_instr(assembly_context& c) { // th.vmfge.vv vd, va, vb, vm -> th.vmfle.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("th.vmfle.vv");
     std::swap(c.arg2, c.arg3);
     make_inst(c);
 }
@@ -290,14 +315,32 @@ void vmfgt_vv_instr(assembly_context& c) { // vmfgt.vv vd, va, vb, vm -> vmflt.v
     make_inst(c);
 }
 
-void vmmv_m_instr(assembly_context& c) { // vmmv.m vd, vs -> vmand.mm vd, vd, vs
+void th_vmfgt_vv_instr(assembly_context& c) { // th.vmfgt.vv vd, va, vb, vm -> th.vmflt.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("th.vmflt.vv");
+    std::swap(c.arg2, c.arg3);
+    make_inst(c);
+}
+
+void vmmv_m_instr(assembly_context& c) { // vmmv.m vd, vs -> vmand.mm vd, vs, vs
     c.inst_offset = fast_instr_search("vmand.mm");
+    c.arg3 = c.arg2;
+    make_inst(c);
+}
+
+void th_vmmv_m_instr(assembly_context& c) { // th.vmmv.m vd, vs -> th.vmand.mm vd, vs, vs
+    c.inst_offset = fast_instr_search("th.vmand.mm");
     c.arg3 = c.arg2;
     make_inst(c);
 }
 
 void vmnot_m_instr(assembly_context& c) { // vmnot.m vd, vs -> vmnand.mm vd, vs, vs
     c.inst_offset = fast_instr_search("vmnand.mm");
+    c.arg3 = c.arg2;
+    make_inst(c);
+}
+
+void th_vmnot_m_instr(assembly_context& c) { // th.vmnot.m vd, vs -> th.vmnand.mm vd, vs, vs
+    c.inst_offset = fast_instr_search("th.vmnand.mm");
     c.arg3 = c.arg2;
     make_inst(c);
 }
@@ -309,8 +352,21 @@ void vmset_m_instr(assembly_context& c) { // vmset.m vd -> vmxnor.mm vd, vd, vd
     make_inst(c);
 }
 
+void th_vmset_m_instr(assembly_context& c) { // th.vmset.m vd -> th.vmxnor.mm vd, vd, vd
+    c.inst_offset = fast_instr_search("th.vmxnor.mm");
+    c.arg2 = c.arg1;
+    c.arg3 = c.arg2;
+    make_inst(c);
+}
+
 void vmsge_vi_instr(assembly_context& c) { // vmsge.vi vd, va, i, vm -> vmsgt.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsgt.vi");
+    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    make_inst(c);
+}
+
+void th_vmsge_vi_instr(assembly_context& c) { // th.vmsge.vi vd, va, i, vm -> th.vmsgt.vi vd, va, i-1, vm
+    c.inst_offset = fast_instr_search("th.vmsgt.vi");
     c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
     make_inst(c);
 }
@@ -321,8 +377,20 @@ void vmsgeu_vi_instr(assembly_context& c) { // vmsgeu.vi vd, va, i, vm -> vmsgtu
     make_inst(c);
 }
 
+void th_vmsgeu_vi_instr(assembly_context& c) { // th.vmsgeu.vi vd, va, i, vm -> th.vmsgtu.vi vd, va, i-1, vm
+    c.inst_offset = fast_instr_search("th.vmsgtu.vi");
+    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    make_inst(c);
+}
+
 void vmsge_vv_instr(assembly_context& c) { // vmsge.vv vd, va, vb, vm -> vmsle.vv vd, vb, va, vm
     c.inst_offset = fast_instr_search("vmsle.vv");
+    std::swap(c.arg2, c.arg3);
+    make_inst(c);
+}
+
+void th_vmsge_vv_instr(assembly_context& c) { // th.vmsge.vv vd, va, vb, vm -> th.vmsle.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("th.vmsle.vv");
     std::swap(c.arg2, c.arg3);
     make_inst(c);
 }
@@ -333,8 +401,20 @@ void vmsgeu_vv_instr(assembly_context& c) { // vmsgeu.vv vd, va, vb, vm -> vmsle
     make_inst(c);
 }
 
+void th_vmsgeu_vv_instr(assembly_context& c) { // th.vmsgeu.vv vd, va, vb, vm -> th.vmsleu.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("th.vmsleu.vv");
+    std::swap(c.arg2, c.arg3);
+    make_inst(c);
+}
+
 void vmsgt_vv_instr(assembly_context& c) { // vmsgt.vv vd, va, vb, vm -> vmslt.vv vd, vb, va, vm
     c.inst_offset = fast_instr_search("vmslt.vv");
+    std::swap(c.arg2, c.arg3);
+    make_inst(c);
+}
+
+void th_vmsgt_vv_instr(assembly_context& c) { // th.vmsgt.vv vd, va, vb, vm -> th.vmslt.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("th.vmslt.vv");
     std::swap(c.arg2, c.arg3);
     make_inst(c);
 }
@@ -345,8 +425,20 @@ void vmsgtu_vv_instr(assembly_context& c) { // vmsgtu.vv vd, va, vb, vm -> vmslt
     make_inst(c);
 }
 
+void th_vmsgtu_vv_instr(assembly_context& c) { // th.vmsgtu.vv vd, va, vb, vm -> th.vmsltu.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("th.vmsltu.vv");
+    std::swap(c.arg2, c.arg3);
+    make_inst(c);
+}
+
 void vmslt_vi_instr(assembly_context& c) { // vmslt.vi vd, va, i, vm -> vmsle.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsle.vi");
+    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    make_inst(c);
+}
+
+void th_vmslt_vi_instr(assembly_context& c) { // th.vmslt.vi vd, va, i, vm -> th.vmsle.vi vd, va, i-1, vm
+    c.inst_offset = fast_instr_search("th.vmsle.vi");
     c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
     make_inst(c);
 }
@@ -357,14 +449,33 @@ void vmsltu_vi_instr(assembly_context& c) { // vmsltu.vi vd, va, i, vm -> vmsleu
     make_inst(c);
 }
 
+void th_vmsltu_vi_instr(assembly_context& c) { // th.vmsltu.vi vd, va, i, vm -> th.vmsleu.vi vd, va, i-1, vm
+    c.inst_offset = fast_instr_search("th.vmsleu.vi");
+    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    make_inst(c);
+}
+
 void vneg_v_instr(assembly_context& c) { // vneg.v vd, vs -> vrsub.vx vd, vs, zero
     c.inst_offset = fast_instr_search("vrsub.vx");
     c.arg3 = "zero";
     make_inst(c);
 }
 
+void th_vneg_v_instr(assembly_context& c) { // th.vneg.v vd, vs -> th.vrsub.vx vd, vs, zero
+    c.inst_offset = fast_instr_search("th.vrsub.vx");
+    c.arg3 = "zero";
+    make_inst(c);
+}
+
 void vnot_v_instr(assembly_context& c) { // vnot.v vd, vs, vm -> vxor.vi vd, vs, -1, vm
     c.inst_offset = fast_instr_search("vxor.vi");
+    c.arg4 = c.arg3;
+    c.arg3 = "-1";
+    make_inst(c);
+}
+
+void th_vnot_v_instr(assembly_context& c) { // th.vnot.v vd, vs, vm -> th.vxor.vi vd, vs, -1, vm
+    c.inst_offset = fast_instr_search("th.vxor.vi");
     c.arg4 = c.arg3;
     c.arg3 = "-1";
     make_inst(c);
@@ -377,6 +488,13 @@ void vncvt_x_x_w_instr(assembly_context& c) { // vncvt.x.x.w vd, vs, vm -> vnsrl
     make_inst(c);
 }
 
+void th_vncvt_x_x_v_instr(assembly_context& c) { // th.vncvt.x.x.v vd, vs, vm -> th.vnsrl.vx vd, vs, zero, vm
+    c.inst_offset = fast_instr_search("th.vnsrl.vx");
+    c.arg4 = c.arg3;
+    c.arg3 = "zero";
+    make_inst(c);
+}
+
 void vwcvt_x_x_v_instr(assembly_context& c) { // vwcvt.x.x.v vd, vs, vm -> vwadd.vx vd, vs, zero, vm
     c.inst_offset = fast_instr_search("vwadd.vx");
     c.arg4 = c.arg3;
@@ -384,8 +502,22 @@ void vwcvt_x_x_v_instr(assembly_context& c) { // vwcvt.x.x.v vd, vs, vm -> vwadd
     make_inst(c);
 }
 
+void th_vwcvt_x_x_v_instr(assembly_context& c) { // th.vwcvt.x.x.v vd, vs, vm -> th.vwadd.vx vd, vs, zero, vm
+    c.inst_offset = fast_instr_search("th.vwadd.vx");
+    c.arg4 = c.arg3;
+    c.arg3 = "zero";
+    make_inst(c);
+}
+
 void vwcvtu_x_x_v_instr(assembly_context& c) { // vwcvtu.x.x.v vd, vs, vm -> vwaddu.vx vd, vs, zero, vm
     c.inst_offset = fast_instr_search("vwaddu.vx");
+    c.arg4 = c.arg3;
+    c.arg3 = "zero";
+    make_inst(c);
+}
+
+void th_vwcvtu_x_x_v_instr(assembly_context& c) { // th.vwcvtu.x.x.v vd, vs, vm -> th.vwaddu.vx vd, vs, zero, vm
+    c.inst_offset = fast_instr_search("th.vwaddu.vx");
     c.arg4 = c.arg3;
     c.arg3 = "zero";
     make_inst(c);
