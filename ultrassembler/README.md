@@ -1,6 +1,6 @@
 # Welcome to Ultrassembler!
 
-Ultrassembler is the world's #1 (and only) complete assembler library for RISC-V. It's easy to use, fully independent of GCC and LLVM, and _over 10x faster_ 🏎️ than them.
+Ultrassembler is the world's #1 (and only) complete assembler library for RISC-V. It's easy to use, fully independent of binutils and LLVM, and _up to 20x faster_ 🏎️ than them.
 
 <p align="center">
     <img src="assets/Figure_1.svg">
@@ -10,7 +10,7 @@ Here's more on that. Ultrassembler is...
 
 ### ▫️ Complete
 
-Supports all 2000+ instructions in these RISC-V instruction sets!
+Supports all **2000+** instructions in these RISC-V instruction sets!
 
 - RV32E
 - RV32I
@@ -87,13 +87,13 @@ Supports all 2000+ instructions in these RISC-V instruction sets!
 - XTheadVector
 - XTheadZvamo
   
-This includes pseudoinstructions, custom instructions, labels, and many other assembler directives!
+This is in additon to 80+ pseudoinstructions, custom instructions, labels, and many other assembler directives!
 
-The endgame is full compatibility with GCC's `as` excluding certain features (more below).
+### ▫️ Portable
 
-### ▫️ Not a binary
+Ultrassembler ships in the lean and mean `libuas` library and is available in the `chatacli` tool. 
 
-Ultrassembler ships in the lean and mean `ultrassembler` library and is also available in the `chatacli` tool. Use it anywhere C++20 is supported and link it dynamically or statically. It's your choice.
+Use it on any platform that supports C++23. Link it dynamically or statically. It's your choice.
 
 ### ▫️ Zero config
 
@@ -101,15 +101,13 @@ There's only one (1) function with one (1) required parameter. Truly effortless.
 
 ### ▫️ Independent of GCC and LLVM
 
-Ultrassembler shares zero (0) code with GCC or LLVM. That means we can make it a third reference implementation of RISC-V assembly!
+Ultrassembler shares exactly zero (0) code with binutils or LLVM. That means we can make it a third reference implementation of RISC-V assembly.
 
 ### ▫️ Verified quality
 
-The Ultrassembler testsuite currently has 1700+ tests covering all supported instructions and directives and other cases too.
+The Ultrassembler testsuite currently has 1900+ tests covering all supported instructions and directives and other cases too.
 
-This has led to Ultrassembler revealing lots of bugs in `as` including ones causing internal errors!
-
-### ▫️ Fast! 🏎️
+### ▫️ Super-duper crazy fast! 🏎️
 
 Ultrassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Unlike `mold`, however, Ultrassembler doesn't use multithreading, but it doesn't need to. **Coming soon: How is Ultrassembler so fast?**
 
@@ -128,6 +126,8 @@ In other words, Ultrassembler replaces what you would otherwise do with `as foo.
 ### ▫️ Directive support
 
 Because Ultrassembler only generates RISC-V machine code, it ignores directives such as `.align` and `.globl` which only make sense with executable files.
+
+Support for these directives could come in the future through a "faux header" setup where attributes and constants are emulated as if there was a header.
 
 Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc) Ultrassembler supports as of the latest commit:
 

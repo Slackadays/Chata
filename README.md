@@ -4,9 +4,11 @@ Chata is a free and open-source solution for DSP, or Digital Signal Processing.
 
 Chata aims to fix problems other DSP libraries and languages have such as poor documentation, narrow application scope, and lack of real world usage.
 
-**This project currently consists of these five parts:**
+**This project currently consists of these six parts:**
 
-👉 **`libchata`** The core C++ library with the Chata compiler, Ultrassembler, and execution environment. [`Click here to see libchata.`](libchata)
+👉 **`libchata`** The core C++ library with the Chata compiler and execution environment. [`Click here to see libchata.`](libchata)
+
+👉 **`ultrassembler`** The superfast, complete, and portable RISC-V assembler library. [`Click here to see ultrassembler.`](ultrassembler)
 
 👉 **`chatadsp`** The standard library of DSP effects. [`Click here to see chatadsp.`](chatadsp)
 
