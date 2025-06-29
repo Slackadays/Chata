@@ -365,6 +365,12 @@ bool make_inst_from_pseudoinst(assembly_context& c) {
                                                         return true;
                                                     }
                                                 }
+                                                if (c.inst[11] == 'x') {
+                                                    if (c.inst.size() < 13) {
+                                                        th_vmsgeu_vx_instr(c);
+                                                        return true;
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -381,6 +387,12 @@ bool make_inst_from_pseudoinst(assembly_context& c) {
                                             if (c.inst[10] == 'v') {
                                                 if (c.inst.size() < 12) {
                                                     th_vmsge_vv_instr(c);
+                                                    return true;
+                                                }
+                                            }
+                                            if (c.inst[10] == 'x') {
+                                                if (c.inst.size() < 12) {
+                                                    th_vmsge_vx_instr(c);
                                                     return true;
                                                 }
                                             }
@@ -498,6 +510,24 @@ bool make_inst_from_pseudoinst(assembly_context& c) {
                                         if (c.inst.size() < 10) {
                                             th_vmmv_m_instr(c);
                                             return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (c.inst[5] == 'v') {
+                            if (c.inst.size() < 7) return false;
+                            if (c.inst[6] == '.') {
+                                if (c.inst.size() < 8) return false;
+                                if (c.inst[7] == 'x') {
+                                    if (c.inst.size() < 9) return false;
+                                    if (c.inst[8] == '.') {
+                                        if (c.inst.size() < 10) return false;
+                                        if (c.inst[9] == 's') {
+                                            if (c.inst.size() < 11) {
+                                                th_vmv_x_s_instr(c);
+                                                return true;
+                                            }
                                         }
                                     }
                                 }

@@ -529,6 +529,24 @@ void th_vwcvtu_x_x_v_instr(assembly_context& c) { // th.vwcvtu.x.x.v vd, vs, vm 
     make_inst(c);
 }
 
+void th_vmsge_vx_instr(assembly_context& c) { // th.vmsge.vx vd, va, vb, vm -> th.vmsle.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("th.vmsle.vv");
+    std::swap(c.arg2, c.arg3);
+    make_inst(c);
+}
+
+void th_vmsgeu_vx_instr(assembly_context& c) { // th.vmsgeu.vx vd, va, vb, vm -> th.vmsleu.vv vd, vb, va, vm
+    c.inst_offset = fast_instr_search("th.vmsleu.vv");
+    std::swap(c.arg2, c.arg3);
+    make_inst(c);
+}
+
+void th_vmv_x_s_instr(assembly_context& c) { // th.vmv.x.s rd, vs2 -> th.vext.x.v rd, vs2, zero
+    c.inst_offset = fast_instr_search("th.vext.x.v");
+    c.arg3 = "zero";
+    make_inst(c);
+}
+
 void vl1r_v_instr(assembly_context& c) { // vl1r.v v3, zero -> vl1re8.v v3, zero
     c.inst_offset = fast_instr_search("vl1re8.v");
     make_inst(c);

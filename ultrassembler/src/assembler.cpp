@@ -359,6 +359,20 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
     }
 }
 
+template<auto bits>
+void verify_imm(const auto& imm) {
+    using T = decltype(bits);
+    if constexpr (std::is_signed_v<T>) {
+        if (imm < -(1 << (bits - 1)) || imm >= (1 << (bits - 1))) {
+            throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [" + to_ultrastring(-(1 << (bits - 1))) + ", " + to_ultrastring((1 << (bits - 1))) + ")", 0, 0);
+        }
+    } else if constexpr (std::is_unsigned_v<T>) {
+        if (imm < 0 || imm >= (1u << bits)) {
+            throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, " + to_ultrastring((1u << bits)) + ")", 0, 0);
+        }
+    }
+}
+
 void make_inst(assembly_context& c) {
     DBG(std::cout << "Instruction: " << c.inst << std::endl;)
     DBG(std::cout << "arg1: " << c.arg1 << std::endl;)
@@ -415,10 +429,11 @@ void make_inst(assembly_context& c) {
 
     using enum RVInstructionFormat;
     using enum RVInstructionID;
+    using enum RVInSetMinReqs;
 
     if (ssargs.super_special_snowflake) {
         handle_super_special_snowflakes(imm, rd, rs1, id, c);
-        DBG(std::cout << "Encoding I-type special snowflake instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding I-type special snowflake instruction with name " << c.inst << std::endl;)
         inst |= rd << 7;     // Add rd
         inst |= funct << 12; // Add funct3
         inst |= rs1 << 15;   // Add rs1
@@ -436,9 +451,7 @@ void make_inst(assembly_context& c) {
         if (ssargs.get_imm_for_rs) {
             if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
                 // Check for unsigned 5b
-                if (imm < 0 || imm >= 32) {
-                    throw UltraError(UltraErrorType::Compiler, "Immediate " + c.arg3 + " is out of range of [0, 32)", c.line, c.column);
-                }
+                verify_imm<5u>(num.value());
                 imm = num.value();
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
@@ -481,7 +494,22 @@ void make_inst(assembly_context& c) {
                 rs2 |= imm;
             }
         }
-        if (opcode != opcode::OP_IMM) {
+
+        if (id == AES32DSI || id == AES32DSMI || id == AES32ESI || id == AES32ESMI || id == SM4ED || id == SM4KS) {
+            uint8_t bs = decode_imm<int>(c.arg4, c).value();
+            inst |= (bs & 0b11) << 30; // Add bs[1:0]
+        } else if (id == THSFENCEVMAS) {
+            rs2 = rs1;
+            rs1 = rd;
+            rd = 0b00000;
+        } else if (id == THADDSL || reqs == XTheadMemIdx) {
+            if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
+                imm = num.value();
+            } else {
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
+            }
+            funct |= (imm & 0b11) << 3; // Add imm2
+        } else if (opcode != opcode::OP_IMM) {
             if (!c.arg4.empty() && opcode == opcode::OP_FP) {
                 frm = decode_frm(c.arg4);
             } else if (!c.arg5.empty() && !no_rs2) {
@@ -493,14 +521,9 @@ void make_inst(assembly_context& c) {
                     frm = 0b111;
                 }
             }
-        }
+        } 
 
-        if (id == AES32DSI || id == AES32DSMI || id == AES32ESI || id == AES32ESMI || id == SM4ED || id == SM4KS) {
-            uint8_t bs = decode_imm<int>(c.arg4, c).value();
-            inst |= (bs & 0b11) << 30; // Add bs[1:0]
-        }
-
-        DBG(std::cout << "Encoding R-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding R-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 7; // Add rd
         if (ssargs.use_frm_for_funct3) {
             inst |= frm << 12; // Add frm
@@ -532,7 +555,7 @@ void make_inst(assembly_context& c) {
             }
         }
 
-        DBG(std::cout << "Encoding R4-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding R4-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 7; // Add rd
         if (ssargs.use_frm_for_funct3) {
             inst |= frm << 12; // Add frm
@@ -563,6 +586,43 @@ void make_inst(assembly_context& c) {
                     throw UltraError(UltraErrorType::Compiler, "Invalid register in prefetch argument " + c.arg1, c.line, c.column);
                 }
                 imm |= ((offset >> 5) & 0b111111) << 5; // Add offset[11:5]
+            } else if (id == THSRRI || id == THTST) {
+                rd = decode_register(c.arg1).encoding;
+                rs1 = decode_register(c.arg2).encoding;
+                if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                    imm |= num.value();
+                    verify_imm<6u>(num.value()); // Check for unsigned 6b
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+                }
+            } else if (id == THSRRIW) {
+                rd = decode_register(c.arg1).encoding;
+                rs1 = decode_register(c.arg2).encoding;
+                if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                    imm |= num.value();
+                    verify_imm<5u>(num.value()); // Check for unsigned 5b
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+                }
+            } else if (reqs == XTheadMemIdx) {
+                rd = decode_register(c.arg1).encoding;
+                remove_extraneous_parentheses(c.arg2);
+                rs1 = decode_register(c.arg2).encoding;
+                if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                    imm |= num.value();
+                    verify_imm<5u>(num.value()); // Check for unsigned 5b
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+                }
+                
+                uint8_t imm2 = 0;
+                if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
+                    imm2 = num.value();
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
+                }
+                verify_imm<2u>(imm2); // Check for unsigned 2b
+                funct |= imm2 << 8; // Add imm2
             } else {
                 if (ssargs.custom_reg_val.has_value() && !ssargs.no_rs1) {
                     rd = ssargs.custom_reg_val.value();
@@ -574,24 +634,18 @@ void make_inst(assembly_context& c) {
             }
         } else if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
-            // check for signed 12b
-            if (imm < -2048 || imm >= 2048) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-2048, 2048)", c.line, c.column);
-            }
+            verify_imm<12>(imm); // Check for signed 12b
             rd = decode_register(c.arg1).encoding;
             rs1 = decode_register(c.arg2).encoding;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
-            // Check for signed 12b
-            if (imm < -2048 || imm >= 2048) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-2048, 2048)", c.line, c.column);
-            }
+            verify_imm<12>(imm); // Check for signed 12b
             rd = decode_register(c.arg1).encoding;
             rs1 = decode_register(reg).encoding;
         }
 
-        DBG(std::cout << "Encoding I-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding I-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 7;               // Add rd
         inst |= (funct & 0b111) << 12; // Add funct3, trim to last 3b for some which have longer functs
         inst |= rs1 << 15;             // Add rs1
@@ -599,23 +653,17 @@ void make_inst(assembly_context& c) {
     } else if (type == S) {
         if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
-            // Check for signed 12b
-            if (imm < -2048 || imm >= 2048) {
-                throw UltraError(UltraErrorType::Compiler, "Store immediate " + to_ultrastring(imm) + " is out of range [-2048, 2048)", c.line, c.column);
-            }
+            verify_imm<12>(imm); // Check for signed 12b
             rs1 = decode_register(c.arg2).encoding;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
-            // Check for signed 12b
-            if (imm < -2048 || imm >= 2048) {
-                throw UltraError(UltraErrorType::Compiler, "Store immediate " + to_ultrastring(imm) + " is out of range [-2048, 2048)", c.line, c.column);
-            }
+            verify_imm<12>(imm); // Check for signed 12b
             rs1 = decode_register(reg).encoding;
         }
         rs2 = decode_register(c.arg1).encoding;
 
-        DBG(std::cout << "Encoding S-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding S-type instruction with name " << c.inst << std::endl;)
         inst |= (imm & 0b11111) << 7; // Add imm[4:0]
         inst |= funct << 12;          // Add funct3
         inst |= rs1 << 15;            // Add rs1
@@ -624,10 +672,7 @@ void make_inst(assembly_context& c) {
     } else if (type == Branch) {
         if (auto num = to_num<int>(c.arg3); num.has_value()) {
             imm = num.value();
-            // Check for signed 13b
-            if (imm < -4096 || imm >= 4096) {
-                throw UltraError(UltraErrorType::Compiler, "Branch immediate " + to_ultrastring(imm) + " is out of range [-4096, 4096)", c.line, c.column);
-            }
+            verify_imm<13>(imm); // Check for signed 13b
         } else {
             imm = string_to_label(c.arg3, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = Branch});
@@ -635,7 +680,7 @@ void make_inst(assembly_context& c) {
         rs1 = decode_register(c.arg1).encoding;
         rs2 = decode_register(c.arg2).encoding;
 
-        DBG(std::cout << "Encoding Branch-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding Branch-type instruction with name " << c.inst << std::endl;)
         inst |= ((imm >> 11) & 0b1) << 7;      // Add imm[11]
         inst |= ((imm >> 1) & 0b1111) << 8;    // Add imm[4:1]
         inst |= funct << 12;                   // Add funct3
@@ -651,16 +696,13 @@ void make_inst(assembly_context& c) {
         }
         rd = decode_register(c.arg1).encoding;
 
-        DBG(std::cout << "Encoding U-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding U-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 7;   // Add rd
         inst |= imm << 12; // Add imm[31:12]
     } else if (type == J) {
         if (auto num = to_num<int>(c.arg2); num.has_value()) {
             imm = num.value();
-            // check for signed 21
-            if (imm < -1048576 || imm >= 1048576) {
-                throw UltraError(UltraErrorType::Compiler, "J-type immediate " + to_ultrastring(imm) + " is out of range [-1048576, 1048576)", c.line, c.column);
-            }
+            verify_imm<21>(imm); // Check for signed 21b
 
         } else {
             imm = string_to_label(c.arg2, c);
@@ -668,7 +710,7 @@ void make_inst(assembly_context& c) {
         }
         rd = decode_register(c.arg1).encoding;
 
-        DBG(std::cout << "Encoding J-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding J-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 7;                           // Add rd
         inst |= ((imm >> 12) & 0b11111111) << 12;  // Add imm[19:12]
         inst |= ((imm >> 11) & 0b1) << 20;         // Add imm[11]
@@ -677,16 +719,13 @@ void make_inst(assembly_context& c) {
     } else if (type == CJ) {
         if (auto num = to_num<int>(c.arg1); num.has_value()) {
             imm = num.value();
-            // Check for signed 12b
-            if (imm < -2048 || imm >= 2048) {
-                throw UltraError(UltraErrorType::Compiler, "CJ immediate " + to_ultrastring(imm) + " is out of range [-2048, 2048)", c.line, c.column);
-            }
+            verify_imm<12>(imm); // Check for signed 12b
         } else {
             imm = string_to_label(c.arg1, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = CJ});
         }
 
-        DBG(std::cout << "Encoding CJ-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CJ-type instruction with name " << c.inst << std::endl;)
         inst |= ((imm >> 5) & 0b1) << 2;   // Add offset[5]
         inst |= ((imm >> 1) & 0b111) << 3; // Add offset[3:1]
         inst |= ((imm >> 7) & 0b1) << 6;   // Add offset[7]
@@ -707,20 +746,14 @@ void make_inst(assembly_context& c) {
         }
         rd = decode_register(c.arg1).encoding & 0b111;
 
-        DBG(std::cout << "Encoding CL-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CL-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 2;               // Add rd' (just 3 bits)
         if (id == CLW || id == CFLW) { // offset[2|6]
-            // check for unsigned 7b
-            if (imm < 0 || imm >= 128) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 128)", c.line, c.column);
-            }
+            verify_imm<7u>(imm); // Check for unsigned 7b
             inst |= ((imm >> 6) & 0b1) << 5;  // Add offset[6]
             inst |= ((imm >> 2) & 0b1) << 6;  // Add offset[2]
         } else if (id == CLD || id == CFLD) { // offset[7:6]
-            // check for unsigned 8b
-            if (imm < 0 || imm >= 256) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 256)", c.line, c.column);
-            }
+            verify_imm<8u>(imm); // Check for unsigned 8b
             inst |= ((imm >> 6) & 0b11) << 5; // Add offset[7:6]
         }
         inst |= rs1 << 7;                   // Add rs1' (just 3 bits)
@@ -737,20 +770,14 @@ void make_inst(assembly_context& c) {
         }
         rs2 = decode_register(c.arg1).encoding & 0b111;
 
-        DBG(std::cout << "Encoding CS-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CS-type instruction with name " << c.inst << std::endl;)
         inst |= rs2 << 2;              // Add rs2' (just 3 bits)
         if (id == CSW || id == CFSW) { // offset[2|6]
-            // check for unsigned 7b
-            if (imm < 0 || imm >= 128) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 128)", c.line, c.column);
-            }
+            verify_imm<7u>(imm); // Check for unsigned 7b
             inst |= ((imm >> 6) & 0b1) << 5;  // Add offset[6]
             inst |= ((imm >> 2) & 0b1) << 6;  // Add offset[2]
         } else if (id == CSD || id == CFSD) { // offset[7:6]
-            // check for unsigned 8b
-            if (imm < 0 || imm >= 256) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 256)", c.line, c.column);
-            }
+            verify_imm<8u>(imm); // Check for unsigned 8b
             inst |= ((imm >> 6) & 0b11) << 5; // Add offset[7:6]
         }
         inst |= rs1 << 7;                   // Add rs1' (just 3 bits)
@@ -765,19 +792,13 @@ void make_inst(assembly_context& c) {
         }
         rs1 = decode_register(c.arg1).encoding & 0b111;
 
-        DBG(std::cout << "Encoding CB-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CB-type instruction with name " << c.inst << std::endl;)
         if (id == CSRLI || id == CSRAI || id == CANDI) { // shamt[5], shamt[4:0]
-            // check for unsigned 6b
-            if (imm < 0 || imm >= 64) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 64)", c.line, c.column);
-            }
+            verify_imm<6u>(imm); // Check for unsigned 6b
             inst |= (imm & 0b11111) << 2;     // Add shamt[4:0]
             inst |= ((imm >> 5) & 0b1) << 12; // Add shamt[5]
         } else {
-            // check for signed 9b
-            if (imm < -256 || imm >= 256) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-256, 256)", c.line, c.column);
-            }
+            verify_imm<9>(imm); // Check for signed 9b
             inst |= ((imm >> 5) & 0b1) << 2;   // Add offset[5]
             inst |= ((imm >> 1) & 0b11) << 3;  // Add offset[2:1]
             inst |= ((imm >> 6) & 0b11) << 5;  // Add offset[7:6]
@@ -802,7 +823,7 @@ void make_inst(assembly_context& c) {
             rs2 = decode_register(c.arg2).encoding;
         }
 
-        DBG(std::cout << "Encoding CR-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CR-type instruction with name " << c.inst << std::endl;)
         inst |= rs2 << 2;    // Add rs2
         inst |= rd << 7;     // Add rd
         inst |= funct << 12; // Add funct4
@@ -823,49 +844,31 @@ void make_inst(assembly_context& c) {
             }
         }
 
-        DBG(std::cout << "Encoding CI-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CI-type instruction with name " << c.inst << std::endl;)
         if (id == CLWSP || id == CFLWSP) { // offset[4:2|7:6]
-            // check for unsigned 8b
-            if (imm < 0 || imm >= 256) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 256)", c.line, c.column);
-            }
+            verify_imm<8u>(imm); // Check for unsigned 8b
             inst |= ((imm >> 6) & 0b11) << 2;     // Add offset[7:6]
             inst |= ((imm >> 2) & 0b1111) << 4;   // Add offset[4:2]
             inst |= ((imm >> 5) & 0b1) << 12;     // Add offset[5]
         } else if (id == CLDSP || id == CFLDSP) { // offset[4:3|8:6]
-            // check for unsigned 9b
-            if (imm < 0 || imm >= 512) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 512)", c.line, c.column);
-            }
+            verify_imm<9u>(imm); // Check for unsigned 9b
             inst |= ((imm >> 6) & 0b111) << 2;                 // Add offset[8:6]
             inst |= ((imm >> 3) & 0b11) << 5;                  // Add offset[4:3]
             inst |= ((imm >> 5) & 0b1) << 12;                  // Add offset[5]
         } else if (id == CLI || id == CADDI || id == CADDIW) { // imm[5], imm[4:0]
-            // check for signed 6b
-            if (imm < -32 || imm >= 32) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-32, 32)", c.line, c.column);
-            }
+            verify_imm<6>(imm); // Check for signed 6b
             inst |= (imm & 0b11111) << 2;     // Add imm[4:0]
             inst |= ((imm >> 5) & 0b1) << 12; // Add imm[5]
         } else if (id == CSLLI) {             // imm[5], imm[4:0]
-            // check for unsigned 6b
-            if (imm < 0 || imm >= 64) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 64)", c.line, c.column);
-            }
+            verify_imm<6u>(imm); // Check for unsigned 6b
             inst |= (imm & 0b11111) << 2;     // Add imm[4:0]
             inst |= ((imm >> 5) & 0b1) << 12; // Add imm[5]
         } else if (id == CLUI) {              // nzimm[17], imm[16:12]
-            // check for signed 6b
-            if (imm < -32 || imm >= 32) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-32, 32)", c.line, c.column);
-            }
+            verify_imm<6>(imm); // Check for signed 6b
             inst |= ((imm >> 12) & 0b11111) << 2; // Add imm[16:12]
             inst |= ((imm >> 17) & 0b1) << 12;    // Add nzimm[17]
         } else if (id == CADDI16SP) {             // nzimm[9], nzimm[4|6|8:7|5]
-            // check for signed 10b
-            if (imm < -512 || imm >= 512) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-512, 512)", c.line, c.column);
-            }
+            verify_imm<10>(imm); // Check for signed 10b
             inst |= ((imm >> 5) & 0b1) << 2;    // Add nzimm[5]
             inst |= ((imm >> 7) & 0b11) << 3;   // Add nzimm[8:7]
             inst |= ((imm >> 6) & 0b1) << 5;    // Add nzimm[6]
@@ -887,20 +890,14 @@ void make_inst(assembly_context& c) {
             imm = offset;
         }
 
-        DBG(std::cout << "Encoding CSS-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CSS-type instruction with name " << c.inst << std::endl;)
         inst |= rs2 << 2;                  // Add rs2
         if (id == CSWSP || id == CFSWSP) { // offset[5:2|7:6]
-            // check for unsigned 8b
-            if (imm < 0 || imm >= 256) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 256)", c.line, c.column);
-            }
+            verify_imm<8u>(imm); // Check for unsigned 8b
             inst |= ((imm >> 6) & 0b11) << 7;     // Add offset[7:6]
             inst |= ((imm >> 2) & 0b1111) << 9;   // Add offset[5:2]
         } else if (id == CSDSP || id == CFSDSP) { // offset[5:3|8:6]
-            // check for unsigned 9b
-            if (imm < 0 || imm >= 512) {
-                throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 512)", c.line, c.column);
-            }
+            verify_imm<9u>(imm); // Check for unsigned 9b
             inst |= ((imm >> 6) & 0b111) << 7;  // Add offset[8:6]
             inst |= ((imm >> 3) & 0b111) << 10; // Add offset[5:3]
         } else {                                // offset[5:4|9:6]
@@ -916,7 +913,7 @@ void make_inst(assembly_context& c) {
             throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
 
-        DBG(std::cout << "Encoding CIW-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CIW-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 2;                    // Add rd' (just 3 bits)
         inst |= ((imm >> 3) & 0b1) << 5;    // Add nzuimm[3]
         inst |= ((imm >> 2) & 0b1) << 6;    // Add nzuimm[2]
@@ -927,7 +924,7 @@ void make_inst(assembly_context& c) {
         rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
         rs2 = decode_register(c.arg2).encoding & 0b111;
 
-        DBG(std::cout << "Encoding CA-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CA-type instruction with name " << c.inst << std::endl;)
         inst |= rs2 << 2;            // Add rs2' (just 3 bits)
         inst |= (funct & 0b11) << 5; // Add funct2
         inst |= rd << 7;             // Add rd' (just 3 bits)
@@ -937,7 +934,7 @@ void make_inst(assembly_context& c) {
         remove_extraneous_parentheses(c.arg2);
         rs1 = decode_register(c.arg2).encoding;
 
-        DBG(std::cout << "Encoding VL or VS or VLR or VSR-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding VL or VS or VLR or VSR-type instruction with name " << c.inst << std::endl;)
 
         inst |= rd << 7;               // Add rd
         inst |= (funct & 0b111) << 12; // Add width
@@ -953,7 +950,7 @@ void make_inst(assembly_context& c) {
         rs1 = decode_register(c.arg2).encoding;
         rs2 = decode_register(c.arg3).encoding;
 
-        DBG(std::cout << "Encoding VLS or VLX or VSS or VSX-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding VLS or VLX or VSS or VSX-type instruction with name " << c.inst << std::endl;)
 
         inst |= rd << 7;               // Add rd
         inst |= (funct & 0b111) << 12; // Add width
@@ -989,7 +986,7 @@ void make_inst(assembly_context& c) {
             std::swap(rs1, rs2);
         }
 
-        DBG(std::cout << "Encoding IVV or FVV or MVV or IVX or FVF or MVX-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding IVV or FVV or MVV or IVX or FVF or MVX-type instruction with name " << c.inst << std::endl;)
 
         inst |= rd << 7;               // Add rd
         inst |= (funct & 0b111) << 12; // Add width
@@ -1014,10 +1011,7 @@ void make_inst(assembly_context& c) {
 
             if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
                 imm = num.value();
-                // Check for signed 5b
-                if (imm < -16 || imm >= 16) {
-                    throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-16, 16)", c.line, c.column);
-                }
+                verify_imm<5>(imm); // Check for signed 5b
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
             }
@@ -1029,20 +1023,11 @@ void make_inst(assembly_context& c) {
 
                 if (id == VSLLVI || id == VSRLVI || id == VSRAVI || id == VNSRLWI || id == VNSRAWI || id == VSSRLVI || id == VSSRAVI || id == VNCLIPUWI || id == VNCLIPWI || id == VSLIDEUPVI
                     || id == VSLIDEDOWNVI || id == VRGATHERVI || id == VWSLLVI) {
-                    // check for unsigned 5b
-                    if (imm < 0 || imm >= 32) {
-                        throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 32)", c.line, c.column);
-                    }
+                    verify_imm<5u>(imm); // Check for unsigned 5b
                 } else if (id == VRORVI) {
-                    // check for unsigned 6b
-                    if (imm < 0 || imm >= 64) {
-                        throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [0, 64)", c.line, c.column);
-                    }
+                    verify_imm<6u>(imm); // Check for unsigned 6b
                 } else {
-                    // Check for signed 5b
-                    if (imm < -16 || imm >= 16) {
-                        throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [-16, 16)", c.line, c.column);
-                    }
+                    verify_imm<5>(imm); // Check for signed 5b
                 }
 
                 if (id == VRORVI) {
@@ -1053,7 +1038,7 @@ void make_inst(assembly_context& c) {
             }
         }
 
-        DBG(std::cout << "Encoding IVI-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding IVI-type instruction with name " << c.inst << std::endl;)
 
         inst |= rd << 7;               // Add rd
         inst |= (funct & 0b111) << 12; // Add width
@@ -1075,7 +1060,7 @@ void make_inst(assembly_context& c) {
             rs1 = decode_register(reg).encoding & 0b111;
         }
 
-        DBG(std::cout << "Encoding CLB-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CLB-type instruction with name " << c.inst << std::endl;)
 
         inst |= rd << 2;          // Add rd' (just 3 bits)
         inst |= (imm >> 1) << 5;  // Add uimm[1]
@@ -1093,7 +1078,7 @@ void make_inst(assembly_context& c) {
             rs1 = decode_register(reg).encoding & 0b111;
         }
 
-        DBG(std::cout << "Encoding CSB-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CSB-type instruction with name " << c.inst << std::endl;)
 
         inst |= rs2 << 2;         // Add rs2' (just 3 bits)
         inst |= (imm >> 1) << 5;  // Add uimm[1]
@@ -1111,7 +1096,7 @@ void make_inst(assembly_context& c) {
             rs1 = decode_register(reg).encoding & 0b111;
         }
 
-        DBG(std::cout << "Encoding CLH-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CLH-type instruction with name " << c.inst << std::endl;)
 
         inst |= rd << 2;            // Add rd' (just 3 bits)
         inst |= (imm >> 1) << 5;    // Add uimm[1]
@@ -1129,7 +1114,7 @@ void make_inst(assembly_context& c) {
             rs1 = decode_register(reg).encoding & 0b111;
         }
 
-        DBG(std::cout << "Encoding CSH-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CSH-type instruction with name " << c.inst << std::endl;)
 
         inst |= rs2 << 2;           // Add rs2' (just 3 bits)
         inst |= imm << 5;           // Add uimm[0]
@@ -1139,7 +1124,7 @@ void make_inst(assembly_context& c) {
     } else if (type == CU) {
         rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
 
-        DBG(std::cout << "Encoding CU-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CU-type instruction with name " << c.inst << std::endl;)
 
         inst |= (funct & 0b11111) << 2; // Add funct5
         inst |= rd << 7;                // Add rd' (just 3 bits)
@@ -1148,7 +1133,7 @@ void make_inst(assembly_context& c) {
         rs1 = decode_register(c.arg1).encoding & 0b111;
         rs2 = decode_register(c.arg2).encoding & 0b111;
 
-        DBG(std::cout << "Encoding CMMV-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CMMV-type instruction with name " << c.inst << std::endl;)
 
         inst |= rs2 << 2;            // Add rs2' (just 3 bits)
         inst |= (funct & 0b11) << 5; // Add funct2
@@ -1161,7 +1146,7 @@ void make_inst(assembly_context& c) {
             throw UltraError(UltraErrorType::Compiler, "Invalid index " + c.arg1, c.line, c.column);
         }
 
-        DBG(std::cout << "Encoding CMJT-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CMJT-type instruction with name " << c.inst << std::endl;)
 
         inst |= (imm & 0b11111111) << 2; // Add imm[7:0]
         inst |= funct << 10;             // Add funct6
@@ -1182,7 +1167,7 @@ void make_inst(assembly_context& c) {
                            case 14: {reg_list="ra, s0-s9"; xreg_list="x1, x8-x9, x18-x25";}
                            case 15: {reg_list="ra, s0-s11"; xreg_list="x1, x8-x9, x18-x27";}
                                */
-        DBG(std::cout << "Encoding CMPP-type instruction with name " << name << std::endl;)
+        DBG(std::cout << "Encoding CMPP-type instruction with name " << c.inst << std::endl;)
         uint8_t rlist = 0;
 
         if (c.arg1.front() == '{') {
@@ -1648,7 +1633,7 @@ void handle_directives(assembly_context& c) {
                 if (fast_eq(c.arg1, name)) {
                     is_type = true;
                     this_type = type;
-                    DBG(std::cout << "Found type: " << name << std::endl;)
+                    DBG(std::cout << "Found type: " << c.inst << std::endl;)
                     break;
                 }
             }
@@ -2027,8 +2012,8 @@ ultravector<uint8_t> assemble_code(const std::string_view& data, const ultravect
 
     int res = std::system(
             "riscv64-linux-gnu-as "
-            "-march=rv64gvfdcqb_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp_zfbfmin_zvfbfmin_zvfbfwma_zabha_zicbom_"
-            "zicboz_zicbop_xtheadvector "
+            "-march=rv64gfdcqb_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp_zfbfmin_zvfbfmin_zvfbfwma_zabha_zicbom_"
+            "zicboz_zicbop_xtheadvector_xtheadcmo_xtheadsync_xtheadba_xtheadbb_xtheadbs_xtheadcondmov_xtheadmemidx_xtheadmempair_xtheadfmemidx_xtheadmac_xtheadfmv_xtheadint_xtheadvdotv0.7.1_xtheadzvamo "
             "temp.s -o temp.o"
     );
 

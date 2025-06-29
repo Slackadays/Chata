@@ -1841,8 +1841,6 @@ enum class RVInstructionID : uint16_t {
     THVMSGTUVI,
     THVMSGTVX,
     THVMSGTVI,
-    THVMSGEVX,
-    THVMSGEUVX,
     THVMINUVV,
     THVMINUVX,
     THVMINVV,
@@ -2045,7 +2043,6 @@ enum class RVInstructionID : uint16_t {
     THVMSOFM,
     THVIOTAM,
     THVIDV,
-    THVMVXS,
     THVEXTXV,
     THVMVSX,
     THVFMVFS,
@@ -2264,6 +2261,6 @@ struct rvinstruction {
             , ssargs(ssargs) {}
 };
 
-extern const std::array<rvinstruction, 2033> instructions;
+extern const std::array<rvinstruction, 2035> instructions;
 
 } // namespace ultrassembler_internal

@@ -1986,6 +1986,36 @@ int main() {
     as("vfncvtbf16.f.f.w v4, v5", 0x57925e4a);
     as("vfwcvtbf16.f.f.v v6, v7", 0x5793764a);
     as("vfwmaccbf16.vv v8, v9, v10", 0x5794a4ee);
+    as("th.dcache.call", 0x0b001000);
+    as("th.dcache.ciall", 0x0b003000);
+    as("th.dcache.iall", 0x0b002000);
+    as("th.dcache.cpa x5", 0x0b809202);
+    as("th.dcache.cipa x6", 0x0b00b302);
+    as("th.dcache.ipa x7", 0x0b80a302);
+    as("th.dcache.cva x8", 0x0b005402);
+    as("th.dcache.civa x9", 0x0b807402);
+    as("th.dcache.iva x10", 0x0b006502);
+    as("th.dcache.csw x11", 0x0b801502);
+    as("th.dcache.cisw x12", 0x0b003602);
+    as("th.dcache.cpal1 x13", 0x0b808602);
+    as("th.dcache.cval1 x14", 0x0b004702);
+    as("th.icache.iall", 0x0b000001);
+    as("th.icache.ialls", 0x0b001001);
+    as("th.icache.ipa x15", 0x0b808703);
+    as("th.icache.iva x16", 0x0b000803);
+    as("th.l2cache.call", 0x0b005001);
+    as("th.l2cache.ciall", 0x0b007001);
+    as("th.l2cache.iall", 0x0b006001);
+    as("th.sfence.vmas x17, x18", 0x0b802805);
+    as("th.sync", 0x0b008001);
+    as("th.sync.s", 0x0b009001);
+    as("th.sync.i", 0x0b00a001);
+    as("th.sync.is", 0x0b00b001);
+    as("th.addsl a0, a1, a2, 3", 0x0b95c506);
+    as("th.srri a0, a1, 4", 0x0b954510);
+    as("th.srriw a0, a1, 5", 0x0b955514);
+    //as("th.ext 
+
 
     as("beq t0, t1, foolabel\n#blahblah comment\nadd a0, a5, a6\nfoolabel:", {0x63, 0x84, 0x62, 0x00, 0x33, 0x85, 0x07, 0x01});
     as("foolabel:\nadd a0, a5, a6\nbne t0, t1, foolabel\n#ignore this", {0x33, 0x85, 0x07, 0x01, 0xe3, 0x9e, 0x62, 0xfe});
