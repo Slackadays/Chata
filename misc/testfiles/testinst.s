@@ -1,1 +1,1 @@
-th.srriw a0, a1, 5
+th.mvnez s0, s1, s2

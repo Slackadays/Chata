@@ -2014,18 +2014,28 @@ int main() {
     as("th.addsl a0, a1, a2, 3", 0x0b95c506);
     as("th.srri a0, a1, 4", 0x0b954510);
     as("th.srriw a0, a1, 5", 0x0b955514);
-    //as("th.ext 
+    as("th.ext x5, x6, 1, 10", 0x8b22a304);
+    as("th.extu x7, x8, 2, 11", 0x8b33b408);
+    as("th.ff0 a0, a1", 0x0b950584);
+    as("th.ff1 a2, a3", 0x0b960686);
+    as("th.rev a4, a5", 0x0b970782);
+    as("th.revw a6, a7", 0x0b980890);
+    as("th.tstnbz t0, t1", 0x8b120380);
+    as("th.tst t2, t3, 20", 0x8b134e89);
+    as("th.mveqz t4, t5, t6", 0x8b1eff41);
+    as("th.mvnez s0, s1, s2", 0x0b942443);
+    //as("
 
 
-    as("beq t0, t1, foolabel\n#blahblah comment\nadd a0, a5, a6\nfoolabel:", {0x63, 0x84, 0x62, 0x00, 0x33, 0x85, 0x07, 0x01});
+    as("beq t0, t1, foolabel \n#blahblah comment \nadd a0, a5, a6\nfoolabel:", {0x63, 0x84, 0x62, 0x00, 0x33, 0x85, 0x07, 0x01});
     as("foolabel:\nadd a0, a5, a6\nbne t0, t1, foolabel\n#ignore this", {0x33, 0x85, 0x07, 0x01, 0xe3, 0x9e, 0x62, 0xfe});
-    as("beq t0, t1, foolabel\nc.li a5, 26 # foobar\n\n\n#irrelevant comment\n\n#another comment\n\nfoolabel: # also ignore this comment", {0x63, 0x83, 0x62, 0x00, 0xe9, 0x47});
-    as("foolabel:\nc.li a5, 26\nbeq t0, t1, foolabel", {0xe9, 0x47, 0xe3, 0x8f, 0x62, 0xfe});
+    as(" beq t0, t1, foolabel\nc.li a5, 26 # foobar\n\n\n#irrelevant comment\n\n#another comment\n\nfoolabel: # also ignore this comment", {0x63, 0x83, 0x62, 0x00, 0xe9, 0x47});
+    as(" foolabel:\nc.li a5, 26\nbeq t0, t1, foolabel", {0xe9, 0x47, 0xe3, 0x8f, 0x62, 0xfe});
     as("foolabel:\nc.li a5, 26\nadd s0, s1, s2\nbeq t0, t1, foolabel", {0xe9, 0x47, 0x33, 0x84, 0x24, 0x01, 0xe3, 0x8d, 0x62, 0xfe});
     as("dummylabel:\nc.li a5, 26\n#another comment for good measure\nbeq t0, t1, foolabel\nxor a0, a1, a2\nbarlabel:\nfoolabel:\nadd s0, s1, s2\nj dummylabel",
        {0xe9, 0x47, 0x63, 0x84, 0x62, 0x00, 0x33, 0xc5, 0xc5, 0x00, 0x33, 0x84, 0x24, 0x01, 0x6f, 0xf0, 0x3f, 0xff});
     as("foolabel:\njal zero, foolabel\nc.j foolabel\nbazlabel:\njal zero, barlabel\nc.j barlabel\n.dotlabel:\nbarlabel:", {0x6f, 0x00, 0x00, 0x00, 0xf5, 0xbf, 0x6f, 0x00, 0x60, 0x00, 0x09, 0xa0});
-    as(".dotfoolabel:\njal zero, .dotfoolabel\nc.j .dotfoolabel\nbazlabel:\njal zero, .dotbarlabel\nc.j .dotbarlabel\n.dotlabel:\n.dotbarlabel:",
+    as(" .dotfoolabel:\njal zero, .dotfoolabel\nc.j .dotfoolabel\nbazlabel:\njal zero, .dotbarlabel\nc.j .dotbarlabel\n.dotlabel:\n.dotbarlabel:",
        {0x6f, 0x00, 0x00, 0x00, 0xf5, 0xbf, 0x6f, 0x00, 0x60, 0x00, 0x09, 0xa0});
 
     std::cout << passed_tests << " tests passed, " << failed_tests << " tests failed, " << passed_tests + failed_tests << " tests total" << std::endl;

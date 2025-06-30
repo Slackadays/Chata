@@ -628,9 +628,27 @@ void make_inst(assembly_context& c) {
                     rd = ssargs.custom_reg_val.value();
                     remove_extraneous_parentheses(c.arg1);
                     rs1 = decode_register(c.arg1).encoding;
-                } else {
+                } else if (ssargs.custom_reg_val.has_value()) {
                     rd = ssargs.custom_reg_val.value();
+                } else {
+                    rd = decode_register(c.arg1).encoding;
+                    rs1 = decode_register(c.arg2).encoding;
                 }
+            }
+        } else if (id == THEXT || id == THEXTU) {
+            rd = decode_register(c.arg1).encoding;
+            rs1 = decode_register(c.arg2).encoding;
+            if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                imm |= num.value() << 6; // add imm1
+                verify_imm<5u>(num.value()); // Check for unsigned 5b
+            } else {
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+            }
+            if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
+                   imm |= num.value(); // add imm2
+                verify_imm<5u>(num.value()); // Check for unsigned 5b
+            } else {
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
             }
         } else if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
             imm = num.value();
