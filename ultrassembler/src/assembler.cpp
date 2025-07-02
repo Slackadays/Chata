@@ -610,7 +610,7 @@ void make_inst(assembly_context& c) {
                 rs1 = decode_register(c.arg2).encoding;
                 if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
                     imm |= num.value();
-                    verify_imm<5u>(num.value()); // Check for unsigned 5b
+                    verify_imm<5>(num.value()); // Check for signed 5b
                 } else {
                     throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
                 }
@@ -622,7 +622,7 @@ void make_inst(assembly_context& c) {
                     throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
                 }
                 verify_imm<2u>(imm2); // Check for unsigned 2b
-                funct |= imm2 << 8; // Add imm2
+                imm |= imm2 << 5; // Add imm2
             } else {
                 if (ssargs.custom_reg_val.has_value() && !ssargs.no_rs1) {
                     rd = ssargs.custom_reg_val.value();

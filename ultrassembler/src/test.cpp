@@ -2024,7 +2024,17 @@ int main() {
     as("th.tst t2, t3, 20", 0x8b134e89);
     as("th.mveqz t4, t5, t6", 0x8b1eff41);
     as("th.mvnez s0, s1, s2", 0x0b942443);
-    //as("
+    as("th.lbia s3, (s4), 12, 2", 0x8b49ca1c);
+    as("th.lbib s3, (s4), 12, 2", 0x8b49ca0c);
+    as("th.lbuia t0, (t1), 13, 3", 0x8b42d39e);
+    as("th.lbuib t2, (t3), 13, 3", 0x8b43de8e);
+    as("th.lhia a0, (a1), 14, 1", 0x0bc5e53a);
+    as("th.lhib a2, (a3), 14, 1", 0x0bc6e62a);
+    as("th.lhuia a4, (a5), 15, 0", 0x0bc7f7b8);
+    as("th.lhuib a6, (a7), 15, 0", 0x0bc8f8a8);
+    as("th.lwia x0, (x1), 15, 0", 0x0bc0f058);
+    as("th.lwib x2, (x3), 15, 0", 0x0bc1f148);
+    as("th.lwuia x4, (x5), 2, 1", 0x0bc222da);
 
 
     as("beq t0, t1, foolabel \n#blahblah comment \nadd a0, a5, a6\nfoolabel:", {0x63, 0x84, 0x62, 0x00, 0x33, 0x85, 0x07, 0x01});

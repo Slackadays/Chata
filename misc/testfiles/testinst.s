@@ -1,1 +1,1 @@
-th.mvnez s0, s1, s2
+th.lwuia x4, (x5), 2, 1
