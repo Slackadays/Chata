@@ -3244,6 +3244,9 @@ const uint16_t fast_instr_search(const ultrastring& inst) {
                         if (inst.size() < 6) return instr_search_failed;
                         if (inst[5] == 'r') {
                             if (inst.size() < 7) return instr_search_failed;
+                            if (inst[6] == 'd') {
+                                if (inst.size() < 8) return 1363;
+                            }
                             if (inst[6] == 'w') {
                                 if (inst.size() < 8) return 1361;
                                 if (inst[7] == 'u') {
@@ -3261,9 +3264,6 @@ const uint16_t fast_instr_search(const ultrastring& inst) {
                                 if (inst[7] == 'u') {
                                     if (inst.size() < 9) return 1360;
                                 }
-                            }
-                            if (inst[6] == 'f') {
-                                if (inst.size() < 8) return 1363;
                             }
                         }
                     }

@@ -1,1 +1,1 @@
-th.lwuia x4, (x5), 2, 1
+th.vmaqaus.vx v15, t3, v16

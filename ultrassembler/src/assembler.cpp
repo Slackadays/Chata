@@ -359,12 +359,17 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
     }
 }
 
-template<auto bits>
+template <auto bits>
 void verify_imm(const auto& imm) {
     using T = decltype(bits);
     if constexpr (std::is_signed_v<T>) {
         if (imm < -(1 << (bits - 1)) || imm >= (1 << (bits - 1))) {
-            throw UltraError(UltraErrorType::Compiler, "Immediate " + to_ultrastring(imm) + " is out of range [" + to_ultrastring(-(1 << (bits - 1))) + ", " + to_ultrastring((1 << (bits - 1))) + ")", 0, 0);
+            throw UltraError(
+                    UltraErrorType::Compiler,
+                    "Immediate " + to_ultrastring(imm) + " is out of range [" + to_ultrastring(-(1 << (bits - 1))) + ", " + to_ultrastring((1 << (bits - 1))) + ")",
+                    0,
+                    0
+            );
         }
     } else if constexpr (std::is_unsigned_v<T>) {
         if (imm < 0 || imm >= (1u << bits)) {
@@ -486,6 +491,9 @@ void make_inst(assembly_context& c) {
             if (ssargs.get_imm_for_rs) {
                 rs2 = imm;
             } else {
+                if (reqs == XTheadMemPair) {
+                    remove_extraneous_parentheses(c.arg3);
+                }
                 rs2 = decode_register(c.arg3).encoding;
             }
         } else {
@@ -502,13 +510,21 @@ void make_inst(assembly_context& c) {
             rs2 = rs1;
             rs1 = rd;
             rd = 0b00000;
-        } else if (id == THADDSL || reqs == XTheadMemIdx) {
+        } else if (id == THADDSL || reqs == XTheadMemIdx || reqs == XTheadFMemIdx) {
             if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
                 imm = num.value();
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
             }
             funct |= (imm & 0b11) << 3; // Add imm2
+        } else if (reqs == XTheadMemPair) {
+            std::swap(rs1, rs2);
+            if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
+                funct |= num.value() << 3;
+                verify_imm<2u>(num.value()); // Check for unsigned 2b
+            } else {
+                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
+            }
         } else if (opcode != opcode::OP_IMM) {
             if (!c.arg4.empty() && opcode == opcode::OP_FP) {
                 frm = decode_frm(c.arg4);
@@ -521,7 +537,7 @@ void make_inst(assembly_context& c) {
                     frm = 0b111;
                 }
             }
-        } 
+        }
 
         DBG(std::cout << "Encoding R-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 7; // Add rd
@@ -614,7 +630,7 @@ void make_inst(assembly_context& c) {
                 } else {
                     throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
                 }
-                
+
                 uint8_t imm2 = 0;
                 if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
                     imm2 = num.value();
@@ -622,7 +638,7 @@ void make_inst(assembly_context& c) {
                     throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
                 }
                 verify_imm<2u>(imm2); // Check for unsigned 2b
-                imm |= imm2 << 5; // Add imm2
+                imm |= imm2 << 5;     // Add imm2
             } else {
                 if (ssargs.custom_reg_val.has_value() && !ssargs.no_rs1) {
                     rd = ssargs.custom_reg_val.value();
@@ -639,13 +655,13 @@ void make_inst(assembly_context& c) {
             rd = decode_register(c.arg1).encoding;
             rs1 = decode_register(c.arg2).encoding;
             if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
-                imm |= num.value() << 6; // add imm1
+                imm |= num.value() << 6;     // add imm1
                 verify_imm<5u>(num.value()); // Check for unsigned 5b
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
             if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
-                   imm |= num.value(); // add imm2
+                imm |= num.value();          // add imm2
                 verify_imm<5u>(num.value()); // Check for unsigned 5b
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
@@ -765,13 +781,13 @@ void make_inst(assembly_context& c) {
         rd = decode_register(c.arg1).encoding & 0b111;
 
         DBG(std::cout << "Encoding CL-type instruction with name " << c.inst << std::endl;)
-        inst |= rd << 2;               // Add rd' (just 3 bits)
-        if (id == CLW || id == CFLW) { // offset[2|6]
-            verify_imm<7u>(imm); // Check for unsigned 7b
+        inst |= rd << 2;                      // Add rd' (just 3 bits)
+        if (id == CLW || id == CFLW) {        // offset[2|6]
+            verify_imm<7u>(imm);              // Check for unsigned 7b
             inst |= ((imm >> 6) & 0b1) << 5;  // Add offset[6]
             inst |= ((imm >> 2) & 0b1) << 6;  // Add offset[2]
         } else if (id == CLD || id == CFLD) { // offset[7:6]
-            verify_imm<8u>(imm); // Check for unsigned 8b
+            verify_imm<8u>(imm);              // Check for unsigned 8b
             inst |= ((imm >> 6) & 0b11) << 5; // Add offset[7:6]
         }
         inst |= rs1 << 7;                   // Add rs1' (just 3 bits)
@@ -789,13 +805,13 @@ void make_inst(assembly_context& c) {
         rs2 = decode_register(c.arg1).encoding & 0b111;
 
         DBG(std::cout << "Encoding CS-type instruction with name " << c.inst << std::endl;)
-        inst |= rs2 << 2;              // Add rs2' (just 3 bits)
-        if (id == CSW || id == CFSW) { // offset[2|6]
-            verify_imm<7u>(imm); // Check for unsigned 7b
+        inst |= rs2 << 2;                     // Add rs2' (just 3 bits)
+        if (id == CSW || id == CFSW) {        // offset[2|6]
+            verify_imm<7u>(imm);              // Check for unsigned 7b
             inst |= ((imm >> 6) & 0b1) << 5;  // Add offset[6]
             inst |= ((imm >> 2) & 0b1) << 6;  // Add offset[2]
         } else if (id == CSD || id == CFSD) { // offset[7:6]
-            verify_imm<8u>(imm); // Check for unsigned 8b
+            verify_imm<8u>(imm);              // Check for unsigned 8b
             inst |= ((imm >> 6) & 0b11) << 5; // Add offset[7:6]
         }
         inst |= rs1 << 7;                   // Add rs1' (just 3 bits)
@@ -812,11 +828,11 @@ void make_inst(assembly_context& c) {
 
         DBG(std::cout << "Encoding CB-type instruction with name " << c.inst << std::endl;)
         if (id == CSRLI || id == CSRAI || id == CANDI) { // shamt[5], shamt[4:0]
-            verify_imm<6u>(imm); // Check for unsigned 6b
-            inst |= (imm & 0b11111) << 2;     // Add shamt[4:0]
-            inst |= ((imm >> 5) & 0b1) << 12; // Add shamt[5]
+            verify_imm<6u>(imm);                         // Check for unsigned 6b
+            inst |= (imm & 0b11111) << 2;                // Add shamt[4:0]
+            inst |= ((imm >> 5) & 0b1) << 12;            // Add shamt[5]
         } else {
-            verify_imm<9>(imm); // Check for signed 9b
+            verify_imm<9>(imm);                // Check for signed 9b
             inst |= ((imm >> 5) & 0b1) << 2;   // Add offset[5]
             inst |= ((imm >> 1) & 0b11) << 3;  // Add offset[2:1]
             inst |= ((imm >> 6) & 0b11) << 5;  // Add offset[7:6]
@@ -863,39 +879,39 @@ void make_inst(assembly_context& c) {
         }
 
         DBG(std::cout << "Encoding CI-type instruction with name " << c.inst << std::endl;)
-        if (id == CLWSP || id == CFLWSP) { // offset[4:2|7:6]
-            verify_imm<8u>(imm); // Check for unsigned 8b
-            inst |= ((imm >> 6) & 0b11) << 2;     // Add offset[7:6]
-            inst |= ((imm >> 2) & 0b1111) << 4;   // Add offset[4:2]
-            inst |= ((imm >> 5) & 0b1) << 12;     // Add offset[5]
-        } else if (id == CLDSP || id == CFLDSP) { // offset[4:3|8:6]
-            verify_imm<9u>(imm); // Check for unsigned 9b
+        if (id == CLWSP || id == CFLWSP) {                     // offset[4:2|7:6]
+            verify_imm<8u>(imm);                               // Check for unsigned 8b
+            inst |= ((imm >> 6) & 0b11) << 2;                  // Add offset[7:6]
+            inst |= ((imm >> 2) & 0b1111) << 4;                // Add offset[4:2]
+            inst |= ((imm >> 5) & 0b1) << 12;                  // Add offset[5]
+        } else if (id == CLDSP || id == CFLDSP) {              // offset[4:3|8:6]
+            verify_imm<9u>(imm);                               // Check for unsigned 9b
             inst |= ((imm >> 6) & 0b111) << 2;                 // Add offset[8:6]
             inst |= ((imm >> 3) & 0b11) << 5;                  // Add offset[4:3]
             inst |= ((imm >> 5) & 0b1) << 12;                  // Add offset[5]
         } else if (id == CLI || id == CADDI || id == CADDIW) { // imm[5], imm[4:0]
-            verify_imm<6>(imm); // Check for signed 6b
-            inst |= (imm & 0b11111) << 2;     // Add imm[4:0]
-            inst |= ((imm >> 5) & 0b1) << 12; // Add imm[5]
-        } else if (id == CSLLI) {             // imm[5], imm[4:0]
-            verify_imm<6u>(imm); // Check for unsigned 6b
-            inst |= (imm & 0b11111) << 2;     // Add imm[4:0]
-            inst |= ((imm >> 5) & 0b1) << 12; // Add imm[5]
-        } else if (id == CLUI) {              // nzimm[17], imm[16:12]
-            verify_imm<6>(imm); // Check for signed 6b
-            inst |= ((imm >> 12) & 0b11111) << 2; // Add imm[16:12]
-            inst |= ((imm >> 17) & 0b1) << 12;    // Add nzimm[17]
-        } else if (id == CADDI16SP) {             // nzimm[9], nzimm[4|6|8:7|5]
-            verify_imm<10>(imm); // Check for signed 10b
-            inst |= ((imm >> 5) & 0b1) << 2;    // Add nzimm[5]
-            inst |= ((imm >> 7) & 0b11) << 3;   // Add nzimm[8:7]
-            inst |= ((imm >> 6) & 0b1) << 5;    // Add nzimm[6]
-            inst |= ((imm >> 4) & 0b1) << 6;    // Add nzimm[4]
-            inst |= ((imm >> 9) & 0b1) << 12;   // Add nzimm[9]
-        } else {                                // offset[4|9:6]
-            inst |= ((imm >> 6) & 0b1111) << 2; // Add offset[9:6]
-            inst |= ((imm >> 4) & 0b1) << 6;    // Add offset[4]
-            inst |= ((imm >> 5) & 0b1) << 12;   // Add offset[5]
+            verify_imm<6>(imm);                                // Check for signed 6b
+            inst |= (imm & 0b11111) << 2;                      // Add imm[4:0]
+            inst |= ((imm >> 5) & 0b1) << 12;                  // Add imm[5]
+        } else if (id == CSLLI) {                              // imm[5], imm[4:0]
+            verify_imm<6u>(imm);                               // Check for unsigned 6b
+            inst |= (imm & 0b11111) << 2;                      // Add imm[4:0]
+            inst |= ((imm >> 5) & 0b1) << 12;                  // Add imm[5]
+        } else if (id == CLUI) {                               // nzimm[17], imm[16:12]
+            verify_imm<6>(imm);                                // Check for signed 6b
+            inst |= ((imm >> 12) & 0b11111) << 2;              // Add imm[16:12]
+            inst |= ((imm >> 17) & 0b1) << 12;                 // Add nzimm[17]
+        } else if (id == CADDI16SP) {                          // nzimm[9], nzimm[4|6|8:7|5]
+            verify_imm<10>(imm);                               // Check for signed 10b
+            inst |= ((imm >> 5) & 0b1) << 2;                   // Add nzimm[5]
+            inst |= ((imm >> 7) & 0b11) << 3;                  // Add nzimm[8:7]
+            inst |= ((imm >> 6) & 0b1) << 5;                   // Add nzimm[6]
+            inst |= ((imm >> 4) & 0b1) << 6;                   // Add nzimm[4]
+            inst |= ((imm >> 9) & 0b1) << 12;                  // Add nzimm[9]
+        } else {                                               // offset[4|9:6]
+            inst |= ((imm >> 6) & 0b1111) << 2;                // Add offset[9:6]
+            inst |= ((imm >> 4) & 0b1) << 6;                   // Add offset[4]
+            inst |= ((imm >> 5) & 0b1) << 12;                  // Add offset[5]
         }
         inst |= rd << 7;     // Add rd
         inst |= funct << 13; // Add funct3
@@ -909,18 +925,18 @@ void make_inst(assembly_context& c) {
         }
 
         DBG(std::cout << "Encoding CSS-type instruction with name " << c.inst << std::endl;)
-        inst |= rs2 << 2;                  // Add rs2
-        if (id == CSWSP || id == CFSWSP) { // offset[5:2|7:6]
-            verify_imm<8u>(imm); // Check for unsigned 8b
+        inst |= rs2 << 2;                         // Add rs2
+        if (id == CSWSP || id == CFSWSP) {        // offset[5:2|7:6]
+            verify_imm<8u>(imm);                  // Check for unsigned 8b
             inst |= ((imm >> 6) & 0b11) << 7;     // Add offset[7:6]
             inst |= ((imm >> 2) & 0b1111) << 9;   // Add offset[5:2]
         } else if (id == CSDSP || id == CFSDSP) { // offset[5:3|8:6]
-            verify_imm<9u>(imm); // Check for unsigned 9b
-            inst |= ((imm >> 6) & 0b111) << 7;  // Add offset[8:6]
-            inst |= ((imm >> 3) & 0b111) << 10; // Add offset[5:3]
-        } else {                                // offset[5:4|9:6]
-            inst |= ((imm >> 6) & 0b1111) << 7; // Add offset[9:6]
-            inst |= ((imm >> 4) & 0b11) << 11;  // Add offset[5:4]
+            verify_imm<9u>(imm);                  // Check for unsigned 9b
+            inst |= ((imm >> 6) & 0b111) << 7;    // Add offset[8:6]
+            inst |= ((imm >> 3) & 0b111) << 10;   // Add offset[5:3]
+        } else {                                  // offset[5:4|9:6]
+            inst |= ((imm >> 6) & 0b1111) << 7;   // Add offset[9:6]
+            inst |= ((imm >> 4) & 0b11) << 11;    // Add offset[5:4]
         }
         inst |= funct << 13; // Add funct3
     } else if (type == CIW) {
@@ -2031,7 +2047,8 @@ ultravector<uint8_t> assemble_code(const std::string_view& data, const ultravect
     int res = std::system(
             "riscv64-linux-gnu-as "
             "-march=rv64gfdcqb_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp_zfbfmin_zvfbfmin_zvfbfwma_zabha_zicbom_"
-            "zicboz_zicbop_xtheadvector_xtheadcmo_xtheadsync_xtheadba_xtheadbb_xtheadbs_xtheadcondmov_xtheadmemidx_xtheadmempair_xtheadfmemidx_xtheadmac_xtheadfmv_xtheadint_xtheadvdotv0.7.1_xtheadzvamo "
+            "zicboz_zicbop_xtheadvector_xtheadcmo_xtheadsync_xtheadba_xtheadbb_xtheadbs_xtheadcondmov_xtheadmemidx_xtheadmempair_xtheadfmemidx_xtheadmac_xtheadfmv_xtheadint_xtheadvdotv0.7.1_"
+            "xtheadzvamo "
             "temp.s -o temp.o"
     );
 
