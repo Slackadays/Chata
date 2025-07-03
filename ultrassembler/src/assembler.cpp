@@ -298,10 +298,10 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
             throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
         }
         DBG(std::cout << "CSRI instruction made" << std::endl;)
-    } else if (id == VSETVLI || id == VSETIVLI) {
+    } else if (id == VSETVLI || id == VSETIVLI || id == THVSETVLI) {
         rd = decode_register(c.arg1).encoding;
 
-        if (id == VSETVLI) {
+        if (id == VSETVLI || id == THVSETVLI) {
             rs1 = decode_register(c.arg2).encoding;
         } else {
             auto res = decode_imm<int>(c.arg2, c);
