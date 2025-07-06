@@ -105,7 +105,7 @@ Ultrassembler shares exactly zero (0) code with binutils or LLVM. That means we 
 
 ### ▫️ Verified quality
 
-The Ultrassembler testsuite currently has 1900+ tests covering all supported instructions and directives and other cases too.
+The Ultrassembler testsuite currently has 2000+ tests covering all supported instructions and directives and other cases too.
 
 ### ▫️ Super-duper crazy fast! 🏎️
 
