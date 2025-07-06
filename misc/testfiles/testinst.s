@@ -1,1 +1,1 @@
-th.vamoswapw.v v3, (x1), v4
+th.vamomaxud.v v22, v23, (x24), v22

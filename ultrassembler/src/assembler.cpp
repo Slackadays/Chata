@@ -152,6 +152,8 @@ std::optional<uint8_t> decode_vsew(const ultrastring& str) {
         return 0b010;
     } else if (fast_eq(str, "e64")) {
         return 0b011;
+    } else if (fast_eq(str, "e128")) {
+        return 0b100;
     } else {
         return std::nullopt;
     }
@@ -172,6 +174,20 @@ std::optional<uint8_t> decode_vlmul(const ultrastring& str) {
         return 0b110;
     } else if (fast_eq(str, "mf2")) {
         return 0b111;
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<uint8_t> decode_vediv(const ultrastring& str) {
+    if (fast_eq(str, "d1")) {
+        return 0b00;
+    } else if (fast_eq(str, "d2")) {
+        return 0b01;
+    } else if (fast_eq(str, "d4")) {
+        return 0b10;
+    } else if (fast_eq(str, "d8")) {
+        return 0b11;
     } else {
         return std::nullopt;
     }
@@ -316,7 +332,11 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
 
         auto sew = decode_vsew(c.arg3);
         if (sew.has_value()) {
-            imm |= sew.value() << 3;
+            if (id == THVSETVLI) {
+                imm |= sew.value() << 2;
+            } else {
+                imm |= sew.value() << 3;
+            }
         } else {
             throw UltraError(UltraErrorType::Compiler, "Invalid VSEW " + c.arg3, c.line, c.column);
         }
@@ -352,6 +372,8 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
                 if (c.arg6 == "ma") {
                     imm |= 0b1 << 7;
                 }
+            } else if (auto ediv = decode_vediv(c.arg5); ediv.has_value()) {
+                imm |= ediv.value() << 5;
             }
         } else {
             throw UltraError(UltraErrorType::Compiler, "Invalid vtypei " + c.arg4, c.line, c.column);
@@ -1013,6 +1035,9 @@ void make_inst(assembly_context& c) {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         } else {
+            if (reqs == XTheadZvamo) {
+                remove_extraneous_parentheses(c.arg3);
+            }
             rs1 = decode_register(c.arg3).encoding;
         }
 
