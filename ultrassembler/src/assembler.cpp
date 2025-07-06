@@ -267,14 +267,14 @@ std::pair<int32_t, ultrastring> decode_offset_plus_reg(const ultrastring& str, a
 }
 
 void remove_extraneous_parentheses(ultrastring& str) {
+    if (str.back() == ')') { // Do this first to prevent more copies later
+        str.pop_back();
+    }
     if (str.front() == '0') {
         str.erase(0, 1);
     }
     if (str.front() == '(') {
         str.erase(0, 1);
-    }
-    if (str.back() == ')') {
-        str.pop_back();
     }
 }
 
