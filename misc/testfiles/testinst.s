@@ -1,1 +1,1 @@
-th.vamomaxud.v v22, v23, (x24), v22
+th.vfmv.s.f v5, fa1
