@@ -529,7 +529,7 @@ void th_vwcvtu_x_x_v_instr(assembly_context& c) { // th.vwcvtu.x.x.v vd, vs, vm 
     make_inst(c);
 }
 
-void th_vmsge_vx_instr(assembly_context& c) { // th.vmsge.vx vd, va, vb, vm -> th.vmsle.vv vd, vb, va, vm
+void th_vmsge_vx_instr(assembly_context& c) { // th.vmsge.vx vd, va, rs1, vm -> th.vmsle.vv vd, vb, va, vm
     c.inst_offset = fast_instr_search("th.vmsle.vv");
     std::swap(c.arg2, c.arg3);
     make_inst(c);

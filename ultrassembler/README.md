@@ -6,11 +6,11 @@ Ultrassembler is the world's #1 (and only) complete assembler library for RISC-V
     <img src="assets/Figure_1.svg">
 </p>
 
-Here's more on that. Ultrassembler is...
+But it's more than just fast. Ultrassembler is...
 
 ### ▫️ Complete
 
-Supports all **2000+** instructions in these RISC-V instruction sets!
+Supports all **2000+ instructions** in these RISC-V instruction sets!
 
 - RV32E
 - RV32I
@@ -105,13 +105,15 @@ Ultrassembler shares exactly zero (0) code with binutils or LLVM. That means we 
 
 ### ▫️ Verified quality
 
-The Ultrassembler testsuite currently has 2000+ tests covering all supported instructions and directives and other cases too.
+The Ultrassembler testsuite currently has **2600+ tests** covering all supported instructions and directives and other cases too.
 
 ### ▫️ Super-duper crazy fast! 🏎️
 
 Ultrassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Unlike `mold`, however, Ultrassembler doesn't use multithreading, but it doesn't need to. **Coming soon: How is Ultrassembler so fast?**
 
-On my desktop with a Zen 3 CPU and GCC 11, Ultrassembler is approximately 13x faster than `as` and 9x faster on my RISC-V SBC with a TH1520 SoC and GCC 14, both assembling the `16kinstrs.s` sample file, measured in number of cycles.
+It's so fast that you could use it to insert inline assembly in your code with little to no performance overhead!
+
+On my desktop with a Zen 3 CPU and GCC 11, Ultrassembler is approximately 13x faster than `as` and 9x faster on my RISC-V SBC with a TH1520 SoC and GCC 14, both assembling the `16kinstrs.s` sample file, measured in number of cycles. Compared to LLVM, the difference is even more staggering.
 
 ## Differences to `as` and `llvm-mc`
 
