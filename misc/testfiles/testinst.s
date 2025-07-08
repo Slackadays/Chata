@@ -1,1 +1,1 @@
-th.vmsge.vx v27, v28, x29
+vmsge.vx v2, v28, x29, v0.t, v1

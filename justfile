@@ -78,13 +78,28 @@ check-format:
   cd chatacli/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose --dry-run '{}' +
   cd ultrassembler/src; find '(' -name '*.cpp' -o -name '*.hpp' ')' -exec clang-format --Werror -i --verbose --dry-run '{}' +
 
-# run codegen scripts
+# run all codegen scripts
 generate:
+  @just generate-instructions
+  @just generate-registers
+  @just generate-csrs
+  @just generate-pseudoinstructions
+
+# just generate ultraassembler instructions
+generate-instructions:
   cd ultrassembler; python3 scripts/generate_instruction_search.py
+
+# just generate ultraassembler registers
+generate-registers:
   cd ultrassembler; python3 scripts/generate_register_search.py
+
+# just generate ultraassembler csrs
+generate-csrs:
   cd ultrassembler; python3 scripts/generate_csr_search.py
+
+# just generate ultraassembler pseudoinstructions
+generate-pseudoinstructions:
   cd ultrassembler; python3 scripts/generate_pseudoinstruction_converter.py
-  @just format
 
 # run testsuites for everything
 test:
