@@ -645,62 +645,62 @@ void vmsgeu_vx_instr(assembly_context& c) {
         c.arg3 = c.arg1;
         make_inst(c);
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Invalid arguments for vmsge.vx", c.line, c.column);
+        throw UltraError(UltraErrorType::Assembler, "Invalid arguments for vmsgeu.vx", c.line, c.column);
     }
 }
 
 void th_vmsge_vx_instr(assembly_context& c) {
     // th.vmsge.vx vd, va, x (unmasked va >= x) -> th.vmslt.vx vd, va, x; th.vmnand.mm vd, vd, vd
     if (c.arg4.empty()) {
-        c.inst_offset = fast_instr_search("vmslt.vx");
+        c.inst_offset = fast_instr_search("th.vmslt.vx");
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmnand.mm");
+        c.inst_offset = fast_instr_search("th.vmnand.mm");
         c.arg2 = c.arg1;
         c.arg3 = c.arg1;
         make_inst(c);
 
     // th.vmsge.vx vd, va, x, v0.t (masked va >= x, vd != v0) -> th.vmslt.vx vd, va, x, v0.t; th.vmxor.mm vd, vd, v0
     } else if (c.arg1 != "v0" && c.arg4 == "v0.t" && c.arg5.empty()) {
-        c.inst_offset = fast_instr_search("vmslt.vx");
+        c.inst_offset = fast_instr_search("th.vmslt.vx");
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmxor.mm");
+        c.inst_offset = fast_instr_search("th.vmxor.mm");
         c.arg2 = c.arg1;
         c.arg3 = "v0";
         c.arg4 = "";
         make_inst(c);
 
-    // th.vmsge.vx vd, va, x, v0.t, vt (masked va >= x, vd == v0, vt is temp register) -> th.vmslt.vx vt, va, x; th.vmandn.mm vd, vd, vt
+    // th.vmsge.vx vd, va, x, v0.t, vt (masked va >= x, vd == v0, vt is temp register) -> th.vmslt.vx vt, va, x; th.vmandnot.mm vd, vd, vt
     } else if (c.arg1 == "v0" && c.arg4 == "v0.t" && !c.arg5.empty()) {
-        c.inst_offset = fast_instr_search("vmslt.vx");
+        c.inst_offset = fast_instr_search("th.vmslt.vx");
         auto vd = c.arg1;
         c.arg1 = c.arg5;
         c.arg4 = "";
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmandn.mm");
+        c.inst_offset = fast_instr_search("th.vmandnot.mm");
         c.arg3 = c.arg1;
         c.arg2 = vd;
         c.arg1 = vd;
         make_inst(c);
 
-    // th.vmsge.vx vd, va, x, v0.t, vt (masked va >= x, any vd, vt is temp register) -> th.vmslt.vx vt, va, x; th.vmandn.mm vt, v0, vt; th.vmandn.mm vd, vd, v0; th.vmor.mm vd, vt, vd
+    // th.vmsge.vx vd, va, x, v0.t, vt (masked va >= x, any vd, vt is temp register) -> th.vmslt.vx vt, va, x; th.vmandnot.mm vt, v0, vt; th.vmandnot.mm vd, vd, v0; th.vmor.mm vd, vt, vd
     } else if (c.arg4 == "v0.t" && !c.arg5.empty()) {
-        c.inst_offset = fast_instr_search("vmslt.vx");
+        c.inst_offset = fast_instr_search("th.vmslt.vx");
         auto vd = c.arg1;
         c.arg1 = c.arg5;
         c.arg4 = "";
         c.arg5 = "";
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmandn.mm");
+        c.inst_offset = fast_instr_search("th.vmandnot.mm");
         c.arg2 = "v0";
         c.arg3 = c.arg1;
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmandn.mm");
+        c.inst_offset = fast_instr_search("th.vmandnot.mm");
         auto vt = c.arg1;
         c.arg1 = vd;
         c.arg2 = c.arg1;
         c.arg3 = "v0";
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmor.mm");
+        c.inst_offset = fast_instr_search("th.vmor.mm");
         c.arg2 = vt;
         c.arg3 = c.arg1;
         make_inst(c);
@@ -710,62 +710,62 @@ void th_vmsge_vx_instr(assembly_context& c) {
 }
 
 void th_vmsgeu_vx_instr(assembly_context& c) {
-    // vmsgeu.vx vd, va, x (unmasked va >= x) -> vmsltu.vx vd, va, x; vmnand.mm vd, vd, vd
+    // th.vmsgeu.vx vd, va, x (unmasked va >= x) -> th.vmsltu.vx vd, va, x; th.vmnand.mm vd, vd, vd
     if (c.arg4.empty()) {
-        c.inst_offset = fast_instr_search("vmsltu.vx");
+        c.inst_offset = fast_instr_search("th.vmsltu.vx");
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmnand.mm");
+        c.inst_offset = fast_instr_search("th.vmnand.mm");
         c.arg2 = c.arg1;
         c.arg3 = c.arg1;
         make_inst(c);
 
-    // vmsgeu.vx vd, va, x, v0.t (masked va >= x, vd != v0) -> vmsltu.vx vd, va, x, v0.t; vmxor.mm vd, vd, v0
+    // th.vmsgeu.vx vd, va, x, v0.t (masked va >= x, vd != v0) -> th.vmsltu.vx vd, va, x, v0.t; th.vmxor.mm vd, vd, v0
     } else if (c.arg1 != "v0" && c.arg4 == "v0.t" && c.arg5.empty()) {
-        c.inst_offset = fast_instr_search("vmsltu.vx");
+        c.inst_offset = fast_instr_search("th.vmsltu.vx");
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmxor.mm");
+        c.inst_offset = fast_instr_search("th.vmxor.mm");
         c.arg2 = c.arg1;
         c.arg3 = "v0";
         c.arg4 = "";
         make_inst(c);
 
-    // vmsgeu.vx vd, va, x, v0.t, vt (masked va >= x, vd == v0, vt is temp register) -> vmsltu.vx vt, va, x; vmandn.mm vd, vd, vt
+    // th.vmsgeu.vx vd, va, x, v0.t, vt (masked va >= x, vd == v0, vt is temp register) -> th.vmsltu.vx vt, va, x; th.vmandnot.mm vd, vd, vt
     } else if (c.arg1 == "v0" && c.arg4 == "v0.t" && !c.arg5.empty()) {
-        c.inst_offset = fast_instr_search("vmsltu.vx");
+        c.inst_offset = fast_instr_search("th.vmsltu.vx");
         auto vd = c.arg1;
         c.arg1 = c.arg5;
         c.arg4 = "";
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmandn.mm");
+        c.inst_offset = fast_instr_search("th.vmandnot.mm");
         c.arg3 = c.arg1;
         c.arg2 = vd;
         c.arg1 = vd;
         make_inst(c);
 
-    // vmsgeu.vx vd, va, x, v0.t, vt (masked va >= x, any vd, vt is temp register) -> vmsltu.vx vt, va, x; vmandn.mm vt, v0, vt; vmandn.mm vd, vd, v0; vmor.mm vd, vt, vd
+    // th.vmsgeu.vx vd, va, x, v0.t, vt (masked va >= x, any vd, vt is temp register) -> th.vmsltu.vx vt, va, x; th.vmandn.mm vt, v0, vt; th.vmandn.mm vd, vd, v0; th.vmor.mm vd, vt, vd
     } else if (c.arg4 == "v0.t" && !c.arg5.empty()) {
-        c.inst_offset = fast_instr_search("vmsltu.vx");
+        c.inst_offset = fast_instr_search("th.vmsltu.vx");
         auto vd = c.arg1;
         c.arg1 = c.arg5;
         c.arg4 = "";
         c.arg5 = "";
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmandn.mm");
+        c.inst_offset = fast_instr_search("th.vmandnot.mm");
         c.arg2 = "v0";
         c.arg3 = c.arg1;
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmandn.mm");
+        c.inst_offset = fast_instr_search("th.vmandnot.mm");
         auto vt = c.arg1;
         c.arg1 = vd;
         c.arg2 = c.arg1;
         c.arg3 = "v0";
         make_inst(c);
-        c.inst_offset = fast_instr_search("vmor.mm");
+        c.inst_offset = fast_instr_search("th.vmor.mm");
         c.arg2 = vt;
         c.arg3 = c.arg1;
         make_inst(c);
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Invalid arguments for th.vmsge.vx", c.line, c.column);
+        throw UltraError(UltraErrorType::Assembler, "Invalid arguments for th.vmsgeu.vx", c.line, c.column);
     }
 }
 

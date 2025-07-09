@@ -296,6 +296,9 @@ bool make_inst_from_pseudoinst(assembly_context& c) {
                                                 if (c.inst[11] == 'v') {
                                                     if (c.inst.size() < 13) {th_vmsgeu_vv_instr(c); return true;}
                                                 }
+                                                if (c.inst[11] == 'x') {
+                                                    if (c.inst.size() < 13) {th_vmsgeu_vx_instr(c); return true;}
+                                                }
                                             }
                                         }
                                     }
@@ -308,6 +311,9 @@ bool make_inst_from_pseudoinst(assembly_context& c) {
                                             }
                                             if (c.inst[10] == 'v') {
                                                 if (c.inst.size() < 12) {th_vmsge_vv_instr(c); return true;}
+                                            }
+                                            if (c.inst[10] == 'x') {
+                                                if (c.inst.size() < 12) {th_vmsge_vx_instr(c); return true;}
                                             }
                                         }
                                     }
@@ -1054,6 +1060,9 @@ bool make_inst_from_pseudoinst(assembly_context& c) {
                                     }
                                     if (c.inst[8] == 'v') {
                                         if (c.inst.size() < 10) {vmsgeu_vv_instr(c); return true;}
+                                    }
+                                    if (c.inst[8] == 'x') {
+                                        if (c.inst.size() < 10) {vmsgeu_vx_instr(c); return true;}
                                     }
                                 }
                             }

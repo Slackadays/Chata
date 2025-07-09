@@ -1927,7 +1927,7 @@ void handle_directives(assembly_context& c) {
     }
 }
 
-size_t parse_this_line(size_t i, const std::string_view& data, assembly_context& c) {
+size_t parse_this_line(size_t i, const ultrastring& data, assembly_context& c) {
     /*c.inst = "addi";
     c.arg1 = "zero";
     c.arg2 = "zero";
@@ -1941,6 +1941,8 @@ size_t parse_this_line(size_t i, const std::string_view& data, assembly_context&
     return;*/
 
     c.inst.clear();
+    
+
     auto is_whitespace = [](const char& c) {
         return c == '\t' || c == ' ';
     };
@@ -1951,6 +1953,7 @@ size_t parse_this_line(size_t i, const std::string_view& data, assembly_context&
     auto not_at_end = [](const char& c) {
         return c != '\n' && c != '#';
     };
+
     while (i < data.size()) {
         char temp = ch();
         if (not_at_end(temp) && is_whitespace(temp)) {
@@ -1959,14 +1962,19 @@ size_t parse_this_line(size_t i, const std::string_view& data, assembly_context&
             break;
         }
     }
+
+    volatile char preview;
     while (i < data.size() && not_at_end(ch()) && !is_whitespace(ch())) {
         c.inst.push_back(ch());
         i++;
+        preview = ch();
     }
+
     DBG(std::cout << "Instruction candidate: " << c.inst << std::endl;)
     while (i < data.size() && not_at_end(ch()) && is_whitespace(ch())) {
         i++;
     }
+
     auto parse_arg = [&](ultrastring& arg) {
         arg.clear();
         while (i < data.size() && not_at_end(ch()) && ch() != ',' && !is_whitespace(ch())) {
@@ -1993,7 +2001,7 @@ size_t parse_this_line(size_t i, const std::string_view& data, assembly_context&
                         parse_arg(c.arg6);
                         if (!c.arg6.empty()) {
                             c.arg_extra.clear();
-                            while (i < data.size() && ch() != '\n') {
+                            while (i < data.size() && not_at_end(ch())) {
                                 c.arg_extra.push_back(ch());
                                 i++;
                             }
@@ -2012,8 +2020,10 @@ size_t parse_this_line(size_t i, const std::string_view& data, assembly_context&
     return i;
 }
 
-ultravector<uint8_t> assemble_code(const std::string_view& data, const ultravector<RVInstructionSet> supported_sets) {
+ultravector<uint8_t> assemble_code(const std::string_view& input, const ultravector<RVInstructionSet> supported_sets) {
     // auto then = std::chrono::high_resolution_clock::now();
+
+    ultrastring data(input);
 
     assembly_context c;
 
