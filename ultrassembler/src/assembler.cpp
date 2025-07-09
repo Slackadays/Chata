@@ -97,7 +97,7 @@ std::optional<T> decode_imm(const ultrastring& imm, assembly_context& c) {
     }
 }
 
-const rvregister& decode_register(const ultrastring& str) {
+inline const rvregister& decode_register(const ultrastring& str) {
     // return registers[4];
     if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
         return registers[reg];
