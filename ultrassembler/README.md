@@ -109,7 +109,7 @@ The Ultrassembler testsuite currently has **2600+ tests** covering all supported
 
 ### ▫️ Super-duper crazy fast! 🏎️
 
-Ultrassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Unlike `mold`, however, Ultrassembler doesn't use multithreading, but it doesn't need to. **Coming soon: How is Ultrassembler so fast?**
+Ultrassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Some of these tricks include those you'd only see in fields like high speed trading. **Coming soon: How is Ultrassembler so fast?**
 
 It's so fast that you could use it to insert inline assembly in your code with little to no performance overhead!
 
