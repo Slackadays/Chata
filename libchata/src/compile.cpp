@@ -28,7 +28,7 @@ chatastring allocate_label(struct compilation_context& c) {
     return chatastring(generated_label_prefix) + to_chatastring(c.generated_label_num);
 }
 
-chatastring allocate_label(int num) {
+chatastring allocate_label(int32_t num) {
     return chatastring(generated_label_prefix) + to_chatastring(num);
 }
 
@@ -138,7 +138,7 @@ void replace_temp_registers(chatastring& input) {
                 break;
             }
         }
-        if (auto num = to_num<int>(id_str); num.has_value()) {
+        if (auto num = to_num<int32_t>(id_str); num.has_value()) {
             id = num.value();
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid temporary integer register ID " + id_str);
@@ -191,7 +191,7 @@ void replace_temp_registers(chatastring& input) {
                 break;
             }
         }
-        if (auto num = to_num<int>(id_str); num.has_value()) {
+        if (auto num = to_num<int32_t>(id_str); num.has_value()) {
             id = num.value();
         } else {
             throw ChataError(ChataErrorType::Compiler, "Invalid temporary floating point register ID " + id_str);

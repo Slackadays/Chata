@@ -1,1 +1,2 @@
-th.vmsgeu.vx v2, v28, x29, v0.t, v1
+addi a0, a1, 10
+jal zero, 4

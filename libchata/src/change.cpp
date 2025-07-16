@@ -98,7 +98,7 @@ void process_changes(InternalFile& file, struct compilation_context& c) {
                 this_reg = operand_1;
             }
             if (is_float(this_num)) {
-                this_num = to_chatastring(static_cast<int>(to_float(this_num)));
+                this_num = to_chatastring(static_cast<int32_t>(to_float(this_num)));
             }
             if (operation == "=") {
                 lines.push_back("li " + this_reg + ", " + this_num);

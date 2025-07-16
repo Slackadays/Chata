@@ -153,9 +153,7 @@ typedef std::basic_string<char, std::char_traits<char>, MemoryBank<char>> ultras
 template <typename T>
 using ultravector = std::vector<T, MemoryBank<T>>;
 
-ultrastring to_ultrastring(const int& num);
-ultrastring allocate_label(struct compilation_context& c);
-ultrastring allocate_label(int num);
+ultrastring to_ultrastring(const int32_t& num);
 
 class GlobalMemoryBank {
     inline static std::array<std::byte, memory_pool_size> pool;

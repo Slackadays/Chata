@@ -308,7 +308,7 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
     } else if (id == CSRRWI || id == CSRRSI || id == CSRRCI) {
         rd = decode_register(c.arg1).encoding;
         imm = decode_csr(c.arg2);
-        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             rs1 = num.value();
         } else {
             throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
@@ -320,7 +320,7 @@ void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, co
         if (id == VSETVLI || id == THVSETVLI) {
             rs1 = decode_register(c.arg2).encoding;
         } else {
-            auto res = decode_imm<int>(c.arg2, c);
+            auto res = decode_imm<int32_t>(c.arg2, c);
             if (res.has_value()) {
                 rs1 = res.value();
             } else {
@@ -476,7 +476,7 @@ void make_inst(assembly_context& c) {
         imm = 0;*/
 
         if (ssargs.get_imm_for_rs) {
-            if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                 // Check for unsigned 5b
                 verify_imm<5u>(num.value());
                 imm = num.value();
@@ -526,14 +526,14 @@ void make_inst(assembly_context& c) {
         }
 
         if (id == AES32DSI || id == AES32DSMI || id == AES32ESI || id == AES32ESMI || id == SM4ED || id == SM4KS) {
-            uint8_t bs = decode_imm<int>(c.arg4, c).value();
+            uint8_t bs = decode_imm<int32_t>(c.arg4, c).value();
             inst |= (bs & 0b11) << 30; // Add bs[1:0]
         } else if (id == THSFENCEVMAS) {
             rs2 = rs1;
             rs1 = rd;
             rd = 0b00000;
         } else if (id == THADDSL || reqs == XTheadMemIdx || reqs == XTheadFMemIdx) {
-            if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
                 imm = num.value();
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
@@ -541,7 +541,7 @@ void make_inst(assembly_context& c) {
             funct |= (imm & 0b11) << 3; // Add imm2
         } else if (reqs == XTheadMemPair) {
             std::swap(rs1, rs2);
-            if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
                 funct |= num.value() << 3;
                 verify_imm<2u>(num.value()); // Check for unsigned 2b
             } else {
@@ -627,7 +627,7 @@ void make_inst(assembly_context& c) {
             } else if (id == THSRRI || id == THTST) {
                 rd = decode_register(c.arg1).encoding;
                 rs1 = decode_register(c.arg2).encoding;
-                if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                     imm |= num.value();
                     verify_imm<6u>(num.value()); // Check for unsigned 6b
                 } else {
@@ -636,7 +636,7 @@ void make_inst(assembly_context& c) {
             } else if (id == THSRRIW) {
                 rd = decode_register(c.arg1).encoding;
                 rs1 = decode_register(c.arg2).encoding;
-                if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                     imm |= num.value();
                     verify_imm<5u>(num.value()); // Check for unsigned 5b
                 } else {
@@ -646,7 +646,7 @@ void make_inst(assembly_context& c) {
                 rd = decode_register(c.arg1).encoding;
                 remove_extraneous_parentheses(c.arg2);
                 rs1 = decode_register(c.arg2).encoding;
-                if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+                if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                     imm |= num.value();
                     verify_imm<5>(num.value()); // Check for signed 5b
                 } else {
@@ -654,7 +654,7 @@ void make_inst(assembly_context& c) {
                 }
 
                 uint8_t imm2 = 0;
-                if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
+                if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
                     imm2 = num.value();
                 } else {
                     throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
@@ -676,19 +676,19 @@ void make_inst(assembly_context& c) {
         } else if (id == THEXT || id == THEXTU) {
             rd = decode_register(c.arg1).encoding;
             rs1 = decode_register(c.arg2).encoding;
-            if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                 imm |= num.value() << 6;     // add imm1
                 verify_imm<5u>(num.value()); // Check for unsigned 5b
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
-            if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
                 imm |= num.value();          // add imm2
                 verify_imm<5u>(num.value()); // Check for unsigned 5b
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
             }
-        } else if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+        } else if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value();
             verify_imm<12>(imm); // Check for signed 12b
             rd = decode_register(c.arg1).encoding;
@@ -707,7 +707,7 @@ void make_inst(assembly_context& c) {
         inst |= rs1 << 15;             // Add rs1
         inst |= imm << 20;             // Add imm
     } else if (type == S) {
-        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value();
             verify_imm<12>(imm); // Check for signed 12b
             rs1 = decode_register(c.arg2).encoding;
@@ -726,9 +726,26 @@ void make_inst(assembly_context& c) {
         inst |= rs2 << 20;            // Add rs2
         inst |= (imm >> 5) << 25;     // Add imm[11:5]
     } else if (type == Branch) {
-        if (auto num = to_num<int>(c.arg3); num.has_value()) {
-            imm = num.value();
-            verify_imm<13>(imm); // Check for signed 13b
+        if (c.arg3.size() >= 3 && c.arg3.front() == '.' && (c.arg3[1] == '+' || c.arg3[1] == '-')) { // the .+imm or .-imm relative case
+            c.arg3.erase(0, 1);
+            if (c.arg3.front() == '+') {
+                c.arg3.erase(0, 1);
+            }
+            if (auto num = to_num<int32_t>(c.arg3); num.has_value()) {
+                imm = num.value();
+                verify_imm<13>(imm);
+            } else {
+                throw UltraError(UltraErrorType::Compiler, "Invalid relative immediate " + c.arg3, c.line, c.column);
+            }
+        } else if (auto num = to_num<int32_t>(c.arg3); num.has_value()) { // the plain imm constant case
+            if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
+                imm = num.value();
+                verify_imm<13>(imm); // Check for signed 13b
+            } else {
+                // calculate the offset assuming that imm is an absolute address
+                imm = num.value() - (c.machine_code.size() - bytes);
+                verify_imm<13>(imm); // Check for signed 13b
+            }
         } else {
             imm = string_to_label(c.arg3, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = Branch});
@@ -745,7 +762,7 @@ void make_inst(assembly_context& c) {
         inst |= ((imm >> 5) & 0b111111) << 25; // Add imm[10:5]
         inst |= ((imm >> 12) & 0b1) << 31;     // Add imm[12]
     } else if (type == U) {
-        if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
             imm = num.value();
         } else {
             throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
@@ -756,10 +773,26 @@ void make_inst(assembly_context& c) {
         inst |= rd << 7;   // Add rd
         inst |= imm << 12; // Add imm[31:12]
     } else if (type == J) {
-        if (auto num = to_num<int>(c.arg2); num.has_value()) {
-            imm = num.value();
-            verify_imm<21>(imm); // Check for signed 21b
-
+        if (c.arg2.size() >= 3 && c.arg2.front() == '.' && (c.arg2[1] == '+' || c.arg2[1] == '-')) { // the .+imm or .-imm relative case
+            c.arg2.erase(0, 1);
+            if (c.arg2.front() == '+') {
+                c.arg2.erase(0, 1);
+            }
+            if (auto num = to_num<int32_t>(c.arg2); num.has_value()) {
+                imm = num.value();
+                verify_imm<21>(imm);
+            } else {
+                throw UltraError(UltraErrorType::Compiler, "Invalid relative immediate " + c.arg2, c.line, c.column);
+            }
+        } else if (auto num = to_num<int32_t>(c.arg2); num.has_value()) { // the plain imm constant case
+            if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
+                imm = num.value();
+                verify_imm<21>(imm);
+            } else {
+                // calculate the offset assuming that imm is an absolute address
+                imm = num.value() - (c.machine_code.size() - bytes);
+                verify_imm<21>(imm);
+            }
         } else {
             imm = string_to_label(c.arg2, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = J});
@@ -773,9 +806,26 @@ void make_inst(assembly_context& c) {
         inst |= ((imm >> 1) & 0b1111111111) << 21; // Add imm[10:1]
         inst |= ((imm >> 20) & 0b1) << 31;         // Add imm[20]
     } else if (type == CJ) {
-        if (auto num = to_num<int>(c.arg1); num.has_value()) {
-            imm = num.value();
-            verify_imm<12>(imm); // Check for signed 12b
+        if (c.arg1.size() >= 3 && c.arg1.front() == '.' && (c.arg1[1] == '+' || c.arg1[1] == '-')) { // the .+imm or .-imm relative case
+            c.arg1.erase(0, 1);
+            if (c.arg1.front() == '+') {
+                c.arg1.erase(0, 1);
+            }
+            if (auto num = to_num<int32_t>(c.arg1); num.has_value()) {
+                imm = num.value();
+                verify_imm<12>(imm);
+            } else {
+                throw UltraError(UltraErrorType::Compiler, "Invalid relative immediate " + c.arg3, c.line, c.column);
+            }
+        } else if (auto num = to_num<int32_t>(c.arg1); num.has_value()) { // the plain imm constant case
+            if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
+                imm = num.value();
+                verify_imm<12>(imm); // Check for signed 13b
+            } else {
+                // calculate the offset assuming that imm is an absolute address
+                imm = num.value() - (c.machine_code.size() - bytes);
+                verify_imm<12>(imm); // Check for signed 13b
+            }
         } else {
             imm = string_to_label(c.arg1, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = CJ});
@@ -792,7 +842,7 @@ void make_inst(assembly_context& c) {
         inst |= ((imm >> 11) & 0b1) << 12; // Add offset[11]
         inst |= funct << 13;               // Add funct3
     } else if (type == CL) {
-        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value();
             rs1 = decode_register(c.arg2).encoding & 0b111;
         } else {
@@ -816,7 +866,7 @@ void make_inst(assembly_context& c) {
         inst |= ((imm >> 3) & 0b111) << 10; // Add offset[5:3]
         inst |= funct << 13;                // Add funct3
     } else if (type == CS) {
-        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value();
             rs1 = decode_register(c.arg2).encoding & 0b111;
         } else {
@@ -840,8 +890,23 @@ void make_inst(assembly_context& c) {
         inst |= ((imm >> 3) & 0b111) << 10; // Add offset[5:3]
         inst |= funct << 13;                // Add funct3
     } else if (type == CB) {
-        if (auto num = to_num<int>(c.arg2); num.has_value()) {
-            imm = num.value();
+        if (c.arg2.size() >= 3 && c.arg2.front() == '.' && (c.arg2[1] == '+' || c.arg2[1] == '-')) { // the .+imm or .-imm relative case
+            c.arg2.erase(0, 1);
+            if (c.arg2.front() == '+') {
+                c.arg2.erase(0, 1);
+            }
+            if (auto num = to_num<int32_t>(c.arg2); num.has_value()) {
+                imm = num.value();
+            } else {
+                throw UltraError(UltraErrorType::Compiler, "Invalid relative immediate " + c.arg3, c.line, c.column);
+            }
+        } else if (auto num = to_num<int32_t>(c.arg2); num.has_value()) { // the plain imm constant case
+            if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
+                imm = num.value();
+            } else {
+                // calculate the offset assuming that imm is an absolute address
+                imm = num.value() - (c.machine_code.size() - bytes);
+            }
         } else {
             imm = string_to_label(c.arg2, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = CB});
@@ -892,7 +957,7 @@ void make_inst(assembly_context& c) {
             }
         } else {
             rd = decode_register(c.arg1).encoding;
-            if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
                 imm = num.value();
             } else {
                 auto [offset, reg] = decode_offset_plus_reg(c.arg2, c); // discard reg
@@ -939,7 +1004,7 @@ void make_inst(assembly_context& c) {
         inst |= funct << 13; // Add funct3
     } else if (type == CSS) {
         rs2 = decode_register(c.arg1).encoding;
-        if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
             imm = num.value();
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c); // discard reg
@@ -963,7 +1028,7 @@ void make_inst(assembly_context& c) {
         inst |= funct << 13; // Add funct3
     } else if (type == CIW) {
         rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
-        if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
             imm = num.value();
         } else {
             throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
@@ -1029,7 +1094,7 @@ void make_inst(assembly_context& c) {
         if (ssargs.custom_reg_val.has_value()) {
             rs1 = ssargs.custom_reg_val.value();
         } else if (ssargs.get_imm_for_rs) {
-            if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                 rs1 = num.value();
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
@@ -1068,7 +1133,7 @@ void make_inst(assembly_context& c) {
         if (ssargs.custom_reg_val.has_value()) {
             rs2 = ssargs.custom_reg_val.value();
 
-            if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
                 imm = num.value();
                 verify_imm<5>(imm); // Check for signed 5b
             } else {
@@ -1077,7 +1142,7 @@ void make_inst(assembly_context& c) {
         } else {
             rs2 = decode_register(c.arg2).encoding;
 
-            if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                 imm = num.value();
 
                 if (id == VSLLVI || id == VSRLVI || id == VSRAVI || id == VNSRLWI || id == VNSRAWI || id == VSSRLVI || id == VSSRAVI || id == VNCLIPUWI || id == VNCLIPWI || id == VSLIDEUPVI
@@ -1110,7 +1175,7 @@ void make_inst(assembly_context& c) {
         }
     } else if (type == CLB) {
         rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
-        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value() & 0b11;
             rs1 = decode_register(c.arg2).encoding & 0b111;
         } else {
@@ -1128,7 +1193,7 @@ void make_inst(assembly_context& c) {
         inst |= funct << 10;      // Add funct6
     } else if (type == CSBfmt) {
         rs2 = decode_register(c.arg1).encoding & 0b111;
-        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value() & 0b11;
             rs1 = decode_register(c.arg2).encoding & 0b111;
         } else {
@@ -1146,7 +1211,7 @@ void make_inst(assembly_context& c) {
         inst |= funct << 10;      // Add funct6
     } else if (type == CLHfmt) {
         rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
-        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value() & 0b11;
             rs1 = decode_register(c.arg2).encoding & 0b111;
         } else {
@@ -1164,7 +1229,7 @@ void make_inst(assembly_context& c) {
         inst |= (funct >> 1) << 10; // Add funct6
     } else if (type == CSHfmt) {
         rs2 = decode_register(c.arg1).encoding & 0b111;
-        if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = (num.value() >> 1) & 0b1;
             rs1 = decode_register(c.arg2).encoding & 0b111;
         } else {
@@ -1199,7 +1264,7 @@ void make_inst(assembly_context& c) {
         inst |= rs1 << 7;            // Add rs1' (just 3 bits)
         inst |= (funct >> 2) << 10;  // Add funct6
     } else if (type == CMJTfmt) {
-        if (auto num = decode_imm<int>(c.arg1, c); num.has_value()) {
+        if (auto num = decode_imm<int32_t>(c.arg1, c); num.has_value()) {
             imm = num.value();
         } else {
             throw UltraError(UltraErrorType::Compiler, "Invalid index " + c.arg1, c.line, c.column);
@@ -1303,19 +1368,19 @@ void make_inst(assembly_context& c) {
 
         // imm = stack_adj
         if (c.arg3.empty()) {
-            if (auto num = decode_imm<int>(c.arg2, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
                 imm = num.value();
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
             }
         } else if (c.arg4.empty()) {
-            if (auto num = decode_imm<int>(c.arg3, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                 imm = num.value();
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         } else {
-            if (auto num = decode_imm<int>(c.arg4, c); num.has_value()) {
+            if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
                 imm = num.value();
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
@@ -1663,6 +1728,12 @@ void handle_directives(assembly_context& c) {
         } else if (fast_eq(c.arg1, "pop")) {
             DBG(std::cout << "Popping options" << std::endl;)
             c.options.pop_back();
+        } else if (fast_eq(c.arg1, "simpleoffset")) {
+            DBG(std::cout << "Setting simpleoffset option to true" << std::endl;)
+            c.options.back().plain_jump_offset = true;
+        } else if (fast_eq(c.arg1, "nosimpleoffset")) {
+            DBG(std::cout << "Setting simpleoffset option to false" << std::endl;)
+            c.options.back().plain_jump_offset = false;
         }
     } else if (fast_eq(c.inst, ".insn")) {
         DBG(std::cout << "Instruction directive" << std::endl;)
@@ -2026,6 +2097,8 @@ ultravector<uint8_t> assemble_code(const std::string_view& input, const ultravec
     ultrastring data(input);
 
     assembly_context c;
+
+    c.options.push_back(directive_options{});
 
     c.supported_sets = supported_sets;
 

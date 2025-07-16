@@ -59,7 +59,7 @@ using chatavector = std::vector<T, MemoryBank<T>>;
 
 chatastring to_chatastring(const int& num);
 chatastring allocate_label(struct compilation_context& c);
-chatastring allocate_label(int num);
+chatastring allocate_label(int32_t num);
 chatastring allocate_int_register(struct compilation_context& c);
 chatastring allocate_int_register(int num);
 chatastring allocate_float_register(struct compilation_context& c);

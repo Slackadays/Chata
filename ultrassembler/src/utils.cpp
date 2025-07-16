@@ -46,7 +46,7 @@ void GlobalMemoryBank::reset() {
 
 namespace ultrassembler_internal {
 
-ultrastring to_ultrastring(const int& num) {
+ultrastring to_ultrastring(const int32_t& num) {
     ultrastring result;
     result.reserve(32);
     std::array<char, 16> temp;

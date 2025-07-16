@@ -8,7 +8,7 @@ namespace ultrassembler_internal {
 void li_instr(assembly_context& c) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
                                      // Case 1: imm is a 12-bit signed integer
     int imm;
-    if (auto num = to_num<int>(c.arg2); num.has_value()) {
+    if (auto num = to_num<int32_t>(c.arg2); num.has_value()) {
         imm = num.value();
     } else {
         throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
@@ -33,7 +33,7 @@ void li_instr(assembly_context& c) { // li rd, imm -> lui rd, imm[31:12]; addi r
 void la_instr(assembly_context& c) { // la rd, imm -> auipc rd, imm[31:12]; addi rd, rd, imm[11:0]
                                      // Case 1: imm is a 12-bit signed integer
     int imm;
-    if (auto num = to_num<int>(c.arg2); num.has_value()) {
+    if (auto num = to_num<int32_t>(c.arg2); num.has_value()) {
         imm = num.value();
     } else {
         throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
@@ -226,7 +226,7 @@ void j_instr(assembly_context& c) {
 void call_instr(assembly_context& c) {
     // Case 1: imm is a 12-bit signed integer
     int imm;
-    if (auto num = to_num<int>(c.arg1); num.has_value()) {
+    if (auto num = to_num<int32_t>(c.arg1); num.has_value()) {
         imm = num.value();
     } else {
         throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg1, c.line, c.column);
@@ -367,25 +367,25 @@ void th_vmset_m_instr(assembly_context& c) { // th.vmset.m vd -> th.vmxnor.mm vd
 
 void vmsge_vi_instr(assembly_context& c) { // vmsge.vi vd, va, i, vm -> vmsgt.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsgt.vi");
-    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int32_t>(c.arg3).value() - 1);
     make_inst(c);
 }
 
 void th_vmsge_vi_instr(assembly_context& c) { // th.vmsge.vi vd, va, i, vm -> th.vmsgt.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("th.vmsgt.vi");
-    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int32_t>(c.arg3).value() - 1);
     make_inst(c);
 }
 
 void vmsgeu_vi_instr(assembly_context& c) { // vmsgeu.vi vd, va, i, vm -> vmsgtu.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsgtu.vi");
-    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int32_t>(c.arg3).value() - 1);
     make_inst(c);
 }
 
 void th_vmsgeu_vi_instr(assembly_context& c) { // th.vmsgeu.vi vd, va, i, vm -> th.vmsgtu.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("th.vmsgtu.vi");
-    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int32_t>(c.arg3).value() - 1);
     make_inst(c);
 }
 
@@ -439,25 +439,25 @@ void th_vmsgtu_vv_instr(assembly_context& c) { // th.vmsgtu.vv vd, va, vb, vm ->
 
 void vmslt_vi_instr(assembly_context& c) { // vmslt.vi vd, va, i, vm -> vmsle.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsle.vi");
-    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int32_t>(c.arg3).value() - 1);
     make_inst(c);
 }
 
 void th_vmslt_vi_instr(assembly_context& c) { // th.vmslt.vi vd, va, i, vm -> th.vmsle.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("th.vmsle.vi");
-    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int32_t>(c.arg3).value() - 1);
     make_inst(c);
 }
 
 void vmsltu_vi_instr(assembly_context& c) { // vmsltu.vi vd, va, i, vm -> vmsleu.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("vmsleu.vi");
-    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int32_t>(c.arg3).value() - 1);
     make_inst(c);
 }
 
 void th_vmsltu_vi_instr(assembly_context& c) { // th.vmsltu.vi vd, va, i, vm -> th.vmsleu.vi vd, va, i-1, vm
     c.inst_offset = fast_instr_search("th.vmsleu.vi");
-    c.arg3 = to_ultrastring(to_num<int>(c.arg3).value() - 1);
+    c.arg3 = to_ultrastring(to_num<int32_t>(c.arg3).value() - 1);
     make_inst(c);
 }
 

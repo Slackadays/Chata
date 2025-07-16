@@ -5,8 +5,9 @@
 
 namespace ultrassembler_internal {
 
-struct directive_option {
+struct directive_options {
     ultravector<RVInstructionSet> supported_sets;
+    bool plain_jump_offset = false;
 };
 
 struct label_loc {
@@ -31,7 +32,7 @@ struct assembly_context {
     ultravector<std::pair<ultrastring, int>> labels;
     ultravector<label_loc> label_locs;
     ultravector<std::pair<ultrastring, ultrastring>> constants;
-    ultravector<directive_option> options;
+    ultravector<directive_options> options;
     int32_t custom_inst = 0;
     uint32_t line = 1;
     uint32_t column = 0;
