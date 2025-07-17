@@ -875,8 +875,11 @@ int main() {
     as("c.addi16sp sp, 16", 0x4161);
     as("c.slli x14, 1", 0x0607);
     as("c.srli x15, 1", 0x8583);
+    as("addi a0, a1, 10 \n c.srli x15, 1", {0x13, 0x85, 0xa5, 0x00, 0x85, 0x83});
     as("c.srai x15, 1", 0x8587);
+    as("addi a0, a1, 10 \n c.srai x15, 1", {0x13, 0x85, 0xa5, 0x00, 0x85, 0x87});
     as("c.andi x15, 1", 0x858b);
+    as("addi a0, a1, 10 \n c.andi x15, 1", {0x13, 0x85, 0xa5, 0x00, 0x85, 0x8b});
     as("c.mv x16, x17", 0x4688);
     as("c.add x18, x19", 0x4e99);
     as("c.and x8, x9", 0x658c);
