@@ -176,6 +176,7 @@ int main() {
     as(".equ foo, 0x100 \n auipc t0, foo", 0x97021000);
     as("jal zero, 4", 0x6f004000);
     as("jal zero, .+4", 0x6f004000);
+    as("jal zero, .-4", 0x6ff0dfff);
     as("addi a0, a1, 10 \n jal zero, 4", {0x13, 0x85, 0xa5, 0x00, 0x6f, 0x00, 0x00, 0x00});
     as(".option simpleoffset \n .option push \n addi a0, a1, 10 \n jal zero, 4", {0x13, 0x85, 0xa5, 0x00, 0x6f, 0x00, 0x40, 0x00});
     as("addi a0, a1, 10 \n jal zero, .+4", {0x13, 0x85, 0xa5, 0x00, 0x6f, 0x00, 0x40, 0x00});
@@ -853,10 +854,18 @@ int main() {
     as("c.fsd f11, x12, 8", 0x0ca6);
     as("c.fsd f11, 8(x12)", 0x0ca6);
     as("c.j 64", 0x81a0);
+    as("c.j .+64", 0x81a0);
+    as("c.j .-64", 0xc1b7);
+    as("addi a0, a1, 10 \n c.j 64", {0x13, 0x85, 0xa5, 0x00, 0x35, 0xa8});
+    as("addi a0, a1, 10 \n c.j .+64", {0x13, 0x85, 0xa5, 0x00, 0x81, 0xa0});
+    as(".option simpleoffset \n .option push \n addi a0, a1, 10 \n c.j 64", {0x13, 0x85, 0xa5, 0x00, 0x81, 0xa0});
+    as(".option simpleoffset \n .option push \n addi a0, a1, 10 \n c.j .+64", {0x13, 0x85, 0xa5, 0x00, 0x81, 0xa0});
     as("c.jal 32", 0x0520);
     as("c.jr x1", 0x8280);
     as("c.jalr x2", 0x0291);
     as("c.beqz x8, 16", 0x01c8);
+    as("c.beqz x8, .+16", 0x01c8);
+    as("c.beqz x8, .-16", 0x65d8);
     as("c.bnez x9, 8", 0x81e4);
     as("c.li x10, 31", 0x7d45);
     as("c.lui x11, 16", 0x8165);
@@ -1190,6 +1199,8 @@ int main() {
     as("blez a1, -40", 0xe34cb0fc);
     as("bgtz a2, 64", 0x6310c004);
     as("j 24", 0x6f008001);
+    as("j .+24", 0x6f008001);
+    as("j .-24", 0x6ff09ffe);
     as("ret", 0x67800000);
     as("nop", 0x13000000);
     as("vfneg.v v0, v1", 0x57901026);

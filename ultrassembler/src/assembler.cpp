@@ -901,7 +901,7 @@ void make_inst(assembly_context& c) {
                 throw UltraError(UltraErrorType::Compiler, "Invalid relative immediate " + c.arg3, c.line, c.column);
             }
         } else if (auto num = to_num<int32_t>(c.arg2); num.has_value()) { // the plain imm constant case
-            if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
+            if ((c.options.size() > 0 && c.options.back().plain_jump_offset) || id == CSRLI || id == CSRAI || id == CANDI) { // the plain jump offset case, some regular C instrs use CB but don't actually jump
                 imm = num.value();
             } else {
                 // calculate the offset assuming that imm is an absolute address

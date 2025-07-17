@@ -105,7 +105,7 @@ Ultrassembler shares exactly zero (0) code with binutils or LLVM. That means we 
 
 ### ▫️ Verified quality
 
-The Ultrassembler testsuite currently has **2600+ tests** covering all supported instructions and directives and other cases too.
+The Ultrassembler testsuite currently has **2700+ tests** covering all supported instructions and directives and other cases too.
 
 ### ▫️ Super-duper crazy fast! 🏎️
 
@@ -174,6 +174,8 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 | Control and Status Registers                     | ☑️                                                     |
 | Standard pseudoinstructions                      | ☑️                                                     |
 | CSR pseudoinstructions                           | ☑️                                                     |
+
+In addition, for instructions such as `jal`, `j`, `beq`, `c.jal`, and `c.beqz` which adjust the PC to jump to a different location, Ultrassembler supports `.option simpleoffset` and `.option nosimpleoffset` to enable the offset to be a simple integer instead of an integer with a `.+` or `.-` prefix. For example, `j .+64` can be `j 64` instead when you add `.option simpleoffset`.
 
 ### ▫️ License
 
