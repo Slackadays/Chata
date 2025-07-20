@@ -150,7 +150,7 @@ int main() {
     as(".insn r V, 0b111, 0b1111111, x8, x1, x2", 0x57f420fe);
     as(".insn r VE, 0b111, 0b1111111, x8, x1, x2", 0x77f420fe);
     as(".insn r IMM_32, 0b111, 0b1111111, x8, x1, x2", 0x1bf420fe);
-    as(".insn r OP_32, 0b111, 0b1111111, x8, x1, x2", 0x3bf420fe);
+    as(".insn r op_32, 0b111, 0b1111111, x8, x1, x2", 0x3bf420fe);
     as(".insn r CUSTOM_2, 0b111, 0b1111111, x8, x1, x2", 0x5bf420fe);
     as(".insn r CUSTOM_3, 0b111, 0b1111111, x8, x1, x2", 0x7bf420fe);
     as(".insn cr C0, 0b1111, x8, x18", 0x48f4);

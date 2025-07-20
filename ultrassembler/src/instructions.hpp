@@ -2197,49 +2197,111 @@ enum class RVInSetMinReqs : uint8_t { // The smallest set combination that provi
 
 namespace opcode {
 
-constexpr uint8_t OP_LOAD = 0b0000011;
-constexpr uint8_t OP_STORE = 0b0100011;
-constexpr uint8_t OP_MADD = 0b1000011;
-constexpr uint8_t OP_BRANCH = 0b1100011;
-constexpr uint8_t OP_LOAD_FP = 0b0000111;
-constexpr uint8_t OP_STORE_FP = 0b0100111;
-constexpr uint8_t OP_MSUB = 0b1000111;
-constexpr uint8_t OP_JALR = 0b1100111;
-constexpr uint8_t OP_CUSTOM_0 = 0b0001011;
-constexpr uint8_t OP_CUSTOM_1 = 0b0101011;
-constexpr uint8_t OP_NMSUB = 0b1001011;
-constexpr uint8_t OP_RESERVED = 0b1101011;
-constexpr uint8_t OP_MISC_MEM = 0b0001111;
-constexpr uint8_t OP_AMO = 0b0101111;
-constexpr uint8_t OP_NMADD = 0b1001111;
-constexpr uint8_t OP_JAL = 0b1101111;
-constexpr uint8_t OP_IMM = 0b0010011;
-constexpr uint8_t OP_OP = 0b0110011;
-constexpr uint8_t OP_FP = 0b1010011;
-constexpr uint8_t OP_SYSTEM = 0b1110011;
-constexpr uint8_t OP_AUIPC = 0b0010111;
-constexpr uint8_t OP_LUI = 0b0110111;
-constexpr uint8_t OP_V = 0b1010111;
-constexpr uint8_t OP_VE = 0b1110111;
-constexpr uint8_t OP_IMM_32 = 0b0011011;
-constexpr uint8_t OP_32 = 0b0111011;
-constexpr uint8_t OP_CUSTOM_2 = 0b1011011;
-constexpr uint8_t OP_CUSTOM_3 = 0b1111011;
+constexpr uint8_t op_LOAD = 0b0000011;
+constexpr uint8_t op_STORE = 0b0100011;
+constexpr uint8_t op_MADD = 0b1000011;
+constexpr uint8_t op_BRANCH = 0b1100011;
+constexpr uint8_t op_LOAD_FP = 0b0000111;
+constexpr uint8_t op_STORE_FP = 0b0100111;
+constexpr uint8_t op_MSUB = 0b1000111;
+constexpr uint8_t op_JALR = 0b1100111;
+constexpr uint8_t op_CUSTOM_0 = 0b0001011;
+constexpr uint8_t op_CUSTOM_1 = 0b0101011;
+constexpr uint8_t op_NMSUB = 0b1001011;
+constexpr uint8_t op_RESERVED = 0b1101011;
+constexpr uint8_t op_MISC_MEM = 0b0001111;
+constexpr uint8_t op_AMO = 0b0101111;
+constexpr uint8_t op_NMADD = 0b1001111;
+constexpr uint8_t op_JAL = 0b1101111;
+constexpr uint8_t op_IMM = 0b0010011;
+constexpr uint8_t op_OP = 0b0110011;
+constexpr uint8_t op_FP = 0b1010011;
+constexpr uint8_t op_SYSTEM = 0b1110011;
+constexpr uint8_t op_AUIPC = 0b0010111;
+constexpr uint8_t op_LUI = 0b0110111;
+constexpr uint8_t op_V = 0b1010111;
+constexpr uint8_t op_VE = 0b1110111;
+constexpr uint8_t op_IMM_32 = 0b0011011;
+constexpr uint8_t op_32 = 0b0111011;
+constexpr uint8_t op_CUSTOM_2 = 0b1011011;
+constexpr uint8_t op_CUSTOM_3 = 0b1111011;
 
-constexpr uint8_t OP_C0 = 0b00;
-constexpr uint8_t OP_C1 = 0b01;
-constexpr uint8_t OP_C2 = 0b10;
+constexpr uint8_t op_C0 = 0b00;
+constexpr uint8_t op_C1 = 0b01;
+constexpr uint8_t op_C2 = 0b10;
 
 } // namespace opcode
 
+struct ssflag {
+    uint8_t value;
+
+    constexpr ssflag(uint8_t value) : value(value) {}
+
+    constexpr bool operator&(ssflag other) const {
+        return (value & other.value) != 0;
+    }
+
+    constexpr ssflag operator|(ssflag other) const {
+        return ssflag(value | other.value);
+    }
+
+    constexpr ssflag operator~() const {
+        return ssflag(~value);
+    }
+};
+
+namespace ssarg {
+
+constexpr ssflag get_imm_for_rs = 0b00000001;
+constexpr ssflag use_frm_for_funct3 = 0b00000010;
+constexpr ssflag special_handling = 0b00000100;
+constexpr ssflag swap_rs1_rs2 = 0b00001000;
+constexpr ssflag use_funct_for_imm = 0b00010000;
+constexpr ssflag no_rs1 = 0b00100000;
+constexpr ssflag has_custom_reg_val = 0b01000000;
+
+} // namespace ssarg
+
 struct special_snowflake_args {
-    std::optional<uint8_t> custom_reg_val;
-    bool get_imm_for_rs = false;
-    bool use_frm_for_funct3 = false;
-    bool super_special_snowflake = false;
-    bool swap_rs1_rs2 = false;
-    bool use_funct_for_imm = false;
-    bool no_rs1 = false;
+    uint8_t custom_reg_val;
+    ssflag flags = 0;
+
+    constexpr special_snowflake_args(ssflag flags)
+            : flags(flags) {}
+    constexpr special_snowflake_args(uint8_t custom_reg_val, ssflag flags)
+            : custom_reg_val(custom_reg_val)
+            , flags(flags | ssarg::has_custom_reg_val) {}
+    constexpr special_snowflake_args(uint8_t custom_reg_val)
+            : custom_reg_val(custom_reg_val), flags(ssarg::has_custom_reg_val) {}
+    constexpr special_snowflake_args() = default;
+
+    constexpr bool get_imm_for_rs() const {
+        return flags & ssarg::get_imm_for_rs;
+    }
+
+    constexpr bool use_frm_for_funct3() const {
+        return flags & ssarg::use_frm_for_funct3;
+    }
+
+    constexpr bool special_handling() const {
+        return flags & ssarg::special_handling;
+    }
+
+    constexpr bool swap_rs1_rs2() const {
+        return flags & ssarg::swap_rs1_rs2;
+    }
+
+    constexpr bool use_funct_for_imm() const {
+        return flags & ssarg::use_funct_for_imm;
+    }
+
+    constexpr bool no_rs1() const {
+        return flags & ssarg::no_rs1;
+    }
+
+    constexpr bool has_custom_reg_val() const {
+        return flags & ssarg::has_custom_reg_val;
+    }
 };
 
 struct rvinstruction {
@@ -2251,7 +2313,7 @@ struct rvinstruction {
     uint8_t bytes;
     special_snowflake_args ssargs = {};
 
-    rvinstruction(const char* dummyname, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs requirements, uint8_t bytes, special_snowflake_args ssargs = {})
+    constexpr rvinstruction(const char* dummyname, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs requirements, uint8_t bytes, special_snowflake_args ssargs = {})
             : id(id)
             , type(type)
             , opcode(opcode)

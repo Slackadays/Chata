@@ -294,93 +294,6 @@ void remove_extraneous_parentheses(ultrastring& str) {
     }
 }
 
-void handle_super_special_snowflakes(int32_t& imm, uint8_t& rd, uint8_t& rs1, const RVInstructionID& id, assembly_context& c) {
-    using enum RVInstructionID;
-    if (id == FENCE) {
-        imm |= decode_fence(c.arg1) << 4; // Add pred
-        imm |= decode_fence(c.arg2);      // Add succ
-        DBG(std::cout << "FENCE instruction made" << std::endl;)
-    } else if (id == CSRRW || id == CSRRS || id == CSRRC) {
-        rd = decode_register(c.arg1).encoding;
-        imm = decode_csr(c.arg2);
-        rs1 = decode_register(c.arg3).encoding;
-        DBG(std::cout << "CSR instruction made" << std::endl;)
-    } else if (id == CSRRWI || id == CSRRSI || id == CSRRCI) {
-        rd = decode_register(c.arg1).encoding;
-        imm = decode_csr(c.arg2);
-        if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
-            rs1 = num.value();
-        } else {
-            throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
-        }
-        DBG(std::cout << "CSRI instruction made" << std::endl;)
-    } else if (id == VSETVLI || id == VSETIVLI || id == THVSETVLI) {
-        rd = decode_register(c.arg1).encoding;
-
-        if (id == VSETVLI || id == THVSETVLI) {
-            rs1 = decode_register(c.arg2).encoding;
-        } else {
-            auto res = decode_imm<int32_t>(c.arg2, c);
-            if (res.has_value()) {
-                rs1 = res.value();
-            } else {
-                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
-            }
-
-            imm |= 0b11 << 10;
-        }
-
-        auto sew = decode_vsew(c.arg3);
-        if (sew.has_value()) {
-            if (id == THVSETVLI) {
-                imm |= sew.value() << 2;
-            } else {
-                imm |= sew.value() << 3;
-            }
-        } else {
-            throw UltraError(UltraErrorType::Compiler, "Invalid VSEW " + c.arg3, c.line, c.column);
-        }
-        if (c.arg4.empty()) {
-            return;
-        } else if (c.arg4 == "ta") {
-            imm |= 0b1 << 6;
-            if (c.arg5 == "ma") {
-                imm |= 0b1 << 7;
-            }
-        } else if (c.arg4 == "ma") {
-            imm |= 0b1 << 7;
-            if (c.arg5 == "ta") {
-                imm |= 0b1 << 6;
-            }
-        } else if (c.arg4 == "tu") {
-            if (c.arg5 == "ma") {
-                imm |= 0b1 << 7;
-            }
-        } else if (auto lmul = decode_vlmul(c.arg4); lmul.has_value()) {
-            imm |= lmul.value();
-            if (c.arg5 == "ta") {
-                imm |= 0b1 << 6;
-                if (c.arg6 == "ma") {
-                    imm |= 0b1 << 7;
-                }
-            } else if (c.arg5 == "ma") {
-                imm |= 0b1 << 7;
-                if (c.arg6 == "ta") {
-                    imm |= 0b1 << 6;
-                }
-            } else if (c.arg5 == "tu") {
-                if (c.arg6 == "ma") {
-                    imm |= 0b1 << 7;
-                }
-            } else if (auto ediv = decode_vediv(c.arg5); ediv.has_value()) {
-                imm |= ediv.value() << 5;
-            }
-        } else {
-            throw UltraError(UltraErrorType::Compiler, "Invalid vtypei " + c.arg4, c.line, c.column);
-        }
-    }
-}
-
 template <auto bits>
 void verify_imm(const auto& imm) {
     using T = decltype(bits);
@@ -458,24 +371,13 @@ void make_inst(assembly_context& c) {
     using enum RVInstructionID;
     using enum RVInSetMinReqs;
 
-    if (ssargs.super_special_snowflake) {
-        handle_super_special_snowflakes(imm, rd, rs1, id, c);
-        DBG(std::cout << "Encoding I-type special snowflake instruction with name " << c.inst << std::endl;)
-        inst |= rd << 7;     // Add rd
-        inst |= funct << 12; // Add funct3
-        inst |= rs1 << 15;   // Add rs1
-        inst |= imm << 20;   // Add imm
-        reinterpret_cast<uint32_t&>(c.machine_code[c.machine_code.size() - bytes]) = inst;
-        return;
-    }
-
     if (type == R) {
         /*rd = 0b00000;
         rs1 = 0b00000;
         rs2 = 0b00000;
         imm = 0;*/
 
-        if (ssargs.get_imm_for_rs) {
+        if (ssargs.get_imm_for_rs()) {
             if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                 // Check for unsigned 5b
                 verify_imm<5u>(num.value());
@@ -485,7 +387,7 @@ void make_inst(assembly_context& c) {
             }
         }
         rd = decode_register(c.arg1).encoding;
-        if (opcode == opcode::OP_AMO) { // The A and Zacas sets sometimes use registers that look like (a0)
+        if (opcode == opcode::op_AMO) { // The A and Zacas sets sometimes use registers that look like (a0)
             remove_extraneous_parentheses(c.arg2);
             remove_extraneous_parentheses(c.arg3);
             using enum RVInstructionID;
@@ -508,9 +410,9 @@ void make_inst(assembly_context& c) {
         } else {
             rs1 = decode_register(c.arg2).encoding;
         }
-        auto no_rs2 = ssargs.custom_reg_val.has_value();
+        auto no_rs2 = ssargs.has_custom_reg_val();
         if (!no_rs2) {
-            if (ssargs.get_imm_for_rs) {
+            if (ssargs.get_imm_for_rs()) {
                 rs2 = imm;
             } else {
                 if (reqs == XTheadMemPair) {
@@ -519,7 +421,7 @@ void make_inst(assembly_context& c) {
                 rs2 = decode_register(c.arg3).encoding;
             }
         } else {
-            rs2 = ssargs.custom_reg_val.value();
+            rs2 = ssargs.custom_reg_val;
             if (id == AES64KS1I) {
                 rs2 |= imm;
             }
@@ -547,15 +449,15 @@ void make_inst(assembly_context& c) {
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
             }
-        } else if (opcode != opcode::OP_IMM) {
-            if (!c.arg4.empty() && opcode == opcode::OP_FP) {
+        } else if (opcode != opcode::op_IMM) {
+            if (!c.arg4.empty() && opcode == opcode::op_FP) {
                 frm = decode_frm(c.arg4);
             } else if (!c.arg5.empty() && !no_rs2) {
                 frm = decode_frm(c.arg5);
             } else if (!c.arg3.empty() && no_rs2) {
                 frm = decode_frm(c.arg3);
             } else {
-                if (ssargs.use_frm_for_funct3) {
+                if (ssargs.use_frm_for_funct3()) {
                     frm = 0b111;
                 }
             }
@@ -563,7 +465,7 @@ void make_inst(assembly_context& c) {
 
         DBG(std::cout << "Encoding R-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 7; // Add rd
-        if (ssargs.use_frm_for_funct3) {
+        if (ssargs.use_frm_for_funct3()) {
             inst |= frm << 12; // Add frm
         } else {
             inst |= (funct & 0b111) << 12; // Add funct3
@@ -574,28 +476,28 @@ void make_inst(assembly_context& c) {
     } else if (type == R4) {
         rd = decode_register(c.arg1).encoding;
         rs1 = decode_register(c.arg2).encoding;
-        auto no_rs2 = ssargs.custom_reg_val.has_value();
+        auto no_rs2 = ssargs.has_custom_reg_val();
         if (!no_rs2) {
-            if (ssargs.get_imm_for_rs) {
+            if (ssargs.get_imm_for_rs()) {
                 rs2 = imm;
             } else {
                 rs2 = decode_register(c.arg3).encoding;
             }
         } else {
-            rs2 = ssargs.custom_reg_val.value();
+            rs2 = ssargs.custom_reg_val;
         }
         rs3 = decode_register(c.arg4).encoding;
         if (!c.arg5.empty()) {
             frm = decode_frm(c.arg5);
         } else {
-            if (ssargs.use_frm_for_funct3) {
+            if (ssargs.use_frm_for_funct3()) {
                 frm = 0b111;
             }
         }
 
         DBG(std::cout << "Encoding R4-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 7; // Add rd
-        if (ssargs.use_frm_for_funct3) {
+        if (ssargs.use_frm_for_funct3()) {
             inst |= frm << 12; // Add frm
         } else {
             inst |= (funct & 0b111) << 12; // Add funct3
@@ -609,8 +511,7 @@ void make_inst(assembly_context& c) {
         rs1 = 0b00000;
         rs2 = 0b00000;+
         imm = 0;*/
-
-        if (ssargs.use_funct_for_imm) {
+        if (ssargs.use_funct_for_imm()) {
             imm = (funct >> 3) & 0b111111111111; // put funct12 in imm and don't sign extend
 
             if (id == PREFETCHI || id == PREFETCHR || id == PREFETCHW) {
@@ -662,31 +563,112 @@ void make_inst(assembly_context& c) {
                 verify_imm<2u>(imm2); // Check for unsigned 2b
                 imm |= imm2 << 5;     // Add imm2
             } else {
-                if (ssargs.custom_reg_val.has_value() && !ssargs.no_rs1) {
-                    rd = ssargs.custom_reg_val.value();
+                if (ssargs.has_custom_reg_val() && !ssargs.no_rs1()) {
+                    rd = ssargs.custom_reg_val;
                     remove_extraneous_parentheses(c.arg1);
                     rs1 = decode_register(c.arg1).encoding;
-                } else if (ssargs.custom_reg_val.has_value()) {
-                    rd = ssargs.custom_reg_val.value();
+                } else if (ssargs.has_custom_reg_val()) {
+                    rd = ssargs.custom_reg_val;
                 } else {
                     rd = decode_register(c.arg1).encoding;
                     rs1 = decode_register(c.arg2).encoding;
                 }
             }
-        } else if (id == THEXT || id == THEXTU) {
-            rd = decode_register(c.arg1).encoding;
-            rs1 = decode_register(c.arg2).encoding;
-            if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
-                imm |= num.value() << 6;     // add imm1
-                verify_imm<5u>(num.value()); // Check for unsigned 5b
-            } else {
-                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
-            }
-            if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
-                imm |= num.value();          // add imm2
-                verify_imm<5u>(num.value()); // Check for unsigned 5b
-            } else {
-                throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
+        } else if (ssargs.special_handling()) {
+            if (id == THEXT || id == THEXTU) {
+                rd = decode_register(c.arg1).encoding;
+                rs1 = decode_register(c.arg2).encoding;
+                if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
+                    imm |= num.value() << 6;     // add imm1
+                    verify_imm<5u>(num.value()); // Check for unsigned 5b
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+                }
+                if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
+                    imm |= num.value();          // add imm2
+                    verify_imm<5u>(num.value()); // Check for unsigned 5b
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
+                }
+            } else if (id == FENCE) {
+                imm |= decode_fence(c.arg1) << 4; // Add pred
+                imm |= decode_fence(c.arg2);      // Add succ
+            } else if (id == CSRRW || id == CSRRS || id == CSRRC) {
+                rd = decode_register(c.arg1).encoding;
+                imm = decode_csr(c.arg2);
+                rs1 = decode_register(c.arg3).encoding;
+            } else if (id == CSRRWI || id == CSRRSI || id == CSRRCI) {
+                rd = decode_register(c.arg1).encoding;
+                imm = decode_csr(c.arg2);
+                if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
+                    rs1 = num.value();
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
+                }
+            } else if (id == VSETVLI || id == VSETIVLI || id == THVSETVLI) {
+                rd = decode_register(c.arg1).encoding;
+
+                if (id == VSETVLI || id == THVSETVLI) {
+                    rs1 = decode_register(c.arg2).encoding;
+                } else {
+                    auto res = decode_imm<int32_t>(c.arg2, c);
+                    if (res.has_value()) {
+                        rs1 = res.value();
+                    } else {
+                        throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+                    }
+
+                    imm |= 0b11 << 10;
+                }
+
+                auto sew = decode_vsew(c.arg3);
+                if (sew.has_value()) {
+                    if (id == THVSETVLI) {
+                        imm |= sew.value() << 2;
+                    } else {
+                        imm |= sew.value() << 3;
+                    }
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid VSEW " + c.arg3, c.line, c.column);
+                }
+                if (c.arg4.empty()) {
+                    return;
+                } else if (c.arg4 == "ta") {
+                    imm |= 0b1 << 6;
+                    if (c.arg5 == "ma") {
+                        imm |= 0b1 << 7;
+                    }
+                } else if (c.arg4 == "ma") {
+                    imm |= 0b1 << 7;
+                    if (c.arg5 == "ta") {
+                        imm |= 0b1 << 6;
+                    }
+                } else if (c.arg4 == "tu") {
+                    if (c.arg5 == "ma") {
+                        imm |= 0b1 << 7;
+                    }
+                } else if (auto lmul = decode_vlmul(c.arg4); lmul.has_value()) {
+                    imm |= lmul.value();
+                    if (c.arg5 == "ta") {
+                        imm |= 0b1 << 6;
+                        if (c.arg6 == "ma") {
+                            imm |= 0b1 << 7;
+                        }
+                    } else if (c.arg5 == "ma") {
+                        imm |= 0b1 << 7;
+                        if (c.arg6 == "ta") {
+                            imm |= 0b1 << 6;
+                        }
+                    } else if (c.arg5 == "tu") {
+                        if (c.arg6 == "ma") {
+                            imm |= 0b1 << 7;
+                        }
+                    } else if (auto ediv = decode_vediv(c.arg5); ediv.has_value()) {
+                        imm |= ediv.value() << 5;
+                    }
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid vtypei " + c.arg4, c.line, c.column);
+                }
             }
         } else if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value();
@@ -733,23 +715,21 @@ void make_inst(assembly_context& c) {
             }
             if (auto num = to_num<int32_t>(c.arg3); num.has_value()) {
                 imm = num.value();
-                verify_imm<13>(imm);
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid relative immediate " + c.arg3, c.line, c.column);
             }
         } else if (auto num = to_num<int32_t>(c.arg3); num.has_value()) { // the plain imm constant case
             if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
                 imm = num.value();
-                verify_imm<13>(imm); // Check for signed 13b
             } else {
                 // calculate the offset assuming that imm is an absolute address
                 imm = num.value() - (c.machine_code.size() - bytes);
-                verify_imm<13>(imm); // Check for signed 13b
             }
         } else {
             imm = string_to_label(c.arg3, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = Branch});
         }
+        verify_imm<13>(imm); // Check for signed 13b
         rs1 = decode_register(c.arg1).encoding;
         rs2 = decode_register(c.arg2).encoding;
 
@@ -780,23 +760,21 @@ void make_inst(assembly_context& c) {
             }
             if (auto num = to_num<int32_t>(c.arg2); num.has_value()) {
                 imm = num.value();
-                verify_imm<21>(imm);
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid relative immediate " + c.arg2, c.line, c.column);
             }
         } else if (auto num = to_num<int32_t>(c.arg2); num.has_value()) { // the plain imm constant case
             if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
                 imm = num.value();
-                verify_imm<21>(imm);
             } else {
                 // calculate the offset assuming that imm is an absolute address
                 imm = num.value() - (c.machine_code.size() - bytes);
-                verify_imm<21>(imm);
             }
         } else {
             imm = string_to_label(c.arg2, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = J});
         }
+        verify_imm<21>(imm);
         rd = decode_register(c.arg1).encoding;
 
         DBG(std::cout << "Encoding J-type instruction with name " << c.inst << std::endl;)
@@ -813,23 +791,21 @@ void make_inst(assembly_context& c) {
             }
             if (auto num = to_num<int32_t>(c.arg1); num.has_value()) {
                 imm = num.value();
-                verify_imm<12>(imm);
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid relative immediate " + c.arg3, c.line, c.column);
             }
         } else if (auto num = to_num<int32_t>(c.arg1); num.has_value()) { // the plain imm constant case
             if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
                 imm = num.value();
-                verify_imm<12>(imm); // Check for signed 13b
             } else {
                 // calculate the offset assuming that imm is an absolute address
                 imm = num.value() - (c.machine_code.size() - bytes);
-                verify_imm<12>(imm); // Check for signed 13b
             }
         } else {
             imm = string_to_label(c.arg1, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = CJ});
         }
+        verify_imm<12>(imm);
 
         DBG(std::cout << "Encoding CJ-type instruction with name " << c.inst << std::endl;)
         inst |= ((imm >> 5) & 0b1) << 2;   // Add offset[5]
@@ -934,12 +910,12 @@ void make_inst(assembly_context& c) {
             inst |= funct << 13; // Add funct3
         }
     } else if (type == CR) {
-        if (!ssargs.no_rs1) {
+        if (!ssargs.no_rs1()) {
             rd = decode_register(c.arg1).encoding;
         }
 
-        if (ssargs.custom_reg_val.has_value()) {
-            rs2 = ssargs.custom_reg_val.value();
+        if (ssargs.has_custom_reg_val()) {
+            rs2 = ssargs.custom_reg_val;
         } else {
             rs2 = decode_register(c.arg2).encoding;
         }
@@ -950,9 +926,9 @@ void make_inst(assembly_context& c) {
         inst |= funct << 12; // Add funct4
     } else if (type == CI) {
 
-        if (ssargs.custom_reg_val.has_value()) {
-            rd = ssargs.custom_reg_val.value();
-            if (ssargs.use_funct_for_imm) {
+        if (ssargs.has_custom_reg_val()) {
+            rd = ssargs.custom_reg_val;
+            if (ssargs.use_funct_for_imm()) {
                 imm = (funct & 0b111111);
             }
         } else {
@@ -1091,9 +1067,9 @@ void make_inst(assembly_context& c) {
             rs2 = decode_register(c.arg2).encoding;
         }
 
-        if (ssargs.custom_reg_val.has_value()) {
-            rs1 = ssargs.custom_reg_val.value();
-        } else if (ssargs.get_imm_for_rs) {
+        if (ssargs.has_custom_reg_val()) {
+            rs1 = ssargs.custom_reg_val;
+        } else if (ssargs.get_imm_for_rs()) {
             if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                 rs1 = num.value();
             } else {
@@ -1106,7 +1082,7 @@ void make_inst(assembly_context& c) {
             rs1 = decode_register(c.arg3).encoding;
         }
 
-        if (ssargs.swap_rs1_rs2) {
+        if (ssargs.swap_rs1_rs2()) {
             std::swap(rs1, rs2);
         }
 
@@ -1118,7 +1094,7 @@ void make_inst(assembly_context& c) {
         inst |= rs2 << 20;             // Add vs2
         inst |= (funct >> 3) << 25;    // Add vm, funct6
 
-        if (ssargs.custom_reg_val.has_value()) {
+        if (ssargs.has_custom_reg_val()) {
             if (fast_eq(c.arg3, "v0.t")) {
                 inst &= ~(1 << 25); // Clear the 25th bit
             }
@@ -1130,8 +1106,8 @@ void make_inst(assembly_context& c) {
     } else if (type == IVI) {
         rd = decode_register(c.arg1).encoding;
 
-        if (ssargs.custom_reg_val.has_value()) {
-            rs2 = ssargs.custom_reg_val.value();
+        if (ssargs.has_custom_reg_val()) {
+            rs2 = ssargs.custom_reg_val;
 
             if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
                 imm = num.value();
@@ -1602,67 +1578,67 @@ ultravector<RVInstructionSet> decode_sets(const ultrastring& str) {
 uint8_t decode_opcode(const ultrastring& str) {
     using namespace opcode;
     if (fast_eq(str, "LOAD")) {
-        return OP_LOAD;
+        return op_LOAD;
     } else if (fast_eq(str, "STORE")) {
-        return OP_STORE;
+        return op_STORE;
     } else if (fast_eq(str, "MADD")) {
-        return OP_MADD;
+        return op_MADD;
     } else if (fast_eq(str, "BRANCH")) {
-        return OP_BRANCH;
+        return op_BRANCH;
     } else if (fast_eq(str, "LOAD_FP")) {
-        return OP_LOAD_FP;
+        return op_LOAD_FP;
     } else if (fast_eq(str, "STORE_FP")) {
-        return OP_STORE_FP;
+        return op_STORE_FP;
     } else if (fast_eq(str, "MSUB")) {
-        return OP_MSUB;
+        return op_MSUB;
     } else if (fast_eq(str, "JALR")) {
-        return OP_JALR;
+        return op_JALR;
     } else if (fast_eq(str, "CUSTOM_0")) {
-        return OP_CUSTOM_0;
+        return op_CUSTOM_0;
     } else if (fast_eq(str, "CUSTOM_1")) {
-        return OP_CUSTOM_1;
+        return op_CUSTOM_1;
     } else if (fast_eq(str, "NMSUB")) {
-        return OP_NMSUB;
+        return op_NMSUB;
     } else if (fast_eq(str, "RESERVED")) {
-        return OP_RESERVED;
+        return op_RESERVED;
     } else if (fast_eq(str, "MISC_MEM")) {
-        return OP_MISC_MEM;
+        return op_MISC_MEM;
     } else if (fast_eq(str, "AMO")) {
-        return OP_AMO;
+        return op_AMO;
     } else if (fast_eq(str, "NMADD")) {
-        return OP_NMADD;
+        return op_NMADD;
     } else if (fast_eq(str, "JAL")) {
-        return OP_JAL;
+        return op_JAL;
     } else if (fast_eq(str, "IMM")) {
-        return OP_IMM;
+        return op_IMM;
     } else if (fast_eq(str, "OP")) {
-        return OP_OP;
+        return op_OP;
     } else if (fast_eq(str, "FP")) {
-        return OP_FP;
+        return op_FP;
     } else if (fast_eq(str, "SYSTEM")) {
-        return OP_SYSTEM;
+        return op_SYSTEM;
     } else if (fast_eq(str, "AUIPC")) {
-        return OP_AUIPC;
+        return op_AUIPC;
     } else if (fast_eq(str, "LUI")) {
-        return OP_LUI;
+        return op_LUI;
     } else if (fast_eq(str, "V")) {
-        return OP_V;
+        return op_V;
     } else if (fast_eq(str, "VE")) {
-        return OP_VE;
+        return op_VE;
     } else if (fast_eq(str, "IMM_32")) {
-        return OP_IMM_32;
-    } else if (fast_eq(str, "OP_32")) {
-        return OP_32;
+        return op_IMM_32;
+    } else if (fast_eq(str, "op_32")) {
+        return op_32;
     } else if (fast_eq(str, "CUSTOM_2")) {
-        return OP_CUSTOM_2;
+        return op_CUSTOM_2;
     } else if (fast_eq(str, "CUSTOM_3")) {
-        return OP_CUSTOM_3;
+        return op_CUSTOM_3;
     } else if (fast_eq(str, "C0")) {
-        return OP_C0;
+        return op_C0;
     } else if (fast_eq(str, "C1")) {
-        return OP_C1;
+        return op_C1;
     } else if (fast_eq(str, "C2")) {
-        return OP_C2;
+        return op_C2;
     } else {
         throw UltraError(UltraErrorType::Compiler, "Invalid opcode " + str);
     }

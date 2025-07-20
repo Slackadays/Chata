@@ -1,2 +1,1 @@
-addi a0, a1, 10
-c.srli x15, 1
+beq x27, x28, 40
