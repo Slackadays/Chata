@@ -2310,16 +2310,14 @@ struct rvinstruction {
     uint8_t opcode;
     uint16_t funct;
     RVInSetMinReqs requirements;
-    uint8_t bytes;
     special_snowflake_args ssargs = {};
 
-    constexpr rvinstruction(const char* dummyname, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs requirements, uint8_t bytes, special_snowflake_args ssargs = {})
+    constexpr rvinstruction(const char* dummyname, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs requirements, special_snowflake_args ssargs = {})
             : id(id)
             , type(type)
             , opcode(opcode)
             , funct(funct)
             , requirements(requirements)
-            , bytes(bytes)
             , ssargs(ssargs) {}
 };
 

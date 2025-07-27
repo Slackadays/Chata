@@ -92,9 +92,13 @@ template <typename T>
 std::optional<T> decode_imm(const ultrastring& imm, assembly_context& c) {
     if (auto num = to_num<T>(imm); num.has_value()) {
         return num;
-    } else {
-        return decode_constant<T>(imm, c);
+    } else if (auto con = decode_constant<T>(imm, c); con.has_value()) {
+        return con;
+    } else if (auto res = decode_expression<T>(imm, c); res.has_value()) { 
+        return res;
     }
+
+    return std::nullopt;
 }
 
 inline const rvregister& decode_register(const ultrastring& str) {
@@ -282,6 +286,102 @@ std::pair<int32_t, ultrastring> decode_offset_plus_reg(const ultrastring& str, a
     return {offset, temp};
 }
 
+inline const uint8_t decode_encoding_length(const uint8_t opcode) {
+    // 0bxxxxx00, 0bxxxxx01, 0bxxxxx10 = 2 bytes
+    // 0bxxxxx11 = 4 bytes
+    if ((opcode & 0b11) != 0b11) {
+        return 2;
+    } else {
+        return 4;
+    }
+}
+
+template <typename T>
+std::optional<T> decode_expression(const ultrastring& str, assembly_context& c) {
+    size_t i = 0;
+    int32_t result = 0;
+
+    auto is_whitespace = [](const char& c) {
+        return c == ' ' || c == '\t';
+    };
+    auto is_operator = [](const char& c) { 
+        return c == '+' || c == '-' || c == '*' || c == '/';
+    };
+
+    auto ch = [&]() {
+        DBG(return str.at(i);)
+        return str[i];
+    };
+
+    auto parse_one_term = [&]() -> std::optional<int32_t> {
+        while (i < str.length() && is_whitespace(ch())) {
+            i++;
+        }
+        ultrastring term;
+        while (i < str.length() && !is_whitespace(ch()) && !is_operator(ch())) {
+            term.push_back(ch());
+            i++;
+        }
+        if (term.empty()) {
+            return std::nullopt;
+        }
+
+        // Manually use to_num and decode_constant to avoid recursion issues
+        if (auto num = to_num<int32_t>(term); num.has_value()) {
+            return num.value();
+        } else if (auto con = decode_constant<int32_t>(term, c); con.has_value()) {
+            return con.value();
+        } else {
+            return std::nullopt;
+        }
+    };
+
+    if (auto first = parse_one_term(); first.has_value()) {
+        result = first.value();
+    } else {
+        return std::nullopt;
+    }
+
+    while (i < str.length()) {
+        while (i < str.length() && is_whitespace(ch())) {
+            i++;
+        }
+        if (i == str.length()) {
+            break;
+        }
+        char op = ch();
+        if (!is_operator(op)) {
+            return std::nullopt;
+        }
+        i++;
+
+        auto next = parse_one_term();
+        if (!next) {
+            return std::nullopt;
+        }
+
+        if (op == '+') {
+            result += next.value();
+        } else if (op == '-') {
+            result -= next.value();
+        } else if (op == '*') {
+            result *= next.value();
+        } else if (op == '/') {
+            if (next.value() == 0) {
+                return std::nullopt;
+            }
+            result /= next.value();
+        } else {
+            throw UltraError(UltraErrorType::Compiler,
+                             "Invalid operator '" + ultrastring(1, op) + "' in expression: " + str,
+                             c.line, c.column);
+        }
+    }
+
+    return static_cast<T>(result);
+}
+
+
 void remove_extraneous_parentheses(ultrastring& str) {
     if (str.back() == ')') { // Do this first to prevent more copies later
         str.pop_back();
@@ -343,9 +443,10 @@ void make_inst(assembly_context& c) {
     auto& id = base_i.id;
     auto& reqs = base_i.requirements;
     auto& funct = base_i.funct;
-    auto& bytes = base_i.bytes;
     auto& opcode = base_i.opcode;
     auto& ssargs = base_i.ssargs;
+
+    auto bytes = decode_encoding_length(opcode);
 
     if (bytes == 4) {
         c.machine_code.insert(c.machine_code.end(), {0, 0, 0, 0});
@@ -2024,6 +2125,20 @@ size_t parse_this_line(size_t i, const ultrastring& data, assembly_context& c) {
 
     auto parse_arg = [&](ultrastring& arg) {
         arg.clear();
+        while (i < data.size() && not_at_end(ch()) && ch() != ',') {
+            arg.push_back(ch());
+            i++;
+        }
+        while (is_whitespace(arg.back())) {
+            arg.pop_back();
+        }
+        while (i < data.size() && not_at_end(ch()) && (is_whitespace(ch()) || ch() == ',')) {
+            i++;
+        }
+    };
+
+    auto parse_arg_nospaces = [&](ultrastring& arg) {
+        arg.clear();
         while (i < data.size() && not_at_end(ch()) && ch() != ',' && !is_whitespace(ch())) {
             arg.push_back(ch());
             i++;
@@ -2035,7 +2150,13 @@ size_t parse_this_line(size_t i, const ultrastring& data, assembly_context& c) {
             i++;
         }
     };
-    parse_arg(c.arg1);
+
+    if (c.inst[0] != '.') {
+        parse_arg(c.arg1);
+    } else {
+        parse_arg_nospaces(c.arg1); // This handles the special case of .insn type arg1, arg2, etc (no , between type and arg1)
+    }
+    
     if (!c.arg1.empty()) {
         parse_arg(c.arg2);
         if (!c.arg2.empty()) {
