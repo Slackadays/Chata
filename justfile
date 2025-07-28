@@ -92,6 +92,8 @@ generate-instructions:
 generate-registers:
   cd ultrassembler; python3 scripts/generate_register_search.py
   cd ultrassembler; python3 scripts/generate_float_register_search.py
+  cd ultrassembler; python3 scripts/generate_vec_register_search.py
+  cd ultrassembler; python3 scripts/generate_int_register_search.py
 
 # just generate ultraassembler csrs
 generate-csrs:

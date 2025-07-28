@@ -110,15 +110,6 @@ inline const rvregister& decode_register(const ultrastring& str) {
     }
 }
 
-inline const rvregister& decode_float_register(const ultrastring& str) {
-    // return registers[4];
-    if (auto reg = fast_float_reg_search(str); reg != reg_search_failed) {
-        return registers[reg];
-    } else {
-        throw UltraError(UltraErrorType::Compiler, "Invalid floating point register " + str);
-    }
-}
-
 uint8_t decode_frm(const ultrastring& frm) {
     if (fast_eq(frm, "rne")) {
         return 0b000;

@@ -27,6 +27,8 @@ constexpr std::array<std::string_view, 32> valid_vector_registers = {"v0",  "v1"
 constexpr uint8_t reg_search_failed = (uint8_t)-1;
 const uint8_t fast_reg_search(const ultrastring& reg);
 const uint8_t fast_float_reg_search(const ultrastring& reg);
+const uint8_t fast_vec_reg_search(const ultrastring& reg);
+const uint8_t fast_int_reg_search(const ultrastring& reg);
 
 enum class RegisterType : uint8_t {
     Integer,
@@ -133,30 +135,14 @@ enum class RegisterID : uint8_t {
     v31
 };
 
-class regname {
-    char name[5];
-    uint8_t name_size;
-
-public:
-    constexpr regname(const char* input) {
-        name_size = 0;
-        for (size_t i = 0; i < 4 && input[i] != '\0'; i++) {
-            name[i] = input[i];
-            name_size++;
-        }
-        name[4] = '\0';
-    }
-    const uint8_t& size() const { return name_size; }
-    const bool operator==(const auto& other) const { return fast_eq(*this, other); }
-    operator const char*() const { return name; }
-};
-
 struct rvregister {
-    regname name;
-    regname alias;
     RegisterType type;
     RegisterID id;
     uint8_t encoding;
+    uint8_t padding;
+    
+    constexpr rvregister(const char* dummyname, const char* dummyalias, RegisterType type, RegisterID id, uint8_t encoding)
+        : type(type), id(id), encoding(encoding) {}
 };
 
 extern const std::array<rvregister, 96> registers;
