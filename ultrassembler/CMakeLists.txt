@@ -41,6 +41,7 @@ add_library(objultra OBJECT
     src/generated/make_inst_from_pseudoinst.cpp
     src/generated/instruction_search.cpp
     src/generated/register_search.cpp
+    src/generated/float_register_search.cpp
     src/generated/csr_search.cpp
 )
 
