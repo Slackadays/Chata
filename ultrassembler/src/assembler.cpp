@@ -381,7 +381,6 @@ std::optional<T> decode_expression(const ultrastring& str, assembly_context& c) 
     return static_cast<T>(result);
 }
 
-
 void remove_extraneous_parentheses(ultrastring& str) {
     if (str.back() == ')') { // Do this first to prevent more copies later
         str.pop_back();
@@ -2151,7 +2150,7 @@ size_t parse_this_line(size_t i, const ultrastring& data, assembly_context& c) {
         }
     };
 
-    if (c.inst[0] != '.') {
+    if (c.inst.front() != '.') {
         parse_arg(c.arg1);
     } else {
         parse_arg_nospaces(c.arg1); // This handles the special case of .insn type arg1, arg2, etc (no , between type and arg1)

@@ -18,6 +18,7 @@ namespace fs = std::filesystem;
 
 bool assemble_flag = false;
 bool no_write_flag = false;
+bool silent_flag = false;
 
 #if defined(__linux__) || defined(__unix__) || defined(__APPLE__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__HAIKU__) || defined(__FreeBSD__) \
         || defined(__posix__)
@@ -66,13 +67,6 @@ std::optional<std::string> fileContents(const fs::path& path) {
 }
 
 int main(int argc, char* argv[]) {
-    std::cout << "Welcome to ChataCLI " << PROJECT_VERSION << " (commit " << GIT_COMMIT_HASH << " on branch " << GIT_BRANCH << ")" << std::endl;
-    std::cout << "libchata version: " << libchata::version() << std::endl;
-    if (argc < 2) {
-        std::cout << "You must provide one or more files" << std::endl;
-        return 1;
-    }
-
     std::vector<std::string> args;
     for (int i = 0; i < argc; i++) {
         args.push_back(argv[i]);
@@ -88,22 +82,38 @@ int main(int argc, char* argv[]) {
             no_write_flag = true;
             args.erase(args.begin() + i);
         }
+        if (args.at(i) == "--silent") {
+            silent_flag = true;
+            args.erase(args.begin() + i);
+        }
     }
+
+    if (!silent_flag) {
+        std::cout << "Welcome to ChataCLI " << PROJECT_VERSION << " (commit " << GIT_COMMIT_HASH << " on branch " << GIT_BRANCH << ")" << std::endl;
+        std::cout << "libchata version: " << libchata::version() << std::endl;
+    }
+    if (argc < 2) {
+        std::cout << "You must provide one or more files" << std::endl;
+        return 1;
+    }
+
+    
 
     fs::path filePath = args.back();
     auto contents = fileContents(filePath);
 
-    if (contents) {
-        std::cout << "File found: " << filePath.string() << std::endl;
-    } else {
-        std::cout << "File not found: " << filePath.string() << std::endl;
-        return 1;
+    if (!silent_flag) {
+        if (contents) {
+            std::cout << "File found: " << filePath.string() << std::endl;
+        } else {
+            std::cout << "File not found: " << filePath.string() << std::endl;
+            return 1;
+        }
     }
-
+    
     InputFile file(*contents, filePath.string());
 
     if (assemble_flag) {
-        std::cout << "Assembling the file " << filePath.string() << std::endl;
         std::span<uint8_t> result;
         try {
             result = ultrassembler::assemble(file.data);
@@ -116,15 +126,23 @@ int main(int argc, char* argv[]) {
         }
         if (!no_write_flag) {
             std::string filename = filePath.replace_extension(".bin").string();
-            std::cout << "Writing result to " << filename << std::endl;
+            if (!silent_flag) {
+                std::cout << "Writing result to " << filename << std::endl;
+            }
+            
             writeToFile(filename, std::string(result.begin(), result.end()));
         } else {
-            std::cout << "Skipping writing the result to a file" << std::endl;
+            if (!silent_flag) {
+                std::cout << "Skipping writing the result to a file" << std::endl;
+            }
         }
         return 0;
     }
 
-    std::cout << "Processing the file " << filePath.string() << std::endl;
+    if (!silent_flag) {
+        std::cout << "Processing the file " << filePath.string() << std::endl;
+    }
+    
 
     ChataProcessor processor;
 
@@ -133,7 +151,9 @@ int main(int argc, char* argv[]) {
 
         double value = 2.0;
 
-        std::cout << "Ok, let's see if we can change the value of a float. Current value: " << value << std::endl;
+        if (!silent_flag) {
+            std::cout << "Ok, let's see if we can change the value of a float. Current value: " << value << std::endl;
+        }
 
         chata_args args;
 
@@ -141,11 +161,17 @@ int main(int argc, char* argv[]) {
 
         processor.process_data(args);
 
-        std::cout << "New value: " << args.input1 << std::endl;
+        if (!silent_flag) {
+            std::cout << "New value: " << args.input1 << std::endl;
+        }
+        
     } catch (ChataError& e) {
         std::cout << "" << e.what() << std::endl;
         return 1;
     }
 
-    std::cout << "Success!" << std::endl;
+    if (!silent_flag) {
+        std::cout << "Success!" << std::endl;
+    }
+    
 }

@@ -53,7 +53,6 @@ clean:
   @just clean-lib
   @just clean-cli
 
-
 # clear all CMake files for just libchata
 clean-lib:
   if [ -d "libchata/build" ]; then rm -rf libchata/build; fi
@@ -109,3 +108,10 @@ test:
 test-uas:
   cd ultrassembler/build; ./test_ultrassembler
   
+# run all benchmarks
+benchmark:
+  @just benchmark-uas
+
+# run benchmark for just ultraassembler
+benchmark-uas:
+  perf stat -r 2000 chata -a --silent --no-write misc/testfiles/16kinstrs.s
