@@ -2791,16 +2791,16 @@ int main() {
     as("th.vmv.s.x v3, x3", 0xd7e10136);
     as("th.vfmv.f.s fa0, v4", 0x57154032);
     as("th.vfmv.s.f v5, fa1", 0xd7d20536);
-    as("vslideup.vx v16, v17, t0", 0x57c8123b);
-    as("vslideup.vi v18, v19, 15", 0x57b9373b);
-    as("vslidedown.vx v20, v21, t1", 0x574a533f);
-    as("vslidedown.vi v22, v23, 16", 0x573b783f);
-    as("vslide1up.vx v24, v25, t2", 0x57ec933b);
-    as("vslide1down.vx v28, v29, t3", 0x576ede3f);
-    as("vrgather.vv v0, v1, v2", 0x57001132);
-    as("vrgather.vx v6, v7, t4", 0x57c37e32);
-    as("vrgather.vi v8, v9, 17", 0x57b49832);
-    as("vcompress.vm v10, v11, v12", 0x5725b65e);
+    as("th.vslideup.vx v16, v17, t0", 0x57c8123b);
+    as("th.vslideup.vi v18, v19, 15", 0x57b9373b);
+    as("th.vslidedown.vx v20, v21, t1", 0x574a533f);
+    as("th.vslidedown.vi v22, v23, 16", 0x573b783f);
+    as("th.vslide1up.vx v24, v25, t2", 0x57ec933b);
+    as("th.vslide1down.vx v28, v29, t3", 0x576ede3f);
+    as("th.vrgather.vv v0, v1, v2", 0x57001132);
+    as("th.vrgather.vx v6, v7, t4", 0x57c37e32);
+    as("th.vrgather.vi v8, v9, 17", 0x57b49832);
+    as("th.vcompress.vm v10, v11, v12", 0x5725b65e);
 
     as("beq t0, t1, foolabel \n#blahblah comment \nadd a0, a5, a6\nfoolabel:", {0x63, 0x84, 0x62, 0x00, 0x33, 0x85, 0x07, 0x01});
     as("foolabel:\nadd a0, a5, a6\nbne t0, t1, foolabel\n#ignore this", {0x33, 0x85, 0x07, 0x01, 0xe3, 0x9e, 0x62, 0xfe});

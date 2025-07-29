@@ -1222,7 +1222,7 @@ void make_inst(assembly_context& c) {
                 imm = num.value();
 
                 if (id == VSLLVI || id == VSRLVI || id == VSRAVI || id == VNSRLWI || id == VNSRAWI || id == VSSRLVI || id == VSSRAVI || id == VNCLIPUWI || id == VNCLIPWI || id == VSLIDEUPVI
-                    || id == VSLIDEDOWNVI || id == VRGATHERVI || id == VWSLLVI) {
+                    || id == VSLIDEDOWNVI || id == VRGATHERVI || id == VWSLLVI || id == THVSLIDEDOWNVI || id == THVRGATHERVI) {
                     verify_imm<5u>(imm); // Check for unsigned 5b
                 } else if (id == VRORVI) {
                     verify_imm<6u>(imm); // Check for unsigned 6b
