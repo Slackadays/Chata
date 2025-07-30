@@ -177,6 +177,8 @@ Here's a table of what [directives](https://github.com/riscv-non-isa/riscv-asm-m
 
 In addition, for instructions such as `jal`, `j`, `beq`, `c.jal`, and `c.beqz` which adjust the PC to jump to a different location, Ultrassembler supports `.option simpleoffset` and `.option nosimpleoffset` to enable the offset to be a simple integer instead of an integer with a `.+` or `.-` prefix. For example, `j .+64` can be `j 64` instead when you add `.option simpleoffset`.
 
+⏩ For a complete and up-to-date list of everything supported here, check out [the test suite!](https://github.com/Slackadays/Chata/blob/main/ultrassembler/src/test.cpp)
+
 ### ▫️ License
 
 Ultrassembler is available with the MPL 2.0 license. This may or may not be easier to include in your project than the GPL, but this depends on your situation.
