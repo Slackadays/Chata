@@ -2232,23 +2232,58 @@ constexpr uint8_t op_C2 = 0b10;
 
 } // namespace opcode
 
-struct ssflag {
-    uint8_t value;
+struct ssflag_tag {};
+struct rreq_tag {};
 
-    constexpr ssflag(uint8_t value) : value(value) {}
+template<class Tag>
+struct GenericFlag {
+    uint8_t value = 0;
 
-    constexpr bool operator&(ssflag other) const {
+    template<typename U = Tag>
+    constexpr explicit GenericFlag(uint8_t val) requires (!std::is_same_v<U, ssflag_tag>)
+        : value(val) {}
+
+    template<typename U = Tag>
+    constexpr GenericFlag(uint8_t val) requires std::is_same_v<U, ssflag_tag>
+        : value(val) {}
+
+    constexpr bool operator&(GenericFlag other) const {
         return (value & other.value) != 0;
     }
 
-    constexpr ssflag operator|(ssflag other) const {
-        return ssflag(value | other.value);
-    }
-
-    constexpr ssflag operator~() const {
-        return ssflag(~value);
+    constexpr GenericFlag operator|(GenericFlag other) const {
+        return GenericFlag(value | other.value);
     }
 };
+
+using ssflag = GenericFlag<ssflag_tag>;
+using rreq = GenericFlag<rreq_tag>;
+
+namespace reg_reqs {
+    
+// 0b reg4 reg3 reg2 reg1
+// 00 = any reg
+// 01 = only int
+// 10 = only float
+// 11 = only vector
+
+// Special cases: 0b 10 11 case (since no known instruction has vector for reg3 and float for reg4)
+
+constexpr rreq any_regs = rreq(0b00000000);
+constexpr rreq int_reg = rreq(0b00000001);
+constexpr rreq int_int = rreq(0b00000101);
+constexpr rreq int_int_int = rreq(0b00010101);
+constexpr rreq int_float = rreq(0b00000110);
+constexpr rreq float_int = rreq(0b00001001);
+
+constexpr rreq floatint_floatint_floatint_floatint = rreq(0b10110000);
+constexpr rreq floatint_floatint_floatint = rreq(0b10110001);
+constexpr rreq floatint_floatint = rreq(0b10110010);
+constexpr rreq int_floatint_floatint = rreq(0b10110011);
+constexpr rreq int_floatint = rreq(0b10110100);
+constexpr rreq floatint_int = rreq(0b10110101);
+
+} // namespace register_requirements
 
 namespace ssarg {
 
@@ -2263,7 +2298,7 @@ constexpr ssflag has_custom_reg_val = 0b01000000;
 } // namespace ssarg
 
 struct special_snowflake_args {
-    uint8_t custom_reg_val;
+    uint8_t custom_reg_val = 0;
     ssflag flags = 0;
 
     constexpr special_snowflake_args(ssflag flags)
@@ -2309,15 +2344,25 @@ struct rvinstruction {
     RVInstructionFormat type;
     uint8_t opcode;
     uint16_t funct;
-    RVInSetMinReqs requirements;
+    RVInSetMinReqs setreqs;
+    rreq regreqs = reg_reqs::any_regs;
     special_snowflake_args ssargs = {};
 
-    constexpr rvinstruction(const char* dummyname, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs requirements, special_snowflake_args ssargs = {})
+    constexpr rvinstruction(const char* dummyname, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs setreqs, special_snowflake_args ssargs = {})
             : id(id)
             , type(type)
             , opcode(opcode)
             , funct(funct)
-            , requirements(requirements)
+            , setreqs(setreqs)
+            , ssargs(ssargs) {}
+
+    constexpr rvinstruction(const char* dummyname, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs setreqs, rreq regreqs, special_snowflake_args ssargs = {})
+            : id(id)
+            , type(type)
+            , opcode(opcode)
+            , funct(funct)
+            , setreqs(setreqs)
+            , regreqs(regreqs)
             , ssargs(ssargs) {}
 };
 

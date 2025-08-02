@@ -440,7 +440,8 @@ void make_inst(assembly_context& c) {
     auto base_i = instructions.at(c.inst_offset); // Don't make this one auto&, it's slower
     auto& type = base_i.type;
     auto& id = base_i.id;
-    auto& reqs = base_i.requirements;
+    auto& setreqs = base_i.setreqs;
+    auto& regreqs = base_i.regreqs;
     auto& funct = base_i.funct;
     auto& opcode = base_i.opcode;
     auto& ssargs = base_i.ssargs;
@@ -515,7 +516,7 @@ void make_inst(assembly_context& c) {
             if (ssargs.get_imm_for_rs()) {
                 rs2 = imm;
             } else {
-                if (reqs == XTheadMemPair) {
+                if (setreqs == XTheadMemPair) {
                     remove_extraneous_parentheses(c.arg3);
                 }
                 rs2 = decode_register(c.arg3).encoding;
@@ -534,14 +535,14 @@ void make_inst(assembly_context& c) {
             rs2 = rs1;
             rs1 = rd;
             rd = 0b00000;
-        } else if (id == THADDSL || reqs == XTheadMemIdx || reqs == XTheadFMemIdx) {
+        } else if (id == THADDSL || setreqs == XTheadMemIdx || setreqs == XTheadFMemIdx) {
             if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
                 imm = num.value();
             } else {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg4, c.line, c.column);
             }
             funct |= (imm & 0b11) << 3; // Add imm2
-        } else if (reqs == XTheadMemPair) {
+        } else if (setreqs == XTheadMemPair) {
             std::swap(rs1, rs2);
             if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
                 funct |= num.value() << 3;
@@ -643,7 +644,7 @@ void make_inst(assembly_context& c) {
                 } else {
                     throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
                 }
-            } else if (reqs == XTheadMemIdx) {
+            } else if (setreqs == XTheadMemIdx) {
                 rd = decode_register(c.arg1).encoding;
                 remove_extraneous_parentheses(c.arg2);
                 rs1 = decode_register(c.arg2).encoding;
@@ -1176,7 +1177,7 @@ void make_inst(assembly_context& c) {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         } else {
-            if (reqs == XTheadZvamo) {
+            if (setreqs == XTheadZvamo) {
                 remove_extraneous_parentheses(c.arg3);
             }
             rs1 = decode_register(c.arg3).encoding;
