@@ -43,13 +43,17 @@ regex = "(?<={)\"([\w.]+)\""
 
 instructions = re.findall(regex, content)
 
-# Now add each instruction's list position to itself
+# Now add each instruction's list position to itself along with length
 for i in range(len(instructions)):
-    instructions[i] = (instructions[i], i)
+    instructions[i] = (instructions[i], i, len(instructions[i]))
 
 instructions.sort()
 
 print(instructions)
+
+min_len = min([i[2] for i in instructions])
+
+max_len = max([i[2] for i in instructions])
 
 depth = 0
 
@@ -61,15 +65,24 @@ code += "#include \"../instructions.hpp\"\n"
 code += "#include \"../ultrassembler.hpp\"\n\n"
 code += "namespace ultrassembler_internal {\n\n"
 code += "const uint16_t fast_instr_search(const ultrastring& inst) {\n"
+code += "    const auto size = inst.size();\n\n"
 
 def ind():
-    return "    " * (depth + 1)
+    return "    " * (depth + 2)
 
-def instr_exists(instr):
-    return instr in [i[0] for i in instructions]
+def instr_exists(instr, length):
+    #return instr in [i[0] for i in instructions]
+    for i in instructions:
+        if i[0] == instr and i[2] == length:
+            return True
+    return False
     
-def prefix_exists(prefix):
-    return any([instr.startswith(prefix) for instr in [i[0] for i in instructions]])
+def prefix_exists(prefix, length):
+    #return any([instr.startswith(prefix) for instr in [i[0] for i in instructions]])
+    for i in instructions:
+        if i[0].startswith(prefix) and i[2] == length:
+            return True
+    return False
 
 potentialchars = ""
 
@@ -79,30 +92,37 @@ for instr in instructions:
         if char not in potentialchars:
             potentialchars += char
 
-def process_depth():
+def process_depth(current_len):
     global code, current_instr, depth
-    if instr_exists(current_instr):
-        code += ind() + f"if (inst.size() < {depth + 1}) return {instructions[[i[0] for i in instructions].index(current_instr)][1]};\n"
-    else:
-        code += ind() + f"if (inst.size() < {depth + 1}) return instr_search_failed;\n"
+    #if instr_exists(current_instr):
+    #    code += ind() + f"if (inst.size() < {depth + 1}) return {instructions[[i[0] for i in instructions].index######(current_instr)][1]};\n"
+    #else:
+    #    code += ind() + f"if (inst.size() < {depth + 1}) return instr_search_failed;\n"
     for letter in potentialchars:
-        if prefix_exists(current_instr + letter):
+        if instr_exists(current_instr + letter, current_len):
+            code += ind() + f"if (inst[{depth}] == '{letter}') return {instructions[[i[0] for i in instructions].index(current_instr + letter)][1]};\n"
+        elif prefix_exists(current_instr + letter, current_len):
             code += ind() + f"if (inst[{depth}] == '{letter}') {{\n"
             current_instr += letter
             depth += 1
-            process_depth()
+            process_depth(current_len)
             depth -= 1
             current_instr = current_instr[:-1]
             code += ind() + "}\n"
         
 
-process_depth()
+for i in range(min_len, max_len + 1):
+    code += f"    if (size == {i}) {{\n"
+    process_depth(i)
+    code += "    }\n\n"
 
-code += ind() + "return instr_search_failed;\n"
+code += "    return instr_search_failed;\n"
 code += "}\n\n"
 code += "} // namespace ultrassembler_internal"
 
 print(code)
+
+#exit()
 
 with open(output, "w") as file:
     file.write(code)

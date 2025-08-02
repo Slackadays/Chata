@@ -26,9 +26,6 @@ constexpr std::array<std::string_view, 32> valid_vector_registers = {"v0",  "v1"
 
 constexpr uint8_t reg_search_failed = (uint8_t)-1;
 const uint8_t fast_reg_search(const ultrastring& reg);
-const uint8_t fast_float_reg_search(const ultrastring& reg);
-const uint8_t fast_vec_reg_search(const ultrastring& reg);
-const uint8_t fast_int_reg_search(const ultrastring& reg);
 
 enum class RegisterType : uint8_t {
     Integer,
