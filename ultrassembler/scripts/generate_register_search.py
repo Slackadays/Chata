@@ -46,15 +46,12 @@ def ind():
     return "    " * (depth + 2)
 
 def reg_exists(reg, length):
-    #return reg in [i[0] for i in registers]
     for r in registers:
         if r[0] == reg and r[2] == length:
             return True
     return False
     
 def prefix_exists(prefix, length):
-    #return any([reg.startswith(prefix) for reg in [i[0] for i in registers]])
-    #the above line but with the current length
     for reg in registers:
         if reg[0].startswith(prefix) and reg[2] == length:
             return True
@@ -70,12 +67,7 @@ for reg in registers:
 
 def process_depth(current_len):
     global code, current_reg, depth
-    #if reg_exists(current_reg):
-    #    code += ind() + f"if (reg.size() < {depth + 1}) return {registers[[i[0] for i in registers].index(current_reg)][1]};\n"
-    #else:
-    #    code += ind() + f"if (reg.size() < {depth + 1}) return reg_search_failed;\n"
     for letter in potentialchars:
-        
         if reg_exists(current_reg + letter, current_len):
             print(f"Found register {current_reg + letter} at depth {depth} with length {current_len}")
             code += ind() + f"if (reg[{depth}] == '{letter}') return {registers[[i[0] for i in registers].index(current_reg + letter)][1]};\n"

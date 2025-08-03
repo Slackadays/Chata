@@ -71,14 +71,12 @@ def ind():
     return "    " * (depth + 2)
 
 def instr_exists(instr, length):
-    #return instr in [i[0] for i in instructions]
     for i in instructions:
         if i[0] == instr and i[2] == length:
             return True
     return False
     
 def prefix_exists(prefix, length):
-    #return any([instr.startswith(prefix) for instr in [i[0] for i in instructions]])
     for i in instructions:
         if i[0].startswith(prefix) and i[2] == length:
             return True
@@ -94,10 +92,6 @@ for instr in instructions:
 
 def process_depth(current_len):
     global code, current_instr, depth
-    #if instr_exists(current_instr):
-    #    code += ind() + f"if (inst.size() < {depth + 1}) return {instructions[[i[0] for i in instructions].index######(current_instr)][1]};\n"
-    #else:
-    #    code += ind() + f"if (inst.size() < {depth + 1}) return instr_search_failed;\n"
     for letter in potentialchars:
         if instr_exists(current_instr + letter, current_len):
             code += ind() + f"if (inst[{depth}] == '{letter}') return {instructions[[i[0] for i in instructions].index(current_instr + letter)][1]};\n"
@@ -109,7 +103,6 @@ def process_depth(current_len):
             depth -= 1
             current_instr = current_instr[:-1]
             code += ind() + "}\n"
-        
 
 for i in range(min_len, max_len + 1):
     code += f"    if (size == {i}) {{\n"

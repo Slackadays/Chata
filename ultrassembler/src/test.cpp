@@ -896,6 +896,8 @@ int main() {
     as("c.or x10, x11", 0x4d8d);
     as("c.xor x12, x13", 0x358e);
     as("c.sub x14, x15", 0x1d8f);
+    as("c.addw x9, x10", 0xa99c);
+    as("c.subw x11, x12", 0x919d);
     as("c.nop", 0x0100);
     as("c.ebreak", 0x0290);
     as("czero.eqz x1, x2, x3", 0xb350310e);
