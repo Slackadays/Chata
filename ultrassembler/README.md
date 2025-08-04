@@ -97,21 +97,27 @@ Use it on any platform that supports C++23. Link it dynamically or statically. I
 
 ### ▫️ Zero config
 
-There's only one (1) function with one (1) required parameter. Truly effortless.
+There's only one (1) function with one (1) required parameter. 
+
+Truly effortless.
 
 ### ▫️ Independent of GCC and LLVM
 
-Ultrassembler shares exactly zero (0) code with binutils or LLVM. That means we can make it a third reference implementation of RISC-V assembly.
+Ultrassembler shares exactly zero (0) code with binutils or LLVM. 
+
+Make it your third reference implementation of RISC-V assembly!
 
 ### ▫️ Verified quality
 
 The Ultrassembler testsuite currently has **2700+ tests** covering all supported instructions and directives and other cases too.
 
+Despite its speed, Ultrassembler also doesn't skimp out on checks like those for invalid instructions, registers, and immediates.
+
 ### ▫️ Super-duper crazy fast! 🏎️
 
 Ultrassembler uses a strategy similar to what the fast `mold` linker also uses: more efficient data structures and algorithms. Some of these tricks include those you'd only see in fields like high speed trading. **Coming soon: How is Ultrassembler so fast?**
 
-It's so fast that you could use it to insert inline assembly in your code with little to no performance overhead!
+It's so fast that you could use it to insert inline assembly in your code with little to no performance overhead.
 
 On my desktop with a Zen 3 CPU and GCC 11, Ultrassembler is approximately 13x faster than `as` and 9x faster on my RISC-V SBC with a TH1520 SoC and GCC 14, both assembling the `16kinstrs.s` sample file, measured in number of cycles. Compared to LLVM, the difference is even more staggering.
 
