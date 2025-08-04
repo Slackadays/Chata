@@ -101,13 +101,80 @@ std::optional<T> decode_imm(const ultrastring& imm, assembly_context& c) {
     return std::nullopt;
 }
 
-inline const rvregister& decode_register(const ultrastring& str) {
+inline const rvregister& decode_register(const ultrastring& str, const uint8_t pos, const rreq reqs = reg_reqs::any_regs) {
     // return registers[4];
-    if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
+    /*if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
         return registers[reg];
     } else {
         throw UltraError(UltraErrorType::Compiler, "Invalid register " + str);
+    }*/
+    using namespace reg_reqs;
+    using enum RegisterType;
+    auto reg = fast_reg_search(str);
+    if (reg == reg_search_failed) {
+        throw UltraError(UltraErrorType::Assembler, "Invalid register " + str);
     }
+    if (reqs == any_regs) {
+        return registers[reg];
+    } else if ((reqs & 0b11110000) == 0b10110000) { // Special cases
+        auto& data = registers[reg];
+
+        if (reqs == floatint_floatint_floatint_floatint || reqs == floatint_floatint_floatint || reqs == floatint_floatint) {
+            if (data.type == Integer || data.type == FloatingPoint) {
+                return data;
+            } else {
+                throw UltraError(UltraErrorType::Compiler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+            }
+        } else if (reqs == int_floatint_floatint || reqs == int_floatint) {
+            if (pos == 0) {
+                if (data.type == Integer) {
+                    return data;
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+                }
+            } else {
+                if (data.type == Integer || data.type == FloatingPoint) {
+                    return data;
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+                }
+            }
+        } else if (reqs == floatint_int) {
+            if (pos == 1) {
+                if (data.type == Integer) {
+                    return data;
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+                }
+            } else {
+                if (data.type == Integer || data.type == FloatingPoint) {
+                    return data;
+                } else {
+                    throw UltraError(UltraErrorType::Compiler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+                }
+            }
+        } else {
+            throw UltraError(UltraErrorType::Compiler, "Invalid special register requirements");
+        }
+    } else {
+        auto& data = registers[reg];
+            
+        if ((reqs >> (pos * 2) & 0b11) == 0b00) {
+            return data;
+        } else if (data.type == Integer && (reqs >> (pos * 2) & 0b11) == 0b01) {
+            return data;
+        } else if (data.type == FloatingPoint && (reqs >> (pos * 2) & 0b11) == 0b10) {
+            return data;
+        } else if (data.type == Vector && (reqs >> (pos * 2) & 0b11) == 0b11) {
+            return data;
+        } else {
+            throw UltraError(UltraErrorType::Compiler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+        }
+    }
+}
+
+const rvregister& decode_register(const ultrastring& str) {
+    return decode_register(str, 0);
 }
 
 uint8_t decode_frm(const ultrastring& frm) {
@@ -487,7 +554,7 @@ void make_inst(assembly_context& c) {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         }
-        rd = decode_register(c.arg1).encoding;
+        rd = decode_register(c.arg1, 0, regreqs).encoding;
         if (opcode == opcode::op_AMO) { // The A and Zacas sets sometimes use registers that look like (a0)
             remove_extraneous_parentheses(c.arg2);
             remove_extraneous_parentheses(c.arg3);
@@ -509,7 +576,7 @@ void make_inst(assembly_context& c) {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
             }
         } else {
-            rs1 = decode_register(c.arg2).encoding;
+            rs1 = decode_register(c.arg2, 1, regreqs).encoding;
         }
         auto no_rs2 = ssargs.has_custom_reg_val();
         if (!no_rs2) {
@@ -519,7 +586,7 @@ void make_inst(assembly_context& c) {
                 if (setreqs == XTheadMemPair) {
                     remove_extraneous_parentheses(c.arg3);
                 }
-                rs2 = decode_register(c.arg3).encoding;
+                rs2 = decode_register(c.arg3, 2, regreqs).encoding;
             }
         } else {
             rs2 = ssargs.custom_reg_val;
@@ -575,19 +642,19 @@ void make_inst(assembly_context& c) {
         inst |= rs2 << 20;          // Add rs2
         inst |= (funct >> 3) << 25; // Add funct7
     } else if (type == R4) {
-        rd = decode_register(c.arg1).encoding;
-        rs1 = decode_register(c.arg2).encoding;
+        rd = decode_register(c.arg1, 0, regreqs).encoding;
+        rs1 = decode_register(c.arg2, 1, regreqs).encoding;
         auto no_rs2 = ssargs.has_custom_reg_val();
         if (!no_rs2) {
             if (ssargs.get_imm_for_rs()) {
                 rs2 = imm;
             } else {
-                rs2 = decode_register(c.arg3).encoding;
+                rs2 = decode_register(c.arg3, 2, regreqs).encoding;
             }
         } else {
             rs2 = ssargs.custom_reg_val;
         }
-        rs3 = decode_register(c.arg4).encoding;
+        rs3 = decode_register(c.arg4, 3, regreqs).encoding;
         if (!c.arg5.empty()) {
             frm = decode_frm(c.arg5);
         } else {

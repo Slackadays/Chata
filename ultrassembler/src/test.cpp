@@ -1827,6 +1827,8 @@ int main() {
     as("vfwsub.vf v0, v1, f4", 0x575012ca);
     as("vfwadd.wv v2, v3, v4", 0x571132d2);
     as("vfwadd.wf v5, v6, f5", 0xd7d262d2);
+    as("vfwsub.wv v7, v8, v9", 0xd79384da);
+    as("vfwsub.wf v10, v11, f6", 0x5755b3da);
     as("vfmul.vv v7, v8, v9", 0xd7938492);
     as("vfmul.vf v10, v11, f6", 0x5755b392);
     as("vfdiv.vv v12, v13, v14", 0x5716d782);

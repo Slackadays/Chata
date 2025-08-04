@@ -2244,11 +2244,23 @@ struct GenericFlag {
     constexpr explicit GenericFlag() = default;
 
     constexpr bool operator&(GenericFlag other) const {
-        return (value & other.value) != 0;
+        return value & other.value;
+    }
+
+    constexpr uint8_t operator&(uint8_t other) const {
+        return value & other;
     }
 
     constexpr GenericFlag operator|(GenericFlag other) const {
         return GenericFlag(value | other.value);
+    }
+
+    constexpr bool operator==(GenericFlag other) const {
+        return value == other.value;
+    }
+
+    constexpr uint8_t operator>>(uint8_t shift) const {
+        return value >> shift;
     }
 };
 
@@ -2265,6 +2277,13 @@ namespace reg_reqs {
 
 // Special cases: 0b 10 11 case (since no known instruction has vector for reg3 and float for reg4)
 
+constexpr rreq floatint_floatint_floatint_floatint = rreq(0b10110000);
+constexpr rreq floatint_floatint_floatint = rreq(0b10110001);
+constexpr rreq floatint_floatint = rreq(0b10110010);
+constexpr rreq int_floatint_floatint = rreq(0b10110011);
+constexpr rreq int_floatint = rreq(0b10110100);
+constexpr rreq floatint_int = rreq(0b10110101);
+
 constexpr rreq any_regs = rreq(0b00000000);
 constexpr rreq int_reg = rreq(0b00000001);
 constexpr rreq int_int = rreq(0b00000101);
@@ -2279,13 +2298,12 @@ constexpr rreq vector_int_int = rreq(0b00010111);
 constexpr rreq vector_int_vector = rreq(0b00110111);
 constexpr rreq float_int_int = rreq(0b00010110);
 constexpr rreq int_float_float = rreq(0b00101001);
-
-constexpr rreq floatint_floatint_floatint_floatint = rreq(0b10110000);
-constexpr rreq floatint_floatint_floatint = rreq(0b10110001);
-constexpr rreq floatint_floatint = rreq(0b10110010);
-constexpr rreq int_floatint_floatint = rreq(0b10110011);
-constexpr rreq int_floatint = rreq(0b10110100);
-constexpr rreq floatint_int = rreq(0b10110101);
+constexpr rreq vector_vector_vector = rreq(0b00111111);
+constexpr rreq vector_vector_int = rreq(0b00011111);
+constexpr rreq vector_vector = rreq(0b00001111);
+constexpr rreq vector_reg = rreq(0b00000011);
+constexpr rreq vector_vector_float = rreq(0b00101111);
+constexpr rreq vector_float_vector = rreq(0b00111011);
 
 } // namespace register_requirements
 

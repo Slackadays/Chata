@@ -1,1 +1,1 @@
-packw x12, x13, x14
+vfwsub.wf v10, v11, f6
