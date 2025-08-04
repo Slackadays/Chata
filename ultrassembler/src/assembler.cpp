@@ -688,14 +688,14 @@ void make_inst(assembly_context& c) {
                     throw UltraError(UltraErrorType::Compiler, "Invalid prefetch argument " + c.arg1, c.line, c.column);
                 }
                 if (auto reg_res = fast_reg_search(reg); reg_res != reg_search_failed) {
-                    rs1 = decode_register(reg).encoding;
+                    rs1 = decode_register(reg, 0, regreqs).encoding;
                 } else {
                     throw UltraError(UltraErrorType::Compiler, "Invalid register in prefetch argument " + c.arg1, c.line, c.column);
                 }
                 imm |= ((offset >> 5) & 0b111111) << 5; // Add offset[11:5]
             } else if (id == THSRRI || id == THTST) {
-                rd = decode_register(c.arg1).encoding;
-                rs1 = decode_register(c.arg2).encoding;
+                rd = decode_register(c.arg1, 0, regreqs).encoding;
+                rs1 = decode_register(c.arg2, 1, regreqs).encoding;
                 if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                     imm |= num.value();
                     verify_imm<6u>(num.value()); // Check for unsigned 6b
@@ -703,8 +703,8 @@ void make_inst(assembly_context& c) {
                     throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
                 }
             } else if (id == THSRRIW) {
-                rd = decode_register(c.arg1).encoding;
-                rs1 = decode_register(c.arg2).encoding;
+                rd = decode_register(c.arg1, 0, regreqs).encoding;
+                rs1 = decode_register(c.arg2, 1, regreqs).encoding;
                 if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                     imm |= num.value();
                     verify_imm<5u>(num.value()); // Check for unsigned 5b
@@ -712,9 +712,9 @@ void make_inst(assembly_context& c) {
                     throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
                 }
             } else if (setreqs == XTheadMemIdx) {
-                rd = decode_register(c.arg1).encoding;
+                rd = decode_register(c.arg1, 0, regreqs).encoding;
                 remove_extraneous_parentheses(c.arg2);
-                rs1 = decode_register(c.arg2).encoding;
+                rs1 = decode_register(c.arg2, 1, regreqs).encoding;
                 if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                     imm |= num.value();
                     verify_imm<5>(num.value()); // Check for signed 5b
@@ -734,18 +734,18 @@ void make_inst(assembly_context& c) {
                 if (ssargs.has_custom_reg_val() && !ssargs.no_rs1()) {
                     rd = ssargs.custom_reg_val;
                     remove_extraneous_parentheses(c.arg1);
-                    rs1 = decode_register(c.arg1).encoding;
+                    rs1 = decode_register(c.arg1, 0, regreqs).encoding;
                 } else if (ssargs.has_custom_reg_val()) {
                     rd = ssargs.custom_reg_val;
                 } else {
-                    rd = decode_register(c.arg1).encoding;
-                    rs1 = decode_register(c.arg2).encoding;
+                    rd = decode_register(c.arg1, 0, regreqs).encoding;
+                    rs1 = decode_register(c.arg2, 1, regreqs).encoding;
                 }
             }
         } else if (ssargs.special_handling()) {
             if (id == THEXT || id == THEXTU) {
-                rd = decode_register(c.arg1).encoding;
-                rs1 = decode_register(c.arg2).encoding;
+                rd = decode_register(c.arg1, 0, regreqs).encoding;
+                rs1 = decode_register(c.arg2, 1, regreqs).encoding;
                 if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                     imm |= num.value() << 6;     // add imm1
                     verify_imm<5u>(num.value()); // Check for unsigned 5b
@@ -762,11 +762,11 @@ void make_inst(assembly_context& c) {
                 imm |= decode_fence(c.arg1) << 4; // Add pred
                 imm |= decode_fence(c.arg2);      // Add succ
             } else if (id == CSRRW || id == CSRRS || id == CSRRC) {
-                rd = decode_register(c.arg1).encoding;
+                rd = decode_register(c.arg1, 0, regreqs).encoding;
                 imm = decode_csr(c.arg2);
-                rs1 = decode_register(c.arg3).encoding;
+                rs1 = decode_register(c.arg3, 1, regreqs).encoding;
             } else if (id == CSRRWI || id == CSRRSI || id == CSRRCI) {
-                rd = decode_register(c.arg1).encoding;
+                rd = decode_register(c.arg1, 0, regreqs).encoding;
                 imm = decode_csr(c.arg2);
                 if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                     rs1 = num.value();
@@ -774,10 +774,10 @@ void make_inst(assembly_context& c) {
                     throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg3, c.line, c.column);
                 }
             } else if (id == VSETVLI || id == VSETIVLI || id == THVSETVLI) {
-                rd = decode_register(c.arg1).encoding;
+                rd = decode_register(c.arg1, 0, regreqs).encoding;
 
                 if (id == VSETVLI || id == THVSETVLI) {
-                    rs1 = decode_register(c.arg2).encoding;
+                    rs1 = decode_register(c.arg2, 1, regreqs).encoding;
                 } else {
                     auto res = decode_imm<int32_t>(c.arg2, c);
                     if (res.has_value()) {
@@ -841,14 +841,14 @@ void make_inst(assembly_context& c) {
         } else if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value();
             verify_imm<12>(imm); // Check for signed 12b
-            rd = decode_register(c.arg1).encoding;
-            rs1 = decode_register(c.arg2).encoding;
+            rd = decode_register(c.arg1, 0, regreqs).encoding;
+            rs1 = decode_register(c.arg2, 1, regreqs).encoding;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
             verify_imm<12>(imm); // Check for signed 12b
-            rd = decode_register(c.arg1).encoding;
-            rs1 = decode_register(reg).encoding;
+            rd = decode_register(c.arg1, 0, regreqs).encoding;
+            rs1 = decode_register(reg, 1, regreqs).encoding;
         }
 
         DBG(std::cout << "Encoding I-type instruction with name " << c.inst << std::endl;)
@@ -860,14 +860,14 @@ void make_inst(assembly_context& c) {
         if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value();
             verify_imm<12>(imm); // Check for signed 12b
-            rs1 = decode_register(c.arg2).encoding;
+            rs1 = decode_register(c.arg2, 1, regreqs).encoding;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
             verify_imm<12>(imm); // Check for signed 12b
-            rs1 = decode_register(reg).encoding;
+            rs1 = decode_register(reg, 1, regreqs).encoding;
         }
-        rs2 = decode_register(c.arg1).encoding;
+        rs2 = decode_register(c.arg1, 0, regreqs).encoding;
 
         DBG(std::cout << "Encoding S-type instruction with name " << c.inst << std::endl;)
         inst |= (imm & 0b11111) << 7; // Add imm[4:0]
@@ -898,8 +898,8 @@ void make_inst(assembly_context& c) {
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = Branch});
         }
         verify_imm<13>(imm); // Check for signed 13b
-        rs1 = decode_register(c.arg1).encoding;
-        rs2 = decode_register(c.arg2).encoding;
+        rs1 = decode_register(c.arg1, 0, regreqs).encoding;
+        rs2 = decode_register(c.arg2, 1, regreqs).encoding;
 
         DBG(std::cout << "Encoding Branch-type instruction with name " << c.inst << std::endl;)
         inst |= ((imm >> 11) & 0b1) << 7;      // Add imm[11]
@@ -915,7 +915,7 @@ void make_inst(assembly_context& c) {
         } else {
             throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
         }
-        rd = decode_register(c.arg1).encoding;
+        rd = decode_register(c.arg1, 0, regreqs).encoding;
 
         DBG(std::cout << "Encoding U-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 7;   // Add rd
@@ -943,7 +943,7 @@ void make_inst(assembly_context& c) {
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = J});
         }
         verify_imm<21>(imm);
-        rd = decode_register(c.arg1).encoding;
+        rd = decode_register(c.arg1, 0, regreqs).encoding;
 
         DBG(std::cout << "Encoding J-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 7;                           // Add rd
@@ -988,13 +988,13 @@ void make_inst(assembly_context& c) {
     } else if (type == CL) {
         if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value();
-            rs1 = decode_register(c.arg2).encoding & 0b111;
+            rs1 = decode_register(c.arg2, 1, regreqs).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
-            rs1 = decode_register(reg).encoding & 0b111;
+            rs1 = decode_register(reg, 1, regreqs).encoding & 0b111;
         }
-        rd = decode_register(c.arg1).encoding & 0b111;
+        rd = decode_register(c.arg1, 0, regreqs).encoding & 0b111;
 
         DBG(std::cout << "Encoding CL-type instruction with name " << c.inst << std::endl;)
         inst |= rd << 2;                      // Add rd' (just 3 bits)
@@ -1012,13 +1012,13 @@ void make_inst(assembly_context& c) {
     } else if (type == CS) {
         if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value();
-            rs1 = decode_register(c.arg2).encoding & 0b111;
+            rs1 = decode_register(c.arg2, 1, regreqs).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset;
-            rs1 = decode_register(reg).encoding & 0b111;
+            rs1 = decode_register(reg, 1, regreqs).encoding & 0b111;
         }
-        rs2 = decode_register(c.arg1).encoding & 0b111;
+        rs2 = decode_register(c.arg1, 0, regreqs).encoding & 0b111;
 
         DBG(std::cout << "Encoding CS-type instruction with name " << c.inst << std::endl;)
         inst |= rs2 << 2;                     // Add rs2' (just 3 bits)
@@ -1055,7 +1055,7 @@ void make_inst(assembly_context& c) {
             imm = string_to_label(c.arg2, c);
             c.label_locs.push_back(label_loc {.loc = c.machine_code.size() - bytes, .id = imm, .i_bytes = bytes, .is_dest = false, .format = CB});
         }
-        rs1 = decode_register(c.arg1).encoding & 0b111;
+        rs1 = decode_register(c.arg1, 0, regreqs).encoding & 0b111;
 
         DBG(std::cout << "Encoding CB-type instruction with name " << c.inst << std::endl;)
         if (id == CSRLI || id == CSRAI || id == CANDI) { // shamt[5], shamt[4:0]
@@ -1079,13 +1079,13 @@ void make_inst(assembly_context& c) {
         }
     } else if (type == CR) {
         if (!ssargs.no_rs1()) {
-            rd = decode_register(c.arg1).encoding;
+            rd = decode_register(c.arg1, 0, regreqs).encoding;
         }
 
         if (ssargs.has_custom_reg_val()) {
             rs2 = ssargs.custom_reg_val;
         } else {
-            rs2 = decode_register(c.arg2).encoding;
+            rs2 = decode_register(c.arg2, 1, regreqs).encoding;
         }
 
         DBG(std::cout << "Encoding CR-type instruction with name " << c.inst << std::endl;)
@@ -1100,7 +1100,7 @@ void make_inst(assembly_context& c) {
                 imm = (funct & 0b111111);
             }
         } else {
-            rd = decode_register(c.arg1).encoding;
+            rd = decode_register(c.arg1, 0, regreqs).encoding;
             if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
                 imm = num.value();
             } else {
@@ -1171,7 +1171,7 @@ void make_inst(assembly_context& c) {
         }
         inst |= funct << 13; // Add funct3
     } else if (type == CIW) {
-        rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
+        rd = decode_register(c.arg1, 0, regreqs).encoding & 0b111; // Only use the lower 3 bits
         if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
             imm = num.value();
         } else {
@@ -1186,8 +1186,8 @@ void make_inst(assembly_context& c) {
         inst |= ((imm >> 4) & 0b11) << 11;  // Add nzuimm[5:4]
         inst |= funct << 13;                // Add funct3
     } else if (type == CA) {
-        rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
-        rs2 = decode_register(c.arg2).encoding & 0b111;
+        rd = decode_register(c.arg1, 0, regreqs).encoding & 0b111; // Only use the lower 3 bits
+        rs2 = decode_register(c.arg2, 1, regreqs).encoding & 0b111;
 
         DBG(std::cout << "Encoding CA-type instruction with name " << c.inst << std::endl;)
         inst |= rs2 << 2;            // Add rs2' (just 3 bits)
@@ -1195,9 +1195,9 @@ void make_inst(assembly_context& c) {
         inst |= rd << 7;             // Add rd' (just 3 bits)
         inst |= (funct >> 2) << 10;  // Add funct6
     } else if (type == VL || type == VS || type == VLR || type == VSR) {
-        rd = decode_register(c.arg1).encoding;
+        rd = decode_register(c.arg1, 0, regreqs).encoding;
         remove_extraneous_parentheses(c.arg2);
-        rs1 = decode_register(c.arg2).encoding;
+        rs1 = decode_register(c.arg2, 1, regreqs).encoding;
 
         DBG(std::cout << "Encoding VL or VS or VLR or VSR-type instruction with name " << c.inst << std::endl;)
 
@@ -1210,10 +1210,10 @@ void make_inst(assembly_context& c) {
             inst &= ~(1 << 25); // Clear the 25th bit
         }
     } else if (type == VLS || type == VLX || type == VSS || type == VSX) {
-        rd = decode_register(c.arg1).encoding;
+        rd = decode_register(c.arg1, 0, regreqs).encoding;
         remove_extraneous_parentheses(c.arg2);
-        rs1 = decode_register(c.arg2).encoding;
-        rs2 = decode_register(c.arg3).encoding;
+        rs1 = decode_register(c.arg2, 1, regreqs).encoding;
+        rs2 = decode_register(c.arg3, 2, regreqs).encoding;
 
         DBG(std::cout << "Encoding VLS or VLX or VSS or VSX-type instruction with name " << c.inst << std::endl;)
 
@@ -1227,12 +1227,12 @@ void make_inst(assembly_context& c) {
             inst &= ~(1 << 25); // Clear the 25th bit
         }
     } else if (type == IVV || type == FVV || type == MVV || type == IVX || type == FVF || type == MVX) {
-        rd = decode_register(c.arg1).encoding;
+        rd = decode_register(c.arg1, 0, regreqs).encoding;
 
         if (id == VIDV || id == THVIDV) {
             rs2 = 0;
         } else {
-            rs2 = decode_register(c.arg2).encoding;
+            rs2 = decode_register(c.arg2, 1, regreqs).encoding;
         }
 
         if (ssargs.has_custom_reg_val()) {
@@ -1247,7 +1247,7 @@ void make_inst(assembly_context& c) {
             if (setreqs == XTheadZvamo) {
                 remove_extraneous_parentheses(c.arg3);
             }
-            rs1 = decode_register(c.arg3).encoding;
+            rs1 = decode_register(c.arg3, 2, regreqs).encoding;
         }
 
         if (ssargs.swap_rs1_rs2()) {
@@ -1272,7 +1272,7 @@ void make_inst(assembly_context& c) {
             }
         }
     } else if (type == IVI) {
-        rd = decode_register(c.arg1).encoding;
+        rd = decode_register(c.arg1, 0, regreqs).encoding;
 
         if (ssargs.has_custom_reg_val()) {
             rs2 = ssargs.custom_reg_val;
@@ -1284,7 +1284,7 @@ void make_inst(assembly_context& c) {
                 throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
             }
         } else {
-            rs2 = decode_register(c.arg2).encoding;
+            rs2 = decode_register(c.arg2, 1, regreqs).encoding;
 
             if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                 imm = num.value();
@@ -1318,14 +1318,14 @@ void make_inst(assembly_context& c) {
             inst &= ~(1 << 25); // Clear the 25th bit
         }
     } else if (type == CLB) {
-        rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
+        rd = decode_register(c.arg1, 0, regreqs).encoding & 0b111; // Only use the lower 3 bits
         if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value() & 0b11;
-            rs1 = decode_register(c.arg2).encoding & 0b111;
+            rs1 = decode_register(c.arg2, 1, regreqs).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset & 0b11;
-            rs1 = decode_register(reg).encoding & 0b111;
+            rs1 = decode_register(reg, 1, regreqs).encoding & 0b111;
         }
 
         DBG(std::cout << "Encoding CLB-type instruction with name " << c.inst << std::endl;)
@@ -1336,14 +1336,14 @@ void make_inst(assembly_context& c) {
         inst |= rs1 << 7;         // Add rs1' (just 3 bits)
         inst |= funct << 10;      // Add funct6
     } else if (type == CSBfmt) {
-        rs2 = decode_register(c.arg1).encoding & 0b111;
+        rs2 = decode_register(c.arg1, 0, regreqs).encoding & 0b111;
         if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value() & 0b11;
-            rs1 = decode_register(c.arg2).encoding & 0b111;
+            rs1 = decode_register(c.arg2, 1, regreqs).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset & 0b11;
-            rs1 = decode_register(reg).encoding & 0b111;
+            rs1 = decode_register(reg, 1, regreqs).encoding & 0b111;
         }
 
         DBG(std::cout << "Encoding CSB-type instruction with name " << c.inst << std::endl;)
@@ -1354,14 +1354,14 @@ void make_inst(assembly_context& c) {
         inst |= rs1 << 7;         // Add rs1' (just 3 bits)
         inst |= funct << 10;      // Add funct6
     } else if (type == CLHfmt) {
-        rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
+        rd = decode_register(c.arg1, 0, regreqs).encoding & 0b111; // Only use the lower 3 bits
         if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = num.value() & 0b11;
-            rs1 = decode_register(c.arg2).encoding & 0b111;
+            rs1 = decode_register(c.arg2, 1, regreqs).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = offset & 0b11;
-            rs1 = decode_register(reg).encoding & 0b111;
+            rs1 = decode_register(reg, 1, regreqs).encoding & 0b111;
         }
 
         DBG(std::cout << "Encoding CLH-type instruction with name " << c.inst << std::endl;)
@@ -1372,14 +1372,14 @@ void make_inst(assembly_context& c) {
         inst |= rs1 << 7;           // Add rs1' (just 3 bits)
         inst |= (funct >> 1) << 10; // Add funct6
     } else if (type == CSHfmt) {
-        rs2 = decode_register(c.arg1).encoding & 0b111;
+        rs2 = decode_register(c.arg1, 0, regreqs).encoding & 0b111;
         if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
             imm = (num.value() >> 1) & 0b1;
-            rs1 = decode_register(c.arg2).encoding & 0b111;
+            rs1 = decode_register(c.arg2, 1, regreqs).encoding & 0b111;
         } else {
             auto [offset, reg] = decode_offset_plus_reg(c.arg2, c);
             imm = (offset >> 1) & 0b1;
-            rs1 = decode_register(reg).encoding & 0b111;
+            rs1 = decode_register(reg, 1, regreqs).encoding & 0b111;
         }
 
         DBG(std::cout << "Encoding CSH-type instruction with name " << c.inst << std::endl;)
@@ -1390,7 +1390,7 @@ void make_inst(assembly_context& c) {
         inst |= rs1 << 7;           // Add rs1' (just 3 bits)
         inst |= (funct >> 1) << 10; // Add funct6
     } else if (type == CU) {
-        rd = decode_register(c.arg1).encoding & 0b111; // Only use the lower 3 bits
+        rd = decode_register(c.arg1, 0, regreqs).encoding & 0b111; // Only use the lower 3 bits
 
         DBG(std::cout << "Encoding CU-type instruction with name " << c.inst << std::endl;)
 
@@ -1398,8 +1398,8 @@ void make_inst(assembly_context& c) {
         inst |= rd << 7;                // Add rd' (just 3 bits)
         inst |= (funct >> 5) << 10;     // Add funct6
     } else if (type == CMMV) {
-        rs1 = decode_register(c.arg1).encoding & 0b111;
-        rs2 = decode_register(c.arg2).encoding & 0b111;
+        rs1 = decode_register(c.arg1, 0, regreqs).encoding & 0b111;
+        rs2 = decode_register(c.arg2, 1, regreqs).encoding & 0b111;
 
         DBG(std::cout << "Encoding CMMV-type instruction with name " << c.inst << std::endl;)
 
