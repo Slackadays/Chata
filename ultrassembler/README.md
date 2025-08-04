@@ -87,7 +87,7 @@ Supports all **2000+ instructions** in these RISC-V instruction sets!
 - XTheadVector
 - XTheadZvamo
   
-This is in additon to 100+ pseudoinstructions, custom instructions, labels, and many other assembler directives!
+This is in addition to 100+ pseudoinstructions, custom instructions, labels, and many other assembler directives!
 
 ### ▫️ Portable
 
