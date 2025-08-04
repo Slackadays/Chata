@@ -1,1 +1,1 @@
-c.subw x11, x12
+packw x12, x13, x14

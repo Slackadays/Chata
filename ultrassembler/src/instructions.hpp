@@ -2269,9 +2269,16 @@ constexpr rreq any_regs = rreq(0b00000000);
 constexpr rreq int_reg = rreq(0b00000001);
 constexpr rreq int_int = rreq(0b00000101);
 constexpr rreq int_int_int = rreq(0b00010101);
-constexpr rreq int_float = rreq(0b00000110);
-constexpr rreq float_int = rreq(0b00001001);
+constexpr rreq int_float = rreq(0b00001001);
+constexpr rreq float_int = rreq(0b00000110);
 constexpr rreq float_reg = rreq(0b00000010);
+constexpr rreq float_float_float = rreq(0b00101010);
+constexpr rreq float_float = rreq(0b00001010);
+constexpr rreq vector_int = rreq(0b00000111);
+constexpr rreq vector_int_int = rreq(0b00010111);
+constexpr rreq vector_int_vector = rreq(0b00110111);
+constexpr rreq float_int_int = rreq(0b00010110);
+constexpr rreq int_float_float = rreq(0b00101001);
 
 constexpr rreq floatint_floatint_floatint_floatint = rreq(0b10110000);
 constexpr rreq floatint_floatint_floatint = rreq(0b10110001);
@@ -2374,6 +2381,6 @@ struct rvinstruction {
             ) {}
 };
 
-extern const std::array<rvinstruction, 2035> instructions;
+extern const std::array<rvinstruction, 2034> instructions;
 
 } // namespace ultrassembler_internal

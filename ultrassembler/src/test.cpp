@@ -1166,7 +1166,9 @@ int main() {
     as("minu x31, x31, x0", 0xb3df0f0a);
     as("orc.b x1, x2", 0x93507128);
     as("orn x3, x4, x5", 0xb3615240);
-    as("rev.b x6, x7", 0x13d37368);
+    as("pack x6, x7, x8", 0x33c38308);
+    as("packh x9, x10, x11", 0xb374b508);
+    as("packw x12, x13, x14", 0x3bc6e608);
     as("rol x8, x9, x10", 0x3394a460);
     as("rolw x11, x12, x13", 0xbb15d660);
     as("ror x14, x15, x16", 0x33d70761);

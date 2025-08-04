@@ -1746,13 +1746,17 @@ uint8_t decode_opcode(const ultrastring& str) {
 }
 
 void handle_directives(assembly_context& c) {
+    if (c.inst.size() == 0) {
+        DBG(std::cout << "Empty instruction, skipping" << std::endl;)
+        return;
+    }
     if (c.inst.back() == ':') {
         DBG(std::cout << "Looks like this is a label, adding it" << std::endl;)
         c.label_locs.push_back(label_loc {.loc = c.machine_code.size(), .id = string_to_label(c.inst, c), .is_dest = true});
         return;
     }
     if (c.inst.front() != '.') {
-        DBG(std::cout << "Not a directive, skipping" << std::endl;)
+        throw UltraError(UltraErrorType::Assembler, "Unknown instruction " + c.inst, c.line, c.column);
         return;
     }
     DBG(std::cout << "Looks like this is a directive" << std::endl;)
@@ -2072,6 +2076,8 @@ void handle_directives(assembly_context& c) {
         }
 
         c.constants.push_back({c.arg1, c.arg2});
+    } else {
+        throw UltraError(UltraErrorType::Assembler, "Unknown directive " + c.inst, c.line, c.column);
     }
 }
 
@@ -2251,7 +2257,7 @@ ultravector<uint8_t> assemble_code(const std::string_view& input, const ultravec
 
     int res = std::system(
             "riscv64-linux-gnu-as "
-            "-march=rv64gfdcqb_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp_zfbfmin_zvfbfmin_zvfbfwma_zabha_zicbom_"
+            "-march=rv64gfdcqb_zfa_zknd_zbkb_zknh_zksh_zksed_zvkned_zvkb_zbkx_zvbb_zvbc_zvknhb_zvkg_zvksh_zvksed_zbc_zba_zicond_zacas_zcb_zcmp_zfbfmin_zvfbfmin_zvfbfwma_zabha_zicbom_"
             "zicboz_zicbop_xtheadvector_xtheadcmo_xtheadsync_xtheadba_xtheadbb_xtheadbs_xtheadcondmov_xtheadmemidx_xtheadmempair_xtheadfmemidx_xtheadmac_xtheadfmv_xtheadint_xtheadvdotv0.7.1_"
             "xtheadzvamo "
             "temp.s -o temp.o"
