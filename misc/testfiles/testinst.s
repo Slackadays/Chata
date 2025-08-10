@@ -1,1 +1,1 @@
-vfwsub.wf v10, v11, f6
+vfwmaccbf16.vf v11, f11, v12

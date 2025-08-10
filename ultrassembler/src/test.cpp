@@ -2035,6 +2035,7 @@ int main() {
     as("vfncvtbf16.f.f.w v4, v5", 0x57925e4a);
     as("vfwcvtbf16.f.f.v v6, v7", 0x5793764a);
     as("vfwmaccbf16.vv v8, v9, v10", 0x5794a4ee);
+    as("vfwmaccbf16.vf v11, f11, v12", 0xd7d5c5ee);
     as("th.vfneg.v v11, v12", 0xd715c626);
     as("th.vfabs.v v13, v14", 0xd716e72a);
     as("th.vmclr.m v15", 0xd7a7f76e);
