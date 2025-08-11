@@ -13,7 +13,7 @@ void as(std::string_view input, uint32_t expected_output) {
         result = assemble_code(input);
     } catch (UltraError& e) {
         std::cout << e.what() << std::endl;
-        std::cout << "❌ Test FAILED for " << input << ": expected " << std::hex << expected_output << std::dec << " (" << std::bitset<32>(expected_output) << "), but got an error" << std::endl;
+        std::cout << "❌ Normal test FAILED for " << input << ": expected " << std::hex << expected_output << std::dec << " (" << std::bitset<32>(expected_output) << "), but got an error" << std::endl;
         failed_tests++;
         return;
     }
@@ -24,11 +24,11 @@ void as(std::string_view input, uint32_t expected_output) {
     }
 
     if (result_int != expected_output) {
-        std::cout << "❌ Test FAILED for " << input << ": expected " << std::hex << expected_output << std::dec << " (" << std::bitset<32>(expected_output) << "), but got " << std::hex << result_int
+        std::cout << "❌ Normal test FAILED for " << input << ": expected " << std::hex << expected_output << std::dec << " (" << std::bitset<32>(expected_output) << "), but got " << std::hex << result_int
                   << std::dec << " (" << std::bitset<32>(result_int) << ")" << std::endl;
         failed_tests++;
     } else {
-        std::cout << "✅ Test passed for " << input << std::endl;
+        std::cout << "✅ Normal test passed for " << input << std::endl;
         passed_tests++;
     }
 }
@@ -41,7 +41,7 @@ void as(std::string_view input, std::vector<uint8_t> expected_output) {
         result = std::vector<uint8_t>(temp.begin(), temp.end());
     } catch (UltraError& e) {
         std::cout << e.what() << std::endl;
-        std::cout << "❌ Test FAILED for " << input << ": expected ";
+        std::cout << "❌ Normal test FAILED for " << input << ": expected ";
         for (auto& byte : expected_output) {
             std::cout << std::hex << static_cast<uint32_t>(byte) << " ";
         }
@@ -54,7 +54,7 @@ void as(std::string_view input, std::vector<uint8_t> expected_output) {
     }
 
     if (result != expected_output) {
-        std::cout << "❌ Test FAILED for " << input << ": expected ";
+        std::cout << "❌ Normal test FAILED for " << input << ": expected ";
         for (auto& byte : expected_output) {
             std::cout << std::hex << static_cast<uint32_t>(byte) << " ";
         }
@@ -75,8 +75,21 @@ void as(std::string_view input, std::vector<uint8_t> expected_output) {
         return;
     }
 
-    std::cout << "✅ Test passed for " << input << std::endl;
+    std::cout << "✅ Normal test passed for " << input << std::endl;
     passed_tests++;
+}
+
+void fail(std::string_view input) {
+    ultrassembler::reset_memory_bank();
+    try {
+        auto result = assemble_code(input);
+    } catch (UltraError& e) {
+        std::cout << "✅ Error test passed for " << input << std::endl;
+        passed_tests++;
+        return;
+    }
+    std::cout << "❌ Error test FAILED for " << input << ": expected an error, but didn't get one" << std::endl;
+    failed_tests++;
 }
 
 } // namespace ultrassembler_internal
@@ -1040,6 +1053,7 @@ int main() {
     as("cm.mvsa01 s0, s1", 0x26ac);
     as("cm.mva01s s0, s1", 0x66ac);
     as("cm.jt 16", 0x42a0);
+    fail("cm.jt a0");
     as("cm.jalt 64", 0x02a1);
     as("fli.s f0, -1.0", 0x530010f0);
     as("fli.s f1, min", 0xd38010f0);
@@ -2817,7 +2831,7 @@ int main() {
     as(" beq t0, t1, foolabel\nc.li a5, 26 # foobar\n\n\n#irrelevant comment\n\n#another comment\n\nfoolabel: # also ignore this comment", {0x63, 0x83, 0x62, 0x00, 0xe9, 0x47});
     as(" foolabel:\nc.li a5, 26\nbeq t0, t1, foolabel", {0xe9, 0x47, 0xe3, 0x8f, 0x62, 0xfe});
     as("foolabel:\nc.li a5, 26\nadd s0, s1, s2\nbeq t0, t1, foolabel", {0xe9, 0x47, 0x33, 0x84, 0x24, 0x01, 0xe3, 0x8d, 0x62, 0xfe});
-    as("dummylabel:\nc.li a5, 26\n#another comment for good measure\nbeq t0, t1, foolabel\nxor a0, a1, a2\nbarlabel:\nfoolabel:\nadd s0, s1, s2\nj dummylabel",
+    as("dummylabel:\n\nc.li a5, 26\n#another comment for good measure\nbeq t0, t1, foolabel\nxor a0, a1, a2\nbarlabel:\nfoolabel:\nadd s0, s1, s2\nj dummylabel",
        {0xe9, 0x47, 0x63, 0x84, 0x62, 0x00, 0x33, 0xc5, 0xc5, 0x00, 0x33, 0x84, 0x24, 0x01, 0x6f, 0xf0, 0x3f, 0xff});
     as("foolabel:\njal zero, foolabel\nc.j foolabel\nbazlabel:\njal zero, barlabel\nc.j barlabel\n.dotlabel:\nbarlabel:", {0x6f, 0x00, 0x00, 0x00, 0xf5, 0xbf, 0x6f, 0x00, 0x60, 0x00, 0x09, 0xa0});
     as(" .dotfoolabel:\njal zero, .dotfoolabel\nc.j .dotfoolabel\nbazlabel:\njal zero, .dotbarlabel\nc.j .dotbarlabel\n.dotlabel:\n.dotbarlabel:",
