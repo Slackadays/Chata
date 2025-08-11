@@ -2307,6 +2307,7 @@ constexpr rreq vector_float_vector = rreq(0b00111011);
 constexpr rreq vector_float = rreq(0b00001011);
 constexpr rreq int_vector = rreq(0b00001101);
 constexpr rreq float_vector = rreq(0b00001110);
+constexpr rreq int_vector_int = rreq(0b00011101);
 
 } // namespace register_requirements
 
