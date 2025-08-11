@@ -1,1 +1,1 @@
-vfwmaccbf16.vf v11, f11, v12
+th.vfclass.v v8, v9

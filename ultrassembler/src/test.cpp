@@ -2694,6 +2694,8 @@ int main() {
     as("th.vfwsub.vf v0, v1, f4", 0x575012ca);
     as("th.vfwadd.wv v2, v3, v4", 0x571132d2);
     as("th.vfwadd.wf v5, v6, f5", 0xd7d262d2);
+    as("th.vfwsub.wv v2, v3, v4", 0x571132da);
+    as("th.vfwsub.wf v5, v6, f5", 0xd7d262da);
     as("th.vfmul.vv v7, v8, v9", 0xd7938492);
     as("th.vfmul.vf v10, v11, f6", 0x5755b392);
     as("th.vfdiv.vv v12, v13, v14", 0x5716d782);
@@ -2748,6 +2750,7 @@ int main() {
     as("th.vmfge.vf v1, v2, f24", 0xd7502c7e);
     as("th.vmford.vv v3, v4, v5", 0xd791426a);
     as("th.vmford.vf v6, v7, f25", 0x57d37c6a);
+    as("th.vfclass.v v8, v9", 0x5714988e);
     as("th.vfmerge.vfm v5, v6, fa0, v0", 0xd752655c);
     as("th.vfmv.v.f v7, fa1", 0xd7d3055e);
     as("th.vfcvt.xu.f.v v8, v9", 0x5714908a);
