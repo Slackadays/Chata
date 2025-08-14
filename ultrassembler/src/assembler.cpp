@@ -19,6 +19,8 @@
 
 namespace ultrassembler_internal {
 
+using enum UASErrorID;
+
 int string_to_label(ultrastring& str, assembly_context& c) {
     while (str.back() == ':') {
         str.pop_back();
@@ -75,7 +77,7 @@ std::optional<T> decode_constant(const ultrastring& constant, assembly_context& 
                     }
                 }
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid relocation mode " + constant);
+                throw UASError(InvalidRelocationMode, "Invalid relocation mode " + constant);
             }
         }
     } else {
@@ -106,13 +108,13 @@ inline const rvregister& decode_register(const ultrastring& str, const uint8_t p
     /*if (auto reg = fast_reg_search(str); reg != reg_search_failed) {
         return registers[reg];
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Invalid register " + str);
+        throw UASError(UASErrorID::Assembler, "Invalid register " + str);
     }*/
     using namespace reg_reqs;
     using enum RegisterType;
     auto reg = fast_reg_search(str);
     if (reg == reg_search_failed) {
-        throw UltraError(UltraErrorType::Assembler, "Invalid register " + str);
+        throw UASError(InvalidRegisterGeneric, "Invalid register " + str);
     }
     if (reqs == any_regs) {
         return registers[reg];
@@ -123,20 +125,20 @@ inline const rvregister& decode_register(const ultrastring& str, const uint8_t p
             if (data.type == Integer || data.type == FloatingPoint) {
                 return data;
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+                throw UASError(InvalidRegisterPositional, "Invalid register " + str + " for position " + to_ultrastring(pos));
             }
         } else if (reqs == int_floatint_floatint || reqs == int_floatint) {
             if (pos == 0) {
                 if (data.type == Integer) {
                     return data;
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+                    throw UASError(InvalidRegisterPositional, "Invalid register " + str + " for position " + to_ultrastring(pos));
                 }
             } else {
                 if (data.type == Integer || data.type == FloatingPoint) {
                     return data;
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+                    throw UASError(InvalidRegisterPositional, "Invalid register " + str + " for position " + to_ultrastring(pos));
                 }
             }
         } else if (reqs == floatint_int) {
@@ -144,17 +146,17 @@ inline const rvregister& decode_register(const ultrastring& str, const uint8_t p
                 if (data.type == Integer) {
                     return data;
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+                    throw UASError(InvalidRegisterPositional, "Invalid register " + str + " for position " + to_ultrastring(pos));
                 }
             } else {
                 if (data.type == Integer || data.type == FloatingPoint) {
                     return data;
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+                    throw UASError(InvalidRegisterPositional, "Invalid register " + str + " for position " + to_ultrastring(pos));
                 }
             }
         } else {
-            throw UltraError(UltraErrorType::Assembler, "Invalid special register requirements");
+            throw UASError(InvalidRegisterSpecial, "Invalid special register requirements");
         }
     } else {
         auto& data = registers[reg];
@@ -168,7 +170,7 @@ inline const rvregister& decode_register(const ultrastring& str, const uint8_t p
         } else if (data.type == Vector && (reqs >> (pos * 2) & 0b11) == 0b11) {
             return data;
         } else {
-            throw UltraError(UltraErrorType::Assembler, "Invalid register " + str + " for position " + to_ultrastring(pos));
+            throw UASError(InvalidRegisterPositional, "Invalid register " + str + " for position " + to_ultrastring(pos));
         }
     }
 }
@@ -191,7 +193,7 @@ uint8_t decode_frm(const ultrastring& frm) {
     } else if (fast_eq(frm, "dyn")) {
         return 0b111;
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Invalid rounding mode " + frm);
+        throw UASError(InvalidRoundingMode, "Invalid rounding mode " + frm);
     }
 }
 
@@ -203,7 +205,7 @@ uint8_t decode_fence(const ultrastring& setting) {
     } else if (fast_eq(setting, "rw")) {
         return 0b0011;
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Invalid fence setting " + setting);
+        throw UASError(InvalidFence, "Invalid fence setting " + setting);
     }
 }
 
@@ -211,7 +213,7 @@ const uint16_t& decode_csr(const ultrastring& csr) {
     if (auto res = fast_csr_search(csr); res != csr_search_failed) {
         return csrs[res].second;
     }
-    throw UltraError(UltraErrorType::Assembler, "Invalid CSR " + csr);
+    throw UASError(InvalidCSR, "Invalid CSR " + csr);
 }
 
 std::optional<uint8_t> decode_vsew(const ultrastring& str) {
@@ -330,7 +332,7 @@ uint8_t decode_fli_imm(const float& value) {
     } else if (std::isnan(value)) {
         return 31;
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Invalid fli floating-point immediate " + to_ultrastring(value));
+        throw UASError(InvalidFLI, "Invalid fli floating-point immediate " + to_ultrastring(value));
     }
 }
 
@@ -439,7 +441,7 @@ std::optional<T> decode_expression(const ultrastring& str, assembly_context& c) 
             }
             result /= next.value();
         } else {
-            throw UltraError(UltraErrorType::Assembler,
+            throw UASError(InvalidOperator,
                              "Invalid operator '" + ultrastring(1, op) + "' in expression: " + str,
                              c.line, c.column);
         }
@@ -465,8 +467,8 @@ void verify_imm(const auto& imm) {
     using T = decltype(bits);
     if constexpr (std::is_signed_v<T>) {
         if (imm < -(1 << (bits - 1)) || imm >= (1 << (bits - 1))) {
-            throw UltraError(
-                    UltraErrorType::Assembler,
+            throw UASError(
+                    ImmOutOfRange,
                     "Immediate " + to_ultrastring(imm) + " is out of range [" + to_ultrastring(-(1 << (bits - 1))) + ", " + to_ultrastring((1 << (bits - 1))) + ")",
                     0,
                     0
@@ -474,7 +476,7 @@ void verify_imm(const auto& imm) {
         }
     } else if constexpr (std::is_unsigned_v<T>) {
         if (imm < 0 || imm >= (1u << bits)) {
-            throw UltraError(UltraErrorType::Assembler, "Immediate " + to_ultrastring(imm) + " is out of range [0, " + to_ultrastring((1u << bits)) + ")", 0, 0);
+            throw UASError(ImmOutOfRange, "Immediate " + to_ultrastring(imm) + " is out of range [0, " + to_ultrastring((1u << bits)) + ")", 0, 0);
         }
     }
 }
@@ -551,7 +553,7 @@ void make_inst(assembly_context& c) {
                 verify_imm<5u>(num.value());
                 imm = num.value();
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg3, c.line, c.column);
+                throw UASError(InvalidImm, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         }
         rd = decode_register(c.arg1, 0, regreqs).encoding;
@@ -573,7 +575,7 @@ void make_inst(assembly_context& c) {
             } else if (fast_eq(c.arg2, "nan")) {
                 rs1 = decode_fli_imm(std::numeric_limits<float>::quiet_NaN());
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg2, c.line, c.column);
+                throw UASError(InvalidImm, "Invalid immediate " + c.arg2, c.line, c.column);
             }
         } else {
             rs1 = decode_register(c.arg2, 1, regreqs).encoding;
@@ -606,7 +608,7 @@ void make_inst(assembly_context& c) {
             if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
                 imm = num.value();
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg4, c.line, c.column);
+                throw UASError(InvalidImm, "Invalid immediate " + c.arg4, c.line, c.column);
             }
             funct |= (imm & 0b11) << 3; // Add imm2
         } else if (setreqs == XTheadMemPair) {
@@ -615,7 +617,7 @@ void make_inst(assembly_context& c) {
                 funct |= num.value() << 3;
                 verify_imm<2u>(num.value()); // Check for unsigned 2b
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg4, c.line, c.column);
+                throw UASError(InvalidImm, "Invalid immediate " + c.arg4, c.line, c.column);
             }
         } else if (opcode != opcode::op_IMM) {
             if (!c.arg4.empty() && opcode == opcode::op_FP) {
@@ -685,12 +687,12 @@ void make_inst(assembly_context& c) {
             if (id == PREFETCHI || id == PREFETCHR || id == PREFETCHW) {
                 auto [offset, reg] = decode_offset_plus_reg(c.arg1, c);
                 if (reg.empty()) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid prefetch argument " + c.arg1, c.line, c.column);
+                    throw UASError(InvalidPrefetch, "Invalid prefetch argument " + c.arg1, c.line, c.column);
                 }
                 if (auto reg_res = fast_reg_search(reg); reg_res != reg_search_failed) {
                     rs1 = decode_register(reg, 0, regreqs).encoding;
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid register in prefetch argument " + c.arg1, c.line, c.column);
+                    throw UASError(InvalidPrefetchReg, "Invalid register in prefetch argument " + c.arg1, c.line, c.column);
                 }
                 imm |= ((offset >> 5) & 0b111111) << 5; // Add offset[11:5]
             } else if (id == THSRRI || id == THTST) {
@@ -700,7 +702,7 @@ void make_inst(assembly_context& c) {
                     imm |= num.value();
                     verify_imm<6u>(num.value()); // Check for unsigned 6b
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg2, c.line, c.column);
+                    throw UASError(InvalidImm, "Invalid immediate " + c.arg2, c.line, c.column);
                 }
             } else if (id == THSRRIW) {
                 rd = decode_register(c.arg1, 0, regreqs).encoding;
@@ -709,7 +711,7 @@ void make_inst(assembly_context& c) {
                     imm |= num.value();
                     verify_imm<5u>(num.value()); // Check for unsigned 5b
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg2, c.line, c.column);
+                    throw UASError(InvalidImm, "Invalid immediate " + c.arg2, c.line, c.column);
                 }
             } else if (setreqs == XTheadMemIdx) {
                 rd = decode_register(c.arg1, 0, regreqs).encoding;
@@ -719,14 +721,14 @@ void make_inst(assembly_context& c) {
                     imm |= num.value();
                     verify_imm<5>(num.value()); // Check for signed 5b
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg2, c.line, c.column);
+                    throw UASError(InvalidImm, "Invalid immediate " + c.arg2, c.line, c.column);
                 }
 
                 uint8_t imm2 = 0;
                 if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
                     imm2 = num.value();
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg4, c.line, c.column);
+                    throw UASError(InvalidImm, "Invalid immediate " + c.arg4, c.line, c.column);
                 }
                 verify_imm<2u>(imm2); // Check for unsigned 2b
                 imm |= imm2 << 5;     // Add imm2
@@ -750,13 +752,13 @@ void make_inst(assembly_context& c) {
                     imm |= num.value() << 6;     // add imm1
                     verify_imm<5u>(num.value()); // Check for unsigned 5b
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidImm, "Invalid immediate " + c.arg3, c.line, c.column);
                 }
                 if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
                     imm |= num.value();          // add imm2
                     verify_imm<5u>(num.value()); // Check for unsigned 5b
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg4, c.line, c.column);
+                    throw UASError(InvalidImm, "Invalid immediate " + c.arg4, c.line, c.column);
                 }
             } else if (id == FENCE) {
                 imm |= decode_fence(c.arg1) << 4; // Add pred
@@ -771,7 +773,7 @@ void make_inst(assembly_context& c) {
                 if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                     rs1 = num.value();
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidImm, "Invalid immediate " + c.arg3, c.line, c.column);
                 }
             } else if (id == VSETVLI || id == VSETIVLI || id == THVSETVLI) {
                 rd = decode_register(c.arg1, 0, regreqs).encoding;
@@ -783,7 +785,7 @@ void make_inst(assembly_context& c) {
                     if (res.has_value()) {
                         rs1 = res.value();
                     } else {
-                        throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg2, c.line, c.column);
+                        throw UASError(InvalidImm, "Invalid immediate " + c.arg2, c.line, c.column);
                     }
 
                     imm |= 0b11 << 10;
@@ -797,7 +799,7 @@ void make_inst(assembly_context& c) {
                         imm |= sew.value() << 3;
                     }
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid VSEW " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidVSEW, "Invalid VSEW " + c.arg3, c.line, c.column);
                 }
                 if (c.arg4.empty()) {
                     return;
@@ -835,7 +837,7 @@ void make_inst(assembly_context& c) {
                         imm |= ediv.value() << 5;
                     }
                 } else {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid vtypei " + c.arg4, c.line, c.column);
+                    throw UASError(InvalidVtypei, "Invalid vtypei " + c.arg4, c.line, c.column);
                 }
             }
         } else if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
@@ -884,7 +886,7 @@ void make_inst(assembly_context& c) {
             if (auto num = to_num<int32_t>(c.arg3); num.has_value()) {
                 imm = num.value();
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid relative immediate " + c.arg3, c.line, c.column);
+                throw UASError(InvalidRelImm, "Invalid relative immediate " + c.arg3, c.line, c.column);
             }
         } else if (auto num = to_num<int32_t>(c.arg3); num.has_value()) { // the plain imm constant case
             if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
@@ -913,7 +915,7 @@ void make_inst(assembly_context& c) {
         if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
             imm = num.value();
         } else {
-            throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg2, c.line, c.column);
+            throw UASError(InvalidImm, "Invalid immediate " + c.arg2, c.line, c.column);
         }
         rd = decode_register(c.arg1, 0, regreqs).encoding;
 
@@ -929,7 +931,7 @@ void make_inst(assembly_context& c) {
             if (auto num = to_num<int32_t>(c.arg2); num.has_value()) {
                 imm = num.value();
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid relative immediate " + c.arg2, c.line, c.column);
+                throw UASError(InvalidRelImm, "Invalid relative immediate " + c.arg2, c.line, c.column);
             }
         } else if (auto num = to_num<int32_t>(c.arg2); num.has_value()) { // the plain imm constant case
             if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
@@ -960,7 +962,7 @@ void make_inst(assembly_context& c) {
             if (auto num = to_num<int32_t>(c.arg1); num.has_value()) {
                 imm = num.value();
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid relative immediate " + c.arg3, c.line, c.column);
+                throw UASError(InvalidRelImm, "Invalid relative immediate " + c.arg3, c.line, c.column);
             }
         } else if (auto num = to_num<int32_t>(c.arg1); num.has_value()) { // the plain imm constant case
             if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
@@ -1042,7 +1044,7 @@ void make_inst(assembly_context& c) {
             if (auto num = to_num<int32_t>(c.arg2); num.has_value()) {
                 imm = num.value();
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid relative immediate " + c.arg3, c.line, c.column);
+                throw UASError(InvalidRelImm, "Invalid relative immediate " + c.arg3, c.line, c.column);
             }
         } else if (auto num = to_num<int32_t>(c.arg2); num.has_value()) { // the plain imm constant case
             if ((c.options.size() > 0 && c.options.back().plain_jump_offset) || id == CSRLI || id == CSRAI || id == CANDI) { // the plain jump offset case, some regular C instrs use CB but don't actually jump
@@ -1175,7 +1177,7 @@ void make_inst(assembly_context& c) {
         if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
             imm = num.value();
         } else {
-            throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg2, c.line, c.column);
+            throw UASError(InvalidImm, "Invalid immediate " + c.arg2, c.line, c.column);
         }
 
         DBG(std::cout << "Encoding CIW-type instruction with name " << c.inst << std::endl;)
@@ -1241,7 +1243,7 @@ void make_inst(assembly_context& c) {
             if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                 rs1 = num.value();
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg3, c.line, c.column);
+                throw UASError(InvalidImm, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         } else {
             if (setreqs == XTheadZvamo) {
@@ -1281,7 +1283,7 @@ void make_inst(assembly_context& c) {
                 imm = num.value();
                 verify_imm<5>(imm); // Check for signed 5b
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg2, c.line, c.column);
+                throw UASError(InvalidImm, "Invalid immediate " + c.arg2, c.line, c.column);
             }
         } else {
             rs2 = decode_register(c.arg2, 1, regreqs).encoding;
@@ -1302,7 +1304,7 @@ void make_inst(assembly_context& c) {
                     inst |= ((imm >> 5) & 0b1) << 26; // Add i5
                 }
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg3, c.line, c.column);
+                throw UASError(InvalidImm, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         }
 
@@ -1411,7 +1413,7 @@ void make_inst(assembly_context& c) {
         if (auto num = decode_imm<int32_t>(c.arg1, c); num.has_value()) {
             imm = num.value();
         } else {
-            throw UltraError(UltraErrorType::Assembler, "Invalid index " + c.arg1, c.line, c.column);
+            throw UASError(InvalidIndex, "Invalid index " + c.arg1, c.line, c.column);
         }
 
         DBG(std::cout << "Encoding CMJT-type instruction with name " << c.inst << std::endl;)
@@ -1515,31 +1517,31 @@ void make_inst(assembly_context& c) {
             if (auto num = decode_imm<int32_t>(c.arg2, c); num.has_value()) {
                 imm = num.value();
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg2, c.line, c.column);
+                throw UASError(InvalidImm, "Invalid immediate " + c.arg2, c.line, c.column);
             }
         } else if (c.arg4.empty()) {
             if (auto num = decode_imm<int32_t>(c.arg3, c); num.has_value()) {
                 imm = num.value();
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg3, c.line, c.column);
+                throw UASError(InvalidImm, "Invalid immediate " + c.arg3, c.line, c.column);
             }
         } else {
             if (auto num = decode_imm<int32_t>(c.arg4, c); num.has_value()) {
                 imm = num.value();
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid immediate " + c.arg4, c.line, c.column);
+                throw UASError(InvalidImm, "Invalid immediate " + c.arg4, c.line, c.column);
             }
         }
 
         if (id == CMPUSH) {
             if (imm > 0) {
-                throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
             } else {
                 imm = -imm;
             }
         } else if (id == CMPOP || id == CMPOPRET || id == CMPOPRETZ) {
             if (imm < 0) {
-                throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
             }
         }
 
@@ -1554,7 +1556,7 @@ void make_inst(assembly_context& c) {
             // stack_adj_base = 16;
             // stack_adj = [16|32|48|64]
             if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
-                throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
             }
             spimm = (imm - 16) / 16;
         } else if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32I) != c.supported_sets.end()) {
@@ -1576,26 +1578,26 @@ void make_inst(assembly_context& c) {
                 } */
             if (rlist >= 4 && rlist <= 7) {
                 if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 16) / 16;
             } else if (rlist >= 8 && rlist <= 11) {
                 if (imm != 32 && imm != 48 && imm != 64 && imm != 80) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 32) / 16;
             } else if (rlist >= 12 && rlist <= 14) {
                 if (imm != 48 && imm != 64 && imm != 80 && imm != 96) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 48) / 16;
             } else if (rlist == 15) {
                 if (imm != 64 && imm != 80 && imm != 96 && imm != 112) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 64) / 16;
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid register list " + c.arg1, c.line, c.column);
+                throw UASError(InvalidRegList, "Invalid register list " + c.arg1, c.line, c.column);
             }
         } else { // RV64I is the default case
             // stack_adj = stack_adj_base + spimm[5:4] * 16;
@@ -1622,41 +1624,41 @@ void make_inst(assembly_context& c) {
                 }*/
             if (rlist >= 4 && rlist <= 5) {
                 if (imm != 16 && imm != 32 && imm != 48 && imm != 64) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 16) / 16;
             } else if (rlist >= 6 && rlist <= 7) {
                 if (imm != 32 && imm != 48 && imm != 64 && imm != 80) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 32) / 16;
             } else if (rlist >= 8 && rlist <= 9) {
                 if (imm != 48 && imm != 64 && imm != 80 && imm != 96) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 48) / 16;
             } else if (rlist >= 10 && rlist <= 11) {
                 if (imm != 64 && imm != 80 && imm != 96 && imm != 112) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 64) / 16;
             } else if (rlist >= 12 && rlist <= 13) {
                 if (imm != 80 && imm != 96 && imm != 112 && imm != 128) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 80) / 16;
             } else if (rlist == 14) {
                 if (imm != 96 && imm != 112 && imm != 128 && imm != 144) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 96) / 16;
             } else if (rlist == 15) {
                 if (imm != 112 && imm != 128 && imm != 144 && imm != 160) {
-                    throw UltraError(UltraErrorType::Assembler, "Invalid stack adjustment " + c.arg3, c.line, c.column);
+                    throw UASError(InvalidStackAdj, "Invalid stack adjustment " + c.arg3, c.line, c.column);
                 }
                 spimm = (imm - 112) / 16;
             } else {
-                throw UltraError(UltraErrorType::Assembler, "Invalid register list " + c.arg1, c.line, c.column);
+                throw UASError(InvalidRegList, "Invalid register list " + c.arg1, c.line, c.column);
             }
         }
 
@@ -1808,7 +1810,7 @@ uint8_t decode_opcode(const ultrastring& str) {
     } else if (fast_eq(str, "C2")) {
         return op_C2;
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Invalid opcode " + str);
+        throw UASError(InvalidOpcode, "Invalid opcode " + str);
     }
 }
 
@@ -1823,7 +1825,7 @@ void handle_directives(assembly_context& c) {
         return;
     }
     if (c.inst.front() != '.') {
-        throw UltraError(UltraErrorType::Assembler, "Unknown instruction " + c.inst, c.line, c.column);
+        throw UASError(InvalidInstruction, "Unknown instruction " + c.inst, c.line, c.column);
         return;
     }
     DBG(std::cout << "Looks like this is a directive" << std::endl;)
@@ -2119,7 +2121,7 @@ void handle_directives(assembly_context& c) {
                 }
                 if (auto num = decode_imm<uint8_t>(c.arg1, c); num.has_value()) {
                     if (num.value() != inst_len) {
-                        throw UltraError(UltraErrorType::Assembler, "Instruction length mismatch: expected " + to_ultrastring(num.value()) + ", got " + to_ultrastring(inst_len), c.line, c.column);
+                        throw UASError(InvalidInstLen, "Instruction length mismatch: expected " + to_ultrastring(num.value()) + ", got " + to_ultrastring(inst_len), c.line, c.column);
                     }
                 }
             }
@@ -2139,12 +2141,12 @@ void handle_directives(assembly_context& c) {
         // .equ <name>, <value> = define a constant with name <name> and value <value>
 
         if (c.arg1.empty() || c.arg2.empty()) {
-            throw UltraError(UltraErrorType::Assembler, "Invalid .equ directive", c.line, c.column);
+            throw UASError(InvalidEqu, "Invalid .equ directive", c.line, c.column);
         }
 
         c.constants.push_back({c.arg1, c.arg2});
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Unknown directive " + c.inst, c.line, c.column);
+        throw UASError(InvalidDirective, "Unknown directive " + c.inst, c.line, c.column);
     }
 }
 
@@ -2277,7 +2279,7 @@ ultravector<uint8_t> assemble_code(const std::string_view& input, const ultravec
     if (!c.supported_sets.empty()) {
         if (std::find(c.supported_sets.begin(), c.supported_sets.end(), RV32I) == c.supported_sets.end()
             && std::find(c.supported_sets.begin(), c.supported_sets.end(), RV64I) == c.supported_sets.end()) {
-            throw UltraError(UltraErrorType::Assembler, "The set of supported RISC-V instruction sets must include at least RV32I or RV64I");
+            throw UASError(NotEnoughSets, "The set of supported RISC-V instruction sets must include at least RV32I or RV64I");
         }
     }
 
@@ -2333,7 +2335,7 @@ ultravector<uint8_t> assemble_code(const std::string_view& input, const ultravec
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-as temp.s -o temp.o" << std::endl;)
         // exit(1);
-        throw UltraError(UltraErrorType::Assembler, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
+        throw UASError(GenericError, "error in command riscv64-linux-gnu-as temp.s -o temp.o", 0, 0);
     }
 
     res = std::system("riscv64-linux-gnu-objcopy -O binary temp.o temp.bin");
@@ -2341,7 +2343,7 @@ ultravector<uint8_t> assemble_code(const std::string_view& input, const ultravec
     if (res != 0) {
         // DBG(std::cout << "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin" << std::endl;)
         // exit(1);
-        throw UltraError(UltraErrorType::Assembler, "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin", 0, 0);
+        throw UASError(GenericError, "error in command riscv64-linux-gnu-objcopy -O binary temp.o temp.bin", 0, 0);
     }
 
     std::ifstream in("temp.bin", std::ios::binary);

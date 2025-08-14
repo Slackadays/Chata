@@ -120,7 +120,7 @@ int main(int argc, char* argv[]) {
         } catch (ChataError& e) {
             std::cout << e.what() << std::endl;
             return 1;
-        } catch (UltraError& e) {
+        } catch (UASError& e) {
             std::cout << "" << e.what() << std::endl;
             return 1;
         }

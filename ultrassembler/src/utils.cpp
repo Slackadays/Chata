@@ -14,7 +14,7 @@ GlobalMemoryBank ultrassembler_internal::memory_bank;
 void* GlobalMemoryBank::grab_some_memory(size_t requested) {
     // DBG(std::cout << "Allocating " << requested << " bytes, " << used << " used" << std::endl;)
     if (requested + used > pool.size()) {
-        throw UltraError(UltraErrorType::Other, "Out of memory!");
+        throw UASError(OutOfMemory, "Out of memory!");
     }
     void* ptr = reinterpret_cast<void*>(pool.data() + used);
     used += requested;
@@ -30,7 +30,7 @@ void* GlobalMemoryBank::grab_aligned_memory(size_t requested) {
     // DBG(std::cout << "current_offset: " << current_offset << ", aligned_offset: " << aligned_offset << ", padding: " << padding << std::endl;)
 
     if (padding + requested + used > pool.size()) {
-        throw UltraError(UltraErrorType::Other, "Out of memory!");
+        throw UASError(OutOfMemory, "Out of memory!");
     }
 
     used += padding;
@@ -52,7 +52,7 @@ ultrastring to_ultrastring(const int32_t& num) {
     std::array<char, 16> temp;
     auto res = std::to_chars(temp.data(), temp.data() + temp.size(), num);
     if (res.ec != std::errc()) {
-        throw UltraError(UltraErrorType::Other, "Invalid integer");
+        throw UASError(InvalidInt, "Invalid integer");
     }
     for (auto i = temp.data(); i < res.ptr; i++) {
         result.push_back(*i);
@@ -65,7 +65,7 @@ double to_float(const ultrastring& str) {
     double result = 0;
     auto res = std::from_chars(str.data(), str.data() + str.size(), result);
     if (res.ec != std::errc()) {
-        throw UltraError(UltraErrorType::Other, "Invalid float " + str);
+        throw UASError(InvalidFloat, "Invalid float " + str);
     }
     return result;
 }

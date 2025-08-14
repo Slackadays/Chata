@@ -23,7 +23,7 @@ int main() {
 
     try {
         auto caught_code = ultrassembler::assemble(my_code);
-    } catch (UltraError& e) {
+    } catch (UASError& e) {
         // Handle your error!
     }
 }

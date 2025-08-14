@@ -270,7 +270,7 @@ To preserve performance, Ultrassembler doesn't check if instructions outside of 
 
 ### ▫️ Exceptions
 
-Ultrassembler may throw a `UltraError` exception if it encounters incorrect code or has some other error.
+Ultrassembler may throw a `UASError` exception if it encounters incorrect code or has some other error.
 
 To catch these, just add a `try {} catch(...) {}` block like you would with other C++ code.
 
@@ -301,7 +301,7 @@ int main() {
 
     try {
         auto caught_code = ultrassembler::assemble(my_code);
-    } catch (UltraError& e) {
+    } catch (UASError& e) {
         // Handle your error!
     }
 }

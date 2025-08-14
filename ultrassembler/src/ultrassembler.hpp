@@ -122,15 +122,41 @@ enum class RVInstructionSet : uint8_t {
     XTheadZvamo
 };
 
-enum class UltraErrorType {
-    Unspecified,
-    Compiler,
-    Assembler,
-    Execution,
-    Other
+enum class UASErrorID {
+    GenericError,
+    InvalidRelocationMode,
+    InvalidRegisterGeneric,
+    InvalidRegisterPositional,
+    InvalidRegisterSpecial,
+    InvalidRoundingMode,
+    InvalidFence,
+    InvalidCSR,
+    InvalidFLI,
+    InvalidOperator,
+    ImmOutOfRange,
+    InvalidImm,
+    InvalidPrefetch,
+    InvalidPrefetchReg,
+    InvalidVSEW,
+    InvalidVtypei,
+    InvalidRelImm,
+    InvalidIndex,
+    InvalidStackAdj,
+    InvalidRegList,
+    InvalidOpcode,
+    InvalidInstruction,
+    InstLenMismatch,
+    InvalidEqu,
+    InvalidDirective,
+    NotEnoughSets,
+    OutOfMemory,
+    InvalidInt,
+    InvalidFloat,
+    InvalidInstLen,
+    InvalidInstArguments
 };
 
-class UltraError;
+class UASError;
 
 namespace ultrassembler_internal {
 
@@ -142,6 +168,8 @@ namespace ultrassembler_internal {
 } // namespace ultrassembler_internal
 
 namespace ultrassembler_internal {
+
+using enum UASErrorID;
 
 constexpr size_t memory_pool_size = 33554432;
 
@@ -238,7 +266,7 @@ std::optional<T> to_num(const ultrastring& str) {
                 relocation_mode = 1;
                 relocation_offset = 4;
             } else {
-                throw UltraError(UltraErrorType::Compiler, "Invalid relocation mode " + str);
+                throw UASError(InvalidRelocationMode, "Invalid relocation mode " + str);
             }
         }
     }
@@ -302,7 +330,7 @@ std::optional<T> to_num(const ultrastring& str) {
 
 } // namespace ultrassembler_internal
 
-class UltraError : public std::exception {
+class UASError : public std::exception {
     std::string_view color_start = "\033[1;31m";
     std::string_view color_end = "\033[0m";
 
@@ -314,9 +342,8 @@ class UltraError : public std::exception {
     }
 
 public:
-    std::optional<UltraErrorType> type;
+    UASErrorID type;
     std::optional<std::string_view> details;
-    std::optional<std::string_view> filename;
     std::optional<uint32_t> line = 0;
     std::optional<uint32_t> column = 0;
     std::optional<ultrassembler_internal::ultrastring> line_content;
@@ -326,19 +353,7 @@ public:
         ultrassembler_internal::ultrastring error_message;
         error_message += "| ";
         error_message += color_start;
-        if (!type.has_value()) {
-            error_message += "Unspecified error";
-        } else if (*type == UltraErrorType::Unspecified) {
-            error_message += "Unspecified error";
-        } else if (*type == UltraErrorType::Compiler) {
-            error_message += "Compiler error";
-        } else if (*type == UltraErrorType::Assembler) {
-            error_message += "Assembler error";
-        } else if (*type == UltraErrorType::Execution) {
-            error_message += "Execution error";
-        } else if (*type == UltraErrorType::Other) {
-            error_message += "Other error";
-        }
+        error_message += "Ultrassembler error";
         error_message += color_end;
         error_message += " at line ";
         if (line.has_value()) {
@@ -352,16 +367,8 @@ public:
         } else {
             error_message += "(unknown)";
         }
-        error_message += " in file ";
-        if (filename.has_value()) {
-            error_message += *filename;
-            error_message += ":\n| ";
-        } else {
-            error_message += "(unknown):\n| ";
-        }
-        if (details.has_value()) {
-            error_message += *details;
-        }
+        error_message += ":\n| ";
+
         if (line_content.has_value()) {
             error_message += "\n| ";
             if (line.has_value()) {
@@ -381,33 +388,22 @@ public:
         return error_message.data();
     }
 
-    UltraError(UltraErrorType type, std::string_view details, uint32_t line, uint32_t column, std::string_view filename)
+    UASError(UASErrorID type, std::string_view details, uint32_t line, uint32_t column)
             : type(type)
             , details(details)
             , line(line)
-            , column(column)
-            , filename(filename) {}
+            , column(column) {}
 
-    UltraError(UltraErrorType type, std::string_view details, uint32_t line, uint32_t column, std::string_view filename, ultrassembler_internal::ultrastring line_content)
-            : type(type)
-            , details(details)
-            , line(line)
-            , column(column)
-            , filename(filename)
-            , line_content(line_content) {}
-
-    UltraError(UltraErrorType type, std::optional<std::string_view> details, uint32_t line, uint32_t column) : type(type), details(details), line(line), column(column) {}
-
-    UltraError(UltraErrorType type, std::optional<std::string_view> details, uint32_t line, uint32_t column, ultrassembler_internal::ultrastring line_content)
+    UASError(UASErrorID type, std::string_view details, uint32_t line, uint32_t column, ultrassembler_internal::ultrastring line_content)
             : type(type)
             , details(details)
             , line(line)
             , column(column)
             , line_content(line_content) {}
 
-    UltraError(UltraErrorType type, std::string_view details) : type(type), details(details) {}
+    UASError(UASErrorID type, std::string_view details) : type(type), details(details) {}
 
-    UltraError(UltraErrorType type, std::string_view details, ultrassembler_internal::ultrastring line_content) : type(type), details(details), line_content(line_content) {}
+    UASError(UASErrorID type, std::string_view details, ultrassembler_internal::ultrastring line_content) : type(type), details(details), line_content(line_content) {}
 };
 
 namespace ultrassembler {

@@ -5,13 +5,15 @@
 
 namespace ultrassembler_internal {
 
+using enum UASErrorID;
+
 void li_instr(assembly_context& c) { // li rd, imm -> lui rd, imm[31:12]; addi rd, rd, imm[11:0]
                                      // Case 1: imm is a 12-bit signed integer
     int imm;
     if (auto num = to_num<int32_t>(c.arg2); num.has_value()) {
         imm = num.value();
     } else {
-        throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+        throw UASError(InvalidImm, "Invalid immediate " + c.arg2, c.line, c.column);
     }
     if (imm >= -2048 && imm <= 2047) {
         c.inst_offset = fast_instr_search("addi");
@@ -36,7 +38,7 @@ void la_instr(assembly_context& c) { // la rd, imm -> auipc rd, imm[31:12]; addi
     if (auto num = to_num<int32_t>(c.arg2); num.has_value()) {
         imm = num.value();
     } else {
-        throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg2, c.line, c.column);
+        throw UASError(InvalidImm, "Invalid immediate " + c.arg2, c.line, c.column);
     }
     if (imm >= -2048 && imm <= 2047) {
         c.inst_offset = fast_instr_search("addi");
@@ -229,7 +231,7 @@ void call_instr(assembly_context& c) {
     if (auto num = to_num<int32_t>(c.arg1); num.has_value()) {
         imm = num.value();
     } else {
-        throw UltraError(UltraErrorType::Compiler, "Invalid immediate " + c.arg1, c.line, c.column);
+        throw UASError(InvalidImm, "Invalid immediate " + c.arg1, c.line, c.column);
     }
     if (imm >= -2048 && imm <= 2047) {
         c.inst_offset = fast_instr_search("jalr");
@@ -240,7 +242,7 @@ void call_instr(assembly_context& c) {
         return;
     }
     // Case 2: imm is anything else, split into two instructions, the first assigning the upper 20 bits and the second the lower 12 bits
-    throw UltraError(UltraErrorType::Assembler, "Not implemented yet");
+    throw UASError(GenericError, "Not implemented yet");
 }
 
 void ret_instr(assembly_context& c) {
@@ -585,7 +587,7 @@ void vmsge_vx_instr(assembly_context& c) {
         c.arg3 = c.arg1;
         make_inst(c);
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Invalid arguments for vmsge.vx", c.line, c.column);
+        throw UASError(InvalidInstArguments, "Invalid arguments for vmsge.vx", c.line, c.column);
     }
 }
 
@@ -645,7 +647,7 @@ void vmsgeu_vx_instr(assembly_context& c) {
         c.arg3 = c.arg1;
         make_inst(c);
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Invalid arguments for vmsgeu.vx", c.line, c.column);
+        throw UASError(InvalidInstArguments, "Invalid arguments for vmsgeu.vx", c.line, c.column);
     }
 }
 
@@ -705,7 +707,7 @@ void th_vmsge_vx_instr(assembly_context& c) {
         c.arg3 = c.arg1;
         make_inst(c);
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Invalid arguments for th.vmsge.vx", c.line, c.column);
+        throw UASError(InvalidInstArguments, "Invalid arguments for th.vmsge.vx", c.line, c.column);
     }
 }
 
@@ -765,7 +767,7 @@ void th_vmsgeu_vx_instr(assembly_context& c) {
         c.arg3 = c.arg1;
         make_inst(c);
     } else {
-        throw UltraError(UltraErrorType::Assembler, "Invalid arguments for th.vmsgeu.vx", c.line, c.column);
+        throw UASError(InvalidInstArguments, "Invalid arguments for th.vmsgeu.vx", c.line, c.column);
     }
 }
 

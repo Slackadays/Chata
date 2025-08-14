@@ -11,7 +11,7 @@ void as(std::string_view input, uint32_t expected_output) {
     ultravector<uint8_t> result;
     try {
         result = assemble_code(input);
-    } catch (UltraError& e) {
+    } catch (UASError& e) {
         std::cout << e.what() << std::endl;
         std::cout << "❌ Normal test FAILED for " << input << ": expected " << std::hex << expected_output << std::dec << " (" << std::bitset<32>(expected_output) << "), but got an error" << std::endl;
         failed_tests++;
@@ -39,7 +39,7 @@ void as(std::string_view input, std::vector<uint8_t> expected_output) {
     try {
         auto temp = assemble_code(input);
         result = std::vector<uint8_t>(temp.begin(), temp.end());
-    } catch (UltraError& e) {
+    } catch (UASError& e) {
         std::cout << e.what() << std::endl;
         std::cout << "❌ Normal test FAILED for " << input << ": expected ";
         for (auto& byte : expected_output) {
@@ -83,7 +83,7 @@ void fail(std::string_view input) {
     ultrassembler::reset_memory_bank();
     try {
         auto result = assemble_code(input);
-    } catch (UltraError& e) {
+    } catch (UASError& e) {
         std::cout << "✅ Error test passed for " << input << std::endl;
         passed_tests++;
         return;
