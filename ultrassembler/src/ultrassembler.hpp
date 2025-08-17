@@ -191,8 +191,6 @@ class GlobalMemoryBank {
 public:
     void* grab_some_memory(size_t requested);
 
-    void* grab_aligned_memory(size_t requested);
-
     void reset();
 };
 
@@ -213,21 +211,6 @@ public:
     void deallocate(T* ptr, size_t requested) { return; }
 
     bool operator==(const MemoryBank&) const { return true; }
-};
-
-template <class T>
-class AlignedMemory {
-public:
-    using value_type = T;
-
-    AlignedMemory() = default;
-
-    [[nodiscard]] T* allocate(size_t requested) {
-        std::size_t bytes = requested * sizeof(T);
-        return reinterpret_cast<T*>(memory_bank.grab_aligned_memory(bytes));
-    }
-
-    void deallocate(T* ptr, size_t requested) { return; }
 };
 
 ultravector<uint8_t> assemble_code(const std::string_view& data, const ultravector<RVInstructionSet> sets = {});

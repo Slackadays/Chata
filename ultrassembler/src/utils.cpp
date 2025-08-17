@@ -21,24 +21,6 @@ void* GlobalMemoryBank::grab_some_memory(size_t requested) {
     return ptr;
 }
 
-void* GlobalMemoryBank::grab_aligned_memory(size_t requested) {
-    // DBG(std::cout << "Allocating " << requested << " aligned bytes" << std::endl;)
-    size_t current_offset = reinterpret_cast<size_t>(pool.data() + used);
-    size_t aligned_offset = (current_offset + pagesize - 1) & ~(pagesize - 1);
-    size_t padding = aligned_offset - current_offset;
-
-    // DBG(std::cout << "current_offset: " << current_offset << ", aligned_offset: " << aligned_offset << ", padding: " << padding << std::endl;)
-
-    if (padding + requested + used > pool.size()) {
-        throw UASError(OutOfMemory, "Out of memory!");
-    }
-
-    used += padding;
-    void* ptr = reinterpret_cast<void*>(pool.data() + used);
-    used += requested;
-    return ptr;
-}
-
 void GlobalMemoryBank::reset() {
     DBG(std::cout << "Resetting memory bank, used " << used << " bytes" << std::endl;)
     used = 0;
