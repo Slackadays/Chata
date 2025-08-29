@@ -37,7 +37,6 @@ struct assembly_context {
     uint32_t line = 1;
     uint32_t column = 0;
     uint16_t inst_offset = 0;
-    RVInstructionFormat raw_format;
 };
 
 void make_inst(assembly_context& c);
