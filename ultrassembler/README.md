@@ -207,7 +207,7 @@ One example of where you want to use Ultrassembler is with embedded RISC-V scrip
 
 ### ▫️ Installation
 
-Start by installing `ultrassembler` how you would normally with the instructions in the `ultrassembler` section.
+Start by installing `ultrassembler` how you would normally with the instructions in the `libchata` section.
 
 Then, include the line `#include <ultrassembler.hpp>` where you use Ultrassembler.
 
