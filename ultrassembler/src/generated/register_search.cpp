@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 // The generate_register_search.py script automatically generated this code. DO NOT MODIFY!
-#include "../ultrassembler.hpp"
 #include "../registers.hpp"
+#include "../ultrassembler.hpp"
 
 namespace ultrassembler_internal {
 

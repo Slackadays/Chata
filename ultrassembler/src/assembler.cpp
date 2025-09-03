@@ -96,7 +96,7 @@ std::optional<T> decode_imm(const ultrastring& imm, assembly_context& c) {
         return num;
     } else if (auto con = decode_constant<T>(imm, c); con.has_value()) {
         return con;
-    } else if (auto res = decode_expression<T>(imm, c); res.has_value()) { 
+    } else if (auto res = decode_expression<T>(imm, c); res.has_value()) {
         return res;
     }
 
@@ -160,7 +160,7 @@ inline const rvregister& decode_register(const ultrastring& str, const uint8_t p
         }
     } else {
         auto& data = registers[reg];
-            
+
         if ((reqs >> (pos * 2) & 0b11) == 0b00) {
             return data;
         } else if (data.type == Integer && (reqs >> (pos * 2) & 0b11) == 0b01) {
@@ -373,7 +373,7 @@ std::optional<T> decode_expression(const ultrastring& str, assembly_context& c) 
     auto is_whitespace = [](const char& c) {
         return c == ' ' || c == '\t';
     };
-    auto is_operator = [](const char& c) { 
+    auto is_operator = [](const char& c) {
         return c == '+' || c == '-' || c == '*' || c == '/';
     };
 
@@ -441,9 +441,7 @@ std::optional<T> decode_expression(const ultrastring& str, assembly_context& c) 
             }
             result /= next.value();
         } else {
-            throw UASError(InvalidOperator,
-                             "Invalid operator '" + ultrastring(1, op) + "' in expression: " + str,
-                             c.line, c.column);
+            throw UASError(InvalidOperator, "Invalid operator '" + ultrastring(1, op) + "' in expression: " + str, c.line, c.column);
         }
     }
 
@@ -467,12 +465,7 @@ void verify_imm(const auto& imm) {
     using T = decltype(bits);
     if constexpr (std::is_signed_v<T>) {
         if (imm < -(1 << (bits - 1)) || imm >= (1 << (bits - 1))) {
-            throw UASError(
-                    ImmOutOfRange,
-                    "Immediate " + to_ultrastring(imm) + " is out of range [" + to_ultrastring(-(1 << (bits - 1))) + ", " + to_ultrastring((1 << (bits - 1))) + ")",
-                    0,
-                    0
-            );
+            throw UASError(ImmOutOfRange, "Immediate " + to_ultrastring(imm) + " is out of range [" + to_ultrastring(-(1 << (bits - 1))) + ", " + to_ultrastring((1 << (bits - 1))) + ")", 0, 0);
         }
     } else if constexpr (std::is_unsigned_v<T>) {
         if (imm < 0 || imm >= (1u << bits)) {
@@ -888,7 +881,7 @@ void make_inst(assembly_context& c) {
             } else {
                 throw UASError(InvalidRelImm, "Invalid relative immediate " + c.arg3, c.line, c.column);
             }
-        } else if (auto num = to_num<int32_t>(c.arg3); num.has_value()) { // the plain imm constant case
+        } else if (auto num = to_num<int32_t>(c.arg3); num.has_value()) {     // the plain imm constant case
             if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
                 imm = num.value();
             } else {
@@ -933,7 +926,7 @@ void make_inst(assembly_context& c) {
             } else {
                 throw UASError(InvalidRelImm, "Invalid relative immediate " + c.arg2, c.line, c.column);
             }
-        } else if (auto num = to_num<int32_t>(c.arg2); num.has_value()) { // the plain imm constant case
+        } else if (auto num = to_num<int32_t>(c.arg2); num.has_value()) {     // the plain imm constant case
             if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
                 imm = num.value();
             } else {
@@ -964,7 +957,7 @@ void make_inst(assembly_context& c) {
             } else {
                 throw UASError(InvalidRelImm, "Invalid relative immediate " + c.arg3, c.line, c.column);
             }
-        } else if (auto num = to_num<int32_t>(c.arg1); num.has_value()) { // the plain imm constant case
+        } else if (auto num = to_num<int32_t>(c.arg1); num.has_value()) {     // the plain imm constant case
             if (c.options.size() > 0 && c.options.back().plain_jump_offset) { // the plain jump offset case
                 imm = num.value();
             } else {
@@ -1047,7 +1040,8 @@ void make_inst(assembly_context& c) {
                 throw UASError(InvalidRelImm, "Invalid relative immediate " + c.arg3, c.line, c.column);
             }
         } else if (auto num = to_num<int32_t>(c.arg2); num.has_value()) { // the plain imm constant case
-            if ((c.options.size() > 0 && c.options.back().plain_jump_offset) || id == CSRLI || id == CSRAI || id == CANDI) { // the plain jump offset case, some regular C instrs use CB but don't actually jump
+            if ((c.options.size() > 0 && c.options.back().plain_jump_offset) || id == CSRLI || id == CSRAI
+                || id == CANDI) { // the plain jump offset case, some regular C instrs use CB but don't actually jump
                 imm = num.value();
             } else {
                 // calculate the offset assuming that imm is an absolute address
@@ -1836,8 +1830,7 @@ void handle_directives(assembly_context& c) {
             const std::array<std::pair<std::string_view, RVInstructionSet>, 21> arch_option_names = {
                     {{"rv32i", RV32I}, {"rv64i", RV64I}, {"m", RV32M}, // Using RV32M although it means M in general
                      {"a", RV32A},     {"f", RV32F},     {"d", RV32D},   {"q", RV32Q}, {"zifencei", Zifencei}, {"zicsr", Zicsr}, {"zawrs", Zawrs}, {"zicond", Zicond}, {"zacas", Zacas},
-                     {"zcb", Zcb},     {"zbb", Zbb},     {"zcmp", Zcmp}, {"c", C},     {"zcd", Zcd},           {"zcf", Zcf},     {"zcmt", Zcmt},   {"b", B},           {"v", V}}
-            };
+                     {"zcb", Zcb},     {"zbb", Zbb},     {"zcmp", Zcmp}, {"c", C},     {"zcd", Zcd},           {"zcf", Zcf},     {"zcmt", Zcmt},   {"b", B},           {"v", V}}};
 
             auto get_arches_from_string = [&](const std::string_view& str) {
                 ultravector<RVInstructionSet> arches;
@@ -1899,8 +1892,7 @@ void handle_directives(assembly_context& c) {
                 {{"r", R},     {"i", I},        {"s", S},        {"b", Branch},   {"u", U},     {"j", J},       {"r4", R4},        {"cr", CR},    {"ci", CI},   {"css", CSS},
                  {"ciw", CIW}, {"cl", CL},      {"cs", CS},      {"ca", CA},      {"cb", CB},   {"cj", CJ},     {"vl", VL},        {"vls", VLS},  {"vlx", VLX}, {"vs", VS},
                  {"vss", VSS}, {"vsx", VSX},    {"vlr", VLR},    {"ivv", IVV},    {"fvv", FVV}, {"mvv", MVV},   {"ivi", IVI},      {"ivx", IVX},  {"fvf", FVF}, {"mvx", MVX},
-                 {"clb", CLB}, {"csb", CSBfmt}, {"clh", CLHfmt}, {"csh", CSHfmt}, {"cu", CU},   {"cmmv", CMMV}, {"cmjt", CMJTfmt}, {"cmpp", CMPP}}
-        };
+                 {"clb", CLB}, {"csb", CSBfmt}, {"clh", CLHfmt}, {"csh", CSHfmt}, {"cu", CU},   {"cmmv", CMMV}, {"cmjt", CMJTfmt}, {"cmpp", CMPP}}};
         if (!c.arg1.empty() && c.arg2.empty()) {
             if (auto num = decode_imm<uint32_t>(c.arg1, c); num.has_value()) {
                 custom_inst = num.value();
@@ -2164,7 +2156,6 @@ size_t parse_this_line(size_t i, const ultrastring& data, assembly_context& c) {
     return;*/
 
     c.inst.clear();
-    
 
     auto is_whitespace = [](const char& c) {
         return c == '\t' || c == ' ';
@@ -2231,7 +2222,7 @@ size_t parse_this_line(size_t i, const ultrastring& data, assembly_context& c) {
     } else {
         parse_arg_nospaces(c.arg1); // This handles the special case of .insn type arg1, arg2, etc (no , between type and arg1)
     }
-    
+
     if (!c.arg1.empty()) {
         parse_arg(c.arg2);
         if (!c.arg2.empty()) {
@@ -2270,7 +2261,7 @@ ultravector<uint8_t> assemble_code(const std::string_view& input, const ultravec
 
     assembly_context c;
 
-    c.options.push_back(directive_options{});
+    c.options.push_back(directive_options {});
 
     c.supported_sets = supported_sets;
 

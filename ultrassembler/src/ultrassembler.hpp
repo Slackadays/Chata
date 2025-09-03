@@ -371,11 +371,7 @@ public:
         return error_message.data();
     }
 
-    UASError(UASErrorID type, std::string_view details, uint32_t line, uint32_t column)
-            : type(type)
-            , details(details)
-            , line(line)
-            , column(column) {}
+    UASError(UASErrorID type, std::string_view details, uint32_t line, uint32_t column) : type(type), details(details), line(line), column(column) {}
 
     UASError(UASErrorID type, std::string_view details, uint32_t line, uint32_t column, ultrassembler_internal::ultrastring line_content)
             : type(type)

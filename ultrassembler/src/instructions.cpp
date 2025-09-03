@@ -494,7 +494,7 @@ const std::array<rvinstruction, 2034> instructions = {
          {"fround.q", FROUNDQ, R, op_FP, 0b0100011000, Zfa_and_Q, float_float, {0b00100, use_frm_for_funct3}},
          {"froundnx.q", FROUNDQ, R, op_FP, 0b0100011000, Zfa_and_Q, float_float, {0b00101, use_frm_for_funct3}},
          {"fcvtmod.w.d", FCVTMODWD, R, op_FP, 0b1100001000, Zfa_and_D, int_float, {0b01000, use_frm_for_funct3}}, // This one needs 0b001 for frm (RTZ), and that "rtz" is explicitly
-                                                                                                                                    // included in the assembly, like fcvtmod.w.d rd, rs1, rtz
+                                                                                                                  // included in the assembly, like fcvtmod.w.d rd, rs1, rtz
          {"fmvh.x.d", FMVHXD, R, op_FP, 0b1110001000, Zfa_and_D, int_float, {0b00001}},
          {"fmvp.d.x", FMVPDX, R, op_FP, 0b1011001000, Zfa_and_D, float_int_int},
          {"fmvh.x.q", FMVHXQ, R, op_FP, 0b1110011000, Zfa_and_Q, int_float, {0b00001}},
@@ -551,8 +551,8 @@ const std::array<rvinstruction, 2034> instructions = {
          {"andn", ANDN, R, op_OP, 0b0100000111, Zbb_or_Zbkb, int_int_int},
          {"bclr", BCLR, R, op_OP, 0b0100100001, Zbs, int_int_int},
          {"bclri", BCLRI, R, op_IMM, 0b0100100001, Zbs, int_int_int, {get_imm_for_rs}}, // This one "requires" an extra bit in shamt for RV64, but in reality it's a special case where shamt is big
-                                                                                      // enough to clear a 64 bit register, so we just add the extra bit to rs2 and let the extra available space
-                                                                                      // handle it transparently
+                                                                                        // enough to clear a 64 bit register, so we just add the extra bit to rs2 and let the extra available space
+                                                                                        // handle it transparently
          {"bext", BEXT, R, op_OP, 0b0100100101, Zbs, int_int_int},
          {"bexti", BEXTI, R, op_IMM, 0b0100100101, Zbs, int_int, {get_imm_for_rs}}, // Same idea as bclri
          {"binv", BINV, R, op_OP, 0b0110100001, Zbs, int_int_int},
@@ -1693,7 +1693,7 @@ const std::array<rvinstruction, 2034> instructions = {
          {"th.vlxseg5e.v", THVLXSEG5EV, VLX, op_LOAD_FP, 0b1000111111, XTheadVector, vector_int_vector},
          {"th.vlxseg6e.v", THVLXSEG6EV, VLX, op_LOAD_FP, 0b1010111111, XTheadVector, vector_int_vector},
          {"th.vlxseg7e.v", THVLXSEG7EV, VLX, op_LOAD_FP, 0b1100111111, XTheadVector, vector_int_vector},
-         {"th.vlxseg8e.v", THVLXSEG8EV, VLX, op_LOAD_FP, 0b1110111111, XTheadVector, vector_int_vector },
+         {"th.vlxseg8e.v", THVLXSEG8EV, VLX, op_LOAD_FP, 0b1110111111, XTheadVector, vector_int_vector},
          {"th.vlxseg2bu.v", THVLXSEG2BUV, VLX, op_LOAD_FP, 0b0010111000, XTheadVector, vector_int_vector},
          {"th.vlxseg2hu.v", THVLXSEG2HUV, VLX, op_LOAD_FP, 0b0010111101, XTheadVector, vector_int_vector},
          {"th.vlxseg2wu.v", THVLXSEG2WUV, VLX, op_LOAD_FP, 0b0010111110, XTheadVector, vector_int_vector},
@@ -2053,7 +2053,6 @@ const std::array<rvinstruction, 2034> instructions = {
          {"th.vrgather.vv", THVRGATHERVV, IVV, op_V, 0b0011001000, XTheadVector, vector_vector_vector},
          {"th.vrgather.vx", THVRGATHERVX, IVX, op_V, 0b0011001100, XTheadVector, vector_vector_int},
          {"th.vrgather.vi", THVRGATHERVI, IVI, op_V, 0b0011001011, XTheadVector, vector_vector},
-         {"th.vcompress.vm", THVCOMPRESSVM, MVV, op_V, 0b0101111010, XTheadVector, vector_vector_vector}}
-};
+         {"th.vcompress.vm", THVCOMPRESSVM, MVV, op_V, 0b0101111010, XTheadVector, vector_vector_vector}}};
 
 } // namespace ultrassembler_internal

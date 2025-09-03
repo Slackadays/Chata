@@ -2235,7 +2235,7 @@ constexpr uint8_t op_C2 = 0b10;
 struct ssflag_tag {};
 struct rreq_tag {};
 
-template<class Tag>
+template <class Tag>
 struct GenericFlag {
     uint8_t value = 0;
 
@@ -2243,32 +2243,22 @@ struct GenericFlag {
 
     constexpr explicit GenericFlag() = default;
 
-    constexpr bool operator&(GenericFlag other) const {
-        return value & other.value;
-    }
+    constexpr bool operator&(GenericFlag other) const { return value & other.value; }
 
-    constexpr uint8_t operator&(uint8_t other) const {
-        return value & other;
-    }
+    constexpr uint8_t operator&(uint8_t other) const { return value & other; }
 
-    constexpr GenericFlag operator|(GenericFlag other) const {
-        return GenericFlag(value | other.value);
-    }
+    constexpr GenericFlag operator|(GenericFlag other) const { return GenericFlag(value | other.value); }
 
-    constexpr bool operator==(GenericFlag other) const {
-        return value == other.value;
-    }
+    constexpr bool operator==(GenericFlag other) const { return value == other.value; }
 
-    constexpr uint8_t operator>>(uint8_t shift) const {
-        return value >> shift;
-    }
+    constexpr uint8_t operator>>(uint8_t shift) const { return value >> shift; }
 };
 
 using ssflag = GenericFlag<ssflag_tag>;
 using rreq = GenericFlag<rreq_tag>;
 
 namespace reg_reqs {
-    
+
 // 0b reg4 reg3 reg2 reg1
 // 00 = any reg
 // 01 = only int
@@ -2309,7 +2299,7 @@ constexpr rreq int_vector = rreq(0b00001101);
 constexpr rreq float_vector = rreq(0b00001110);
 constexpr rreq int_vector_int = rreq(0b00011101);
 
-} // namespace register_requirements
+} // namespace reg_reqs
 
 namespace ssarg {
 
@@ -2327,42 +2317,24 @@ struct special_snowflake_args {
     uint8_t custom_reg_val = 0;
     ssflag flags;
 
-    constexpr special_snowflake_args(ssflag flags)
-            : flags(flags) {}
-    constexpr special_snowflake_args(uint8_t custom_reg_val, ssflag flags)
-            : custom_reg_val(custom_reg_val)
-            , flags(flags | ssarg::has_custom_reg_val) {}
-    constexpr special_snowflake_args(uint8_t custom_reg_val)
-            : custom_reg_val(custom_reg_val), flags(ssarg::has_custom_reg_val) {}
+    constexpr special_snowflake_args(ssflag flags) : flags(flags) {}
+    constexpr special_snowflake_args(uint8_t custom_reg_val, ssflag flags) : custom_reg_val(custom_reg_val), flags(flags | ssarg::has_custom_reg_val) {}
+    constexpr special_snowflake_args(uint8_t custom_reg_val) : custom_reg_val(custom_reg_val), flags(ssarg::has_custom_reg_val) {}
     constexpr special_snowflake_args() = default;
 
-    constexpr bool get_imm_for_rs() const {
-        return flags & ssarg::get_imm_for_rs;
-    }
+    constexpr bool get_imm_for_rs() const { return flags & ssarg::get_imm_for_rs; }
 
-    constexpr bool use_frm_for_funct3() const {
-        return flags & ssarg::use_frm_for_funct3;
-    }
+    constexpr bool use_frm_for_funct3() const { return flags & ssarg::use_frm_for_funct3; }
 
-    constexpr bool special_handling() const {
-        return flags & ssarg::special_handling;
-    }
+    constexpr bool special_handling() const { return flags & ssarg::special_handling; }
 
-    constexpr bool swap_rs1_rs2() const {
-        return flags & ssarg::swap_rs1_rs2;
-    }
+    constexpr bool swap_rs1_rs2() const { return flags & ssarg::swap_rs1_rs2; }
 
-    constexpr bool use_funct_for_imm() const {
-        return flags & ssarg::use_funct_for_imm;
-    }
+    constexpr bool use_funct_for_imm() const { return flags & ssarg::use_funct_for_imm; }
 
-    constexpr bool no_rs1() const {
-        return flags & ssarg::no_rs1;
-    }
+    constexpr bool no_rs1() const { return flags & ssarg::no_rs1; }
 
-    constexpr bool has_custom_reg_val() const {
-        return flags & ssarg::has_custom_reg_val;
-    }
+    constexpr bool has_custom_reg_val() const { return flags & ssarg::has_custom_reg_val; }
 };
 
 struct rvinstruction {
@@ -2382,7 +2354,16 @@ struct rvinstruction {
             , setreqs(setreqs)
             , ssargs(ssargs) {}
 
-    constexpr rvinstruction(const char* dummyname, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs setreqs, rreq regreqs, special_snowflake_args ssargs = {})
+    constexpr rvinstruction(
+            const char* dummyname,
+            RVInstructionID id,
+            RVInstructionFormat type,
+            uint8_t opcode,
+            uint16_t funct,
+            RVInSetMinReqs setreqs,
+            rreq regreqs,
+            special_snowflake_args ssargs = {}
+    )
             : id(id)
             , type(type)
             , opcode(opcode)
@@ -2393,13 +2374,13 @@ struct rvinstruction {
 
     constexpr rvinstruction(const char* dummyname, RVInstructionID id, RVInstructionFormat type, uint8_t opcode, uint16_t funct, RVInSetMinReqs setreqs, uint8_t ssargs_val)
             : rvinstruction(
-                dummyname,
-                id,
-                type,
-                opcode,
-                funct,
-                setreqs,
-                special_snowflake_args(ssargs_val) // Delegate to the ssargs overload
+                    dummyname,
+                    id,
+                    type,
+                    opcode,
+                    funct,
+                    setreqs,
+                    special_snowflake_args(ssargs_val) // Delegate to the ssargs overload
             ) {}
 };
 

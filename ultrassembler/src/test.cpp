@@ -24,8 +24,8 @@ void as(std::string_view input, uint32_t expected_output) {
     }
 
     if (result_int != expected_output) {
-        std::cout << "❌ Normal test FAILED for " << input << ": expected " << std::hex << expected_output << std::dec << " (" << std::bitset<32>(expected_output) << "), but got " << std::hex << result_int
-                  << std::dec << " (" << std::bitset<32>(result_int) << ")" << std::endl;
+        std::cout << "❌ Normal test FAILED for " << input << ": expected " << std::hex << expected_output << std::dec << " (" << std::bitset<32>(expected_output) << "), but got " << std::hex
+                  << result_int << std::dec << " (" << std::bitset<32>(result_int) << ")" << std::endl;
         failed_tests++;
     } else {
         std::cout << "✅ Normal test passed for " << input << std::endl;

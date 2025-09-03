@@ -4,6 +4,10 @@ project(ChataCLI LANGUAGES CXX C VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+find_library(AVFORMAT avformat REQUIRED)
+find_library(AVCODEC avcodec REQUIRED)
+find_library(AVUTIL avutil REQUIRED)
+
 execute_process( # save the current branch to GIT_BRANCH
   COMMAND git rev-parse --abbrev-ref HEAD
   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
@@ -44,6 +48,7 @@ endif()
 
 target_link_libraries(chatacli PRIVATE chata)
 target_link_libraries(chatacli PRIVATE uas)
+target_link_libraries(chatacli PRIVATE ${AVFORMAT} ${AVCODEC} ${AVUTIL})
 
 set_property(
     TARGET chatacli
