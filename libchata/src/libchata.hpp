@@ -373,6 +373,8 @@ struct chata_args {
     double input2;
     double input3;
     double input4;
+    double input5;
+    double input6;
 };
 
 class ChataProcessor {

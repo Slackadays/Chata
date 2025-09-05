@@ -39,6 +39,8 @@ include_directories(/usr/local/include)
 
 add_executable(chatacli 
     src/main.cpp
+    src/audiofile.cpp
+    src/utils.cpp
 )
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
