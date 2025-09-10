@@ -4,6 +4,7 @@
 #include <vector>
 #include <optional>
 #include <filesystem>
+#include <fstream>
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -369,4 +370,36 @@ std::optional<std::vector<std::vector<double>>> readCSVFile(const std::string& f
     }
 
     return data;
+}
+
+void writeCSVFIle(const std::string& filename, const std::vector<std::vector<double>>& data) {
+    if (data.empty() || data.at(0).empty()) {
+        throw "No data to write to CSV file";
+    }
+
+    size_t num_channels = data.size();
+    size_t num_samples = data.at(0).size();
+
+    for (const auto& channel_data : data) {
+        if (channel_data.size() != num_samples) {
+            throw "Inconsistent number of samples across channels";
+        }
+    }
+
+    std::ofstream ofs(filename);
+    if (!ofs) {
+        throw "Could not open file for writing: " + filename;
+    }
+
+    for (size_t sample_idx = 0; sample_idx < num_samples; ++sample_idx) {
+        for (size_t ch = 0; ch < num_channels; ++ch) {
+            ofs << data[ch][sample_idx];
+            if (ch < num_channels - 1) {
+                ofs << ",";
+            }
+        }
+        ofs << "\n";
+    }
+
+    ofs.close();
 }
